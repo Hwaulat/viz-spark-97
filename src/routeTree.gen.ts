@@ -9,8 +9,26 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as OvenRouteImport } from './routes/oven'
+import { Route as CedRouteImport } from './routes/ced'
+import { Route as BoilerRouteImport } from './routes/boiler'
 import { Route as IndexRouteImport } from './routes/index'
 
+const OvenRoute = OvenRouteImport.update({
+  id: '/oven',
+  path: '/oven',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CedRoute = CedRouteImport.update({
+  id: '/ced',
+  path: '/ced',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BoilerRoute = BoilerRouteImport.update({
+  id: '/boiler',
+  path: '/boiler',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -19,28 +37,61 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/boiler': typeof BoilerRoute
+  '/ced': typeof CedRoute
+  '/oven': typeof OvenRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/boiler': typeof BoilerRoute
+  '/ced': typeof CedRoute
+  '/oven': typeof OvenRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/boiler': typeof BoilerRoute
+  '/ced': typeof CedRoute
+  '/oven': typeof OvenRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/boiler' | '/ced' | '/oven'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/boiler' | '/ced' | '/oven'
+  id: '__root__' | '/' | '/boiler' | '/ced' | '/oven'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  BoilerRoute: typeof BoilerRoute
+  CedRoute: typeof CedRoute
+  OvenRoute: typeof OvenRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/oven': {
+      id: '/oven'
+      path: '/oven'
+      fullPath: '/oven'
+      preLoaderRoute: typeof OvenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ced': {
+      id: '/ced'
+      path: '/ced'
+      fullPath: '/ced'
+      preLoaderRoute: typeof CedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/boiler': {
+      id: '/boiler'
+      path: '/boiler'
+      fullPath: '/boiler'
+      preLoaderRoute: typeof BoilerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -53,17 +104,10 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  BoilerRoute: BoilerRoute,
+  CedRoute: CedRoute,
+  OvenRoute: OvenRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
