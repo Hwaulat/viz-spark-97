@@ -8,7 +8,8 @@ import {
   Scripts,
 } from "@tanstack/react-router";
 import { useEffect, useState, type ReactNode } from "react";
-import { Activity, Flame, Waves, Thermometer, Gauge, Sun, Moon, Bell, PanelLeftClose } from "lucide-react";
+import { Activity, Flame, Waves, Thermometer, Gauge, Sun, Moon, Bell, PanelLeftClose, LayoutDashboard, FileText, History, Database, Users, ChevronDown } from "lucide-react";
+import { useRouterState } from "@tanstack/react-router";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
@@ -89,14 +90,33 @@ function RootShell({ children }: { children: ReactNode }) {
   );
 }
 
-const NAV = [
-  { to: "/", label: "Overview", icon: Gauge, exact: true },
+const DASHBOARD_CHILDREN: { to: "/" | "/boiler" | "/ced" | "/oven"; label: string; icon: typeof Gauge; exact?: boolean }[] = [
+  { to: "/", label: "General", icon: Gauge, exact: true },
   { to: "/boiler", label: "Boiler Area", icon: Flame },
   { to: "/ced", label: "CED Area", icon: Waves },
   { to: "/oven", label: "Oven Area", icon: Thermometer },
 ];
 
+const OTHER_NAV = [
+  { to: "/report", label: "Report", icon: FileText },
+  { to: "/log-history", label: "Log History", icon: History },
+  { to: "/master-data", label: "Master Data", icon: Database },
+  { to: "/user-management", label: "User Management", icon: Users },
+] as const;
+
+const linkBase =
+  "group flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-sidebar-foreground/75 hover:bg-white/5 hover:text-sidebar-foreground transition";
+const linkActive =
+  "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm bg-sidebar-accent text-white shadow-md shadow-sidebar-accent/30";
+
 function Sidebar() {
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const dashboardActive = DASHBOARD_CHILDREN.some((c) =>
+    c.exact ? pathname === c.to : pathname.startsWith(c.to),
+  );
+  const [dashOpen, setDashOpen] = useState(dashboardActive);
+  useEffect(() => { if (dashboardActive) setDashOpen(true); }, [dashboardActive]);
+
   return (
     <aside className="hidden md:flex md:w-64 shrink-0 flex-col bg-sidebar text-sidebar-foreground">
       <div className="flex items-center gap-3 px-5 py-5">
@@ -112,14 +132,42 @@ function Sidebar() {
       <div className="px-5 pt-4 pb-2 text-[10px] font-semibold uppercase tracking-widest text-sidebar-muted">
         Core Functions
       </div>
-      <nav className="flex-1 px-3 space-y-1">
-        {NAV.map((n) => (
+      <nav className="flex-1 px-3 space-y-1 overflow-y-auto">
+        <button
+          type="button"
+          onClick={() => setDashOpen((v) => !v)}
+          className={`w-full ${dashboardActive ? "text-sidebar-foreground" : "text-sidebar-foreground/75"} flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm hover:bg-white/5 transition`}
+          aria-expanded={dashOpen}
+        >
+          <LayoutDashboard className="h-4 w-4" />
+          <span className="flex-1 text-left">Dashboard</span>
+          <ChevronDown className={`h-4 w-4 transition-transform ${dashOpen ? "rotate-180" : ""}`} />
+        </button>
+        {dashOpen && (
+          <div className="ml-3 pl-3 border-l border-sidebar-border space-y-1">
+            {DASHBOARD_CHILDREN.map((c) => (
+              <Link
+                key={c.to}
+                to={c.to}
+                activeOptions={{ exact: c.exact }}
+                className={linkBase + " py-2 text-[13px]"}
+                activeProps={{ className: linkActive + " py-2 text-[13px]" }}
+              >
+                <c.icon className="h-3.5 w-3.5" />
+                {c.label}
+              </Link>
+            ))}
+          </div>
+        )}
+
+        <div className="pt-3 mt-3 border-t border-sidebar-border" />
+
+        {OTHER_NAV.map((n) => (
           <Link
             key={n.to}
             to={n.to}
-            activeOptions={{ exact: n.exact }}
-            className="group flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-sidebar-foreground/75 hover:bg-white/5 hover:text-sidebar-foreground transition"
-            activeProps={{ className: "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm bg-sidebar-accent text-white shadow-md shadow-sidebar-accent/30" }}
+            className={linkBase}
+            activeProps={{ className: linkActive }}
           >
             <n.icon className="h-4 w-4" />
             {n.label}
