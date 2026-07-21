@@ -90,12 +90,12 @@ function RootShell({ children }: { children: ReactNode }) {
   );
 }
 
-const DASHBOARD_CHILDREN = [
+const DASHBOARD_CHILDREN: { to: "/" | "/boiler" | "/ced" | "/oven"; label: string; icon: typeof Gauge; exact?: boolean }[] = [
   { to: "/", label: "General", icon: Gauge, exact: true },
   { to: "/boiler", label: "Boiler Area", icon: Flame },
   { to: "/ced", label: "CED Area", icon: Waves },
   { to: "/oven", label: "Oven Area", icon: Thermometer },
-] as const;
+];
 
 const OTHER_NAV = [
   { to: "/report", label: "Report", icon: FileText },
