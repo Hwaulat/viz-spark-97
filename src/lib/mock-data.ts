@@ -3,18 +3,25 @@
 export const BOILERS = [1, 2, 3].map((i) => ({
   id: i,
   name: `Boiler ${i}`,
+<<<<<<< HEAD
   running: true,
   temp1: [185.4, 178.2, 182.9][i - 1],
   temp2: [182.1, 179.5, 181.3][i - 1],
   pressure: [8.2, 7.8, 8.4][i - 1],
   runningHours: [14.5, 12.0, 15.2][i - 1],
   energy: [450, 410, 485][i - 1],
+=======
+  running: i !== 2 ? true : true,
+  temp1: [185.4, 178.2, 182.9][i - 1],
+  temp2: [182.1, 179.5, 181.3][i - 1],
+>>>>>>> 69888aee5fb3b9195097880bcb49a2a32f38420e
   fireBurner: i !== 2,
   motorPump: true,
   alarm: i === 2,
   setpoint: 185,
 }));
 
+<<<<<<< HEAD
 export const BOILER_GAS = {
   instantFlow: 320,
   unit: "m³/h",
@@ -70,6 +77,8 @@ export const CED_VALVES = [
   { tag: "VAM411", name: "E-Coat Bath Supply", openPct: 60 },
 ];
 
+=======
+>>>>>>> 69888aee5fb3b9195097880bcb49a2a32f38420e
 export function tempTrend(base: number, points = 48) {
   const data: { t: string; temp1: number; temp2: number; sp: number }[] = [];
   const now = Date.now();
@@ -98,7 +107,10 @@ export function energyTrend(points = 24) {
   return data;
 }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 69888aee5fb3b9195097880bcb49a2a32f38420e
 // CED zones with stations arranged in a U-loop
 export type Station = {
   id: string;
@@ -171,6 +183,7 @@ export const OVEN_ZONES = [
   { name: "Zone 5", pv: 183, sp: 185 },
   { name: "Zone 6", pv: 179, sp: 180 },
 ];
+<<<<<<< HEAD
 
 export interface ChecksheetItem {
   id: string;
@@ -246,3 +259,5 @@ export const APPROVAL_REQUESTS: ApprovalRequest[] = [
   { id: "APR-2026-005", checksheetId: "DP-2026-0720-S1", title: "Daily Checksheet Oven Area - Shift 1", area: "Oven Area", date: "2026-07-20", shift: "Shift 1", submittedBy: "Budi Santoso (Operator)", submittedAt: "14:45", ngItems: 0, status: "Approved", approvedBy: "Hadi Kusuma (Manager)", approvedAt: "2026-07-20 16:00" },
 ];
 
+=======
+>>>>>>> 69888aee5fb3b9195097880bcb49a2a32f38420e
