@@ -9,14 +9,38 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as UserManagementRouteImport } from './routes/user-management'
+import { Route as ReportRouteImport } from './routes/report'
 import { Route as OvenRouteImport } from './routes/oven'
+import { Route as MasterDataRouteImport } from './routes/master-data'
+import { Route as LogHistoryRouteImport } from './routes/log-history'
 import { Route as CedRouteImport } from './routes/ced'
 import { Route as BoilerRouteImport } from './routes/boiler'
 import { Route as IndexRouteImport } from './routes/index'
 
+const UserManagementRoute = UserManagementRouteImport.update({
+  id: '/user-management',
+  path: '/user-management',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReportRoute = ReportRouteImport.update({
+  id: '/report',
+  path: '/report',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const OvenRoute = OvenRouteImport.update({
   id: '/oven',
   path: '/oven',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MasterDataRoute = MasterDataRouteImport.update({
+  id: '/master-data',
+  path: '/master-data',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LogHistoryRoute = LogHistoryRouteImport.update({
+  id: '/log-history',
+  path: '/log-history',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CedRoute = CedRouteImport.update({
@@ -39,43 +63,112 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/boiler': typeof BoilerRoute
   '/ced': typeof CedRoute
+  '/log-history': typeof LogHistoryRoute
+  '/master-data': typeof MasterDataRoute
   '/oven': typeof OvenRoute
+  '/report': typeof ReportRoute
+  '/user-management': typeof UserManagementRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/boiler': typeof BoilerRoute
   '/ced': typeof CedRoute
+  '/log-history': typeof LogHistoryRoute
+  '/master-data': typeof MasterDataRoute
   '/oven': typeof OvenRoute
+  '/report': typeof ReportRoute
+  '/user-management': typeof UserManagementRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/boiler': typeof BoilerRoute
   '/ced': typeof CedRoute
+  '/log-history': typeof LogHistoryRoute
+  '/master-data': typeof MasterDataRoute
   '/oven': typeof OvenRoute
+  '/report': typeof ReportRoute
+  '/user-management': typeof UserManagementRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/boiler' | '/ced' | '/oven'
+  fullPaths:
+    | '/'
+    | '/boiler'
+    | '/ced'
+    | '/log-history'
+    | '/master-data'
+    | '/oven'
+    | '/report'
+    | '/user-management'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/boiler' | '/ced' | '/oven'
-  id: '__root__' | '/' | '/boiler' | '/ced' | '/oven'
+  to:
+    | '/'
+    | '/boiler'
+    | '/ced'
+    | '/log-history'
+    | '/master-data'
+    | '/oven'
+    | '/report'
+    | '/user-management'
+  id:
+    | '__root__'
+    | '/'
+    | '/boiler'
+    | '/ced'
+    | '/log-history'
+    | '/master-data'
+    | '/oven'
+    | '/report'
+    | '/user-management'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   BoilerRoute: typeof BoilerRoute
   CedRoute: typeof CedRoute
+  LogHistoryRoute: typeof LogHistoryRoute
+  MasterDataRoute: typeof MasterDataRoute
   OvenRoute: typeof OvenRoute
+  ReportRoute: typeof ReportRoute
+  UserManagementRoute: typeof UserManagementRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/user-management': {
+      id: '/user-management'
+      path: '/user-management'
+      fullPath: '/user-management'
+      preLoaderRoute: typeof UserManagementRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/report': {
+      id: '/report'
+      path: '/report'
+      fullPath: '/report'
+      preLoaderRoute: typeof ReportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/oven': {
       id: '/oven'
       path: '/oven'
       fullPath: '/oven'
       preLoaderRoute: typeof OvenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/master-data': {
+      id: '/master-data'
+      path: '/master-data'
+      fullPath: '/master-data'
+      preLoaderRoute: typeof MasterDataRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/log-history': {
+      id: '/log-history'
+      path: '/log-history'
+      fullPath: '/log-history'
+      preLoaderRoute: typeof LogHistoryRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/ced': {
@@ -106,7 +199,11 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   BoilerRoute: BoilerRoute,
   CedRoute: CedRoute,
+  LogHistoryRoute: LogHistoryRoute,
+  MasterDataRoute: MasterDataRoute,
   OvenRoute: OvenRoute,
+  ReportRoute: ReportRoute,
+  UserManagementRoute: UserManagementRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
