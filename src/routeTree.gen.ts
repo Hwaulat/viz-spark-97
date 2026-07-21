@@ -9,7 +9,6 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-<<<<<<< HEAD
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as BoilerRouteImport } from './routes/boiler'
 import { Route as CedRouteImport } from './routes/ced'
@@ -65,20 +64,6 @@ const MasterDataRoute = MasterDataRouteImport.update({
 const OvenRoute = OvenRouteImport.update({
   id: '/oven',
   path: '/oven',
-=======
-import { Route as UserManagementRouteImport } from './routes/user-management'
-import { Route as ReportRouteImport } from './routes/report'
-import { Route as OvenRouteImport } from './routes/oven'
-import { Route as MasterDataRouteImport } from './routes/master-data'
-import { Route as LogHistoryRouteImport } from './routes/log-history'
-import { Route as CedRouteImport } from './routes/ced'
-import { Route as BoilerRouteImport } from './routes/boiler'
-import { Route as IndexRouteImport } from './routes/index'
-
-const UserManagementRoute = UserManagementRouteImport.update({
-  id: '/user-management',
-  path: '/user-management',
->>>>>>> 69888aee5fb3b9195097880bcb49a2a32f38420e
   getParentRoute: () => rootRouteImport,
 } as any)
 const ReportRoute = ReportRouteImport.update({
@@ -86,40 +71,9 @@ const ReportRoute = ReportRouteImport.update({
   path: '/report',
   getParentRoute: () => rootRouteImport,
 } as any)
-<<<<<<< HEAD
 const UserManagementRoute = UserManagementRouteImport.update({
   id: '/user-management',
   path: '/user-management',
-=======
-const OvenRoute = OvenRouteImport.update({
-  id: '/oven',
-  path: '/oven',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const MasterDataRoute = MasterDataRouteImport.update({
-  id: '/master-data',
-  path: '/master-data',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LogHistoryRoute = LogHistoryRouteImport.update({
-  id: '/log-history',
-  path: '/log-history',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CedRoute = CedRouteImport.update({
-  id: '/ced',
-  path: '/ced',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const BoilerRoute = BoilerRouteImport.update({
-  id: '/boiler',
-  path: '/boiler',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
->>>>>>> 69888aee5fb3b9195097880bcb49a2a32f38420e
   getParentRoute: () => rootRouteImport,
 } as any)
 
@@ -127,12 +81,9 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/boiler': typeof BoilerRoute
   '/ced': typeof CedRoute
-<<<<<<< HEAD
   '/checksheet': typeof ChecksheetRoute
   '/checksheet-approval': typeof ChecksheetApprovalRoute
   '/checksheet-daily': typeof ChecksheetDailyRoute
-=======
->>>>>>> 69888aee5fb3b9195097880bcb49a2a32f38420e
   '/log-history': typeof LogHistoryRoute
   '/master-data': typeof MasterDataRoute
   '/oven': typeof OvenRoute
@@ -143,12 +94,9 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/boiler': typeof BoilerRoute
   '/ced': typeof CedRoute
-<<<<<<< HEAD
   '/checksheet': typeof ChecksheetRoute
   '/checksheet-approval': typeof ChecksheetApprovalRoute
   '/checksheet-daily': typeof ChecksheetDailyRoute
-=======
->>>>>>> 69888aee5fb3b9195097880bcb49a2a32f38420e
   '/log-history': typeof LogHistoryRoute
   '/master-data': typeof MasterDataRoute
   '/oven': typeof OvenRoute
@@ -160,12 +108,9 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/boiler': typeof BoilerRoute
   '/ced': typeof CedRoute
-<<<<<<< HEAD
   '/checksheet': typeof ChecksheetRoute
   '/checksheet-approval': typeof ChecksheetApprovalRoute
   '/checksheet-daily': typeof ChecksheetDailyRoute
-=======
->>>>>>> 69888aee5fb3b9195097880bcb49a2a32f38420e
   '/log-history': typeof LogHistoryRoute
   '/master-data': typeof MasterDataRoute
   '/oven': typeof OvenRoute
@@ -178,12 +123,9 @@ export interface FileRouteTypes {
     | '/'
     | '/boiler'
     | '/ced'
-<<<<<<< HEAD
     | '/checksheet'
     | '/checksheet-approval'
     | '/checksheet-daily'
-=======
->>>>>>> 69888aee5fb3b9195097880bcb49a2a32f38420e
     | '/log-history'
     | '/master-data'
     | '/oven'
@@ -194,12 +136,9 @@ export interface FileRouteTypes {
     | '/'
     | '/boiler'
     | '/ced'
-<<<<<<< HEAD
     | '/checksheet'
     | '/checksheet-approval'
     | '/checksheet-daily'
-=======
->>>>>>> 69888aee5fb3b9195097880bcb49a2a32f38420e
     | '/log-history'
     | '/master-data'
     | '/oven'
@@ -210,12 +149,9 @@ export interface FileRouteTypes {
     | '/'
     | '/boiler'
     | '/ced'
-<<<<<<< HEAD
     | '/checksheet'
     | '/checksheet-approval'
     | '/checksheet-daily'
-=======
->>>>>>> 69888aee5fb3b9195097880bcb49a2a32f38420e
     | '/log-history'
     | '/master-data'
     | '/oven'
@@ -227,12 +163,9 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   BoilerRoute: typeof BoilerRoute
   CedRoute: typeof CedRoute
-<<<<<<< HEAD
   ChecksheetRoute: typeof ChecksheetRoute
   ChecksheetApprovalRoute: typeof ChecksheetApprovalRoute
   ChecksheetDailyRoute: typeof ChecksheetDailyRoute
-=======
->>>>>>> 69888aee5fb3b9195097880bcb49a2a32f38420e
   LogHistoryRoute: typeof LogHistoryRoute
   MasterDataRoute: typeof MasterDataRoute
   OvenRoute: typeof OvenRoute
@@ -242,7 +175,6 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-<<<<<<< HEAD
     '/': {
       id: '/'
       path: '/'
@@ -304,13 +236,6 @@ declare module '@tanstack/react-router' {
       path: '/oven'
       fullPath: '/oven'
       preLoaderRoute: typeof OvenRouteImport
-=======
-    '/user-management': {
-      id: '/user-management'
-      path: '/user-management'
-      fullPath: '/user-management'
-      preLoaderRoute: typeof UserManagementRouteImport
->>>>>>> 69888aee5fb3b9195097880bcb49a2a32f38420e
       parentRoute: typeof rootRouteImport
     }
     '/report': {
@@ -320,54 +245,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ReportRouteImport
       parentRoute: typeof rootRouteImport
     }
-<<<<<<< HEAD
     '/user-management': {
       id: '/user-management'
       path: '/user-management'
       fullPath: '/user-management'
       preLoaderRoute: typeof UserManagementRouteImport
-=======
-    '/oven': {
-      id: '/oven'
-      path: '/oven'
-      fullPath: '/oven'
-      preLoaderRoute: typeof OvenRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/master-data': {
-      id: '/master-data'
-      path: '/master-data'
-      fullPath: '/master-data'
-      preLoaderRoute: typeof MasterDataRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/log-history': {
-      id: '/log-history'
-      path: '/log-history'
-      fullPath: '/log-history'
-      preLoaderRoute: typeof LogHistoryRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/ced': {
-      id: '/ced'
-      path: '/ced'
-      fullPath: '/ced'
-      preLoaderRoute: typeof CedRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/boiler': {
-      id: '/boiler'
-      path: '/boiler'
-      fullPath: '/boiler'
-      preLoaderRoute: typeof BoilerRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
->>>>>>> 69888aee5fb3b9195097880bcb49a2a32f38420e
       parentRoute: typeof rootRouteImport
     }
   }
@@ -377,12 +259,9 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   BoilerRoute: BoilerRoute,
   CedRoute: CedRoute,
-<<<<<<< HEAD
   ChecksheetRoute: ChecksheetRoute,
   ChecksheetApprovalRoute: ChecksheetApprovalRoute,
   ChecksheetDailyRoute: ChecksheetDailyRoute,
-=======
->>>>>>> 69888aee5fb3b9195097880bcb49a2a32f38420e
   LogHistoryRoute: LogHistoryRoute,
   MasterDataRoute: MasterDataRoute,
   OvenRoute: OvenRoute,
@@ -392,7 +271,6 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-<<<<<<< HEAD
 
 import type { getRouter } from './router.tsx'
 import type { startInstance } from './start.ts'
@@ -403,5 +281,3 @@ declare module '@tanstack/react-start' {
     config: Awaited<ReturnType<typeof startInstance.getOptions>>
   }
 }
-=======
->>>>>>> 69888aee5fb3b9195097880bcb49a2a32f38420e

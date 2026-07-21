@@ -8,11 +8,7 @@ import {
   Scripts,
 } from "@tanstack/react-router";
 import { useEffect, useState, type ReactNode } from "react";
-<<<<<<< HEAD
 import { Activity, Flame, Waves, Thermometer, Gauge, Sun, Moon, Bell, PanelLeftClose, LayoutDashboard, FileText, History, Database, Users, ChevronDown, ClipboardCheck, Clock, ShieldCheck } from "lucide-react";
-=======
-import { Activity, Flame, Waves, Thermometer, Gauge, Sun, Moon, Bell, PanelLeftClose, LayoutDashboard, FileText, History, Database, Users, ChevronDown } from "lucide-react";
->>>>>>> 69888aee5fb3b9195097880bcb49a2a32f38420e
 import { useRouterState } from "@tanstack/react-router";
 
 import appCss from "../styles.css?url";
@@ -94,16 +90,11 @@ function RootShell({ children }: { children: ReactNode }) {
   );
 }
 
-<<<<<<< HEAD
 const DASHBOARD_CHILDREN: { to: "/" | "/boiler" | "/ced" | "/oven" | "/checksheet"; label: string; icon: typeof Gauge; exact?: boolean }[] = [
-=======
-const DASHBOARD_CHILDREN: { to: "/" | "/boiler" | "/ced" | "/oven"; label: string; icon: typeof Gauge; exact?: boolean }[] = [
->>>>>>> 69888aee5fb3b9195097880bcb49a2a32f38420e
   { to: "/", label: "General", icon: Gauge, exact: true },
   { to: "/boiler", label: "Boiler Area", icon: Flame },
   { to: "/ced", label: "CED Area", icon: Waves },
   { to: "/oven", label: "Oven Area", icon: Thermometer },
-<<<<<<< HEAD
   { to: "/checksheet", label: "Dashboard Checksheet", icon: ClipboardCheck },
 ];
 
@@ -112,10 +103,6 @@ const CHECKSHEET_NAV = [
   { to: "/checksheet-approval", label: "Approval", icon: ShieldCheck },
 ] as const;
 
-=======
-];
-
->>>>>>> 69888aee5fb3b9195097880bcb49a2a32f38420e
 const OTHER_NAV = [
   { to: "/report", label: "Report", icon: FileText },
   { to: "/log-history", label: "Log History", icon: History },
@@ -179,7 +166,6 @@ function Sidebar() {
           </div>
         )}
 
-<<<<<<< HEAD
         {CHECKSHEET_NAV.map((n) => (
           <Link
             key={n.to}
@@ -192,8 +178,6 @@ function Sidebar() {
           </Link>
         ))}
 
-=======
->>>>>>> 69888aee5fb3b9195097880bcb49a2a32f38420e
         <div className="pt-3 mt-3 border-t border-sidebar-border" />
 
         {OTHER_NAV.map((n) => (
@@ -209,10 +193,7 @@ function Sidebar() {
         ))}
       </nav>
 
-<<<<<<< HEAD
 
-=======
->>>>>>> 69888aee5fb3b9195097880bcb49a2a32f38420e
       <div className="p-4 mt-2">
         <div className="rounded-lg bg-white/5 border border-sidebar-border p-3 text-[11px]">
           <div className="flex items-center justify-between text-sidebar-muted">
