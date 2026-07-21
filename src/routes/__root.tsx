@@ -7,8 +7,8 @@ import {
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
-import { useEffect, type ReactNode } from "react";
-import { Activity, Flame, Waves, Thermometer, Gauge } from "lucide-react";
+import { useEffect, useState, type ReactNode } from "react";
+import { Activity, Flame, Waves, Thermometer, Gauge, Sun, Moon, Bell, PanelLeftClose } from "lucide-react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
@@ -60,6 +60,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     ],
     links: [
       { rel: "stylesheet", href: appCss },
+      { rel: "preconnect", href: "https://fonts.googleapis.com" },
+      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
+      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" },
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
     ],
   }),
@@ -69,10 +72,15 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   errorComponent: ErrorComponent,
 });
 
+const themeInitScript = `try{var t=localStorage.getItem('theme');var d=t?t==='dark':window.matchMedia('(prefers-color-scheme: dark)').matches;if(d)document.documentElement.classList.add('dark');}catch(e){}`;
+
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" className="dark">
-      <head><HeadContent /></head>
+    <html lang="en">
+      <head>
+        <HeadContent />
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+      </head>
       <body className="min-h-screen bg-background text-foreground antialiased">
         {children}
         <Scripts />
@@ -90,61 +98,113 @@ const NAV = [
 
 function Sidebar() {
   return (
-    <aside className="hidden md:flex md:w-60 shrink-0 flex-col border-r border-border bg-panel">
-      <div className="flex items-center gap-2 px-5 py-5 border-b border-border">
-        <div className="grid h-9 w-9 place-items-center rounded-md bg-primary/15 text-primary">
-          <Activity className="h-5 w-5" />
+    <aside className="hidden md:flex md:w-64 shrink-0 flex-col bg-sidebar text-sidebar-foreground">
+      <div className="flex items-center gap-3 px-5 py-5">
+        <div className="grid h-10 w-10 place-items-center rounded-full bg-gradient-to-br from-sidebar-accent to-primary/60 shadow-lg">
+          <Activity className="h-5 w-5 text-white" />
         </div>
         <div>
           <div className="text-sm font-semibold leading-tight">UtilityOps</div>
-          <div className="text-[10px] uppercase tracking-widest text-muted-foreground">Plant Control</div>
+          <div className="text-[10px] uppercase tracking-widest text-sidebar-muted">Monitoring System</div>
         </div>
       </div>
-      <nav className="flex-1 p-3 space-y-1">
+
+      <div className="px-5 pt-4 pb-2 text-[10px] font-semibold uppercase tracking-widest text-sidebar-muted">
+        Core Functions
+      </div>
+      <nav className="flex-1 px-3 space-y-1">
         {NAV.map((n) => (
           <Link
             key={n.to}
             to={n.to}
             activeOptions={{ exact: n.exact }}
-            className="group flex items-center gap-3 rounded-md px-3 py-2 text-sm text-muted-foreground hover:bg-accent hover:text-foreground"
-            activeProps={{ className: "flex items-center gap-3 rounded-md px-3 py-2 text-sm bg-accent text-foreground border-l-2 border-primary" }}
+            className="group flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-sidebar-foreground/75 hover:bg-white/5 hover:text-sidebar-foreground transition"
+            activeProps={{ className: "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm bg-sidebar-accent text-white shadow-md shadow-sidebar-accent/30" }}
           >
             <n.icon className="h-4 w-4" />
             {n.label}
           </Link>
         ))}
       </nav>
-      <div className="p-4 border-t border-border">
-        <div className="rounded-md bg-secondary/60 p-3 text-[11px]">
-          <div className="flex items-center justify-between text-muted-foreground">
+
+      <div className="p-4 mt-2">
+        <div className="rounded-lg bg-white/5 border border-sidebar-border p-3 text-[11px]">
+          <div className="flex items-center justify-between text-sidebar-muted">
             <span>PLC LINK</span>
             <span className="inline-flex items-center gap-1.5 text-ok"><span className="h-1.5 w-1.5 rounded-full bg-ok animate-pulse" />ONLINE</span>
           </div>
-          <div className="mt-1 flex items-center justify-between text-muted-foreground">
+          <div className="mt-1 flex items-center justify-between text-sidebar-muted">
             <span>MC PROTOCOL</span>
-            <span className="text-foreground">42 ms</span>
+            <span className="text-sidebar-foreground">42 ms</span>
           </div>
+        </div>
+        <div className="mt-3 flex items-center gap-2 text-[10px] text-sidebar-muted">
+          <span className="h-1.5 w-1.5 rounded-full bg-ok" />
+          System Online
+          <span className="ml-auto font-mono">v2.4.1</span>
         </div>
       </div>
     </aside>
   );
 }
 
+function useTheme() {
+  const [theme, setTheme] = useState<"light" | "dark">("light");
+  useEffect(() => {
+    setTheme(document.documentElement.classList.contains("dark") ? "dark" : "light");
+  }, []);
+  const toggle = () => {
+    const next = theme === "dark" ? "light" : "dark";
+    setTheme(next);
+    document.documentElement.classList.toggle("dark", next === "dark");
+    try { localStorage.setItem("theme", next); } catch {}
+  };
+  return { theme, toggle };
+}
+
 function TopBar() {
-  const now = new Date();
-  const ts = now.toLocaleString("en-GB", { hour12: false });
+  const { theme, toggle } = useTheme();
+  const [ts, setTs] = useState("");
+  useEffect(() => {
+    const tick = () => setTs(new Date().toLocaleString("en-GB", { hour12: false }));
+    tick();
+    const id = setInterval(tick, 1000);
+    return () => clearInterval(id);
+  }, []);
   return (
-    <header className="flex h-14 items-center justify-between border-b border-border bg-panel/60 px-6 backdrop-blur">
-      <div className="flex items-center gap-3 text-xs text-muted-foreground">
-        <span className="inline-flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-ok" />AC 220V</span>
-        <span className="inline-flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-ok" />DC 24V</span>
-        <span className="inline-flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-ok" />RUN</span>
-        <span className="inline-flex items-center gap-1.5 opacity-60"><span className="h-2 w-2 rounded-full bg-muted-foreground" />STOP</span>
-        <span className="inline-flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-warn" />1 ALARM</span>
+    <header className="flex h-16 items-center justify-between border-b border-border bg-card px-6">
+      <div className="flex items-center gap-3">
+        <button className="grid h-9 w-9 place-items-center rounded-md text-muted-foreground hover:bg-secondary" aria-label="collapse">
+          <PanelLeftClose className="h-4 w-4" />
+        </button>
+        <div className="hidden lg:flex items-center gap-2 text-xs text-muted-foreground">
+          <span className="inline-flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-ok" />AC 220V</span>
+          <span className="inline-flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-ok" />DC 24V</span>
+          <span className="inline-flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-ok" />RUN</span>
+          <span className="inline-flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-warn" />1 ALARM</span>
+        </div>
       </div>
-      <div className="flex items-center gap-4">
-        <span className="rounded-md bg-secondary px-2.5 py-1 text-[11px] font-mono text-muted-foreground">MODE: AUTO</span>
-        <span className="font-mono text-xs text-foreground">{ts}</span>
+      <div className="flex items-center gap-3">
+        <span className="hidden sm:inline rounded-md bg-secondary px-2.5 py-1 text-[11px] font-mono text-muted-foreground">MODE: AUTO</span>
+        <span className="font-mono text-xs text-foreground tabular-nums">{ts || "—"}</span>
+        <button
+          onClick={toggle}
+          className="grid h-9 w-9 place-items-center rounded-full text-muted-foreground hover:bg-secondary hover:text-foreground transition"
+          aria-label="Toggle theme"
+        >
+          {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+        </button>
+        <button className="relative grid h-9 w-9 place-items-center rounded-full text-muted-foreground hover:bg-secondary hover:text-foreground" aria-label="notifications">
+          <Bell className="h-4 w-4" />
+          <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-destructive" />
+        </button>
+        <div className="flex items-center gap-2 pl-2 border-l border-border">
+          <div className="grid h-9 w-9 place-items-center rounded-full bg-primary text-primary-foreground text-sm font-semibold">A</div>
+          <div className="hidden sm:block text-xs leading-tight">
+            <div className="font-semibold">Admin</div>
+            <div className="text-muted-foreground text-[10px]">Super Admin</div>
+          </div>
+        </div>
       </div>
     </header>
   );
