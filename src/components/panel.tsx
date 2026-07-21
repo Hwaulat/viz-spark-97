@@ -16,7 +16,7 @@ export function Panel({
   }[tone];
   return (
     <section className={cn(
-      "rounded-lg border bg-card text-card-foreground shadow-[inset_0_1px_0_0_rgba(255,255,255,0.04)]",
+      "rounded-xl border bg-card text-card-foreground shadow-sm",
       toneBorder, className,
     )}>
       {(title || right) && (
