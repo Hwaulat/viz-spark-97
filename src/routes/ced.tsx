@@ -653,6 +653,11 @@ function ProcessDetail({
   zone: string;
   setZone: (z: string) => void;
 }) {
+  const mockLevel = 78; // Mock tank level percentage
+  const maxLiquidHeight = 140;
+  const liquidHeight = (mockLevel / 100) * maxLiquidHeight;
+  const liquidY = 290 - liquidHeight;
+
   return (
     <>
       <div className="flex items-center justify-between flex-wrap gap-2">
@@ -721,7 +726,7 @@ function ProcessDetail({
               />
               <text
                 x="250"
-                y="170"
+                y="160"
                 textAnchor="middle"
                 fontSize={11}
                 fill="var(--muted-foreground)"
@@ -729,11 +734,22 @@ function ProcessDetail({
               >
                 PROCESS TANK
               </text>
+              <text
+                x="250"
+                y="178"
+                textAnchor="middle"
+                fontSize={10}
+                fill="var(--primary)"
+                fontFamily="var(--font-mono)"
+                fontWeight={600}
+              >
+                Level: {mockLevel}%
+              </text>
               <rect
                 x="130"
-                y="200"
+                y={liquidY}
                 width="240"
-                height="90"
+                height={liquidHeight}
                 fill="var(--chart-1)"
                 opacity={0.18}
               />
