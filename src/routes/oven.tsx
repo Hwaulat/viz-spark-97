@@ -1,14 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Panel, StatusDot, ValueDisplay } from "@/components/panel";
-import { OVEN_ZONES, energyTrend } from "@/lib/mock-data";
-import { Zap, Thermometer } from "lucide-react";
+import { OVEN_ZONES, OVENS, OVEN_GAS, energyTrend } from "@/lib/mock-data";
+import { Zap, Thermometer, Flame, Fuel } from "lucide-react";
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
 export const Route = createFileRoute("/oven")({
   head: () => ({
     meta: [
       { title: "Oven Area — Utility Monitoring" },
-      { name: "description", content: "Oven energy consumption and multi-zone temperature monitoring." },
+      { name: "description", content: "Oven energy consumption, per-unit temperature and gas monitoring." },
     ],
   }),
   component: OvenArea,
@@ -21,6 +21,64 @@ function OvenArea() {
       <div>
         <div className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">Oven Area</div>
         <h1 className="text-2xl font-semibold mt-1">Cure Oven — Energy & Thermal Profile</h1>
+      </div>
+
+      {/* Combined Gas Meter */}
+      <Panel
+        title={
+          <span className="inline-flex items-center gap-2 text-amber-500 font-semibold">
+            <Fuel className="h-4 w-4" /> GAS METER (Total Oven 1 + 2 + 3)
+          </span>
+        }
+        subtitle="1 combined gas meter represents total consumption of all three ovens"
+        right={<span className="rounded bg-amber-500/15 text-amber-600 dark:text-amber-400 px-2.5 py-1 text-[10px] font-mono font-semibold">COMBINED (1 METER)</span>}
+      >
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <ValueDisplay label="Current Gas Consumption" value={OVEN_GAS.instantFlow} unit={OVEN_GAS.unit} tone="warn" />
+          <ValueDisplay label="Total Consumption Today" value={OVEN_GAS.todayTotal.toLocaleString()} unit={OVEN_GAS.todayUnit} />
+          <div className="rounded-md bg-secondary/50 px-3 py-2.5 border border-border/50 flex items-center justify-between">
+            <div>
+              <div className="text-[10px] uppercase tracking-widest text-muted-foreground">Gas Line Pressure</div>
+              <div className="text-lg font-mono font-semibold mt-1 text-foreground">3.8 <span className="text-xs text-muted-foreground font-normal">bar</span></div>
+              <div className="text-[11px] text-ok font-medium mt-0.5">● Supply Line Normal</div>
+            </div>
+            <Fuel className="h-7 w-7 text-amber-500/60" />
+          </div>
+        </div>
+      </Panel>
+
+      {/* Per-Oven Cards */}
+      <div className="grid gap-4 lg:grid-cols-3">
+        {OVENS.map((o) => {
+          const dev = o.temp - o.setpoint;
+          const tone = o.alarm || Math.abs(dev) > 3 ? "warn" : "ok";
+          return (
+            <Panel
+              key={o.id}
+              tone={tone === "warn" ? "warn" : "ok"}
+              title={<span className="inline-flex items-center gap-2"><Flame className="h-3.5 w-3.5" />{o.name}</span>}
+              right={
+                <span className="inline-flex items-center gap-2 text-xs font-mono">
+                  <StatusDot state={tone === "warn" ? "warn" : "on"} pulse={o.alarm} />
+                  {o.running ? "RUNNING" : "STOPPED"}
+                </span>
+              }
+            >
+              <div className="grid grid-cols-2 gap-3">
+                <ValueDisplay label="Temperature" value={o.temp.toFixed(1)} unit="°C" tone={tone === "warn" ? "warn" : "default"} />
+                <ValueDisplay label="Setpoint" value={o.setpoint} unit="°C" />
+                <ValueDisplay label="Gas Flow" value={o.gasFlow} unit="m³/h" tone="warn" />
+                <ValueDisplay label="Gas Today" value={o.gasTotal.toLocaleString()} unit="m³" />
+              </div>
+              <div className="mt-3 rounded-md bg-secondary/60 border border-border/50 px-3 py-2 flex items-center justify-between text-xs">
+                <span className="inline-flex items-center gap-2 text-muted-foreground">
+                  <Zap className="h-3.5 w-3.5 text-primary" /> Energy Today
+                </span>
+                <span className="font-mono font-semibold">{o.energy.toLocaleString()} <span className="text-[10px] text-muted-foreground">kWh</span></span>
+              </div>
+            </Panel>
+          );
+        })}
       </div>
 
       <div className="grid gap-4 lg:grid-cols-2">
@@ -78,7 +136,6 @@ function OvenArea() {
                   <div className="mt-0.5 text-[10px] font-mono text-muted-foreground">
                     SP {z.sp}°C · Δ {dev > 0 ? "+" : ""}{dev}°C
                   </div>
-                  {/* mini bar */}
                   <div className="mt-2 h-1.5 rounded-full bg-background overflow-hidden">
                     <div
                       className={`h-full ${tone==="warn"?"bg-warn":"bg-ok"}`}
