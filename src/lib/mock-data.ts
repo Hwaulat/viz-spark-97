@@ -9,6 +9,12 @@ export const BOILERS = [1, 2, 3].map((i) => ({
   pressure: [8.2, 7.8, 8.4][i - 1],
   runningHours: [14.5, 12.0, 15.2][i - 1],
   energy: [450, 410, 485][i - 1],
+  energyAvg: [420, 395, 470][i - 1],
+  energyTotal: [10250, 9480, 11340][i - 1],
+  gasAvg: [110, 95, 118][i - 1],
+  gasTotal: [1650, 1420, 1780][i - 1],
+  onTime: ["06:12", "07:45", "05:58"][i - 1],
+  offTime: ["—", "13:24", "—"][i - 1],
   fireBurner: i !== 2,
   motorPump: true,
   alarm: i === 2,
@@ -21,6 +27,64 @@ export const BOILER_GAS = {
   todayTotal: 4850,
   todayUnit: "m³",
 };
+
+export const OVEN_GAS = {
+  instantFlow: 210,
+  unit: "m³/h",
+  todayTotal: 3120,
+  todayUnit: "m³",
+};
+
+export const OVENS = [1, 2, 3].map((i) => ({
+  id: i,
+  name: `Oven ${i}`,
+  running: true,
+  temp: [186.2, 191.5, 178.9][i - 1],
+  setpoint: [185, 190, 180][i - 1],
+  gasFlow: [72, 84, 54][i - 1],
+  gasTotal: [1050, 1240, 830][i - 1],
+  energy: [1240, 1380, 1120][i - 1],
+  alarm: i === 3,
+}));
+
+export function boilerDayTrend(base: number) {
+  // 24 hours, hourly
+  return Array.from({ length: 24 }, (_, h) => {
+    const noise = Math.sin(h / 3) * 3 + (Math.random() - 0.5) * 2;
+    return {
+      t: `${String(h).padStart(2, "0")}:00`,
+      temp1: +(base + noise).toFixed(1),
+      temp2: +(base - 2 + noise * 0.8).toFixed(1),
+    };
+  });
+}
+
+export function boilerMonthTrend(base: number) {
+  // 30 days
+  return Array.from({ length: 30 }, (_, d) => {
+    const noise = Math.sin(d / 5) * 4 + (Math.random() - 0.5) * 3;
+    return {
+      t: `${String(d + 1).padStart(2, "0")}`,
+      temp1: +(base + noise).toFixed(1),
+      temp2: +(base - 2 + noise * 0.8).toFixed(1),
+    };
+  });
+}
+
+export function boilerEnergyDaily() {
+  return Array.from({ length: 30 }, (_, d) => ({
+    day: `${String(d + 1).padStart(2, "0")}`,
+    energy: Math.round(380 + Math.sin(d / 4) * 60 + Math.random() * 40),
+  }));
+}
+
+export function boilerGasDaily() {
+  return Array.from({ length: 30 }, (_, d) => ({
+    day: `${String(d + 1).padStart(2, "0")}`,
+    gas: Math.round(140 + Math.cos(d / 5) * 30 + Math.random() * 20),
+  }));
+}
+
 
 export interface CEDZoneTemp {
   id: string;
