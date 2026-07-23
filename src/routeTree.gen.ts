@@ -20,6 +20,7 @@ import { Route as MasterDataRouteImport } from './routes/master-data'
 import { Route as OvenRouteImport } from './routes/oven'
 import { Route as ReportRouteImport } from './routes/report'
 import { Route as UserManagementRouteImport } from './routes/user-management'
+import { Route as BoilerDetailsIdRouteImport } from './routes/boiler-details.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -76,6 +77,11 @@ const UserManagementRoute = UserManagementRouteImport.update({
   path: '/user-management',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BoilerDetailsIdRoute = BoilerDetailsIdRouteImport.update({
+  id: '/boiler-details/$id',
+  path: '/boiler-details/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -89,6 +95,7 @@ export interface FileRoutesByFullPath {
   '/oven': typeof OvenRoute
   '/report': typeof ReportRoute
   '/user-management': typeof UserManagementRoute
+  '/boiler-details/$id': typeof BoilerDetailsIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -102,6 +109,7 @@ export interface FileRoutesByTo {
   '/oven': typeof OvenRoute
   '/report': typeof ReportRoute
   '/user-management': typeof UserManagementRoute
+  '/boiler-details/$id': typeof BoilerDetailsIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -116,6 +124,7 @@ export interface FileRoutesById {
   '/oven': typeof OvenRoute
   '/report': typeof ReportRoute
   '/user-management': typeof UserManagementRoute
+  '/boiler-details/$id': typeof BoilerDetailsIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -131,6 +140,7 @@ export interface FileRouteTypes {
     | '/oven'
     | '/report'
     | '/user-management'
+    | '/boiler-details/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -144,6 +154,7 @@ export interface FileRouteTypes {
     | '/oven'
     | '/report'
     | '/user-management'
+    | '/boiler-details/$id'
   id:
     | '__root__'
     | '/'
@@ -157,6 +168,7 @@ export interface FileRouteTypes {
     | '/oven'
     | '/report'
     | '/user-management'
+    | '/boiler-details/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -171,6 +183,7 @@ export interface RootRouteChildren {
   OvenRoute: typeof OvenRoute
   ReportRoute: typeof ReportRoute
   UserManagementRoute: typeof UserManagementRoute
+  BoilerDetailsIdRoute: typeof BoilerDetailsIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -252,6 +265,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof UserManagementRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/boiler-details/$id': {
+      id: '/boiler-details/$id'
+      path: '/boiler-details/$id'
+      fullPath: '/boiler-details/$id'
+      preLoaderRoute: typeof BoilerDetailsIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -267,17 +287,8 @@ const rootRouteChildren: RootRouteChildren = {
   OvenRoute: OvenRoute,
   ReportRoute: ReportRoute,
   UserManagementRoute: UserManagementRoute,
+  BoilerDetailsIdRoute: BoilerDetailsIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
