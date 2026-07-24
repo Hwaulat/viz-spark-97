@@ -1,214 +1,357 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Panel, StatusDot, ValueDisplay } from "@/components/panel";
-import { CHECKSHEET_ITEMS, ChecksheetItem } from "@/lib/mock-data";
-import { ClipboardCheck, CheckCircle2, XCircle, Clock, Filter, ShieldCheck } from "lucide-react";
-import { useState } from "react";
+import { Panel } from "@/components/panel";
+import { CHECKSHEET_ITEMS } from "@/lib/mock-data";
+import {
+  ClipboardList,
+  CheckCircle2,
+  X,
+  Sparkles,
+  Calendar,
+  Download,
+  ChevronDown,
+  Search,
+  LayoutDashboard,
+} from "lucide-react";
+import { useState, useMemo } from "react";
+import {
+  CartesianGrid,
+  Line,
+  LineChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
 
 export const Route = createFileRoute("/checksheet")({
   head: () => ({
     meta: [
       { title: "Dashboard Checksheet — Utility Monitoring" },
-      { name: "description", content: "Overview of equipment & parameter checksheet logs across plant areas." },
+      {
+        name: "description",
+        content:
+          "QC Checksheet dashboard with measurement trends and inspection status overview.",
+      },
     ],
   }),
   component: DashboardChecksheet,
 });
 
+/* ── mock trend data ──────────────────────────────────────── */
+const TREND_DATA = [
+  { date: "01/06", value: 580 },
+  { date: "02/06", value: 620 },
+  { date: "03/06", value: 610 },
+  { date: "04/06", value: 640 },
+  { date: "05/06", value: 880 },
+  { date: "06/06", value: 780 },
+  { date: "07/06", value: 720 },
+  { date: "08/06", value: 810 },
+  { date: "09/06", value: 620 },
+];
+
+/* ── component ────────────────────────────────────────────── */
 function DashboardChecksheet() {
-  const [selectedArea, setSelectedArea] = useState<string>("All");
-  const [selectedStatus, setSelectedStatus] = useState<string>("All");
+  const [partNumber, setPartNumber] = useState("Part Number - Name");
+  const [parameter, setParameter] = useState("Point Stay Middle");
+  const [timeFrame] = useState("01/06/2026 - 30/06/2026");
 
-  const items = CHECKSHEET_ITEMS.filter((item) => {
-    if (selectedArea !== "All" && item.area !== selectedArea) return false;
-    if (selectedStatus !== "All" && item.status !== selectedStatus) return false;
-    return true;
-  });
-
-  const totalChecks = CHECKSHEET_ITEMS.length;
-  const okCount = CHECKSHEET_ITEMS.filter((i) => i.status === "OK").length;
-  const ngCount = CHECKSHEET_ITEMS.filter((i) => i.status === "NG").length;
-  const completionRate = Math.round((okCount / totalChecks) * 100);
+  const totalInspection = 200;
+  const totalOk = 150;
+  const totalWaiting = 20;
+  const totalNg = 30;
+  const okPct = 96.5;
+  const ngPct = 3.5;
+  const waitingPct = 12.4;
 
   return (
-    <div className="p-6 space-y-6">
-      {/* Header */}
-      <div className="flex items-end justify-between flex-wrap gap-3">
-        <div>
-          <div className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">
-            Checksheet System
+    <div className="p-6 space-y-4">
+      {/* ── Title row ───────────────────────────────────── */}
+      <div className="flex items-center justify-between flex-wrap gap-3">
+        <div className="flex items-center gap-2">
+          <LayoutDashboard className="h-5 w-5 text-foreground" />
+          <h1 className="text-xl font-bold tracking-tight">Dashboard</h1>
+        </div>
+        <div className="flex items-center gap-3">
+          {/* Month picker */}
+          <button className="inline-flex items-center gap-2 rounded-lg border border-border bg-card px-3 py-2 text-sm">
+            <Calendar className="h-4 w-4 text-muted-foreground" />
+            June 2026
+          </button>
+          {/* Export PDF */}
+          <button className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground shadow-sm hover:opacity-90">
+            <Download className="h-4 w-4" />
+            Export Pdf
+          </button>
+        </div>
+      </div>
+
+      {/* ── Filter Report ───────────────────────────────── */}
+      <div className="rounded-xl border border-border bg-card p-4 space-y-3">
+        <h2 className="text-lg font-semibold">Filter Report</h2>
+        <div className="grid gap-3 md:grid-cols-4">
+          {/* Part Number & Name */}
+          <div className="space-y-1.5">
+            <label className="text-sm font-semibold text-muted-foreground">
+              Part Number &amp; Name
+            </label>
+            <div className="flex items-center gap-2 rounded-lg border border-border bg-card px-3 py-2.5">
+              <Search className="h-4 w-4 text-muted-foreground shrink-0" />
+              <input
+                className="flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
+                value={partNumber}
+                onChange={(e) => setPartNumber(e.target.value)}
+              />
+              <ChevronDown className="h-4 w-4 text-muted-foreground shrink-0" />
+            </div>
           </div>
-          <h1 className="text-2xl font-semibold tracking-tight mt-1">
-            Dashboard Checksheet
-          </h1>
-          <p className="text-sm text-muted-foreground mt-1">
-            Real-time status overview of quality and operational equipment checks.
+
+          {/* Parameter */}
+          <div className="space-y-1.5">
+            <label className="text-sm font-semibold text-muted-foreground">
+              Parameter
+            </label>
+            <div className="flex items-center gap-2 rounded-lg border border-border bg-card px-3 py-2.5">
+              <Search className="h-4 w-4 text-muted-foreground shrink-0" />
+              <input
+                className="flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
+                value={parameter}
+                onChange={(e) => setParameter(e.target.value)}
+              />
+              <ChevronDown className="h-4 w-4 text-muted-foreground shrink-0" />
+            </div>
+          </div>
+
+          {/* Time Frame */}
+          <div className="space-y-1.5">
+            <label className="text-sm font-semibold text-muted-foreground">
+              Time Frame
+            </label>
+            <div className="flex items-center gap-2 rounded-lg border border-border bg-card px-3 py-2.5">
+              <Calendar className="h-4 w-4 text-muted-foreground shrink-0" />
+              <span className="flex-1 text-sm">{timeFrame}</span>
+            </div>
+          </div>
+
+          {/* Create Report */}
+          <div className="space-y-1.5">
+            <label className="text-sm font-semibold text-transparent select-none">
+              Action
+            </label>
+            <button className="w-full rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground shadow-sm hover:opacity-90">
+              Create Report
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* ── Summary Cards ───────────────────────────────── */}
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        {/* Total Inspection */}
+        <SummaryCard
+          label="Total Inspection"
+          value={totalInspection}
+          sub="+12.1%"
+          subColor="text-ok"
+          iconBg="bg-destructive/10"
+          icon={<ClipboardList className="h-4.5 w-4.5 text-destructive" />}
+        />
+        {/* Total (OK) */}
+        <SummaryCard
+          label="Total (OK)"
+          value={totalOk}
+          sub="93.4%"
+          subColor="text-muted-foreground"
+          iconBg="bg-ok/10"
+          icon={<CheckCircle2 className="h-4.5 w-4.5 text-ok" />}
+        />
+        {/* Total (Waiting) */}
+        <SummaryCard
+          label="Total (Waiting)"
+          value={totalWaiting}
+          sub="Needs Attention"
+          subColor="text-warn"
+          iconBg="bg-warn/10"
+          icon={<Sparkles className="h-4.5 w-4.5 text-warn" />}
+        />
+        {/* Total (NG) */}
+        <SummaryCard
+          label="Total (NG)"
+          value={totalNg}
+          sub="Critical"
+          subColor="text-destructive"
+          iconBg="bg-destructive/10"
+          icon={<X className="h-4.5 w-4.5 text-destructive" />}
+        />
+      </div>
+
+      {/* ── Bottom Row: Trend + Inspection Status ───────── */}
+      <div className="grid gap-3 lg:grid-cols-[1fr_300px]">
+        {/* Measurement Trend */}
+        <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
+          <div className="flex items-start justify-between mb-4">
+            <div>
+              <h3 className="text-lg font-semibold">Measurement Trend</h3>
+              <p className="text-xs text-muted-foreground">
+                Middle Point Stay Analysis for MUFFLER
+              </p>
+            </div>
+            <span className="rounded-full bg-ok/10 px-3 py-1 text-xs text-ok">
+              Stable
+            </span>
+          </div>
+          <ResponsiveContainer width="100%" height={200}>
+            <LineChart data={TREND_DATA}>
+              <CartesianGrid
+                strokeDasharray="3 3"
+                stroke="var(--border)"
+                vertical={false}
+              />
+              <XAxis
+                dataKey="date"
+                tick={{ fontSize: 11, fill: "var(--muted-foreground)" }}
+                tickLine={false}
+                axisLine={false}
+              />
+              <YAxis
+                domain={[0, 1000]}
+                tick={{ fontSize: 11, fill: "var(--muted-foreground)" }}
+                tickLine={false}
+                axisLine={false}
+                label={{
+                  value: "lux",
+                  angle: -90,
+                  position: "insideLeft",
+                  style: {
+                    fontSize: 12,
+                    fill: "var(--muted-foreground)",
+                  },
+                }}
+              />
+              <Tooltip
+                contentStyle={{
+                  background: "var(--card)",
+                  border: "1px solid var(--border)",
+                  borderRadius: 8,
+                  fontSize: 12,
+                }}
+              />
+              <Line
+                type="monotone"
+                dataKey="value"
+                stroke="var(--primary)"
+                strokeWidth={2}
+                dot={{ r: 4, fill: "var(--primary)", strokeWidth: 2 }}
+                activeDot={{ r: 6 }}
+              />
+            </LineChart>
+          </ResponsiveContainer>
+          <p className="text-center text-xs text-muted-foreground mt-2">
+            Days
           </p>
         </div>
-        <div className="flex items-center gap-2">
-          <Link
-            to="/checksheet-daily"
-            className="inline-flex items-center gap-2 rounded-md bg-secondary px-3 py-2 text-xs font-medium hover:bg-secondary/80 border border-border"
-          >
-            <Clock className="h-3.5 w-3.5 text-primary" />
-            Daily Check
-          </Link>
-          <Link
-            to="/checksheet-approval"
-            className="inline-flex items-center gap-2 rounded-md bg-primary px-3 py-2 text-xs font-medium text-primary-foreground hover:opacity-90 shadow-sm"
-          >
-            <ShieldCheck className="h-3.5 w-3.5" />
-            Approval Center
-          </Link>
+
+        {/* Inspection Status */}
+        <div className="rounded-xl border border-border bg-card p-6 shadow-sm flex flex-col items-center">
+          <div className="text-center mb-3">
+            <h3 className="text-lg font-semibold">Inspection Status</h3>
+            <p className="text-xs text-muted-foreground">
+              Current Period Status Distribution
+            </p>
+          </div>
+          <div className="text-2xl font-semibold mb-5">96%</div>
+          <div className="w-full space-y-4">
+            {/* Status OK */}
+            <ProgressRow
+              label="Status OK"
+              value="96.5%"
+              pct={96.5}
+              barBg="bg-ok/15"
+              barFill="bg-ok"
+            />
+            {/* Status NG */}
+            <ProgressRow
+              label="Status NG"
+              value="3.5%"
+              pct={3.5}
+              barBg="bg-destructive/15"
+              barFill="bg-destructive"
+            />
+            {/* Waiting */}
+            <ProgressRow
+              label="Waiting"
+              value="12.4%"
+              pct={12.4}
+              barBg="bg-warn/15"
+              barFill="bg-warn"
+            />
+          </div>
         </div>
       </div>
+    </div>
+  );
+}
 
-      {/* KPI Cards */}
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <Panel title="Total Checked Items">
-          <div className="flex items-end justify-between">
-            <ValueDisplay label="Items Checked" value={totalChecks} tone="default" />
-            <ClipboardCheck className="h-5 w-5 text-muted-foreground mb-2" />
-          </div>
-        </Panel>
-        <Panel title="Normal Status (OK)">
-          <div className="flex items-end justify-between">
-            <ValueDisplay label="Passed" value={okCount} tone="ok" />
-            <CheckCircle2 className="h-5 w-5 text-ok mb-2" />
-          </div>
-        </Panel>
-        <Panel title="Abnormal Status (NG)">
-          <div className="flex items-end justify-between">
-            <ValueDisplay label="Requires Action" value={ngCount} tone="danger" />
-            <XCircle className="h-5 w-5 text-destructive mb-2" />
-          </div>
-        </Panel>
-        <Panel title="Completion Rate">
-          <div className="flex items-end justify-between">
-            <ValueDisplay label="Target: 95%" value={`${completionRate}%`} tone={completionRate >= 90 ? "ok" : "warn"} />
-            <div className="h-2 w-16 rounded-full bg-secondary overflow-hidden mb-3">
-              <div
-                className={`h-full ${completionRate >= 90 ? "bg-ok" : "bg-warn"}`}
-                style={{ width: `${completionRate}%` }}
-              />
-            </div>
-          </div>
-        </Panel>
-      </div>
+/* ── Sub-components ─────────────────────────────────────── */
 
-      {/* Area Completion Bars */}
-      <div className="grid gap-4 lg:grid-cols-3">
-        {[
-          { area: "Oven Area", total: 18, checked: 18, ng: 1, color: "bg-primary" },
-          { area: "Boiler Area", total: 14, checked: 14, ng: 0, color: "bg-ok" },
-          { area: "CED Area", total: 22, checked: 22, ng: 1, color: "bg-warn" },
-        ].map((a) => {
-          const pct = Math.round((a.checked / a.total) * 100);
-          return (
-            <Panel key={a.area} title={a.area} right={<span className="text-xs font-mono text-muted-foreground">{pct}% Done</span>}>
-              <div className="space-y-2">
-                <div className="flex justify-between text-xs">
-                  <span className="text-muted-foreground">Checks Completed</span>
-                  <span className="font-mono font-medium">{a.checked} / {a.total}</span>
-                </div>
-                <div className="h-2.5 rounded-full bg-secondary overflow-hidden">
-                  <div className={`h-full ${a.color}`} style={{ width: `${pct}%` }} />
-                </div>
-                <div className="flex items-center justify-between text-[11px] pt-1">
-                  <span className="text-muted-foreground">Abnormalities (NG):</span>
-                  <span className={`font-mono font-semibold ${a.ng > 0 ? "text-destructive" : "text-ok"}`}>{a.ng} item(s)</span>
-                </div>
-              </div>
-            </Panel>
-          );
-        })}
-      </div>
-
-      {/* Table Section */}
-      <Panel
-        title="Recent Checksheet Items"
-        right={
-          <div className="flex items-center gap-2">
-            <div className="flex items-center gap-1.5 bg-secondary/60 rounded-lg p-1 text-xs">
-              <Filter className="h-3.5 w-3.5 text-muted-foreground ml-1" />
-              <select
-                value={selectedArea}
-                onChange={(e) => setSelectedArea(e.target.value)}
-                aria-label="Filter Area"
-                className="bg-transparent border-none text-xs text-foreground focus:outline-none cursor-pointer"
-              >
-                <option value="All">All Areas</option>
-                <option value="Oven">Oven</option>
-                <option value="Boiler">Boiler</option>
-                <option value="CED">CED</option>
-              </select>
-            </div>
-            <div className="flex items-center gap-1.5 bg-secondary/60 rounded-lg p-1 text-xs">
-              <select
-                value={selectedStatus}
-                onChange={(e) => setSelectedStatus(e.target.value)}
-                aria-label="Filter Status"
-                className="bg-transparent border-none text-xs text-foreground focus:outline-none cursor-pointer"
-              >
-                <option value="All">All Status</option>
-                <option value="OK">OK Only</option>
-                <option value="NG">NG Only</option>
-              </select>
-            </div>
-          </div>
-        }
-      >
-        <div className="overflow-x-auto -mx-4 -my-4">
-          <table className="w-full text-sm">
-            <thead className="bg-secondary/50 text-[10px] uppercase tracking-widest text-muted-foreground">
-              <tr>
-                <th className="text-left font-semibold px-4 py-2.5">ID</th>
-                <th className="text-left font-semibold px-4 py-2.5">Area</th>
-                <th className="text-left font-semibold px-4 py-2.5">Parameter</th>
-                <th className="text-left font-semibold px-4 py-2.5">Standard</th>
-                <th className="text-left font-semibold px-4 py-2.5">Actual</th>
-                <th className="text-left font-semibold px-4 py-2.5">Status</th>
-                <th className="text-left font-semibold px-4 py-2.5">Shift</th>
-                <th className="text-left font-semibold px-4 py-2.5">Inspector</th>
-                <th className="text-left font-semibold px-4 py-2.5">Time</th>
-                <th className="text-left font-semibold px-4 py-2.5">Note</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-border">
-              {items.map((item) => (
-                <tr key={item.id} className="hover:bg-secondary/40">
-                  <td className="px-4 py-2.5 font-mono text-xs text-muted-foreground">{item.id}</td>
-                  <td className="px-4 py-2.5">
-                    <span className="rounded bg-secondary px-2 py-0.5 text-[10px] font-medium uppercase">
-                      {item.area}
-                    </span>
-                  </td>
-                  <td className="px-4 py-2.5 font-medium">{item.parameter}</td>
-                  <td className="px-4 py-2.5 text-xs text-muted-foreground font-mono">{item.standard} {item.unit}</td>
-                  <td className="px-4 py-2.5 text-xs font-mono font-semibold">{item.actual} {item.unit}</td>
-                  <td className="px-4 py-2.5">
-                    <span
-                      className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-mono font-semibold ${
-                        item.status === "OK"
-                          ? "bg-ok/15 text-ok"
-                          : "bg-destructive/15 text-destructive"
-                      }`}
-                    >
-                      <StatusDot state={item.status === "OK" ? "on" : "alarm"} size={6} />
-                      {item.status}
-                    </span>
-                  </td>
-                  <td className="px-4 py-2.5 text-xs text-muted-foreground">{item.shift}</td>
-                  <td className="px-4 py-2.5 text-xs">{item.checkedBy}</td>
-                  <td className="px-4 py-2.5 text-xs font-mono text-muted-foreground">{item.time}</td>
-                  <td className="px-4 py-2.5 text-xs text-muted-foreground italic">
-                    {item.note || "—"}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+function SummaryCard({
+  label,
+  value,
+  sub,
+  subColor,
+  iconBg,
+  icon,
+}: {
+  label: string;
+  value: number;
+  sub: string;
+  subColor: string;
+  iconBg: string;
+  icon: React.ReactNode;
+}) {
+  return (
+    <div className="rounded-lg bg-card border border-border p-3 shadow-sm space-y-2">
+      <div className="flex items-center justify-between">
+        <span className="text-sm text-muted-foreground">{label}</span>
+        <div
+          className={`h-8 w-8 rounded-full flex items-center justify-center ${iconBg}`}
+        >
+          {icon}
         </div>
-      </Panel>
+      </div>
+      <div>
+        <div className="text-2xl font-semibold">{value}</div>
+        <div className={`text-xs ${subColor}`}>{sub}</div>
+      </div>
+    </div>
+  );
+}
+
+function ProgressRow({
+  label,
+  value,
+  pct,
+  barBg,
+  barFill,
+}: {
+  label: string;
+  value: string;
+  pct: number;
+  barBg: string;
+  barFill: string;
+}) {
+  return (
+    <div className="space-y-1.5">
+      <div className="flex items-center justify-between text-sm">
+        <span className="text-muted-foreground text-xs">{label}</span>
+        <span className="font-semibold text-sm">{value}</span>
+      </div>
+      <div className={`h-1.5 rounded-full ${barBg} overflow-hidden`}>
+        <div
+          className={`h-full rounded-full ${barFill}`}
+          style={{ width: `${Math.min(pct, 100)}%` }}
+        />
+      </div>
     </div>
   );
 }
