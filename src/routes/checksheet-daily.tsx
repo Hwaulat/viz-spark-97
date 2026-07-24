@@ -1,276 +1,782 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Panel, StatusDot } from "@/components/panel";
-import { DAILY_PROGRESS_DATA, DailyProgressRecord, CHECKSHEET_ITEMS } from "@/lib/mock-data";
-import { Calendar, CheckCircle2, Clock, AlertTriangle, Send, UserCheck, Plus, Check } from "lucide-react";
+import {
+  Eye,
+  Pencil,
+  Search,
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  CheckCircle2,
+  X,
+  Sparkles,
+  Plus,
+  ArrowLeft,
+  ListChecks,
+} from "lucide-react";
 import { useState } from "react";
 
 export const Route = createFileRoute("/checksheet-daily")({
   head: () => ({
     meta: [
-      { title: "Daily Progress Check — Utility Monitoring" },
-      { name: "description", content: "Daily checksheet data entry and progress tracking per shift and area." },
+      { title: "Daily Progress — Utility Monitoring" },
+      {
+        name: "description",
+        content: "Daily checksheet data entry and progress tracking.",
+      },
     ],
   }),
   component: DailyProgressCheck,
 });
 
+/* ── Types ────────────────────────────────────────────────── */
+interface InspectionRow {
+  id: string;
+  inspectionDate: string;
+  customer: string;
+  docNumber: string;
+  areaGedung: string;
+  partNumber: string;
+  partName: string;
+  type: string;
+  inspectedBy: string;
+  checked: "ok" | "ng" | "waiting";
+}
+
+interface ChecksheetRow {
+  itemCheck: string;
+  measurement: string;
+  minTol: string;
+  maxTol: string;
+  standard: string;
+  start: string;
+  middle: string;
+  end: string;
+}
+
+interface ChecksheetSection {
+  title: string;
+  rows: ChecksheetRow[];
+}
+
+/* ── Mock Data ────────────────────────────────────────────── */
+const INSPECTIONS: InspectionRow[] = Array.from({ length: 10 }, (_, i) => ({
+  id: `DOC-${String(i + 1).padStart(6, "0")}`,
+  inspectionDate: "24/06/2026",
+  customer: "Customer Code - Name",
+  docNumber: `DOC-${String(i + 1).padStart(6, "0")}`,
+  areaGedung: `Gedung ${i < 4 ? "1" : i < 7 ? "2" : "3"}`,
+  partNumber: "Part Number",
+  partName: "Part Name",
+  type: "Type A",
+  inspectedBy: "Hasan",
+  checked:
+    i < 3 ? "ok" : i < 5 ? "ng" : ("waiting" as "ok" | "ng" | "waiting"),
+}));
+
+const CHECKSHEET_SECTIONS: ChecksheetSection[] = [
+  {
+    title: "A. DIMENSI",
+    rows: [
+      {
+        itemCheck: "Dimensi Produk Secara Umum",
+        measurement: "Bore Gaug",
+        minTol: "-0.007",
+        maxTol: "0.007",
+        standard: "Masuk Inspection Jig dan Skala Sesuai Dengan WI",
+        start: "0.002",
+        middle: "0.002",
+        end: "0.002",
+      },
+      {
+        itemCheck: "Dimensi Produk Secara Umum",
+        measurement: "Visual",
+        minTol: "-",
+        maxTol: "-",
+        standard: "Kedalaman 8 ±0.3",
+        start: "OK",
+        middle: "NG",
+        end: "NG",
+      },
+    ],
+  },
+  {
+    title: "B. WELDING QUALITY",
+    rows: [
+      {
+        itemCheck: "Visual Welding",
+        measurement: "Visual",
+        minTol: "-",
+        maxTol: "-",
+        standard: "Standard Visual Welding",
+        start: "OK",
+        middle: "OK",
+        end: "OK",
+      },
+      {
+        itemCheck: "Panjang Welding",
+        measurement: "Steel Ruler",
+        minTol: "-0.007",
+        maxTol: "0.007",
+        standard: "Kedalaman 8 ±0.3",
+        start: "0.002",
+        middle: "0.002",
+        end: "0.002",
+      },
+      {
+        itemCheck: "Visual Welding Secara Umum",
+        measurement: "Visual",
+        minTol: "-",
+        maxTol: "-",
+        standard: "Standard Visual Welding",
+        start: "OK",
+        middle: "OK",
+        end: "OK",
+      },
+    ],
+  },
+  {
+    title: "C. KONDISI PERMUKAAN",
+    rows: [
+      {
+        itemCheck: "Kondisi Permukaan Secara Umum",
+        measurement: "Visual",
+        minTol: "-",
+        maxTol: "-",
+        standard:
+          "Tidak ada Demple, Scratch, Bergelombang atau cacat permukaan lainnya",
+        start: "OK",
+        middle: "OK",
+        end: "OK",
+      },
+    ],
+  },
+  {
+    title: "D. FUNGSI",
+    rows: [
+      {
+        itemCheck: "Semua Ulir",
+        measurement: "Bolt",
+        minTol: "-",
+        maxTol: "-",
+        standard: "Tidak Seret, Tidak Dol",
+        start: "OK",
+        middle: "OK",
+        end: "OK",
+      },
+      {
+        itemCheck: "Simulasi Stay Fuel Tank",
+        measurement: "Hand JIG",
+        minTol: "-",
+        maxTol: "-",
+        standard: "Center, Tidak Mata Gareng & Assy Buat Tidak Seret",
+        start: "OK",
+        middle: "OK",
+        end: "OK",
+      },
+    ],
+  },
+];
+
+/* ── Component ────────────────────────────────────────────── */
 function DailyProgressCheck() {
-  const [selectedDate, setSelectedDate] = useState("2026-07-21");
-  const [selectedShift, setSelectedShift] = useState("Shift 1");
-  const [selectedArea, setSelectedArea] = useState("Oven Area");
-  const [submitted, setSubmitted] = useState(false);
+  const [view, setView] = useState<"list" | "create" | "detail">("list");
+  const [selectedDoc, setSelectedDoc] = useState<InspectionRow | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [searchQuery, setSearchQuery] = useState("");
 
-  // Local state for interactive form inputs
-  const [checks, setChecks] = useState([
-    { id: 1, param: "Zone 1 Burner Pressure", std: "2.0 - 2.5 bar", actual: "2.2", status: "OK", pic: "Budi Santoso" },
-    { id: 2, param: "Zone 2 Temp Deviation", std: "185 - 195 °C", actual: "191", status: "OK", pic: "Budi Santoso" },
-    { id: 3, param: "Zone 3 Temp Deviation", std: "178 - 182 °C", actual: "176", status: "NG", pic: "Budi Santoso", note: "Valve adjusted" },
-    { id: 4, param: "Exhaust Motor Vibration", std: "< 2.5 mm/s", actual: "1.1", status: "OK", pic: "Ahmad Rizky" },
-    { id: "5", param: "Fresh Air Damper Position", std: "45% - 50%", actual: "48%", status: "OK", pic: "Ahmad Rizky" },
-    { id: 6, param: "Safety Interlock Check", std: "Functional", actual: "Functional", status: "OK", pic: "Ahmad Rizky" },
-  ]);
+  const totalPages = 4;
 
-  const handleActualChange = (id: number | string, val: string) => {
-    setChecks((prev) =>
-      prev.map((c) => (c.id === id ? { ...c, actual: val } : c))
+  if (view === "create") {
+    return <CreateInspectionView onBack={() => setView("list")} />;
+  }
+
+  if (view === "detail" && selectedDoc) {
+    return (
+      <DetailInspectionView
+        doc={selectedDoc}
+        onBack={() => {
+          setView("list");
+          setSelectedDoc(null);
+        }}
+      />
     );
-  };
-
-  const handleStatusToggle = (id: number | string) => {
-    setChecks((prev) =>
-      prev.map((c) =>
-        c.id === id ? { ...c, status: c.status === "OK" ? "NG" : "OK" } : c
-      )
-    );
-  };
-
-  const completedCount = checks.filter((c) => c.actual.trim() !== "").length;
-  const progressPct = Math.round((completedCount / checks.length) * 100);
-  const ngCount = checks.filter((c) => c.status === "NG").length;
+  }
 
   return (
-    <div className="p-6 space-y-6">
-      {/* Top Banner */}
-      <div className="flex items-end justify-between flex-wrap gap-3">
-        <div>
-          <div className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">
-            Checksheet System
-          </div>
-          <h1 className="text-2xl font-semibold tracking-tight mt-1">
-            Daily Progress Check
-          </h1>
-          <p className="text-sm text-muted-foreground mt-1">
-            Daily parameter inspection form and real-time shift checklist tracking.
-          </p>
+    <div className="p-6 space-y-4">
+      {/* Header */}
+      <div className="flex items-center justify-between flex-wrap gap-3">
+        <div className="flex items-center gap-2">
+          <ListChecks className="h-5 w-5 text-foreground" />
+          <h1 className="text-xl font-bold tracking-tight">Daily Progress</h1>
         </div>
+      </div>
 
-        {/* Filters */}
-        <div className="flex items-center gap-2 flex-wrap">
-          <div className="flex items-center gap-2 bg-card border border-border px-3 py-1.5 rounded-md text-xs">
-            <Calendar className="h-3.5 w-3.5 text-muted-foreground" />
+      {/* Search & Filters */}
+      <div className="flex items-center gap-3 flex-wrap">
+        <div className="flex items-center gap-2 flex-1 min-w-[300px] rounded-lg border border-border bg-card px-3 py-2.5">
+          <Search className="h-4 w-4 text-muted-foreground shrink-0" />
+          <input
+            className="flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
+            placeholder="Search by doc. no, part number, name, type & inspection by"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
+        <FilterButton label="All Customer" />
+        <FilterButton label="All Part Number - Name" />
+        <FilterButton label="All Gedung" />
+        <button
+          onClick={() => setView("create")}
+          className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground shadow-sm hover:opacity-90"
+        >
+          <Plus className="h-4 w-4" />
+          Create New Inspection
+        </button>
+      </div>
+
+      {/* Table */}
+      <div className="rounded-xl border border-border bg-card shadow-sm overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead className="bg-secondary/50 text-[10px] uppercase tracking-widest text-muted-foreground">
+              <tr>
+                <th className="text-left font-semibold px-4 py-3">Action</th>
+                <th className="text-left font-semibold px-4 py-3">
+                  Inspection Date ▾
+                </th>
+                <th className="text-left font-semibold px-4 py-3">
+                  Customer ▾
+                </th>
+                <th className="text-left font-semibold px-4 py-3">
+                  Doc. Number ▾
+                </th>
+                <th className="text-left font-semibold px-4 py-3">
+                  Area Gedung ▾
+                </th>
+                <th className="text-left font-semibold px-4 py-3">
+                  Part Number ▾
+                </th>
+                <th className="text-left font-semibold px-4 py-3">
+                  Part Name ▾
+                </th>
+                <th className="text-left font-semibold px-4 py-3">Type ▾</th>
+                <th className="text-left font-semibold px-4 py-3">
+                  Inspected By ▾
+                </th>
+                <th className="text-center font-semibold px-4 py-3">
+                  Checked ▾
+                </th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-border">
+              {INSPECTIONS.map((row) => (
+                <tr key={row.id} className="hover:bg-secondary/30">
+                  <td className="px-4 py-3">
+                    <div className="flex items-center gap-1.5">
+                      <button
+                        onClick={() => {
+                          setSelectedDoc(row);
+                          setView("detail");
+                        }}
+                        className="rounded p-1.5 hover:bg-secondary text-muted-foreground"
+                        title="View"
+                      >
+                        <Eye className="h-4 w-4" />
+                      </button>
+                      <button
+                        className="rounded p-1.5 hover:bg-secondary text-muted-foreground"
+                        title="Edit"
+                      >
+                        <Pencil className="h-4 w-4" />
+                      </button>
+                    </div>
+                  </td>
+                  <td className="px-4 py-3 text-sm">{row.inspectionDate}</td>
+                  <td className="px-4 py-3 text-sm">{row.customer}</td>
+                  <td className="px-4 py-3 text-sm font-medium">
+                    {row.docNumber}
+                  </td>
+                  <td className="px-4 py-3 text-sm">{row.areaGedung}</td>
+                  <td className="px-4 py-3 text-sm">{row.partNumber}</td>
+                  <td className="px-4 py-3 text-sm">{row.partName}</td>
+                  <td className="px-4 py-3 text-sm">{row.type}</td>
+                  <td className="px-4 py-3 text-sm">{row.inspectedBy}</td>
+                  <td className="px-4 py-3 text-center">
+                    <CheckedIcon status={row.checked} />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        {/* Pagination */}
+        <div className="flex items-center justify-between px-4 py-3 border-t border-border text-sm text-muted-foreground">
+          <div className="flex items-center gap-2">
+            <span>Rows per page:</span>
             <input
-              type="date"
-              value={selectedDate}
-              onChange={(e) => setSelectedDate(e.target.value)}
-              className="bg-transparent text-xs text-foreground focus:outline-none"
+              className="w-12 rounded border border-border bg-card px-2 py-1 text-center text-xs"
+              defaultValue={10}
             />
+            <span>1–10 of 40</span>
           </div>
-          <select
-            value={selectedShift}
-            onChange={(e) => setSelectedShift(e.target.value)}
-            className="bg-card border border-border px-3 py-2 rounded-md text-xs font-medium focus:outline-none"
-          >
-            <option value="Shift 1">Shift 1 (07:00 - 15:00)</option>
-            <option value="Shift 2">Shift 2 (15:00 - 23:00)</option>
-            <option value="Shift 3">Shift 3 (23:00 - 07:00)</option>
-          </select>
-          <select
-            value={selectedArea}
-            onChange={(e) => setSelectedArea(e.target.value)}
-            className="bg-card border border-border px-3 py-2 rounded-md text-xs font-medium focus:outline-none"
-          >
-            <option value="Oven Area">Oven Area</option>
-            <option value="Boiler Area">Boiler Area</option>
-            <option value="CED Area">CED Area</option>
-          </select>
+          <div className="flex items-center gap-1">
+            <button className="rounded p-1 hover:bg-secondary">
+              <ChevronLeft className="h-4 w-4" />
+            </button>
+            {[1, 2, 3, 4].map((p) => (
+              <button
+                key={p}
+                onClick={() => setCurrentPage(p)}
+                className={`h-8 w-8 rounded text-sm font-medium ${
+                  currentPage === p
+                    ? "bg-primary text-primary-foreground"
+                    : "hover:bg-secondary"
+                }`}
+              >
+                {p}
+              </button>
+            ))}
+            <button className="rounded p-1 hover:bg-secondary">
+              <ChevronRight className="h-4 w-4" />
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ── Create New Inspection View ───────────────────────────── */
+function CreateInspectionView({ onBack }: { onBack: () => void }) {
+  const [formData, setFormData] = useState({
+    areaGedung: "Gedung A",
+    partNumber: "Part Number",
+    partName: "Part Name A",
+    type: "Type A",
+    shift: "Shift 1 (07:00 s/d 16:00)",
+    customerName: "CST-001 - Ragdalion",
+    image: "Document.pdf",
+  });
+
+  const [checkRows, setCheckRows] = useState(
+    CHECKSHEET_SECTIONS.map((s) => ({
+      ...s,
+      rows: s.rows.map((r) => ({ ...r, start: "", middle: "" })),
+    }))
+  );
+
+  return (
+    <div className="p-6 space-y-5">
+      {/* Header */}
+      <div className="flex items-center justify-between flex-wrap gap-3">
+        <div className="flex items-center gap-2">
+          <ListChecks className="h-5 w-5 text-foreground" />
+          <h1 className="text-xl font-bold tracking-tight">
+            Daily Progress - Create New Inspection
+          </h1>
+        </div>
+        <button className="inline-flex items-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-sm hover:opacity-90">
+          Submit
+        </button>
+      </div>
+
+      {/* Form Fields */}
+      <div className="rounded-xl border border-border bg-card p-5 space-y-4">
+        <div className="grid gap-4 md:grid-cols-4">
+          <FormField label="Area Gedung" required>
+            <select className="w-full rounded-lg border border-border bg-card px-3 py-2.5 text-sm">
+              <option>Gedung A</option>
+              <option>Gedung B</option>
+            </select>
+          </FormField>
+          <FormField label="Part Number" required>
+            <select className="w-full rounded-lg border border-border bg-card px-3 py-2.5 text-sm">
+              <option>Part Number</option>
+            </select>
+          </FormField>
+          <FormField label="Part Name">
+            <div className="rounded-lg bg-muted/50 border border-border px-3 py-2.5 text-sm">
+              Part Name A
+            </div>
+          </FormField>
+          <FormField label="Type">
+            <div className="rounded-lg bg-muted/50 border border-border px-3 py-2.5 text-sm">
+              Type A
+            </div>
+          </FormField>
+        </div>
+        <div className="grid gap-4 md:grid-cols-3">
+          <FormField label="Shift">
+            <div className="rounded-lg bg-primary/10 border border-primary/20 px-3 py-2.5 text-sm font-medium">
+              Shift 1 (07:00 s/d 16:00)
+            </div>
+          </FormField>
+          <FormField label="Customer Name" required>
+            <select className="w-full rounded-lg border border-border bg-card px-3 py-2.5 text-sm">
+              <option>CST-001 - Ragdalion</option>
+            </select>
+          </FormField>
+          <FormField label="Image" required>
+            <div className="flex items-center justify-between rounded-lg border border-border bg-card px-3 py-2.5 text-sm">
+              <span>Document.pdf</span>
+              <div className="flex items-center gap-2">
+                <button className="text-muted-foreground hover:text-foreground">
+                  <Eye className="h-4 w-4" />
+                </button>
+                <button className="text-destructive hover:opacity-80">
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
+            </div>
+            <span className="text-xs text-muted-foreground">Format pdf</span>
+          </FormField>
         </div>
       </div>
 
-      {/* Progress Strip */}
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <Panel title="Shift Progress">
-          <div className="flex items-baseline justify-between">
-            <span className="text-3xl font-semibold font-mono tabular-nums text-foreground">{progressPct}%</span>
-            <span className="text-xs text-muted-foreground font-mono">{completedCount}/{checks.length} Checked</span>
+      {/* Checksheet Table */}
+      <div>
+        <h2 className="text-lg font-semibold mb-3">Checksheet</h2>
+        <div className="rounded-xl border border-border bg-card shadow-sm overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead className="bg-secondary/50 text-[10px] uppercase tracking-widest text-muted-foreground">
+                <tr>
+                  <th className="text-left font-semibold px-4 py-3 w-12">
+                    No.
+                  </th>
+                  <th className="text-left font-semibold px-4 py-3">
+                    Item Check
+                  </th>
+                  <th className="text-left font-semibold px-4 py-3">
+                    Measurement/Method
+                  </th>
+                  <th className="text-left font-semibold px-4 py-3">
+                    Min Tolerance
+                  </th>
+                  <th className="text-left font-semibold px-4 py-3">
+                    Max Tolerance
+                  </th>
+                  <th className="text-left font-semibold px-4 py-3">
+                    Standard
+                  </th>
+                  <th className="text-center font-semibold px-4 py-3">
+                    Start
+                  </th>
+                  <th className="text-center font-semibold px-4 py-3">
+                    Middle
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-border">
+                {CHECKSHEET_SECTIONS.map((section) => (
+                  <>
+                    <tr key={section.title}>
+                      <td
+                        colSpan={8}
+                        className="px-4 py-2.5 bg-secondary/30 font-semibold text-sm"
+                      >
+                        {section.title}
+                      </td>
+                    </tr>
+                    {section.rows.map((row, ri) => (
+                      <tr
+                        key={`${section.title}-${ri}`}
+                        className="hover:bg-secondary/20"
+                      >
+                        <td className="px-4 py-3 text-center text-muted-foreground">
+                          {ri + 1}
+                        </td>
+                        <td className="px-4 py-3">{row.itemCheck}</td>
+                        <td className="px-4 py-3 text-muted-foreground">
+                          {row.measurement}
+                        </td>
+                        <td className="px-4 py-3 text-center text-muted-foreground">
+                          {row.minTol}
+                        </td>
+                        <td className="px-4 py-3 text-center text-muted-foreground">
+                          {row.maxTol}
+                        </td>
+                        <td className="px-4 py-3 text-sm max-w-[200px]">
+                          {row.standard}
+                        </td>
+                        <td className="px-4 py-3 text-center">
+                          <ChecksheetInput value={row.start} />
+                        </td>
+                        <td className="px-4 py-3 text-center">
+                          <ChecksheetInput value={row.middle} />
+                        </td>
+                      </tr>
+                    ))}
+                  </>
+                ))}
+              </tbody>
+            </table>
           </div>
-          <div className="mt-3 h-2 rounded-full bg-secondary overflow-hidden">
-            <div className="h-full bg-primary transition-all duration-300" style={{ width: `${progressPct}%` }} />
-          </div>
-        </Panel>
-
-        <Panel title="Abnormal Items (NG)">
-          <div className="flex items-baseline justify-between">
-            <span className={`text-3xl font-semibold font-mono tabular-nums ${ngCount > 0 ? "text-warn" : "text-ok"}`}>{ngCount}</span>
-            <AlertTriangle className={`h-5 w-5 ${ngCount > 0 ? "text-warn" : "text-muted-foreground"}`} />
-          </div>
-          <p className="mt-2 text-xs text-muted-foreground">{ngCount > 0 ? "Requires action / notes" : "All items in spec"}</p>
-        </Panel>
-
-        <Panel title="Inspector PIC">
-          <div className="flex items-center gap-3">
-            <div className="grid h-8 w-8 place-items-center rounded-full bg-primary/10 text-primary font-semibold text-xs">
-              BS
-            </div>
-            <div>
-              <div className="text-sm font-semibold">Budi Santoso</div>
-              <div className="text-[11px] text-muted-foreground">Senior Operator</div>
-            </div>
-          </div>
-        </Panel>
-
-        <Panel title="Form Status">
-          <div className="flex items-center justify-between">
-            <div>
-              <div className="text-xs font-semibold">
-                {submitted ? "Submitted for Review" : "Draft (In Progress)"}
-              </div>
-              <div className="text-[11px] text-muted-foreground mt-0.5">
-                {submitted ? "Sent to Hadi Kusuma" : "Save or submit when done"}
-              </div>
-            </div>
-            <StatusDot state={submitted ? "on" : "warn"} size={10} pulse={!submitted} />
-          </div>
-        </Panel>
+        </div>
       </div>
 
-      {/* Active Form */}
-      <Panel
-        title={`Checksheet Form — ${selectedArea} (${selectedShift})`}
-        subtitle={`Date: ${selectedDate} · Fill actual values & set status`}
-        right={
-          <button
-            onClick={() => setSubmitted(true)}
-            disabled={submitted}
-            className="inline-flex items-center gap-1.5 rounded-md bg-primary px-3.5 py-1.5 text-xs font-medium text-primary-foreground hover:opacity-90 disabled:opacity-50 shadow-sm"
-          >
-            {submitted ? (
-              <>
-                <Check className="h-3.5 w-3.5" /> Submitted
-              </>
-            ) : (
-              <>
-                <Send className="h-3.5 w-3.5" /> Submit to Approval
-              </>
-            )}
-          </button>
-        }
+      <div className="flex justify-start">
+        <button
+          onClick={onBack}
+          className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          Back to List
+        </button>
+      </div>
+    </div>
+  );
+}
+
+/* ── Detail Inspection View ───────────────────────────────── */
+function DetailInspectionView({
+  doc,
+  onBack,
+}: {
+  doc: InspectionRow;
+  onBack: () => void;
+}) {
+  return (
+    <div className="p-6 space-y-5">
+      {/* Header */}
+      <div className="flex items-center gap-3">
+        <button
+          onClick={onBack}
+          className="inline-flex items-center gap-1 rounded-lg border border-border bg-card px-3 py-2 text-sm hover:bg-secondary"
+        >
+          <ChevronLeft className="h-4 w-4" />
+          Back
+        </button>
+        <div className="flex items-center gap-2">
+          <Eye className="h-5 w-5 text-foreground" />
+          <h1 className="text-xl font-bold tracking-tight">
+            Details Inspection
+          </h1>
+        </div>
+      </div>
+
+      {/* Status Strip */}
+      <div className="flex items-center justify-center gap-16 py-4">
+        <div className="flex flex-col items-center gap-1">
+          <CheckCircle2 className="h-10 w-10 text-ok" />
+          <span className="text-sm font-medium">Inspection</span>
+          <span className="text-xs text-muted-foreground">
+            by Andre Waulat |24/06/2026
+          </span>
+        </div>
+        <div className="h-px w-24 bg-border" />
+        <div className="flex flex-col items-center gap-1">
+          <Sparkles className="h-10 w-10 text-warn" />
+          <span className="text-sm font-medium">Checked</span>
+          <span className="text-xs text-muted-foreground">-</span>
+        </div>
+      </div>
+
+      {/* Info Grid */}
+      <div className="rounded-xl border border-border bg-card p-5">
+        <div className="grid gap-4 md:grid-cols-4">
+          <InfoField label="Inspection Date" value="23/06/2026" />
+          <InfoField label="Customer Name" value="CST-001 - Ragdalion" />
+          <InfoField label="Doc. Number" value={doc.docNumber} />
+          <InfoField label="Area Gedung" value={doc.areaGedung} />
+        </div>
+        <div className="grid gap-4 md:grid-cols-4 mt-4">
+          <InfoField label="Part Number" value={doc.partNumber} />
+          <InfoField label="Part Name" value="Part Name A" />
+          <InfoField label="Type" value={doc.type} />
+          <InfoField label="Shift" value="Shift 1 (07:00 s/d 16:00)" />
+        </div>
+        <div className="grid gap-4 md:grid-cols-4 mt-4">
+          <div>
+            <span className="text-xs text-muted-foreground">Image</span>
+            <div>
+              <a
+                href="#"
+                className="text-sm font-medium text-primary underline"
+              >
+                Document.png
+              </a>
+            </div>
+          </div>
+          <div>
+            <span className="text-xs text-muted-foreground">
+              Reason for Rejection
+            </span>
+            <div className="text-sm font-medium">-</div>
+          </div>
+        </div>
+      </div>
+
+      {/* Checksheet Table */}
+      <div>
+        <h2 className="text-lg font-semibold mb-3">Checksheet</h2>
+        <div className="rounded-xl border border-border bg-card shadow-sm overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead className="bg-secondary/50 text-[10px] uppercase tracking-widest text-muted-foreground">
+                <tr>
+                  <th className="text-left font-semibold px-4 py-3 w-12">
+                    No.
+                  </th>
+                  <th className="text-left font-semibold px-4 py-3">
+                    Item Check
+                  </th>
+                  <th className="text-left font-semibold px-4 py-3">
+                    Measurement/Method
+                  </th>
+                  <th className="text-left font-semibold px-4 py-3">
+                    Min Tolerance
+                  </th>
+                  <th className="text-left font-semibold px-4 py-3">
+                    Max Tolerance
+                  </th>
+                  <th className="text-left font-semibold px-4 py-3">
+                    Standard
+                  </th>
+                  <th className="text-center font-semibold px-4 py-3">
+                    Start
+                  </th>
+                  <th className="text-center font-semibold px-4 py-3">
+                    Middle
+                  </th>
+                  <th className="text-center font-semibold px-4 py-3">End</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-border">
+                {CHECKSHEET_SECTIONS.map((section) => (
+                  <>
+                    <tr key={section.title}>
+                      <td
+                        colSpan={9}
+                        className="px-4 py-2.5 bg-secondary/30 font-semibold text-sm"
+                      >
+                        {section.title}
+                      </td>
+                    </tr>
+                    {section.rows.map((row, ri) => (
+                      <tr
+                        key={`${section.title}-${ri}`}
+                        className="hover:bg-secondary/20"
+                      >
+                        <td className="px-4 py-3 text-center text-muted-foreground">
+                          {ri + 1}
+                        </td>
+                        <td className="px-4 py-3">{row.itemCheck}</td>
+                        <td className="px-4 py-3 text-muted-foreground">
+                          {row.measurement}
+                        </td>
+                        <td className="px-4 py-3 text-center text-muted-foreground">
+                          {row.minTol}
+                        </td>
+                        <td className="px-4 py-3 text-center text-muted-foreground">
+                          {row.maxTol}
+                        </td>
+                        <td className="px-4 py-3 text-sm max-w-[200px]">
+                          {row.standard}
+                        </td>
+                        <td className="px-4 py-3 text-center">
+                          <ResultBadge value={row.start} />
+                        </td>
+                        <td className="px-4 py-3 text-center">
+                          <ResultBadge value={row.middle} />
+                        </td>
+                        <td className="px-4 py-3 text-center">
+                          <ResultBadge value={row.end} />
+                        </td>
+                      </tr>
+                    ))}
+                  </>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ── Sub-components ───────────────────────────────────────── */
+function FilterButton({ label }: { label: string }) {
+  return (
+    <button className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-card px-3 py-2.5 text-sm whitespace-nowrap">
+      {label}
+      <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" />
+    </button>
+  );
+}
+
+function CheckedIcon({ status }: { status: "ok" | "ng" | "waiting" }) {
+  if (status === "ok") return <CheckCircle2 className="h-5 w-5 text-ok mx-auto" />;
+  if (status === "ng") return <X className="h-5 w-5 text-destructive mx-auto" />;
+  return <Sparkles className="h-5 w-5 text-warn mx-auto" />;
+}
+
+function FormField({
+  label,
+  required,
+  children,
+}: {
+  label: string;
+  required?: boolean;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="space-y-1.5">
+      <label className="text-sm font-semibold text-muted-foreground">
+        {label}
+        {required && <span className="text-destructive ml-0.5">*</span>}
+      </label>
+      {children}
+    </div>
+  );
+}
+
+function ChecksheetInput({ value }: { value: string }) {
+  const isOkNg = value === "OK" || value === "NG";
+  if (isOkNg) {
+    return (
+      <select
+        defaultValue={value}
+        className="rounded border border-border bg-card px-2 py-1 text-xs text-center"
       >
-        <div className="overflow-x-auto -mx-4 -my-4">
-          <table className="w-full text-sm">
-            <thead className="bg-secondary/50 text-[10px] uppercase tracking-widest text-muted-foreground">
-              <tr>
-                <th className="text-left font-semibold px-4 py-2.5">No</th>
-                <th className="text-left font-semibold px-4 py-2.5">Inspection Parameter</th>
-                <th className="text-left font-semibold px-4 py-2.5">Standard Range</th>
-                <th className="text-left font-semibold px-4 py-2.5">Actual Value</th>
-                <th className="text-left font-semibold px-4 py-2.5">Status</th>
-                <th className="text-left font-semibold px-4 py-2.5">PIC</th>
-                <th className="text-left font-semibold px-4 py-2.5">Action / Note</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-border">
-              {checks.map((c, idx) => (
-                <tr key={c.id} className="hover:bg-secondary/40">
-                  <td className="px-4 py-2.5 font-mono text-xs text-muted-foreground">{idx + 1}</td>
-                  <td className="px-4 py-2.5 font-medium">{c.param}</td>
-                  <td className="px-4 py-2.5 text-xs font-mono text-muted-foreground">{c.std}</td>
-                  <td className="px-4 py-2.5">
-                    <input
-                      type="text"
-                      value={c.actual}
-                      onChange={(e) => handleActualChange(c.id, e.target.value)}
-                      className="w-28 rounded border border-border bg-background px-2 py-1 text-xs font-mono focus:border-primary focus:outline-none"
-                    />
-                  </td>
-                  <td className="px-4 py-2.5">
-                    <button
-                      onClick={() => handleStatusToggle(c.id)}
-                      className={`inline-flex items-center gap-1 px-2.5 py-1 rounded text-xs font-mono font-semibold transition ${
-                        c.status === "OK"
-                          ? "bg-ok/15 text-ok hover:bg-ok/25"
-                          : "bg-destructive/15 text-destructive hover:bg-destructive/25"
-                      }`}
-                    >
-                      {c.status === "OK" ? <CheckCircle2 className="h-3.5 w-3.5" /> : <AlertTriangle className="h-3.5 w-3.5" />}
-                      {c.status}
-                    </button>
-                  </td>
-                  <td className="px-4 py-2.5 text-xs text-muted-foreground">{c.pic}</td>
-                  <td className="px-4 py-2.5">
-                    <input
-                      type="text"
-                      placeholder="Add note if NG..."
-                      defaultValue={c.note || ""}
-                      className="w-full max-w-xs rounded border border-border/60 bg-transparent px-2 py-1 text-xs focus:border-primary focus:outline-none"
-                    />
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </Panel>
+        <option>OK</option>
+        <option>NG</option>
+      </select>
+    );
+  }
+  return (
+    <input
+      defaultValue={value}
+      className="w-16 rounded border border-border bg-card px-2 py-1 text-xs text-center font-mono"
+    />
+  );
+}
 
-      {/* History Log */}
-      <Panel title="Recent Daily Progress Logs" right={<span className="text-[10px] font-mono text-muted-foreground">{DAILY_PROGRESS_DATA.length} ENTRIES</span>}>
-        <div className="overflow-x-auto -mx-4 -my-4">
-          <table className="w-full text-sm">
-            <thead className="bg-secondary/50 text-[10px] uppercase tracking-widest text-muted-foreground">
-              <tr>
-                <th className="text-left font-semibold px-4 py-2.5">Record ID</th>
-                <th className="text-left font-semibold px-4 py-2.5">Date</th>
-                <th className="text-left font-semibold px-4 py-2.5">Shift</th>
-                <th className="text-left font-semibold px-4 py-2.5">Area</th>
-                <th className="text-left font-semibold px-4 py-2.5">Checks Done</th>
-                <th className="text-left font-semibold px-4 py-2.5">NG</th>
-                <th className="text-left font-semibold px-4 py-2.5">Supervisor</th>
-                <th className="text-left font-semibold px-4 py-2.5">Status</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-border">
-              {DAILY_PROGRESS_DATA.map((dp) => (
-                <tr key={dp.id} className="hover:bg-secondary/40">
-                  <td className="px-4 py-2.5 font-mono text-xs text-muted-foreground">{dp.id}</td>
-                  <td className="px-4 py-2.5 text-xs font-mono">{dp.date}</td>
-                  <td className="px-4 py-2.5 text-xs">{dp.shift}</td>
-                  <td className="px-4 py-2.5"><span className="rounded bg-secondary px-2 py-0.5 text-[10px] font-medium">{dp.area}</span></td>
-                  <td className="px-4 py-2.5 text-xs font-mono">{dp.completedChecks}/{dp.totalChecks}</td>
-                  <td className="px-4 py-2.5 text-xs font-mono font-semibold">{dp.ngCount > 0 ? <span className="text-warn">{dp.ngCount}</span> : "0"}</td>
-                  <td className="px-4 py-2.5 text-xs text-muted-foreground">{dp.supervisor}</td>
-                  <td className="px-4 py-2.5">
-                    <span
-                      className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[10px] font-mono ${
-                        dp.status === "Completed"
-                          ? "bg-ok/15 text-ok"
-                          : dp.status === "Pending Review"
-                          ? "bg-warn/15 text-warn"
-                          : "bg-secondary text-muted-foreground"
-                      }`}
-                    >
-                      <span
-                        className={`h-1.5 w-1.5 rounded-full ${
-                          dp.status === "Completed" ? "bg-ok" : dp.status === "Pending Review" ? "bg-warn animate-pulse" : "bg-muted-foreground"
-                        }`}
-                      />
-                      {dp.status}
-                    </span>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </Panel>
+function ResultBadge({ value }: { value: string }) {
+  if (value === "OK") {
+    return (
+      <span className="inline-flex items-center justify-center h-7 w-12 rounded bg-ok/15 text-ok text-xs font-semibold">
+        OK
+      </span>
+    );
+  }
+  if (value === "NG") {
+    return (
+      <span className="inline-flex items-center justify-center h-7 w-12 rounded bg-destructive/15 text-destructive text-xs font-semibold">
+        NG
+      </span>
+    );
+  }
+  return <span className="text-xs font-mono">{value}</span>;
+}
+
+function InfoField({ label, value }: { label: string; value: string }) {
+  return (
+    <div>
+      <span className="text-xs text-muted-foreground">{label}</span>
+      <div className="text-sm font-semibold mt-0.5">{value}</div>
     </div>
   );
 }
