@@ -36,77 +36,122 @@ function BoilerArea() {
         </div>
       </div>
 
-      {/* Summary Card */}
+      {/* Combined Gas Card */}
       <Panel
         title={
-          <span className="inline-flex items-center gap-2 font-semibold">
-            <Gauge className="h-4 w-4" /> Boiler Area Summary
+          <span className="inline-flex items-center gap-2 text-amber-500 font-semibold">
+            <Fuel className="h-4 w-4" /> GAS METER (Total Boiler 1 + 2 + 3)
           </span>
         }
-        subtitle="Total consumption and power"
+        subtitle="1 combined gas meter represents total consumption of all three boilers"
+        right={<span className="rounded bg-amber-500/15 text-amber-600 dark:text-amber-400 px-2.5 py-1 text-[10px] font-mono font-semibold">COMBINED (1 METER)</span>}
       >
-        <div className="grid gap-4 sm:grid-cols-3">
-          <ValueDisplay label="Gas Flow" value={BOILER_GAS.instantFlow} unit="m³/h" tone="warn" />
-          <ValueDisplay label="Gas Pressure" value={BOILER_GAS.gasPressure} unit="bar" tone="ok" />
-          <ValueDisplay label="Power Panel" value={BOILER_GAS.powerPanel} unit="kW" tone="default" />
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <ValueDisplay label="Current Gas Consumption" value={BOILER_GAS.instantFlow} unit={BOILER_GAS.unit} tone="warn" />
+          <ValueDisplay label="Total Consumption Today" value={BOILER_GAS.todayTotal.toLocaleString()} unit={BOILER_GAS.todayUnit} />
+          <div className="rounded-md bg-secondary/50 px-3 py-2.5 border border-border/50 flex items-center justify-between">
+            <div>
+              <div className="text-[10px] uppercase tracking-widest text-muted-foreground">Gas Line Pressure</div>
+              <div className="text-lg font-mono font-semibold mt-1 text-foreground">4.2 <span className="text-xs text-muted-foreground font-normal">bar</span></div>
+              <div className="text-[11px] text-ok font-medium mt-0.5">● Supply Line Normal</div>
+            </div>
+            <Fuel className="h-7 w-7 text-amber-500/60" />
+          </div>
         </div>
       </Panel>
 
-      {/* 3 Boiler Tanks Illustration */}
-      <div className="grid gap-6 lg:grid-cols-3">
+      {/* 3 Boiler Cards */}
+      <div className="grid gap-4 lg:grid-cols-3">
         {BOILERS.map((b) => (
-          <div key={b.id} className="flex flex-col items-center">
-            {/* Tank illustration */}
-            <div className={`relative w-48 h-64 rounded-t-full border-4 flex flex-col items-center p-6 transition-colors ${b.running ? 'border-emerald-500/50 bg-emerald-500/10' : 'border-gray-500/50 bg-gray-500/10'}`}>
-               <div className="text-lg font-bold flex items-center gap-2">
-                 <Flame className={`h-5 w-5 ${b.running ? 'text-emerald-500' : 'text-gray-500'}`} />
-                 {b.name}
-               </div>
-               
-               <div className="mt-6 flex flex-col gap-2 w-full text-center text-sm font-mono bg-background/60 rounded-md py-2 border border-border/50">
-                 <div>Temp 1: <span className="font-bold">{b.temp1.toFixed(1)}°C</span></div>
-                 <div>Temp 2: <span className="font-bold">{b.temp2.toFixed(1)}°C</span></div>
-               </div>
-               
-               <div className="mt-auto flex items-center gap-2 bg-background/50 px-3 py-1.5 rounded-full border border-border/50">
-                  <StatusDot state={b.running ? "on" : "off"} />
-                  <span className="text-sm font-bold font-mono">{b.running ? "ON" : "OFF"}</span>
-               </div>
+          <Panel
+            key={b.id}
+            tone={b.alarm ? "warn" : "ok"}
+            title={<span className="inline-flex items-center gap-2"><Flame className="h-3.5 w-3.5" />{b.name}</span>}
+            right={
+              <span className="inline-flex items-center gap-2 text-xs font-mono">
+                <StatusDot state={b.alarm ? "warn" : "on"} pulse={b.alarm} />
+                {b.running ? "ON" : "OFF"}
+              </span>
+            }
+          >
+            <div className="grid grid-cols-2 gap-3">
+              <ValueDisplay label="Actual Temp 1" value={b.temp1.toFixed(1)} unit="°C" tone={b.alarm ? "warn" : "default"} />
+              <ValueDisplay label="Actual Temp 2" value={b.temp2.toFixed(1)} unit="°C" tone="ok" />
+              <ValueDisplay label="Pressure" value={b.pressure.toFixed(1)} unit="bar" />
+              <ValueDisplay label="Operating Hours" value={b.runningHours.toFixed(1)} unit="hrs" />
             </div>
-            
-            {/* Details underneath the tank */}
-            <div className="mt-4 w-full space-y-3 bg-secondary/30 p-4 rounded-xl border border-border/50">
-               <div className="flex flex-col text-sm border-b border-border/50 pb-3">
-                 <div className="flex justify-between items-center mb-1.5">
-                   <span className="font-medium text-muted-foreground">Boiler Status</span>
-                   <span className={`font-mono text-xs px-2 py-0.5 rounded font-semibold ${b.running ? 'bg-emerald-500/20 text-emerald-600 dark:text-emerald-400' : 'bg-muted text-muted-foreground'}`}>{b.running ? "ON" : "OFF"}</span>
-                 </div>
-                 <div className="flex justify-between text-xs mt-1">
-                   <span className="text-muted-foreground flex items-center gap-1.5"><Power className="h-3 w-3 text-ok" /> ON: <span className="text-foreground font-mono">{b.onTime}</span></span>
-                   <span className="text-muted-foreground flex items-center gap-1.5"><Power className="h-3 w-3 text-destructive" /> OFF: <span className="text-foreground font-mono">{b.offTime}</span></span>
-                 </div>
-               </div>
-               
-               <div className="flex flex-col text-sm">
-                 <div className="flex justify-between items-center mb-1.5">
-                   <span className="font-medium text-muted-foreground">Burner Status</span>
-                   <span className={`font-mono text-xs px-2 py-0.5 rounded font-semibold ${b.fireBurner ? 'bg-amber-500/20 text-amber-600 dark:text-amber-400' : 'bg-muted text-muted-foreground'}`}>{b.fireBurner ? "ON" : "OFF"}</span>
-                 </div>
-                 <div className="flex justify-between text-xs mt-1">
-                   <span className="text-muted-foreground">Durasi ON:</span>
-                   <span className="text-foreground font-mono">{b.burnerDuration}</span>
-                 </div>
-               </div>
-               
-               <Link
-                 to="/boiler-details/$id"
-                 params={{ id: String(b.id) }}
-                 className="mt-3 flex w-full items-center justify-center gap-2 rounded-md bg-primary/10 px-3 py-2 text-xs font-semibold text-primary hover:bg-primary/20 transition"
-               >
-                 <Gauge className="h-3.5 w-3.5" /> Detail Lengkap
-               </Link>
+
+            {/* ON/OFF Timeline */}
+            <div className="mt-3 rounded-md bg-secondary/60 border border-border/50 px-3 py-2 flex items-center justify-between text-xs">
+              <span className="inline-flex items-center gap-2 text-muted-foreground">
+                <Power className="h-3.5 w-3.5 text-ok" /> ON at
+              </span>
+              <span className="font-mono font-semibold">{b.onTime}</span>
+              <span className="inline-flex items-center gap-2 text-muted-foreground">
+                <Power className="h-3.5 w-3.5 text-destructive" /> OFF at
+              </span>
+              <span className="font-mono font-semibold">{b.offTime}</span>
             </div>
-          </div>
+
+            {/* Energy & Gas Summary */}
+            <div className="mt-3 grid grid-cols-2 gap-3">
+              <div className="rounded-md bg-secondary/50 border border-border/50 p-2.5">
+                <div className="text-[10px] uppercase tracking-widest text-muted-foreground">Energy</div>
+                <div className="mt-1 flex items-baseline justify-between font-mono">
+                  <span className="text-[11px] text-muted-foreground">Avg</span>
+                  <span className="text-sm font-semibold tabular-nums">{b.energyAvg} <span className="text-[10px] text-muted-foreground">kWh</span></span>
+                </div>
+                <div className="flex items-baseline justify-between font-mono">
+                  <span className="text-[11px] text-muted-foreground">Total</span>
+                  <span className="text-sm font-semibold tabular-nums">{b.energyTotal.toLocaleString()} <span className="text-[10px] text-muted-foreground">kWh</span></span>
+                </div>
+              </div>
+              <div className="rounded-md bg-secondary/50 border border-border/50 p-2.5">
+                <div className="text-[10px] uppercase tracking-widest text-muted-foreground">Gas</div>
+                <div className="mt-1 flex items-baseline justify-between font-mono">
+                  <span className="text-[11px] text-muted-foreground">Avg</span>
+                  <span className="text-sm font-semibold tabular-nums">{b.gasAvg} <span className="text-[10px] text-muted-foreground">m³/h</span></span>
+                </div>
+                <div className="flex items-baseline justify-between font-mono">
+                  <span className="text-[11px] text-muted-foreground">Total</span>
+                  <span className="text-sm font-semibold tabular-nums">{b.gasTotal.toLocaleString()} <span className="text-[10px] text-muted-foreground">m³</span></span>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-3 space-y-2">
+              <div className="flex flex-col gap-1 rounded-md bg-secondary/60 px-3 py-2 border border-border/50">
+                <div className="flex items-center justify-between">
+                  <span className="inline-flex items-center gap-2 text-xs"><Flame className="h-3.5 w-3.5 text-warn" />Status Burner</span>
+                  <span className="inline-flex items-center gap-2 text-xs font-mono">
+                    <StatusDot state={b.fireBurner ? "on" : "off"} />
+                    {b.fireBurner ? "ON" : "OFF"}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between mt-1 text-xs text-muted-foreground border-t border-border/50 pt-1">
+                  <span>Durasi ON</span>
+                  <span className="font-mono text-foreground">{b.burnerDuration}</span>
+                </div>
+              </div>
+              <div className="flex items-center justify-between rounded-md bg-secondary/60 px-3 py-2 border border-border/50">
+                <span className="inline-flex items-center gap-2 text-xs"><Cog className="h-3.5 w-3.5 text-primary" />Motor Pump</span>
+                <span className="inline-flex items-center gap-2 text-xs font-mono">
+                  <StatusDot state={b.motorPump ? "on" : "off"} />
+                  {b.motorPump ? "RUNNING" : "STOPPED"}
+                </span>
+              </div>
+            </div>
+
+            {/* Details button */}
+            <Link
+              to="/boiler-details/$id"
+              params={{ id: String(b.id) }}
+              className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-md bg-primary px-3 py-2 text-xs font-semibold text-primary-foreground hover:opacity-90 transition"
+            >
+              <Gauge className="h-3.5 w-3.5" /> Details
+              <ArrowRight className="h-3.5 w-3.5" />
+            </Link>
+          </Panel>
         ))}
       </div>
 
