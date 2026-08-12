@@ -94,8 +94,9 @@ function RootShell({ children }: { children: ReactNode }) {
   );
 }
 
-const DASHBOARD_CHILDREN: { to: "/" | "/boiler" | "/ced" | "/oven" | "/checksheet"; label: string; icon: typeof Gauge; exact?: boolean }[] = [
+const DASHBOARD_CHILDREN: { to: "/" | "/boiler" | "/ced" | "/oven" | "/checksheet" | "/monitoring-area"; label: string; icon: typeof Gauge; exact?: boolean }[] = [
   { to: "/", label: "General", icon: Gauge, exact: true },
+  { to: "/monitoring-area", label: "Monitoring Area", icon: Activity },
   { to: "/boiler", label: "Boiler Area", icon: Flame },
   { to: "/ced", label: "CED Area", icon: Waves },
   { to: "/oven", label: "Oven Area", icon: Thermometer },
