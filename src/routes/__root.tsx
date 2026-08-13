@@ -103,17 +103,6 @@ const DASHBOARD_CHILDREN: { to: "/" | "/boiler" | "/ced" | "/oven" | "/checkshee
   { to: "/checksheet", label: "Dashboard Checksheet", icon: ClipboardCheck },
 ];
 
-const CHECKSHEET_NAV = [
-  { to: "/checksheet-daily", label: "Daily Progress Check", icon: Clock },
-  { to: "/checksheet-approval", label: "Approval", icon: ShieldCheck },
-] as const;
-
-const OTHER_NAV = [
-  { to: "/report", label: "Report", icon: FileText },
-  { to: "/log-history", label: "Log History", icon: History },
-  { to: "/master-data", label: "Master Data", icon: Database },
-  { to: "/user-management", label: "User Management", icon: Users },
-] as const;
 
 const linkBase =
   "group flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-sidebar-foreground/75 hover:bg-white/5 hover:text-sidebar-foreground transition";
@@ -171,31 +160,7 @@ function Sidebar() {
           </div>
         )}
 
-        {CHECKSHEET_NAV.map((n) => (
-          <Link
-            key={n.to}
-            to={n.to}
-            className={linkBase}
-            activeProps={{ className: linkActive }}
-          >
-            <n.icon className="h-4 w-4" />
-            {n.label}
-          </Link>
-        ))}
 
-        <div className="pt-3 mt-3 border-t border-sidebar-border" />
-
-        {OTHER_NAV.map((n) => (
-          <Link
-            key={n.to}
-            to={n.to}
-            className={linkBase}
-            activeProps={{ className: linkActive }}
-          >
-            <n.icon className="h-4 w-4" />
-            {n.label}
-          </Link>
-        ))}
       </nav>
 
 
