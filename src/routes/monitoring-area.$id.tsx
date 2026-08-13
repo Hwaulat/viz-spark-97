@@ -105,23 +105,31 @@ function MonitoringAreaDetails() {
                   {/* Tank illustration (Cylinder with rims) */}
                   <div className="relative w-48 flex flex-col items-center">
                     {/* Top Rim */}
-                    <div className="w-[108%] h-10 bg-gradient-to-b from-[#b3e0e6] to-[#7ec3cc] dark:from-[#2a6872] dark:to-[#1a4a52] border-2 border-[#5497a1] dark:border-[#133c43] rounded-[50%] z-20 -mb-5 shadow-sm relative">
+                    <div className={`w-[108%] h-10 border-2 rounded-[50%] z-20 -mb-5 shadow-sm relative ${
+                      b.running
+                        ? "bg-gradient-to-b from-emerald-300 to-emerald-500 dark:from-emerald-700 dark:to-emerald-900 border-emerald-500 dark:border-emerald-800"
+                        : "bg-gradient-to-b from-gray-300 to-gray-400 dark:from-slate-600 dark:to-slate-700 border-gray-400 dark:border-slate-800"
+                    }`}>
                        <div className="absolute inset-1 rounded-[50%] border-t border-white/50"></div>
                     </div>
                     
                     {/* Body */}
-                    <div className="relative w-full h-[280px] border-x-2 border-[#5497a1] dark:border-[#133c43] bg-gradient-to-r from-gray-300 via-gray-100 to-gray-400 dark:from-slate-700 dark:via-slate-500 dark:to-slate-800 flex flex-col items-center pt-8 pb-8 px-4 z-10 overflow-hidden">
+                    <div className={`relative w-full h-[280px] border-x-2 flex flex-col items-center pt-8 pb-8 px-4 z-10 overflow-hidden ${
+                      b.running
+                        ? "border-emerald-500 dark:border-emerald-800 bg-gradient-to-r from-emerald-200 via-emerald-50 to-emerald-300 dark:from-emerald-800 dark:via-emerald-700 dark:to-emerald-900"
+                        : "border-gray-400 dark:border-slate-800 bg-gradient-to-r from-gray-300 via-gray-100 to-gray-400 dark:from-slate-700 dark:via-slate-500 dark:to-slate-800"
+                    }`}>
                       {/* Sub-body gradient to give cylinder feel */}
                       <div className="absolute inset-y-0 left-0 w-8 bg-gradient-to-r from-black/10 to-transparent pointer-events-none" />
                       <div className="absolute inset-y-0 right-0 w-12 bg-gradient-to-l from-black/20 to-transparent pointer-events-none" />
 
                       {/* Fire glow at bottom if running */}
                       {b.running && (
-                        <div className="absolute bottom-0 inset-x-0 h-32 bg-gradient-to-t from-orange-500/40 via-orange-500/10 to-transparent pointer-events-none" />
+                        <div className="absolute bottom-0 inset-x-0 h-32 bg-gradient-to-t from-emerald-400/60 via-emerald-400/10 to-transparent pointer-events-none" />
                       )}
 
-                      <div className="text-lg font-bold flex flex-col items-center gap-1.5 z-10 text-slate-700 dark:text-slate-200 mt-2">
-                        <Flame className={`h-7 w-7 ${b.running ? 'text-orange-500 drop-shadow-[0_0_8px_rgba(249,115,22,0.5)]' : 'text-gray-500'}`} />
+                      <div className="text-lg font-bold flex flex-col items-center gap-1.5 z-10 text-slate-800 dark:text-slate-100 mt-2">
+                        <Flame className={`h-7 w-7 ${b.running ? 'text-emerald-600 drop-shadow-[0_0_8px_rgba(16,185,129,0.5)]' : 'text-gray-500'}`} />
                         {b.name}
                       </div>
 
@@ -136,20 +144,24 @@ function MonitoringAreaDetails() {
                           <span className="font-bold text-base">{b.temp2.toFixed(1)}°C</span>
                         </div>
                       </div>
-
-                      <div className="mt-auto flex items-center gap-2 bg-background/80 px-4 py-2 rounded-full shadow-md z-10 backdrop-blur-sm border-t border-white/40 dark:border-white/10">
-                        <StatusDot state={b.running ? "on" : "off"} />
-                        <span className="text-sm font-bold font-mono tracking-widest">{b.running ? "ON" : "OFF"}</span>
-                      </div>
                     </div>
                     
                     {/* Bottom Rim */}
-                    <div className="w-[108%] h-10 bg-gradient-to-b from-[#87ced6] to-[#5fb7c2] dark:from-[#1a4a52] dark:to-[#0f3035] border-2 border-[#5497a1] dark:border-[#133c43] rounded-[50%] z-20 -mt-5 relative">
+                    <div className={`w-[108%] h-10 border-2 rounded-[50%] z-20 -mt-5 relative ${
+                      b.running
+                        ? "bg-gradient-to-b from-emerald-400 to-emerald-600 dark:from-emerald-800 dark:to-emerald-950 border-emerald-500 dark:border-emerald-800"
+                        : "bg-gradient-to-b from-gray-400 to-gray-500 dark:from-slate-700 dark:to-slate-800 border-gray-400 dark:border-slate-800"
+                    }`}>
                        <div className="absolute inset-1 rounded-[50%] border-t border-white/30"></div>
                     </div>
                     
-                    {/* Base shadow/curve */}
-                    <div className="w-[50%] h-8 bg-slate-500 dark:bg-slate-900 rounded-[50%] z-0 -mt-6 opacity-90 border-b-[3px] border-slate-600 dark:border-black"></div>
+                    {/* Base shadow/curve and Status Badge */}
+                    <div className="w-[50%] h-12 bg-slate-500 dark:bg-slate-900 rounded-b-[50%] z-30 -mt-7 border-b-[3px] border-slate-600 dark:border-black flex flex-col justify-end items-center pb-0.5 shadow-lg relative">
+                      <div className="absolute -top-3 bg-background/90 px-3 py-1 rounded-full shadow-md backdrop-blur-sm border border-border/50 flex items-center gap-2">
+                        <StatusDot state={b.running ? "on" : "off"} />
+                        <span className="text-xs font-bold font-mono tracking-widest">{b.running ? "ON" : "OFF"}</span>
+                      </div>
+                    </div>
                   </div>
                   
                   {/* Details underneath the tank */}
