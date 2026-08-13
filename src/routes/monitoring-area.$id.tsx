@@ -173,13 +173,13 @@ function MonitoringAreaDetails() {
                       </div>
                       <div className="flex justify-between text-xs mt-1 bg-background/50 rounded-lg p-2 border border-border/30">
                         <div className="flex flex-col gap-1.5 text-muted-foreground">
-                          <span className="flex items-center gap-1.5 text-[10px] uppercase tracking-wider"><Power className="h-3.5 w-3.5 text-emerald-500" /> Start</span>
-                          <span className="text-foreground font-mono font-medium">{b.onTime}</span>
+                          <span className="flex items-center gap-1.5 text-[10px] uppercase tracking-wider"><Power className="h-3.5 w-3.5 text-emerald-500" /> ON</span>
+                          <span className="text-foreground font-mono font-bold text-sm">{b.onTime}</span>
                         </div>
                         <div className="w-px bg-border/50 my-1" />
                         <div className="flex flex-col gap-1.5 text-muted-foreground">
-                          <span className="flex items-center gap-1.5 text-[10px] uppercase tracking-wider"><Power className="h-3.5 w-3.5 text-destructive" /> Stop</span>
-                          <span className="text-foreground font-mono font-medium">{b.offTime}</span>
+                          <span className="flex items-center gap-1.5 text-[10px] uppercase tracking-wider"><Power className="h-3.5 w-3.5 text-destructive" /> OFF</span>
+                          <span className="text-foreground font-mono font-bold text-sm">{b.offTime}</span>
                         </div>
                       </div>
                       <div className="flex items-center justify-between mt-2 pt-2 border-t border-border/30 text-xs">
@@ -195,13 +195,13 @@ function MonitoringAreaDetails() {
                       </div>
                       <div className="flex justify-between text-xs mt-1 bg-background/50 rounded-lg p-2 border border-border/30">
                         <div className="flex flex-col gap-1.5 text-muted-foreground">
-                          <span className="flex items-center gap-1.5 text-[10px] uppercase tracking-wider"><Flame className="h-3.5 w-3.5 text-orange-500" /> Start</span>
-                          <span className="text-foreground font-mono font-medium">{b.burnerOnTime}</span>
+                          <span className="flex items-center gap-1.5 text-[10px] uppercase tracking-wider"><Flame className="h-3.5 w-3.5 text-orange-500" /> ON</span>
+                          <span className="text-foreground font-mono font-bold text-sm">{b.burnerOnTime}</span>
                         </div>
                         <div className="w-px bg-border/50 my-1" />
                         <div className="flex flex-col gap-1.5 text-muted-foreground">
-                          <span className="flex items-center gap-1.5 text-[10px] uppercase tracking-wider"><Flame className="h-3.5 w-3.5 text-gray-500" /> Stop</span>
-                          <span className="text-foreground font-mono font-medium">{b.burnerOffTime}</span>
+                          <span className="flex items-center gap-1.5 text-[10px] uppercase tracking-wider"><Flame className="h-3.5 w-3.5 text-gray-500" /> OFF</span>
+                          <span className="text-foreground font-mono font-bold text-sm">{b.burnerOffTime}</span>
                         </div>
                       </div>
                       <div className="flex items-center justify-between mt-2 pt-2 border-t border-border/30 text-xs">
