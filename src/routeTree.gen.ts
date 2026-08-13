@@ -17,11 +17,11 @@ import { Route as ChecksheetApprovalRouteImport } from './routes/checksheet-appr
 import { Route as ChecksheetDailyRouteImport } from './routes/checksheet-daily'
 import { Route as LogHistoryRouteImport } from './routes/log-history'
 import { Route as MasterDataRouteImport } from './routes/master-data'
-import { Route as MonitoringAreaRouteImport } from './routes/monitoring-area'
 import { Route as OvenRouteImport } from './routes/oven'
 import { Route as ReportRouteImport } from './routes/report'
 import { Route as UserManagementRouteImport } from './routes/user-management'
 import { Route as BoilerDetailsIdRouteImport } from './routes/boiler-details.$id'
+import { Route as MonitoringAreaIndexRouteImport } from './routes/monitoring-area.index'
 import { Route as MonitoringAreaIdRouteImport } from './routes/monitoring-area.$id'
 
 const IndexRoute = IndexRouteImport.update({
@@ -64,11 +64,6 @@ const MasterDataRoute = MasterDataRouteImport.update({
   path: '/master-data',
   getParentRoute: () => rootRouteImport,
 } as any)
-const MonitoringAreaRoute = MonitoringAreaRouteImport.update({
-  id: '/monitoring-area',
-  path: '/monitoring-area',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const OvenRoute = OvenRouteImport.update({
   id: '/oven',
   path: '/oven',
@@ -89,10 +84,15 @@ const BoilerDetailsIdRoute = BoilerDetailsIdRouteImport.update({
   path: '/boiler-details/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MonitoringAreaIndexRoute = MonitoringAreaIndexRouteImport.update({
+  id: '/monitoring-area/',
+  path: '/monitoring-area/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const MonitoringAreaIdRoute = MonitoringAreaIdRouteImport.update({
-  id: '/$id',
-  path: '/$id',
-  getParentRoute: () => MonitoringAreaRoute,
+  id: '/monitoring-area/$id',
+  path: '/monitoring-area/$id',
+  getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -104,12 +104,12 @@ export interface FileRoutesByFullPath {
   '/checksheet-daily': typeof ChecksheetDailyRoute
   '/log-history': typeof LogHistoryRoute
   '/master-data': typeof MasterDataRoute
-  '/monitoring-area': typeof MonitoringAreaRouteWithChildren
   '/oven': typeof OvenRoute
   '/report': typeof ReportRoute
   '/user-management': typeof UserManagementRoute
   '/boiler-details/$id': typeof BoilerDetailsIdRoute
   '/monitoring-area/$id': typeof MonitoringAreaIdRoute
+  '/monitoring-area/': typeof MonitoringAreaIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -120,12 +120,12 @@ export interface FileRoutesByTo {
   '/checksheet-daily': typeof ChecksheetDailyRoute
   '/log-history': typeof LogHistoryRoute
   '/master-data': typeof MasterDataRoute
-  '/monitoring-area': typeof MonitoringAreaRouteWithChildren
   '/oven': typeof OvenRoute
   '/report': typeof ReportRoute
   '/user-management': typeof UserManagementRoute
   '/boiler-details/$id': typeof BoilerDetailsIdRoute
   '/monitoring-area/$id': typeof MonitoringAreaIdRoute
+  '/monitoring-area': typeof MonitoringAreaIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -137,12 +137,12 @@ export interface FileRoutesById {
   '/checksheet-daily': typeof ChecksheetDailyRoute
   '/log-history': typeof LogHistoryRoute
   '/master-data': typeof MasterDataRoute
-  '/monitoring-area': typeof MonitoringAreaRouteWithChildren
   '/oven': typeof OvenRoute
   '/report': typeof ReportRoute
   '/user-management': typeof UserManagementRoute
   '/boiler-details/$id': typeof BoilerDetailsIdRoute
   '/monitoring-area/$id': typeof MonitoringAreaIdRoute
+  '/monitoring-area/': typeof MonitoringAreaIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -155,12 +155,12 @@ export interface FileRouteTypes {
     | '/checksheet-daily'
     | '/log-history'
     | '/master-data'
-    | '/monitoring-area'
     | '/oven'
     | '/report'
     | '/user-management'
     | '/boiler-details/$id'
     | '/monitoring-area/$id'
+    | '/monitoring-area/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -171,12 +171,12 @@ export interface FileRouteTypes {
     | '/checksheet-daily'
     | '/log-history'
     | '/master-data'
-    | '/monitoring-area'
     | '/oven'
     | '/report'
     | '/user-management'
     | '/boiler-details/$id'
     | '/monitoring-area/$id'
+    | '/monitoring-area'
   id:
     | '__root__'
     | '/'
@@ -187,12 +187,12 @@ export interface FileRouteTypes {
     | '/checksheet-daily'
     | '/log-history'
     | '/master-data'
-    | '/monitoring-area'
     | '/oven'
     | '/report'
     | '/user-management'
     | '/boiler-details/$id'
     | '/monitoring-area/$id'
+    | '/monitoring-area/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -204,11 +204,12 @@ export interface RootRouteChildren {
   ChecksheetDailyRoute: typeof ChecksheetDailyRoute
   LogHistoryRoute: typeof LogHistoryRoute
   MasterDataRoute: typeof MasterDataRoute
-  MonitoringAreaRoute: typeof MonitoringAreaRouteWithChildren
   OvenRoute: typeof OvenRoute
   ReportRoute: typeof ReportRoute
   UserManagementRoute: typeof UserManagementRoute
   BoilerDetailsIdRoute: typeof BoilerDetailsIdRoute
+  MonitoringAreaIdRoute: typeof MonitoringAreaIdRoute
+  MonitoringAreaIndexRoute: typeof MonitoringAreaIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -269,13 +270,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MasterDataRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/monitoring-area': {
-      id: '/monitoring-area'
-      path: '/monitoring-area'
-      fullPath: '/monitoring-area'
-      preLoaderRoute: typeof MonitoringAreaRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/oven': {
       id: '/oven'
       path: '/oven'
@@ -304,27 +298,22 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BoilerDetailsIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/monitoring-area/': {
+      id: '/monitoring-area/'
+      path: '/monitoring-area'
+      fullPath: '/monitoring-area/'
+      preLoaderRoute: typeof MonitoringAreaIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/monitoring-area/$id': {
       id: '/monitoring-area/$id'
-      path: '/$id'
+      path: '/monitoring-area/$id'
       fullPath: '/monitoring-area/$id'
       preLoaderRoute: typeof MonitoringAreaIdRouteImport
-      parentRoute: typeof MonitoringAreaRoute
+      parentRoute: typeof rootRouteImport
     }
   }
 }
-
-interface MonitoringAreaRouteChildren {
-  MonitoringAreaIdRoute: typeof MonitoringAreaIdRoute
-}
-
-const MonitoringAreaRouteChildren: MonitoringAreaRouteChildren = {
-  MonitoringAreaIdRoute: MonitoringAreaIdRoute,
-}
-
-const MonitoringAreaRouteWithChildren = MonitoringAreaRoute._addFileChildren(
-  MonitoringAreaRouteChildren,
-)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
@@ -335,22 +324,13 @@ const rootRouteChildren: RootRouteChildren = {
   ChecksheetDailyRoute: ChecksheetDailyRoute,
   LogHistoryRoute: LogHistoryRoute,
   MasterDataRoute: MasterDataRoute,
-  MonitoringAreaRoute: MonitoringAreaRouteWithChildren,
   OvenRoute: OvenRoute,
   ReportRoute: ReportRoute,
   UserManagementRoute: UserManagementRoute,
   BoilerDetailsIdRoute: BoilerDetailsIdRoute,
+  MonitoringAreaIdRoute: MonitoringAreaIdRoute,
+  MonitoringAreaIndexRoute: MonitoringAreaIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

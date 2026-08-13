@@ -3,7 +3,7 @@ import { Panel, StatusDot } from "@/components/panel";
 import { Activity, Thermometer, Gauge, ArrowRight, Flame, Power } from "lucide-react";
 import { BOILERS } from "@/lib/mock-data";
 
-export const Route = createFileRoute("/monitoring-area")({
+export const Route = createFileRoute("/monitoring-area/")({
   head: () => ({
     meta: [
       { title: "Monitoring Area — Utility Monitoring System" },
