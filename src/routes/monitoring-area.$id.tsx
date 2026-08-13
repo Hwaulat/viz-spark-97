@@ -1,8 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
-import { ArrowLeft, Activity, Flame, Gauge, Power } from "lucide-react";
-import { BOILERS, BOILER_GAS } from "@/lib/mock-data";
+import { useState, useMemo } from "react";
+import { ArrowLeft, Activity, Flame, Gauge, Power, BarChart3, Filter } from "lucide-react";
+import { BOILERS, BOILER_GAS, BOILER_USAGE_HISTORY } from "@/lib/mock-data";
 import { Panel, StatusDot, ValueDisplay } from "@/components/panel";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 
 export const Route = createFileRoute("/monitoring-area/$id")({
   head: ({ params }) => ({
@@ -17,6 +18,19 @@ export const Route = createFileRoute("/monitoring-area/$id")({
 function MonitoringAreaDetails() {
   const { id } = Route.useParams();
   const [activeTab, setActiveTab] = useState("Boiler Monitoring");
+  const [timeFilter, setTimeFilter] = useState<"daily" | "monthly" | "yearly">("daily");
+
+  const usageData = useMemo(() => BOILER_USAGE_HISTORY[timeFilter], [timeFilter]);
+  const summary = useMemo(() => {
+    const totalEnergy = usageData.reduce((acc, cur) => acc + cur.energy, 0);
+    const totalGas = usageData.reduce((acc, cur) => acc + cur.gas, 0);
+    return {
+      totalEnergy,
+      avgEnergy: Math.round(totalEnergy / usageData.length),
+      totalGas,
+      avgGas: Math.round(totalGas / usageData.length),
+    };
+  }, [usageData]);
 
   // Format the ID back to a readable name
   const name = id
@@ -191,10 +205,74 @@ function MonitoringAreaDetails() {
           )}
 
           {activeTab === "Cummulative Usage" && (
-            <div className="rounded-xl border border-dashed border-border p-12 text-center text-muted-foreground bg-secondary/20">
-              <Activity className="h-8 w-8 mx-auto mb-3 text-muted-foreground/50" />
-              <p className="text-sm font-medium">Cummulative Usage Data</p>
-              <p className="text-xs mt-1">Energy and Gas consumption aggregations are currently being prepared.</p>
+            <div className="space-y-6">
+              <div className="flex items-center justify-between bg-secondary/30 p-2 rounded-lg border border-border/50">
+                <div className="flex items-center gap-2 text-sm font-medium px-2 text-muted-foreground">
+                  <Filter className="h-4 w-4" /> Filter by:
+                </div>
+                <div className="flex gap-1">
+                  {(["daily", "monthly", "yearly"] as const).map((t) => (
+                    <button
+                      key={t}
+                      onClick={() => setTimeFilter(t)}
+                      className={`px-3 py-1.5 text-xs font-medium rounded-md transition ${
+                        timeFilter === t
+                          ? "bg-primary text-primary-foreground shadow-sm"
+                          : "text-muted-foreground hover:bg-secondary hover:text-foreground"
+                      }`}
+                    >
+                      {t.charAt(0).toUpperCase() + t.slice(1)}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                <Panel className="p-4" title={<span className="text-muted-foreground">Total Energy</span>} subtitle={`${timeFilter} aggregate`}>
+                  <div className="mt-2 text-2xl font-bold font-mono text-blue-500">
+                    {summary.totalEnergy.toLocaleString()} <span className="text-xs font-normal text-muted-foreground">kWh</span>
+                  </div>
+                </Panel>
+                <Panel className="p-4" title={<span className="text-muted-foreground">Avg Energy / {timeFilter.replace('ly', '')}</span>} subtitle={`Average per ${timeFilter.replace('ly', '')}`}>
+                  <div className="mt-2 text-2xl font-bold font-mono text-blue-400">
+                    {summary.avgEnergy.toLocaleString()} <span className="text-xs font-normal text-muted-foreground">kWh</span>
+                  </div>
+                </Panel>
+                <Panel className="p-4" title={<span className="text-muted-foreground">Total Gas</span>} subtitle={`${timeFilter} aggregate`}>
+                  <div className="mt-2 text-2xl font-bold font-mono text-emerald-500">
+                    {summary.totalGas.toLocaleString()} <span className="text-xs font-normal text-muted-foreground">m³</span>
+                  </div>
+                </Panel>
+                <Panel className="p-4" title={<span className="text-muted-foreground">Avg Gas / {timeFilter.replace('ly', '')}</span>} subtitle={`Average per ${timeFilter.replace('ly', '')}`}>
+                  <div className="mt-2 text-2xl font-bold font-mono text-emerald-400">
+                    {summary.avgGas.toLocaleString()} <span className="text-xs font-normal text-muted-foreground">m³</span>
+                  </div>
+                </Panel>
+              </div>
+
+              <Panel
+                title={<span className="flex items-center gap-2"><BarChart3 className="h-4 w-4" /> Combine Usage Trend</span>}
+                subtitle={`Energy and Gas usage trend over the selected ${timeFilter} timeframe`}
+              >
+                <div className="h-[350px] mt-4 w-full">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <LineChart data={usageData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+                      <CartesianGrid strokeDasharray="3 3" vertical={false} opacity={0.3} />
+                      <XAxis dataKey="label" tickLine={false} axisLine={false} tick={{ fontSize: 12 }} />
+                      <YAxis yAxisId="left" orientation="left" tickLine={false} axisLine={false} tick={{ fontSize: 12 }} tickFormatter={(val) => \`\${val / 1000}k\`} />
+                      <YAxis yAxisId="right" orientation="right" tickLine={false} axisLine={false} tick={{ fontSize: 12 }} tickFormatter={(val) => \`\${val / 1000}k\`} />
+                      <Tooltip
+                        contentStyle={{ backgroundColor: "rgba(0, 0, 0, 0.8)", borderColor: "rgba(255, 255, 255, 0.1)", borderRadius: "8px" }}
+                        itemStyle={{ color: "#fff" }}
+                        formatter={(value: number, name: string) => [value.toLocaleString(), name]}
+                      />
+                      <Legend wrapperStyle={{ paddingTop: "20px" }} />
+                      <Line yAxisId="left" type="monotone" name="Energy (kWh)" dataKey="energy" stroke="#3b82f6" strokeWidth={3} dot={false} activeDot={{ r: 6 }} />
+                      <Line yAxisId="right" type="monotone" name="Gas (m³)" dataKey="gas" stroke="#10b981" strokeWidth={3} dot={false} activeDot={{ r: 6 }} />
+                    </LineChart>
+                  </ResponsiveContainer>
+                </div>
+              </Panel>
             </div>
           )}
 
