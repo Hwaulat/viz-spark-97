@@ -65,24 +65,26 @@ function MonitoringAreaDetails() {
             </div>
           </Panel>
 
-          {/* Tabs */}
-          <div className="flex border-b border-border/50">
-            {["Boiler Monitoring", "Cummulative Usage", "Historical Charts"].map((tab) => (
-              <button
-                key={tab}
-                onClick={() => setActiveTab(tab)}
-                className={`px-4 py-2.5 text-sm font-medium border-b-2 transition-colors ${
-                  activeTab === tab
-                    ? "border-primary text-primary"
-                    : "border-transparent text-muted-foreground hover:text-foreground hover:border-border"
-                }`}
-              >
-                {tab}
-              </button>
-            ))}
-          </div>
+          {/* Tabbed Section inside a Card */}
+          <div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden flex flex-col">
+            <div className="flex border-b border-border/50 bg-secondary/10 px-2 pt-2">
+              {["Boiler Monitoring", "Cummulative Usage", "Historical Charts"].map((tab) => (
+                <button
+                  key={tab}
+                  onClick={() => setActiveTab(tab)}
+                  className={`px-4 py-2.5 text-sm font-medium border-b-2 transition-colors ${
+                    activeTab === tab
+                      ? "border-primary text-primary"
+                      : "border-transparent text-muted-foreground hover:text-foreground hover:border-border/50"
+                  }`}
+                >
+                  {tab}
+                </button>
+              ))}
+            </div>
 
-          {activeTab === "Boiler Monitoring" && (
+            <div className="p-6">
+              {activeTab === "Boiler Monitoring" && (
             <div className="grid gap-6 lg:grid-cols-3">
               {BOILERS.map((b) => (
                 <div key={b.id} className="flex flex-col items-center">
@@ -180,13 +182,15 @@ function MonitoringAreaDetails() {
             </div>
           )}
 
-          {activeTab === "Historical Charts" && (
-            <div className="rounded-xl border border-dashed border-border p-12 text-center text-muted-foreground bg-secondary/20">
-              <Activity className="h-8 w-8 mx-auto mb-3 text-muted-foreground/50" />
-              <p className="text-sm font-medium">Historical Trend Charts</p>
-              <p className="text-xs mt-1">Temperature and flow rate historical charts will be displayed here.</p>
+              {activeTab === "Historical Charts" && (
+                <div className="rounded-xl border border-dashed border-border p-12 text-center text-muted-foreground bg-secondary/20">
+                  <Activity className="h-8 w-8 mx-auto mb-3 text-muted-foreground/50" />
+                  <p className="text-sm font-medium">Historical Trend Charts</p>
+                  <p className="text-xs mt-1">Temperature and flow rate historical charts will be displayed here.</p>
+                </div>
+              )}
             </div>
-          )}
+          </div>
         </div>
       ) : (
         /* Placeholder Content */
