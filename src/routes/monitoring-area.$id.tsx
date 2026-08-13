@@ -271,8 +271,8 @@ function MonitoringAreaDetails() {
                     <LineChart data={usageData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
                       <CartesianGrid strokeDasharray="3 3" vertical={false} opacity={0.3} />
                       <XAxis dataKey="label" tickLine={false} axisLine={false} tick={{ fontSize: 12 }} />
-                      <YAxis yAxisId="left" orientation="left" tickLine={false} axisLine={false} tick={{ fontSize: 12 }} tickFormatter={(val) => \`\${val / 1000}k\`} />
-                      <YAxis yAxisId="right" orientation="right" tickLine={false} axisLine={false} tick={{ fontSize: 12 }} tickFormatter={(val) => \`\${val / 1000}k\`} />
+                      <YAxis yAxisId="left" orientation="left" tickLine={false} axisLine={false} tick={{ fontSize: 12 }} tickFormatter={(val) => `${val / 1000}k`} />
+                      <YAxis yAxisId="right" orientation="right" tickLine={false} axisLine={false} tick={{ fontSize: 12 }} tickFormatter={(val) => `${val / 1000}k`} />
                       <Tooltip
                         contentStyle={{ backgroundColor: "rgba(0, 0, 0, 0.8)", borderColor: "rgba(255, 255, 255, 0.1)", borderRadius: "8px" }}
                         itemStyle={{ color: "#fff" }}

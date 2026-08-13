@@ -318,3 +318,8 @@ export const APPROVAL_REQUESTS: ApprovalRequest[] = [
   { id: "APR-2026-005", checksheetId: "DP-2026-0720-S1", title: "Daily Checksheet Oven Area - Shift 1", area: "Oven Area", date: "2026-07-20", shift: "Shift 1", submittedBy: "Budi Santoso (Operator)", submittedAt: "14:45", ngItems: 0, status: "Approved", approvedBy: "Hadi Kusuma (Manager)", approvedAt: "2026-07-20 16:00" },
 ];
 
+export const BOILER_USAGE_HISTORY = {
+  daily: Array.from({length: 30}, (_, i) => ({ label: 'Day ' + (i+1), energy: 4000 + Math.floor(Math.random()*2000), gas: 800 + Math.floor(Math.random()*400) })),
+  monthly: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'].map(m => ({ label: m, energy: 120000 + Math.floor(Math.random()*30000), gas: 24000 + Math.floor(Math.random()*6000) })),
+  yearly: Array.from({length: 10}, (_, i) => ({ label: (2015+i).toString(), energy: 1500000 + Math.floor(Math.random()*400000), gas: 300000 + Math.floor(Math.random()*80000) }))
+};
