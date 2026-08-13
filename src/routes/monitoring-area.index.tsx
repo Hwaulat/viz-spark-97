@@ -137,8 +137,20 @@ function MonitoringArea() {
                       Large Tank
                     </div>
                     <div className="flex justify-between px-1 mt-0.5">
-                      <div className="text-[10px] flex flex-col items-start"><span className="text-muted-foreground/80 text-[9px] uppercase">PV</span><span className="font-semibold tabular-nums">{area.largeTank?.pv}°C</span></div>
-                      <div className="text-[10px] flex flex-col items-end"><span className="text-muted-foreground/80 text-[9px] uppercase">SP</span><span className="font-semibold tabular-nums">{area.largeTank?.sp}°C</span></div>
+                      <div className="flex flex-col items-start">
+                        <span className="text-muted-foreground/80 text-[9px] uppercase">PV</span>
+                        <div className="flex items-baseline gap-0.5">
+                          <span className="text-2xl font-semibold tabular-nums">{area.largeTank?.pv}</span>
+                          <span className="text-[10px] text-muted-foreground">°C</span>
+                        </div>
+                      </div>
+                      <div className="flex flex-col items-end">
+                        <span className="text-muted-foreground/80 text-[9px] uppercase">SP</span>
+                        <div className="flex items-baseline gap-0.5">
+                          <span className="text-2xl font-semibold tabular-nums">{area.largeTank?.sp}</span>
+                          <span className="text-[10px] text-muted-foreground">°C</span>
+                        </div>
+                      </div>
                     </div>
                   </div>
                   <div className="rounded-lg bg-secondary/50 p-2.5 border border-border/50 flex flex-col gap-1.5">
@@ -146,8 +158,20 @@ function MonitoringArea() {
                       Small Tank
                     </div>
                     <div className="flex justify-between px-1 mt-0.5">
-                      <div className="text-[10px] flex flex-col items-start"><span className="text-muted-foreground/80 text-[9px] uppercase">PV</span><span className="font-semibold tabular-nums">{area.smallTank?.pv}°C</span></div>
-                      <div className="text-[10px] flex flex-col items-end"><span className="text-muted-foreground/80 text-[9px] uppercase">SP</span><span className="font-semibold tabular-nums">{area.smallTank?.sp}°C</span></div>
+                      <div className="flex flex-col items-start">
+                        <span className="text-muted-foreground/80 text-[9px] uppercase">PV</span>
+                        <div className="flex items-baseline gap-0.5">
+                          <span className="text-2xl font-semibold tabular-nums">{area.smallTank?.pv}</span>
+                          <span className="text-[10px] text-muted-foreground">°C</span>
+                        </div>
+                      </div>
+                      <div className="flex flex-col items-end">
+                        <span className="text-muted-foreground/80 text-[9px] uppercase">SP</span>
+                        <div className="flex items-baseline gap-0.5">
+                          <span className="text-2xl font-semibold tabular-nums">{area.smallTank?.sp}</span>
+                          <span className="text-[10px] text-muted-foreground">°C</span>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -156,39 +180,43 @@ function MonitoringArea() {
               {area.type === "oven-elec" && area.elec && (
                 <div className="grid gap-2 mt-2">
                   <div className="grid grid-cols-2 gap-2">
-                    <div className="rounded bg-secondary/50 p-2 border border-border/50 text-center">
-                      <div className="flex justify-center items-center gap-1 text-[9px] uppercase tracking-wider text-muted-foreground mb-1.5">
-                        <Zap className="h-3 w-3 text-yellow-500" /> Ampere
+                    <div className="rounded bg-secondary/50 p-2 border border-border/50 flex flex-col">
+                      <div className="flex items-center gap-1.5 text-[10px] uppercase tracking-wider text-muted-foreground mb-1">
+                        <Zap className="h-3.5 w-3.5 text-yellow-500" /> Ampere
                       </div>
-                      <div className="flex justify-between text-[10px] px-1 font-mono">
-                        <span className="text-muted-foreground flex flex-col items-center"><span className="text-[8px]">MIN</span><span className="text-foreground">{area.elec.amp.min}</span></span>
-                        <span className="text-blue-500 font-bold flex flex-col items-center"><span className="text-[8px] text-muted-foreground">ACT</span>{area.elec.amp.act}</span>
-                        <span className="text-muted-foreground flex flex-col items-center"><span className="text-[8px]">MAX</span><span className="text-foreground">{area.elec.amp.max}</span></span>
+                      <div className="flex justify-between items-end px-1 font-mono flex-1">
+                        <span className="text-muted-foreground flex flex-col items-start"><span className="text-[9px]">MIN</span><span className="text-xs font-semibold">{area.elec.amp.min}</span></span>
+                        <span className="text-blue-500 flex flex-col items-center"><span className="text-[9px] text-muted-foreground">ACT</span><span className="text-2xl font-bold leading-none tabular-nums">{area.elec.amp.act}</span></span>
+                        <span className="text-muted-foreground flex flex-col items-end"><span className="text-[9px]">MAX</span><span className="text-xs font-semibold">{area.elec.amp.max}</span></span>
                       </div>
                     </div>
-                    <div className="rounded bg-secondary/50 p-2 border border-border/50 text-center">
-                      <div className="flex justify-center items-center gap-1 text-[9px] uppercase tracking-wider text-muted-foreground mb-1.5">
-                        <Zap className="h-3 w-3 text-yellow-500" /> Voltage
+                    <div className="rounded bg-secondary/50 p-2 border border-border/50 flex flex-col">
+                      <div className="flex items-center gap-1.5 text-[10px] uppercase tracking-wider text-muted-foreground mb-1">
+                        <Zap className="h-3.5 w-3.5 text-yellow-500" /> Voltage
                       </div>
-                      <div className="flex justify-between text-[10px] px-1 font-mono">
-                        <span className="text-muted-foreground flex flex-col items-center"><span className="text-[8px]">MIN</span><span className="text-foreground">{area.elec.volt.min}</span></span>
-                        <span className="text-blue-500 font-bold flex flex-col items-center"><span className="text-[8px] text-muted-foreground">ACT</span>{area.elec.volt.act}</span>
-                        <span className="text-muted-foreground flex flex-col items-center"><span className="text-[8px]">MAX</span><span className="text-foreground">{area.elec.volt.max}</span></span>
+                      <div className="flex justify-between items-end px-1 font-mono flex-1">
+                        <span className="text-muted-foreground flex flex-col items-start"><span className="text-[9px]">MIN</span><span className="text-xs font-semibold">{area.elec.volt.min}</span></span>
+                        <span className="text-blue-500 flex flex-col items-center"><span className="text-[9px] text-muted-foreground">ACT</span><span className="text-2xl font-bold leading-none tabular-nums">{area.elec.volt.act}</span></span>
+                        <span className="text-muted-foreground flex flex-col items-end"><span className="text-[9px]">MAX</span><span className="text-xs font-semibold">{area.elec.volt.max}</span></span>
                       </div>
                     </div>
                   </div>
-                  <div className="grid grid-cols-3 gap-1.5">
+                  <div className="grid grid-cols-4 gap-1.5">
                     <div className="rounded bg-secondary/30 py-1.5 px-1 border border-border/50 flex flex-col items-center justify-center text-center">
                       <span className="text-[9px] text-muted-foreground">kW / kW/h</span>
-                      <span className="text-[10px] font-semibold font-mono mt-0.5">{area.elec.kw} / {area.elec.kwh}</span>
+                      <span className="text-sm font-semibold font-mono mt-0.5 leading-none">{area.elec.kw} / {area.elec.kwh}</span>
                     </div>
                     <div className="rounded bg-secondary/30 py-1.5 px-1 border border-border/50 flex flex-col items-center justify-center text-center">
                       <span className="text-[9px] text-muted-foreground">kVar / kVar/h</span>
-                      <span className="text-[10px] font-semibold font-mono mt-0.5">{area.elec.kvar} / {area.elec.kvarh}</span>
+                      <span className="text-sm font-semibold font-mono mt-0.5 leading-none">{area.elec.kvar} / {area.elec.kvarh}</span>
                     </div>
                     <div className="rounded bg-secondary/30 py-1.5 px-1 border border-border/50 flex flex-col items-center justify-center text-center">
-                      <span className="text-[9px] text-muted-foreground">PF / H2</span>
-                      <span className="text-[10px] font-semibold font-mono mt-0.5">{area.elec.pf} / {area.elec.h2}</span>
+                      <span className="text-[9px] text-muted-foreground">PF</span>
+                      <span className="text-base font-semibold font-mono mt-0.5 leading-none">{area.elec.pf}</span>
+                    </div>
+                    <div className="rounded bg-secondary/30 py-1.5 px-1 border border-border/50 flex flex-col items-center justify-center text-center">
+                      <span className="text-[9px] text-muted-foreground">H2</span>
+                      <span className="text-base font-semibold font-mono mt-0.5 leading-none">{area.elec.h2}</span>
                     </div>
                   </div>
                 </div>
