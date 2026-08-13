@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Panel, StatusDot } from "@/components/panel";
-import { Activity, Thermometer, Gauge, ArrowRight, Flame, Power } from "lucide-react";
+import { Panel } from "@/components/panel";
+import { Activity, Thermometer, Gauge, ArrowRight, Flame, Zap } from "lucide-react";
 import { BOILERS } from "@/lib/mock-data";
 
 export const Route = createFileRoute("/monitoring-area/")({
@@ -16,16 +16,40 @@ export const Route = createFileRoute("/monitoring-area/")({
   component: MonitoringArea,
 });
 
-const AREAS = [
-  { id: "boiler-area", name: "Boiler Area", temp: "185", pressure: "9.2" },
-  { id: "flood-station", name: "Flood Station", temp: "30.1", pressure: "1.6" },
-  { id: "pree-degreasing", name: "Pree Degreasing", temp: "28.5", pressure: "1.8" },
-  { id: "degreasing", name: "Degreasing", temp: "35.0", pressure: "2.1" },
-  { id: "phosphate", name: "Phosphate", temp: "42.5", pressure: "1.5" },
-  { id: "oven-sealing", name: "Oven Sealing", temp: "150", pressure: "2.3" },
-  { id: "oven-topcoat", name: "Oven Topcoat", temp: "175", pressure: "2.4" },
-  { id: "oven-ced", name: "Oven CED", temp: "190", pressure: "2.5" },
-  { id: "pted-bag-filter", name: "PTED Bag Filter", temp: "25.0", pressure: "3.2" },
+type AreaCardType = "boiler" | "temp-single" | "temp-dual" | "oven-elec" | "temp-pressure";
+
+interface AreaDef {
+  id: string;
+  name: string;
+  type: AreaCardType;
+  temp?: string;
+  pressure?: string;
+  tempPV?: string;
+  tempSP?: string;
+  largeTank?: { pv: string; sp: string };
+  smallTank?: { pv: string; sp: string };
+  elec?: {
+    amp: { min: string; act: string; max: string };
+    volt: { min: string; act: string; max: string };
+    kw: string;
+    kwh: string;
+    kvar: string;
+    kvarh: string;
+    pf: string;
+    h2: string;
+  };
+}
+
+const AREAS: AreaDef[] = [
+  { id: "boiler-area", name: "Boiler Area", type: "boiler" },
+  { id: "flood-station", name: "Flood Station", type: "temp-single", tempPV: "30.1", tempSP: "30.0" },
+  { id: "pree-degreasing", name: "Pree Degreasing", type: "temp-dual", largeTank: { pv: "28.5", sp: "30.0" }, smallTank: { pv: "46.2", sp: "45.0" } },
+  { id: "degreasing", name: "Degreasing", type: "temp-single", tempPV: "35.0", tempSP: "35.0" },
+  { id: "phosphate", name: "Phosphate", type: "temp-dual", largeTank: { pv: "42.5", sp: "42.0" }, smallTank: { pv: "42.1", sp: "42.0" } },
+  { id: "oven-sealing", name: "Oven Sealing", type: "oven-elec", elec: { amp: { min: "110", act: "125", max: "150" }, volt: { min: "370", act: "380", max: "390" }, kw: "45", kwh: "120", kvar: "12", kvarh: "30", pf: "0.95", h2: "0.5" } },
+  { id: "oven-topcoat", name: "Oven Topcoat", type: "oven-elec", elec: { amp: { min: "130", act: "145", max: "160" }, volt: { min: "375", act: "382", max: "395" }, kw: "52", kwh: "140", kvar: "15", kvarh: "35", pf: "0.96", h2: "0.4" } },
+  { id: "oven-ced", name: "Oven CED", type: "oven-elec", elec: { amp: { min: "140", act: "155", max: "170" }, volt: { min: "378", act: "385", max: "398" }, kw: "60", kwh: "165", kvar: "18", kvarh: "42", pf: "0.94", h2: "0.6" } },
+  { id: "pted-bag-filter", name: "PTED Bag Filter", type: "temp-pressure", temp: "25.0", pressure: "3.2" },
 ];
 
 function MonitoringArea() {
@@ -61,28 +85,123 @@ function MonitoringArea() {
                 <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
               }
             >
-              {area.id === "boiler-area" ? (
+              {area.type === "boiler" && (
                 <div className="grid gap-2 mt-2">
                   {BOILERS.map((b) => (
-                    <div key={b.id} className="rounded-md bg-secondary/50 p-2.5 border border-border/50 flex justify-between items-center">
-                      <span className="text-xs font-semibold flex items-center gap-1.5"><Flame className="h-3 w-3 text-emerald-500" /> {b.name}</span>
-                      <div className="flex gap-3 text-[10px] font-mono">
-                        <span className="text-muted-foreground">T1: <span className="text-foreground font-semibold">{b.temp1.toFixed(1)}°C</span></span>
-                        <span className="text-muted-foreground">T2: <span className="text-foreground font-semibold">{b.temp2.toFixed(1)}°C</span></span>
+                    <div key={b.id} className="rounded-md bg-secondary/50 p-2.5 border border-border/50 flex flex-col gap-1.5">
+                      <div className="flex justify-between items-center">
+                        <span className="text-xs font-semibold flex items-center gap-1.5">
+                          <Flame className="h-3 w-3 text-emerald-500" /> {b.name}
+                        </span>
+                        <div className="flex gap-3 text-[10px] font-mono">
+                          <span className="text-muted-foreground">T1: <span className="text-foreground font-semibold">{b.temp1.toFixed(1)}°C</span></span>
+                          <span className="text-muted-foreground">T2: <span className="text-foreground font-semibold">{b.temp2.toFixed(1)}°C</span></span>
+                        </div>
+                      </div>
+                      <div className="flex justify-between items-center text-[10px]">
+                        <span className="text-muted-foreground">Burner: <span className={b.fireBurner ? "text-emerald-500 font-semibold" : "text-gray-500"}>{b.fireBurner ? "ON" : "OFF"}</span></span>
+                        <span className="text-muted-foreground">Pump: <span className={b.motorPump ? "text-emerald-500 font-semibold" : "text-gray-500"}>{b.motorPump ? "ON" : "OFF"}</span></span>
                       </div>
                     </div>
                   ))}
                 </div>
-              ) : (
+              )}
+
+              {area.type === "temp-single" && (
+                <div className="grid grid-cols-2 gap-4 mt-2">
+                  <div className="rounded-lg bg-secondary/50 p-3 border border-border/50">
+                    <div className="flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-muted-foreground mb-1">
+                      <Thermometer className="h-3.5 w-3.5" /> Temp PV
+                    </div>
+                    <div className="flex items-baseline gap-1">
+                      <span className="text-2xl font-semibold tabular-nums">{area.tempPV}</span>
+                      <span className="text-xs text-muted-foreground">°C</span>
+                    </div>
+                  </div>
+                  <div className="rounded-lg bg-secondary/50 p-3 border border-border/50">
+                    <div className="flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-muted-foreground mb-1">
+                      <Thermometer className="h-3.5 w-3.5" /> Temp SP
+                    </div>
+                    <div className="flex items-baseline gap-1">
+                      <span className="text-2xl font-semibold tabular-nums">{area.tempSP}</span>
+                      <span className="text-xs text-muted-foreground">°C</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {area.type === "temp-dual" && (
+                <div className="grid grid-cols-2 gap-3 mt-2">
+                  <div className="rounded-lg bg-secondary/50 p-2.5 border border-border/50 flex flex-col gap-1.5">
+                    <div className="text-[10px] font-semibold text-muted-foreground text-center border-b border-border/50 pb-1.5">
+                      Large Tank
+                    </div>
+                    <div className="flex justify-between px-1 mt-0.5">
+                      <div className="text-[10px] flex flex-col items-start"><span className="text-muted-foreground/80 text-[9px] uppercase">PV</span><span className="font-semibold tabular-nums">{area.largeTank?.pv}°C</span></div>
+                      <div className="text-[10px] flex flex-col items-end"><span className="text-muted-foreground/80 text-[9px] uppercase">SP</span><span className="font-semibold tabular-nums">{area.largeTank?.sp}°C</span></div>
+                    </div>
+                  </div>
+                  <div className="rounded-lg bg-secondary/50 p-2.5 border border-border/50 flex flex-col gap-1.5">
+                    <div className="text-[10px] font-semibold text-muted-foreground text-center border-b border-border/50 pb-1.5">
+                      Small Tank
+                    </div>
+                    <div className="flex justify-between px-1 mt-0.5">
+                      <div className="text-[10px] flex flex-col items-start"><span className="text-muted-foreground/80 text-[9px] uppercase">PV</span><span className="font-semibold tabular-nums">{area.smallTank?.pv}°C</span></div>
+                      <div className="text-[10px] flex flex-col items-end"><span className="text-muted-foreground/80 text-[9px] uppercase">SP</span><span className="font-semibold tabular-nums">{area.smallTank?.sp}°C</span></div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {area.type === "oven-elec" && area.elec && (
+                <div className="grid gap-2 mt-2">
+                  <div className="grid grid-cols-2 gap-2">
+                    <div className="rounded bg-secondary/50 p-2 border border-border/50 text-center">
+                      <div className="flex justify-center items-center gap-1 text-[9px] uppercase tracking-wider text-muted-foreground mb-1.5">
+                        <Zap className="h-3 w-3 text-yellow-500" /> Ampere
+                      </div>
+                      <div className="flex justify-between text-[10px] px-1 font-mono">
+                        <span className="text-muted-foreground flex flex-col items-center"><span className="text-[8px]">MIN</span><span className="text-foreground">{area.elec.amp.min}</span></span>
+                        <span className="text-blue-500 font-bold flex flex-col items-center"><span className="text-[8px] text-muted-foreground">ACT</span>{area.elec.amp.act}</span>
+                        <span className="text-muted-foreground flex flex-col items-center"><span className="text-[8px]">MAX</span><span className="text-foreground">{area.elec.amp.max}</span></span>
+                      </div>
+                    </div>
+                    <div className="rounded bg-secondary/50 p-2 border border-border/50 text-center">
+                      <div className="flex justify-center items-center gap-1 text-[9px] uppercase tracking-wider text-muted-foreground mb-1.5">
+                        <Zap className="h-3 w-3 text-yellow-500" /> Voltage
+                      </div>
+                      <div className="flex justify-between text-[10px] px-1 font-mono">
+                        <span className="text-muted-foreground flex flex-col items-center"><span className="text-[8px]">MIN</span><span className="text-foreground">{area.elec.volt.min}</span></span>
+                        <span className="text-blue-500 font-bold flex flex-col items-center"><span className="text-[8px] text-muted-foreground">ACT</span>{area.elec.volt.act}</span>
+                        <span className="text-muted-foreground flex flex-col items-center"><span className="text-[8px]">MAX</span><span className="text-foreground">{area.elec.volt.max}</span></span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-3 gap-1.5">
+                    <div className="rounded bg-secondary/30 py-1.5 px-1 border border-border/50 flex flex-col items-center justify-center text-center">
+                      <span className="text-[9px] text-muted-foreground">kW / kW/h</span>
+                      <span className="text-[10px] font-semibold font-mono mt-0.5">{area.elec.kw} / {area.elec.kwh}</span>
+                    </div>
+                    <div className="rounded bg-secondary/30 py-1.5 px-1 border border-border/50 flex flex-col items-center justify-center text-center">
+                      <span className="text-[9px] text-muted-foreground">kVar / kVar/h</span>
+                      <span className="text-[10px] font-semibold font-mono mt-0.5">{area.elec.kvar} / {area.elec.kvarh}</span>
+                    </div>
+                    <div className="rounded bg-secondary/30 py-1.5 px-1 border border-border/50 flex flex-col items-center justify-center text-center">
+                      <span className="text-[9px] text-muted-foreground">PF / H2</span>
+                      <span className="text-[10px] font-semibold font-mono mt-0.5">{area.elec.pf} / {area.elec.h2}</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {area.type === "temp-pressure" && (
                 <div className="grid grid-cols-2 gap-4 mt-2">
                   <div className="rounded-lg bg-secondary/50 p-3 border border-border/50">
                     <div className="flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-muted-foreground mb-1">
                       <Thermometer className="h-3.5 w-3.5" /> Temp
                     </div>
                     <div className="flex items-baseline gap-1">
-                      <span className="text-2xl font-semibold tabular-nums">
-                        {area.temp}
-                      </span>
+                      <span className="text-2xl font-semibold tabular-nums">{area.temp}</span>
                       <span className="text-xs text-muted-foreground">°C</span>
                     </div>
                   </div>
@@ -91,9 +210,7 @@ function MonitoringArea() {
                       <Gauge className="h-3.5 w-3.5" /> Pressure
                     </div>
                     <div className="flex items-baseline gap-1">
-                      <span className="text-2xl font-semibold tabular-nums">
-                        {area.pressure}
-                      </span>
+                      <span className="text-2xl font-semibold tabular-nums">{area.pressure}</span>
                       <span className="text-xs text-muted-foreground">bar</span>
                     </div>
                   </div>
@@ -106,3 +223,4 @@ function MonitoringArea() {
     </div>
   );
 }
+
