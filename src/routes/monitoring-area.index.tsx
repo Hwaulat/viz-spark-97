@@ -101,11 +101,11 @@ function MonitoringArea() {
                       <div className="flex justify-between items-center text-[10px] mt-1 border-t border-border/30 pt-1.5">
                         <div className="flex flex-col items-start gap-0.5">
                           <span className="text-muted-foreground/90 font-medium">Burner: <span className={b.fireBurner ? "text-emerald-500 font-semibold" : "text-gray-500"}>{b.fireBurner ? "ON" : "OFF"}</span></span>
-                          <span className="text-muted-foreground/60 text-[9px] tabular-nums">Since: {b.burnerTime}</span>
+                          <span className="text-muted-foreground/60 text-[9px] tabular-nums">Since: {b.burnerTime} • {b.burnerDuration}</span>
                         </div>
                         <div className="flex flex-col items-end gap-0.5">
                           <span className="text-muted-foreground/90 font-medium">Pump: <span className={b.motorPump ? "text-emerald-500 font-semibold" : "text-gray-500"}>{b.motorPump ? "ON" : "OFF"}</span></span>
-                          <span className="text-muted-foreground/60 text-[9px] tabular-nums">Since: {b.pumpTime}</span>
+                          <span className="text-muted-foreground/60 text-[9px] tabular-nums">Since: {b.pumpTime} • {b.pumpDuration}</span>
                         </div>
                       </div>
                     </div>
