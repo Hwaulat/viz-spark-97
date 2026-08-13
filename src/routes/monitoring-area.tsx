@@ -52,7 +52,7 @@ function MonitoringArea() {
           <Link
             key={area.id}
             to={`/monitoring-area/${area.id}`}
-            className={`block group ${area.id === "boiler-area" ? "lg:col-span-3 sm:col-span-2" : ""}`}
+            className="block group"
           >
             <Panel
               className="hover:border-primary/50 transition-colors h-full flex flex-col"
@@ -62,48 +62,13 @@ function MonitoringArea() {
               }
             >
               {area.id === "boiler-area" ? (
-                <div className="grid gap-6 lg:grid-cols-3 mt-4">
+                <div className="grid gap-2 mt-2">
                   {BOILERS.map((b) => (
-                    <div key={b.id} className="flex flex-col items-center">
-                      <div className={`relative w-40 h-56 rounded-t-full border-4 flex flex-col items-center p-4 transition-colors ${b.running ? 'border-emerald-500/50 bg-emerald-500/10' : 'border-gray-500/50 bg-gray-500/10'}`}>
-                         <div className="text-base font-bold flex items-center gap-2">
-                           <Flame className={`h-4 w-4 ${b.running ? 'text-emerald-500' : 'text-gray-500'}`} />
-                           {b.name}
-                         </div>
-                         
-                         <div className="mt-4 flex flex-col gap-1 w-full text-center text-xs font-mono bg-background/60 rounded-md py-1.5 border border-border/50">
-                           <div>Temp 1: <span className="font-bold">{b.temp1.toFixed(1)}°C</span></div>
-                           <div>Temp 2: <span className="font-bold">{b.temp2.toFixed(1)}°C</span></div>
-                         </div>
-                         
-                         <div className="mt-auto flex items-center gap-2 bg-background/50 px-2.5 py-1 rounded-full border border-border/50">
-                            <StatusDot state={b.running ? "on" : "off"} />
-                            <span className="text-xs font-bold font-mono">{b.running ? "ON" : "OFF"}</span>
-                         </div>
-                      </div>
-                      
-                      <div className="mt-3 w-full max-w-[200px] space-y-2 bg-secondary/30 p-3 rounded-lg border border-border/50">
-                         <div className="flex flex-col text-[11px] border-b border-border/50 pb-2">
-                           <div className="flex justify-between items-center mb-1">
-                             <span className="font-medium text-muted-foreground">Boiler</span>
-                             <span className={`font-mono px-1.5 py-0.5 rounded font-semibold ${b.running ? 'bg-emerald-500/20 text-emerald-600 dark:text-emerald-400' : 'bg-muted text-muted-foreground'}`}>{b.running ? "ON" : "OFF"}</span>
-                           </div>
-                           <div className="flex justify-between mt-1">
-                             <span className="text-muted-foreground flex items-center gap-1"><Power className="h-2.5 w-2.5 text-ok" /> ON: <span className="text-foreground font-mono">{b.onTime}</span></span>
-                             <span className="text-muted-foreground flex items-center gap-1"><Power className="h-2.5 w-2.5 text-destructive" /> OFF: <span className="text-foreground font-mono">{b.offTime}</span></span>
-                           </div>
-                         </div>
-                         
-                         <div className="flex flex-col text-[11px]">
-                           <div className="flex justify-between items-center mb-1">
-                             <span className="font-medium text-muted-foreground">Burner</span>
-                             <span className={`font-mono px-1.5 py-0.5 rounded font-semibold ${b.fireBurner ? 'bg-amber-500/20 text-amber-600 dark:text-amber-400' : 'bg-muted text-muted-foreground'}`}>{b.fireBurner ? "ON" : "OFF"}</span>
-                           </div>
-                           <div className="flex justify-between mt-1">
-                             <span className="text-muted-foreground">Durasi ON:</span>
-                             <span className="text-foreground font-mono">{b.burnerDuration}</span>
-                           </div>
-                         </div>
+                    <div key={b.id} className="rounded-md bg-secondary/50 p-2.5 border border-border/50 flex justify-between items-center">
+                      <span className="text-xs font-semibold flex items-center gap-1.5"><Flame className="h-3 w-3 text-emerald-500" /> {b.name}</span>
+                      <div className="flex gap-3 text-[10px] font-mono">
+                        <span className="text-muted-foreground">T1: <span className="text-foreground font-semibold">{b.temp1.toFixed(1)}°C</span></span>
+                        <span className="text-muted-foreground">T2: <span className="text-foreground font-semibold">{b.temp2.toFixed(1)}°C</span></span>
                       </div>
                     </div>
                   ))}
