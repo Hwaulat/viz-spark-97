@@ -166,13 +166,6 @@ function MonitoringAreaDetails() {
                       </div>
                     </div>
                     
-                    <Link
-                      to="/boiler-details/$id"
-                      params={{ id: String(b.id) }}
-                      className="mt-4 flex w-full items-center justify-center gap-2 rounded-lg bg-primary text-primary-foreground px-3 py-2.5 text-xs font-semibold shadow-sm hover:opacity-90 transition active:scale-[0.98]"
-                    >
-                      <Gauge className="h-4 w-4" /> Detail Lengkap Boiler {b.id}
-                    </Link>
                   </div>
                 </div>
               ))}
