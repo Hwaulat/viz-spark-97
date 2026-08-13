@@ -17,7 +17,9 @@ export const BOILERS = [1, 2, 3].map((i) => ({
   offTime: ["—", "13:24", "—"][i - 1],
   fireBurner: i !== 2,
   burnerDuration: ["2h 23m", "0h 0m", "4h 15m"][i - 1],
+  burnerTime: ["06:12", "13:24", "05:58"][i - 1],
   motorPump: true,
+  pumpTime: ["06:10", "07:40", "05:50"][i - 1],
   alarm: i === 2,
   setpoint: 185,
 }));

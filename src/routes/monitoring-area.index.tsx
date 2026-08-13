@@ -98,9 +98,15 @@ function MonitoringArea() {
                           <span className="text-muted-foreground">T2: <span className="text-foreground font-semibold">{b.temp2.toFixed(1)}°C</span></span>
                         </div>
                       </div>
-                      <div className="flex justify-between items-center text-[10px]">
-                        <span className="text-muted-foreground">Burner: <span className={b.fireBurner ? "text-emerald-500 font-semibold" : "text-gray-500"}>{b.fireBurner ? "ON" : "OFF"}</span></span>
-                        <span className="text-muted-foreground">Pump: <span className={b.motorPump ? "text-emerald-500 font-semibold" : "text-gray-500"}>{b.motorPump ? "ON" : "OFF"}</span></span>
+                      <div className="flex justify-between items-center text-[10px] mt-1 border-t border-border/30 pt-1.5">
+                        <div className="flex flex-col items-start gap-0.5">
+                          <span className="text-muted-foreground/90 font-medium">Burner: <span className={b.fireBurner ? "text-emerald-500 font-semibold" : "text-gray-500"}>{b.fireBurner ? "ON" : "OFF"}</span></span>
+                          <span className="text-muted-foreground/60 text-[9px] tabular-nums">Since: {b.burnerTime}</span>
+                        </div>
+                        <div className="flex flex-col items-end gap-0.5">
+                          <span className="text-muted-foreground/90 font-medium">Pump: <span className={b.motorPump ? "text-emerald-500 font-semibold" : "text-gray-500"}>{b.motorPump ? "ON" : "OFF"}</span></span>
+                          <span className="text-muted-foreground/60 text-[9px] tabular-nums">Since: {b.pumpTime}</span>
+                        </div>
                       </div>
                     </div>
                   ))}
