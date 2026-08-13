@@ -88,38 +88,54 @@ function MonitoringAreaDetails() {
             <div className="grid gap-6 lg:grid-cols-3">
               {BOILERS.map((b) => (
                 <div key={b.id} className="flex flex-col items-center">
-                  {/* Tank illustration */}
-                  <div className="relative w-48 h-[270px] rounded-t-[60px] rounded-b-2xl border-2 border-border shadow-xl overflow-hidden bg-gradient-to-b from-secondary/80 to-secondary/30 flex flex-col items-center p-5">
-                    {/* Subtle inner reflection */}
-                    <div className="absolute inset-y-0 left-4 w-4 bg-gradient-to-r from-white/10 to-transparent pointer-events-none rounded-full blur-[2px]" />
-                    <div className="absolute inset-y-0 right-2 w-8 bg-gradient-to-l from-black/5 to-transparent pointer-events-none rounded-full blur-[4px]" />
-                    
-                    {/* Fire glow at bottom */}
-                    {b.running && (
-                      <div className="absolute bottom-0 inset-x-0 h-24 bg-gradient-to-t from-orange-500/20 via-orange-500/5 to-transparent pointer-events-none" />
-                    )}
-                    
-                    <div className="text-lg font-bold flex flex-col items-center gap-1.5 z-10">
-                      <Flame className={`h-7 w-7 ${b.running ? 'text-orange-500 drop-shadow-[0_0_8px_rgba(249,115,22,0.5)]' : 'text-gray-500'}`} />
-                      {b.name}
+                  {/* Tank illustration (Cylinder with rims) */}
+                  <div className="relative w-48 flex flex-col items-center">
+                    {/* Top Rim */}
+                    <div className="w-[108%] h-10 bg-gradient-to-b from-[#b3e0e6] to-[#7ec3cc] dark:from-[#2a6872] dark:to-[#1a4a52] border-2 border-[#5497a1] dark:border-[#133c43] rounded-[50%] z-20 -mb-5 shadow-sm relative">
+                       <div className="absolute inset-1 rounded-[50%] border-t border-white/50"></div>
                     </div>
                     
-                    <div className="mt-5 flex flex-col gap-2 w-full text-center text-sm font-mono bg-background/80 backdrop-blur-md rounded-xl p-3 border border-border/50 shadow-sm z-10">
-                      <div className="text-muted-foreground text-[10px] uppercase tracking-wider mb-0.5">Temperature</div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-muted-foreground text-xs">T1</span>
-                        <span className="font-bold text-base">{b.temp1.toFixed(1)}°C</span>
+                    {/* Body */}
+                    <div className="relative w-full h-[280px] border-x-2 border-[#5497a1] dark:border-[#133c43] bg-gradient-to-r from-gray-300 via-gray-100 to-gray-400 dark:from-slate-700 dark:via-slate-500 dark:to-slate-800 flex flex-col items-center pt-8 pb-8 px-4 z-10 overflow-hidden">
+                      {/* Sub-body gradient to give cylinder feel */}
+                      <div className="absolute inset-y-0 left-0 w-8 bg-gradient-to-r from-black/10 to-transparent pointer-events-none" />
+                      <div className="absolute inset-y-0 right-0 w-12 bg-gradient-to-l from-black/20 to-transparent pointer-events-none" />
+
+                      {/* Fire glow at bottom if running */}
+                      {b.running && (
+                        <div className="absolute bottom-0 inset-x-0 h-32 bg-gradient-to-t from-orange-500/40 via-orange-500/10 to-transparent pointer-events-none" />
+                      )}
+
+                      <div className="text-lg font-bold flex flex-col items-center gap-1.5 z-10 text-slate-700 dark:text-slate-200 mt-2">
+                        <Flame className={`h-7 w-7 ${b.running ? 'text-orange-500 drop-shadow-[0_0_8px_rgba(249,115,22,0.5)]' : 'text-gray-500'}`} />
+                        {b.name}
                       </div>
-                      <div className="flex justify-between items-center pt-1 border-t border-border/40">
-                        <span className="text-muted-foreground text-xs">T2</span>
-                        <span className="font-bold text-base">{b.temp2.toFixed(1)}°C</span>
+
+                      <div className="mt-5 flex flex-col gap-2 w-full text-center text-sm font-mono bg-background/70 backdrop-blur-md rounded-xl p-3 shadow-md z-10 border-t border-white/40 dark:border-white/10">
+                        <div className="text-muted-foreground text-[10px] uppercase tracking-wider mb-0.5">Temperature</div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-muted-foreground text-xs">T1</span>
+                          <span className="font-bold text-base">{b.temp1.toFixed(1)}°C</span>
+                        </div>
+                        <div className="flex justify-between items-center pt-1 border-t border-border/40">
+                          <span className="text-muted-foreground text-xs">T2</span>
+                          <span className="font-bold text-base">{b.temp2.toFixed(1)}°C</span>
+                        </div>
                       </div>
-                    </div>
-                    
-                    <div className="mt-auto flex items-center gap-2 bg-background/80 px-4 py-2 rounded-full border border-border/50 shadow-sm z-10 backdrop-blur-sm">
+
+                      <div className="mt-auto flex items-center gap-2 bg-background/80 px-4 py-2 rounded-full shadow-md z-10 backdrop-blur-sm border-t border-white/40 dark:border-white/10">
                         <StatusDot state={b.running ? "on" : "off"} />
                         <span className="text-sm font-bold font-mono tracking-widest">{b.running ? "ON" : "OFF"}</span>
+                      </div>
                     </div>
+                    
+                    {/* Bottom Rim */}
+                    <div className="w-[108%] h-10 bg-gradient-to-b from-[#87ced6] to-[#5fb7c2] dark:from-[#1a4a52] dark:to-[#0f3035] border-2 border-[#5497a1] dark:border-[#133c43] rounded-[50%] z-20 -mt-5 relative">
+                       <div className="absolute inset-1 rounded-[50%] border-t border-white/30"></div>
+                    </div>
+                    
+                    {/* Base shadow/curve */}
+                    <div className="w-[50%] h-8 bg-slate-500 dark:bg-slate-900 rounded-[50%] z-0 -mt-6 opacity-90 border-b-[3px] border-slate-600 dark:border-black"></div>
                   </div>
                   
                   {/* Details underneath the tank */}
