@@ -89,25 +89,27 @@ function MonitoringArea() {
                 <div className="grid gap-2 mt-2">
                   {BOILERS.map((b) => (
                     <div key={b.id} className="rounded-md bg-secondary/50 p-2.5 border border-border/50 flex flex-col gap-1.5">
-                      <div className="flex justify-between items-center">
+                      <div className="flex justify-between items-center mb-3">
                         <span className="text-xs font-semibold flex items-center gap-1.5">
-                          <Flame className="h-3 w-3 text-emerald-500" /> {b.name}
+                          <Flame className={`h-3 w-3 ${b.fireBurner ? 'text-emerald-500' : 'text-gray-400'}`} /> {b.name}
                         </span>
-                        <div className="flex gap-3 text-[10px] font-mono">
-                          <span className="text-muted-foreground">T1: <span className="text-foreground font-semibold">{b.temp1.toFixed(1)}°C</span></span>
-                          <span className="text-muted-foreground">T2: <span className="text-foreground font-semibold">{b.temp2.toFixed(1)}°C</span></span>
+                        <div className="flex gap-4 text-[10px] font-mono items-center">
+                          <span className="text-muted-foreground">T1: <span className="text-foreground font-bold text-sm">{b.temp1.toFixed(1)}°C</span></span>
+                          <span className="text-muted-foreground">T2: <span className="text-foreground font-bold text-sm">{b.temp2.toFixed(1)}°C</span></span>
                         </div>
                       </div>
-                      <div className="flex justify-between items-center text-[10px] mt-1 border-t border-border/30 pt-1.5">
-                        <div className="flex flex-col items-start gap-0.5">
-                          <span className="text-muted-foreground/90 font-medium">Burner: <span className={b.fireBurner ? "text-emerald-500 font-semibold" : "text-gray-500"}>{b.fireBurner ? "ON" : "OFF"}</span></span>
-                          <span className="text-muted-foreground/60 text-[9px] tabular-nums">Since: {b.burnerTime} • {b.burnerDuration}</span>
+                      
+                      <div className="flex justify-between items-center mt-1 pt-2 border-t border-border/50">
+                        <div className="flex flex-col gap-0.5">
+                          <div className="text-[10px] text-muted-foreground">Burner: <span className={`font-semibold ${b.fireBurner ? 'text-emerald-500' : 'text-muted-foreground'}`}>{b.fireBurner ? 'ON' : 'OFF'}</span></div>
+                          <div className="text-[9px] text-muted-foreground/80">Since: {b.burnerTime} • {b.burnerDuration}</div>
                         </div>
-                        <div className="flex flex-col items-end gap-0.5">
-                          <span className="text-muted-foreground/90 font-medium">Pump: <span className={b.motorPump ? "text-emerald-500 font-semibold" : "text-gray-500"}>{b.motorPump ? "ON" : "OFF"}</span></span>
-                          <span className="text-muted-foreground/60 text-[9px] tabular-nums">Since: {b.pumpTime} • {b.pumpDuration}</span>
+                        <div className="flex flex-col gap-0.5 text-right">
+                          <div className="text-[10px] text-muted-foreground">Pump: <span className={`font-semibold ${b.motorPump ? 'text-emerald-500' : 'text-muted-foreground'}`}>{b.motorPump ? 'ON' : 'OFF'}</span></div>
+                          <div className="text-[9px] text-muted-foreground/80">Since: {b.pumpTime} • {b.pumpDuration}</div>
                         </div>
                       </div>
+
                     </div>
                   ))}
                 </div>
