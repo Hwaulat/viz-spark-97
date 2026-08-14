@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, useMemo } from "react";
-import { ArrowLeft, Activity, Flame, Gauge, Power, BarChart3, Filter } from "lucide-react";
-import { BOILERS, BOILER_GAS, BOILER_USAGE_HISTORY } from "@/lib/mock-data";
+import { ArrowLeft, Activity, Flame, Gauge, Power, BarChart3, Filter, Waves } from "lucide-react";
+import { BOILERS, BOILER_GAS, BOILER_USAGE_HISTORY, LINE_TRACKING_STATIONS, LINE_TRACKING_ZONES, PROCESS_DETAIL_STATIONS } from "@/lib/mock-data";
 import { Panel, StatusDot, ValueDisplay } from "@/components/panel";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 
@@ -19,6 +19,7 @@ function MonitoringAreaDetails() {
   const { id } = Route.useParams();
   const [activeTab, setActiveTab] = useState("Boiler Monitoring");
   const [timeFilter, setTimeFilter] = useState<"daily" | "monthly" | "yearly">("daily");
+  const [processDetailTab, setProcessDetailTab] = useState("pre-degreasing");
 
   const usageData = useMemo(() => BOILER_USAGE_HISTORY[timeFilter], [timeFilter]);
   const summary = useMemo(() => {
@@ -293,6 +294,206 @@ function MonitoringAreaDetails() {
                   <Activity className="h-8 w-8 mx-auto mb-3 text-muted-foreground/50" />
                   <p className="text-sm font-medium">Historical Trend Charts</p>
                   <p className="text-xs mt-1">Temperature and flow rate historical charts will be displayed here.</p>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      ) : id === "line-tracking" ? (
+        <div className="space-y-6">
+          <div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden flex flex-col">
+            <div className="flex border-b border-border/50 bg-secondary/10 px-2 pt-2">
+              {["Line Tracking", "Process Detail"].map((tab) => (
+                <button
+                  key={tab}
+                  onClick={() => setActiveTab(tab)}
+                  className={`px-4 py-2.5 text-sm font-medium border-b-2 transition-colors ${
+                    activeTab === tab || (activeTab === "Boiler Monitoring" && tab === "Line Tracking") // default
+                      ? "border-primary text-primary"
+                      : "border-transparent text-muted-foreground hover:text-foreground hover:border-border/50"
+                  }`}
+                >
+                  {tab}
+                </button>
+              ))}
+            </div>
+
+            <div className="p-6">
+              {(activeTab === "Line Tracking" || activeTab === "Boiler Monitoring") && (
+                <div className="border border-border/50 rounded-xl overflow-hidden bg-background">
+                  {/* Map Header */}
+                  <div className="flex flex-col gap-2 p-4 border-b border-border/50 bg-secondary/20">
+                    <div className="flex justify-between items-start">
+                      <div className="flex items-center gap-2">
+                        <Waves className="h-4 w-4 text-primary" />
+                        <span className="font-semibold text-sm uppercase tracking-wider text-muted-foreground">Skid Tracking Map (Green = Skid Present)</span>
+                      </div>
+                      <span className="text-xs font-mono text-muted-foreground">{new Date().toLocaleString('en-GB')}</span>
+                    </div>
+                    <p className="text-foreground text-sm">Real-time position of skids along the CED line (U-loop layout)</p>
+                    <div className="flex flex-wrap gap-4 mt-2">
+                      {LINE_TRACKING_ZONES.map((z) => (
+                        <div key={z.key} className="flex items-center gap-1.5">
+                          <div className="w-3 h-3 rounded-full" style={{ backgroundColor: z.color }}></div>
+                          <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">{z.label}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* L-Shape Map Content */}
+                  <div className="relative w-full h-[550px] overflow-x-auto bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCI+CiAgPHJlY3Qgd2lkdGg9IjIwIiBoZWlnaHQ9IjIwIiBmaWxsPSJub25lIiBzdHJva2U9IiNlNWU3ZWIiIHN0cm9rZS13aWR0aD0iMC41Ii8+Cjwvc3ZnPg==')] dark:bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCI+CiAgPHJlY3Qgd2lkdGg9IjIwIiBoZWlnaHQ9IjIwIiBmaWxsPSJub25lIiBzdHJva2U9IiMzMzQxNTUiIHN0cm9rZS13aWR0aD0iMC41Ii8+Cjwvc3ZnPg==')]">
+                    <div className="absolute inset-0 min-w-[1200px]">
+                      {/* L-Shape Track Path */}
+                      <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ zIndex: 0 }}>
+                        <path
+                          d="M 1050 400 L 100 400 A 50 50 0 0 1 50 350 L 50 100 A 50 50 0 0 1 100 50 L 850 50 A 50 50 0 0 1 900 100 L 900 400"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="20"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          className="text-slate-200 dark:text-slate-800 opacity-80"
+                        />
+                      </svg>
+                      
+                      {/* Stations */}
+                      {LINE_TRACKING_STATIONS.map((st) => (
+                        <div
+                          key={st.id}
+                          className="absolute flex flex-col items-center justify-center transform -translate-x-1/2 -translate-y-1/2"
+                          style={{ left: st.x, top: st.y, zIndex: 10 }}
+                        >
+                          <div className={`w-5 h-5 rounded-full border-[2.5px] ${st.stuck ? 'border-orange-500 bg-orange-400' : st.occupied ? 'border-emerald-600 bg-emerald-500' : 'border-gray-400 bg-background'} shadow-sm`} />
+                          <span className="absolute -bottom-5 text-[8px] font-mono text-muted-foreground whitespace-nowrap">{st.id}</span>
+                          {st.since && (
+                            <span className={`absolute -top-5 text-[8px] font-mono px-1 rounded ${st.stuck ? 'bg-orange-100 text-orange-700' : 'bg-secondary text-foreground'}`}>{st.since}</span>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  
+                  {/* Map Legend Footer */}
+                  <div className="flex gap-4 p-3 bg-secondary/10 border-t border-border/50 text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">
+                    <div className="flex items-center gap-1.5"><div className="w-3 h-3 rounded-full bg-emerald-500"></div> GREEN = SKID PRESENT</div>
+                    <div className="flex items-center gap-1.5"><div className="w-3 h-3 rounded-full border-[1.5px] border-gray-400"></div> EMPTY STATION</div>
+                    <div className="flex items-center gap-1.5"><div className="w-3 h-3 rounded-full bg-orange-500"></div> STUCK &gt; 5min</div>
+                  </div>
+                </div>
+              )}
+
+              {activeTab === "Process Detail" && (
+                <div className="space-y-4">
+                  {/* Sub-tabs for Process Detail */}
+                  <div className="flex flex-wrap gap-2 mb-6">
+                    {["pre-degreasing", "degreasing", "phosphate", "flood"].map((tab) => (
+                      <button
+                        key={tab}
+                        onClick={() => setProcessDetailTab(tab)}
+                        className={`px-4 py-2 rounded-t-lg text-xs font-semibold uppercase tracking-wider transition-all border-b-2 ${
+                          processDetailTab === tab 
+                            ? "bg-primary/10 border-primary text-primary" 
+                            : "bg-secondary/40 border-transparent text-muted-foreground hover:bg-secondary"
+                        }`}
+                      >
+                        {tab.replace("-", " ")}
+                      </button>
+                    ))}
+                  </div>
+
+                  {(() => {
+                    const data = PROCESS_DETAIL_STATIONS[processDetailTab as keyof typeof PROCESS_DETAIL_STATIONS];
+                    return (
+                      <div className="animate-in fade-in duration-300">
+                        {/* Summary Cards */}
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                          <Panel className="p-4 shadow-sm border border-border/50 bg-card/60">
+                            <div className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1">PV Temperature</div>
+                            <div className="flex items-baseline gap-1"><span className={`text-2xl font-mono font-bold ${data.alarm ? 'text-destructive' : 'text-emerald-500'}`}>{data.pv}</span><span className="text-xs">°C</span></div>
+                          </Panel>
+                          <Panel className="p-4 shadow-sm border border-border/50 bg-card/60">
+                            <div className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1">Setpoint</div>
+                            <div className="flex items-baseline gap-1"><span className="text-2xl font-mono font-bold">{data.sp}</span><span className="text-xs">°C</span></div>
+                          </Panel>
+                          <Panel className="p-4 shadow-sm border border-border/50 bg-card/60">
+                            <div className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1">Modulating Valve</div>
+                            <div className="flex items-baseline gap-1"><span className="text-2xl font-mono font-bold text-emerald-500">{data.valve}%</span></div>
+                          </Panel>
+                          <Panel className="p-4 shadow-sm border border-border/50 bg-card/60">
+                            <div className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1">Pumps (P1/P2)</div>
+                            <div className="flex items-baseline gap-2">
+                              <span className={`text-xl font-mono font-bold ${data.pump1 ? 'text-emerald-500' : 'text-muted-foreground'}`}>{data.pump1 ? 'ON' : 'OFF'}</span> 
+                              <span className="text-muted-foreground">/</span>
+                              <span className={`text-xl font-mono font-bold ${data.pump2 ? 'text-emerald-500' : 'text-muted-foreground'}`}>{data.pump2 ? 'ON' : 'OFF'}</span>
+                            </div>
+                          </Panel>
+                        </div>
+
+                        {/* P&ID Mimic */}
+                        <div className="border border-border/50 rounded-xl overflow-hidden bg-background">
+                          <div className="flex justify-between items-center p-3 bg-secondary/30 border-b border-border/50">
+                            <div className="flex items-center gap-2">
+                              <Activity className="h-4 w-4 text-muted-foreground" />
+                              <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">P&ID Mimic — {data.name}</span>
+                            </div>
+                            <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-orange-500/10 text-orange-600 border border-orange-500/20">READ-ONLY</span>
+                          </div>
+                          
+                          <div className="relative w-full h-[400px] bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCI+CiAgPHJlY3Qgd2lkdGg9IjIwIiBoZWlnaHQ9IjIwIiBmaWxsPSJub25lIiBzdHJva2U9IiNlNWU3ZWIiIHN0cm9rZS13aWR0aD0iMC41Ii8+Cjwvc3ZnPg==')] dark:bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCI+CiAgPHJlY3Qgd2lkdGg9IjIwIiBoZWlnaHQ9IjIwIiBmaWxsPSJub25lIiBzdHJva2U9IiMzMzQxNTUiIHN0cm9rZS13aWR0aD0iMC41Ii8+Cjwvc3ZnPg==')] flex items-center justify-center">
+                            
+                            {/* Piping */}
+                            <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ zIndex: 0 }}>
+                              <path d="M 200 200 L 300 200" stroke="currentColor" strokeWidth="2" className="text-slate-400 dark:text-slate-600" />
+                              <path d="M 500 200 L 700 200 L 700 80 L 500 80" fill="none" stroke="currentColor" strokeWidth="2" className="text-slate-400 dark:text-slate-600" />
+                              <path d="M 700 200 L 700 320 L 300 320 L 300 260" fill="none" stroke="currentColor" strokeWidth="2" className="text-slate-400 dark:text-slate-600" />
+                              <path d="M 550 200 L 550 140 L 750 140 L 750 80" fill="none" stroke="currentColor" strokeWidth="2" className="text-slate-400 dark:text-slate-600" />
+                            </svg>
+
+                            {/* Pump P1 */}
+                            <div className="absolute left-[180px] top-[200px] flex flex-col items-center transform -translate-x-1/2 -translate-y-1/2">
+                              <div className={`w-12 h-12 rounded-full border-2 flex items-center justify-center bg-background ${data.pump1 ? 'border-emerald-500' : 'border-muted-foreground'}`}>
+                                <div className={`w-4 h-4 rounded-full ${data.pump1 ? 'bg-emerald-500' : 'bg-muted-foreground'}`}></div>
+                              </div>
+                              <span className="text-[10px] font-mono mt-1 text-muted-foreground">Pump P1</span>
+                              <span className={`text-[9px] font-bold ${data.pump1 ? 'text-emerald-500' : 'text-muted-foreground'}`}>{data.pump1 ? 'ON' : 'OFF'}</span>
+                            </div>
+
+                            {/* Process Tank */}
+                            <div className="absolute left-[400px] top-[200px] transform -translate-x-1/2 -translate-y-1/2 w-[200px] h-[120px] rounded-lg border-2 border-primary/50 bg-background overflow-hidden flex flex-col shadow-md">
+                              <div className="bg-secondary/30 text-center py-1 border-b border-border text-[9px] font-bold text-muted-foreground uppercase tracking-widest z-10">Process Tank</div>
+                              <div className="text-center text-[10px] text-primary mt-1 z-10">Level: 78%</div>
+                              <div className="flex-1 flex flex-col items-center justify-center z-10">
+                                <span className="text-3xl font-mono font-bold">{data.pv}°C</span>
+                                <span className="text-[10px] text-muted-foreground mt-1">PV / SP {data.sp}°C</span>
+                              </div>
+                              {/* Water Level Fill */}
+                              <div className="absolute bottom-0 left-0 right-0 bg-primary/20 h-[78%] z-0 border-t border-primary/30"></div>
+                            </div>
+
+                            {/* Modulating Valve */}
+                            <div className="absolute left-[550px] top-[200px] flex flex-col items-center transform -translate-x-1/2 -translate-y-1/2 bg-background px-1">
+                              <div className="w-8 h-8 relative flex items-center justify-center text-emerald-500">
+                                <svg viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6"><path d="M4 4h16v3H4zM4 17h16v3H4zM12 12l8 5H4zM12 12l8-5H4z"/></svg>
+                              </div>
+                              <span className="text-[9px] font-mono mt-1 text-muted-foreground">VAM211</span>
+                              <span className="text-[9px] font-bold text-primary">Open {data.valve}%</span>
+                            </div>
+
+                            {/* Pump P2 */}
+                            <div className="absolute left-[700px] top-[200px] flex flex-col items-center transform -translate-x-1/2 -translate-y-1/2 bg-background p-1">
+                              <div className={`w-12 h-12 rounded-full border-2 flex items-center justify-center bg-background ${data.pump2 ? 'border-emerald-500' : 'border-muted-foreground'}`}>
+                                <div className={`w-4 h-4 rounded-full ${data.pump2 ? 'bg-emerald-500' : 'bg-muted-foreground'}`}></div>
+                              </div>
+                              <span className="text-[10px] font-mono mt-1 text-muted-foreground">Pump P2</span>
+                              <span className={`text-[9px] font-bold ${data.pump2 ? 'text-emerald-500' : 'text-muted-foreground'}`}>{data.pump2 ? 'ON' : 'OFF'}</span>
+                            </div>
+
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })()}
                 </div>
               )}
             </div>

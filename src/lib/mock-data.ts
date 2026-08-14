@@ -324,3 +324,82 @@ export const BOILER_USAGE_HISTORY = {
   monthly: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'].map(m => ({ label: m, energy: 120000 + Math.floor(Math.random()*30000), gas: 24000 + Math.floor(Math.random()*6000) })),
   yearly: Array.from({length: 10}, (_, i) => ({ label: (2015+i).toString(), energy: 1500000 + Math.floor(Math.random()*400000), gas: 300000 + Math.floor(Math.random()*80000) }))
 };
+
+export const LINE_TRACKING_ZONES = [
+  { key: 'predeg', label: 'PRE-DEGREASING', color: 'oklch(0.45 0.10 220)' },
+  { key: 'deg', label: 'DEGREASING', color: 'oklch(0.45 0.12 200)' },
+  { key: 'act', label: 'ACTIVATION', color: 'oklch(0.45 0.14 165)' },
+  { key: 'phos', label: 'PHOSPHATING', color: 'oklch(0.50 0.15 145)' },
+  { key: 'rinse', label: 'RINSE', color: 'oklch(0.50 0.13 210)' },
+  { key: 'ecoat', label: 'FLOOD / E-COAT', color: 'oklch(0.50 0.18 285)' },
+];
+
+export const LINE_TRACKING_STATIONS = (() => {
+  const stations: Station[] = [];
+  
+  // Create an L-shaped loop.
+  // Bottom row (Right to Left)
+  for (let i = 0; i < 15; i++) {
+    const occupied = Math.random() > 0.5;
+    stations.push({
+      id: 'STN' + (23 + i),
+      zone: i < 3 ? 'ecoat' : i < 6 ? 'predeg' : i < 10 ? 'act' : 'phos',
+      x: 1050 - (i * 60),
+      y: 400,
+      occupied,
+      since: occupied ? Math.floor(Math.random() * 12) + 'm' : undefined,
+      stuck: occupied && Math.random() > 0.9,
+    });
+  }
+  
+  // Left column (Bottom to Top)
+  for (let i = 0; i < 8; i++) {
+    const occupied = Math.random() > 0.5;
+    stations.push({
+      id: 'STN' + (38 + i),
+      zone: i < 3 ? 'phos' : 'ecoat',
+      x: 100,
+      y: 350 - (i * 40),
+      occupied,
+      since: occupied ? Math.floor(Math.random() * 12) + 'm' : undefined,
+      stuck: occupied && Math.random() > 0.9,
+    });
+  }
+  
+  // Top row (Left to Right)
+  for (let i = 0; i < 12; i++) {
+    const occupied = Math.random() > 0.5;
+    stations.push({
+      id: 'STN' + (8 + i),
+      zone: i < 5 ? 'rinse' : 'deg',
+      x: 150 + (i * 60),
+      y: 50,
+      occupied,
+      since: occupied ? Math.floor(Math.random() * 12) + 'm' : undefined,
+      stuck: occupied && Math.random() > 0.9,
+    });
+  }
+  
+  // Inner return loop (Top Right to Bottom Right)
+  for (let i = 0; i < 8; i++) {
+    const occupied = Math.random() > 0.5;
+    stations.push({
+      id: 'STN' + (50 + i),
+      zone: 'rinse',
+      x: 900 + (i * 20),
+      y: 100 + (i * 35),
+      occupied,
+      since: occupied ? Math.floor(Math.random() * 12) + 'm' : undefined,
+      stuck: occupied && Math.random() > 0.9,
+    });
+  }
+  
+  return stations;
+})();
+
+export const PROCESS_DETAIL_STATIONS = {
+  'pre-degreasing': { name: 'Pre-Degreasing', pv: 46.2, sp: 45.0, valve: 42, pump1: true, pump2: false },
+  'degreasing': { name: 'Degreasing', pv: 52.8, sp: 52.0, valve: 65, pump1: true, pump2: true },
+  'flood': { name: 'Flood', pv: 28.5, sp: 30.0, valve: 45, pump1: true, pump2: true, alarm: true },
+  'phosphate': { name: 'Phosphate', pv: 42.1, sp: 42.0, valve: 18, pump1: true, pump2: true }
+};

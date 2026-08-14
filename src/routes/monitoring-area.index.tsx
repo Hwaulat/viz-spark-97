@@ -16,7 +16,7 @@ export const Route = createFileRoute("/monitoring-area/")({
   component: MonitoringArea,
 });
 
-type AreaCardType = "boiler" | "temp-single" | "temp-dual" | "oven-elec" | "temp-pressure";
+type AreaCardType = "boiler" | "temp-single" | "temp-dual" | "oven-elec" | "temp-pressure" | "line-tracking";
 
 interface AreaDef {
   id: string;
@@ -41,6 +41,7 @@ interface AreaDef {
 }
 
 const AREAS: AreaDef[] = [
+  { id: "line-tracking", name: "Line Tracking", type: "line-tracking" },
   { id: "boiler-area", name: "Boiler Area", type: "boiler" },
   { id: "flood-station", name: "Flood Station", type: "temp-single", tempPV: "30.1", tempSP: "30.0" },
   { id: "pree-degreasing", name: "Pree Degreasing", type: "temp-dual", largeTank: { pv: "28.5", sp: "30.0" }, smallTank: { pv: "46.2", sp: "45.0" } },
@@ -110,6 +111,47 @@ function MonitoringArea() {
                       </div>
                     </div>
                   ))}
+                </div>
+              )}
+
+              {area.type === "line-tracking" && (
+                <div className="grid gap-2 mt-2">
+                  <div className="rounded-md bg-secondary/50 p-2 border border-border/50">
+                    <div className="flex justify-between items-center text-xs">
+                      <span className="font-medium text-muted-foreground">Pre-Degreasing</span>
+                      <div className="flex gap-2">
+                        <span className="text-foreground">PV: 46.2°C</span>
+                        <span className="text-muted-foreground">SP: 45.0°C</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="rounded-md bg-secondary/50 p-2 border border-border/50">
+                    <div className="flex justify-between items-center text-xs">
+                      <span className="font-medium text-muted-foreground">Degreasing</span>
+                      <div className="flex gap-2">
+                        <span className="text-foreground">PV: 52.8°C</span>
+                        <span className="text-muted-foreground">SP: 52.0°C</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="rounded-md bg-secondary/50 p-2 border border-border/50">
+                    <div className="flex justify-between items-center text-xs">
+                      <span className="font-medium text-muted-foreground">Flood</span>
+                      <div className="flex gap-2">
+                        <span className="text-destructive font-semibold">PV: 28.5°C</span>
+                        <span className="text-muted-foreground">SP: 30.0°C</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="rounded-md bg-secondary/50 p-2 border border-border/50">
+                    <div className="flex justify-between items-center text-xs">
+                      <span className="font-medium text-muted-foreground">Phosphate</span>
+                      <div className="flex gap-2">
+                        <span className="text-foreground">PV: 42.1°C</span>
+                        <span className="text-muted-foreground">SP: 42.0°C</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               )}
 
