@@ -4,6 +4,7 @@ import { ArrowLeft, Activity, Flame, Gauge, Power, BarChart3, Filter, Waves } fr
 import { BOILERS, BOILER_GAS, BOILER_USAGE_HISTORY, LINE_TRACKING_STATIONS, LINE_TRACKING_ZONES, PROCESS_DETAIL_STATIONS } from "@/lib/mock-data";
 import { Panel, StatusDot, ValueDisplay } from "@/components/panel";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
+import LineTrackingSvg from "@/assets/Line-Tracking.svg";
 
 export const Route = createFileRoute("/monitoring-area/$id")({
   head: ({ params }) => ({
@@ -424,7 +425,7 @@ function MonitoringAreaDetails() {
 
                   {/* L-Shape Map Content */}
                   <div className="relative w-full min-h-[600px] overflow-auto flex items-center justify-center bg-background p-4 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCI+CiAgPHJlY3Qgd2lkdGg9IjIwIiBoZWlnaHQ9IjIwIiBmaWxsPSJub25lIiBzdHJva2U9IiNlNWU3ZWIiIHN0cm9rZS13aWR0aD0iMC41Ii8+Cjwvc3ZnPg==')] dark:bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCI+CiAgPHJlY3Qgd2lkdGg9IjIwIiBoZWlnaHQ9IjIwIiBmaWxsPSJub25lIiBzdHJva2U9IiMzMzQxNTUiIHN0cm9rZS13aWR0aD0iMC41Ii8+Cjwvc3ZnPg==')]">
-                    <img src="/Line-Tracking.svg" alt="Line Tracking Map" className="max-w-full h-auto object-contain drop-shadow-sm dark:invert dark:opacity-80" style={{ filter: "drop-shadow(0px 0px 4px rgba(0,0,0,0.2))" }} />
+                    <img src={LineTrackingSvg} alt="Line Tracking Map" className="max-w-full h-auto object-contain drop-shadow-sm dark:invert dark:opacity-80" style={{ filter: "drop-shadow(0px 0px 4px rgba(0,0,0,0.2))" }} />
                   </div>
                   
                   {/* Map Legend Footer */}
