@@ -99,93 +99,65 @@ function MonitoringArea() {
                         </div>
                       </div>
 
-                      {/* Boiler Status */}
-                      <div className="flex flex-col gap-2.5 mt-4 pt-4 border-t border-border/40">
-                        <div className="flex justify-between items-center">
-                          <span className="text-xs font-semibold text-muted-foreground">Boiler Status</span>
-                          <span className={`text-[9px] px-2 py-0.5 rounded font-bold ${b.running ? 'bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400' : 'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400'}`}>
-                            {b.running ? "ON" : "OFF"}
-                          </span>
-                        </div>
-                        
-                        <div className="bg-secondary/30 border border-border/50 rounded-lg flex">
-                          <div className="flex-1 p-2.5 flex flex-col gap-1.5 border-r border-border/50">
-                            <div className="flex items-center gap-2 text-[10px] text-muted-foreground font-medium uppercase tracking-wider">
-                              <Power className={`w-3.5 h-3.5 ${b.running ? 'text-emerald-500' : 'text-muted-foreground/50'}`} /> ON
-                            </div>
-                            <div className="text-xs font-mono font-bold text-foreground pl-5.5">{b.running ? b.onTime : '—'}</div>
+                      <div className="grid grid-cols-2 gap-4 mt-4 pt-4 border-t border-border/40">
+                        {/* Boiler Status */}
+                        <div className="flex flex-col gap-2.5">
+                          <div className="flex justify-between items-center">
+                            <span className="text-xs font-semibold text-muted-foreground">Boiler Status</span>
+                            <span className={`text-[9px] px-2 py-0.5 rounded font-bold ${b.running ? 'bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400' : 'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400'}`}>
+                              {b.running ? "ON" : "OFF"}
+                            </span>
                           </div>
-                          <div className="flex-1 p-2.5 flex flex-col gap-1.5">
-                            <div className="flex items-center gap-2 text-[10px] text-muted-foreground font-medium uppercase tracking-wider">
-                              <Power className={`w-3.5 h-3.5 ${!b.running ? 'text-red-500' : 'text-muted-foreground/50'}`} /> OFF
+                          
+                          <div className="bg-secondary/30 border border-border/50 rounded-lg flex">
+                            <div className="flex-1 p-2 flex flex-col gap-1 border-r border-border/50">
+                              <div className="flex items-center gap-1.5 text-[9px] text-muted-foreground font-medium uppercase tracking-wider">
+                                <Power className={`w-3 h-3 ${b.running ? 'text-emerald-500' : 'text-muted-foreground/50'}`} /> ON
+                              </div>
+                              <div className="text-[10px] font-mono font-bold text-foreground pl-4.5">{b.running ? b.onTime : '—'}</div>
                             </div>
-                            <div className="text-xs font-mono font-bold text-foreground pl-5.5">{!b.running ? b.offTime : '—'}</div>
+                            <div className="flex-1 p-2 flex flex-col gap-1">
+                              <div className="flex items-center gap-1.5 text-[9px] text-muted-foreground font-medium uppercase tracking-wider">
+                                <Power className={`w-3 h-3 ${!b.running ? 'text-red-500' : 'text-muted-foreground/50'}`} /> OFF
+                              </div>
+                              <div className="text-[10px] font-mono font-bold text-foreground pl-4.5">{!b.running ? b.offTime : '—'}</div>
+                            </div>
+                          </div>
+                          
+                          <div className="flex justify-between items-center px-1">
+                            <span className="text-[10px] font-medium text-muted-foreground">Total Duration</span>
+                            <span className="text-[10px] font-mono font-bold text-blue-600 dark:text-blue-400">{b.boilerDuration}</span>
                           </div>
                         </div>
-                        
-                        <div className="flex justify-between items-center px-1">
-                          <span className="text-xs font-medium text-muted-foreground">Total Duration</span>
-                          <span className="text-xs font-mono font-bold text-blue-600 dark:text-blue-400">{b.boilerDuration}</span>
-                        </div>
-                      </div>
 
-                      {/* Burner Status */}
-                      <div className="flex flex-col gap-2.5 mt-4 pt-4 border-t border-border/40">
-                        <div className="flex justify-between items-center">
-                          <span className="text-xs font-semibold text-muted-foreground">Burner Status</span>
-                          <span className={`text-[9px] px-2 py-0.5 rounded font-bold ${b.fireBurner ? 'bg-orange-100 text-orange-600 dark:bg-orange-900/30 dark:text-orange-400' : 'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400'}`}>
-                            {b.fireBurner ? "ON" : "OFF"}
-                          </span>
-                        </div>
-                        
-                        <div className="bg-secondary/30 border border-border/50 rounded-lg flex">
-                          <div className="flex-1 p-2.5 flex flex-col gap-1.5 border-r border-border/50">
-                            <div className="flex items-center gap-2 text-[10px] text-muted-foreground font-medium uppercase tracking-wider">
-                              <Flame className={`w-3.5 h-3.5 ${b.fireBurner ? 'text-orange-500' : 'text-muted-foreground/50'}`} /> ON
-                            </div>
-                            <div className="text-xs font-mono font-bold text-foreground pl-5.5">{b.fireBurner ? b.burnerOnTime : '—'}</div>
+                        {/* Pump Status */}
+                        <div className="flex flex-col gap-2.5">
+                          <div className="flex justify-between items-center">
+                            <span className="text-xs font-semibold text-muted-foreground">Pump Status</span>
+                            <span className={`text-[9px] px-2 py-0.5 rounded font-bold ${b.motorPump ? 'bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400' : 'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400'}`}>
+                              {b.motorPump ? "ON" : "OFF"}
+                            </span>
                           </div>
-                          <div className="flex-1 p-2.5 flex flex-col gap-1.5">
-                            <div className="flex items-center gap-2 text-[10px] text-muted-foreground font-medium uppercase tracking-wider">
-                              <Flame className={`w-3.5 h-3.5 ${!b.fireBurner ? 'text-red-500' : 'text-muted-foreground/50'}`} /> OFF
+                          
+                          <div className="bg-secondary/30 border border-border/50 rounded-lg flex">
+                            <div className="flex-1 p-2 flex flex-col gap-1 border-r border-border/50">
+                              <div className="flex items-center gap-1.5 text-[9px] text-muted-foreground font-medium uppercase tracking-wider">
+                                <Activity className={`w-3 h-3 ${b.motorPump ? 'text-emerald-500' : 'text-muted-foreground/50'}`} /> ON
+                              </div>
+                              <div className="text-[10px] font-mono font-bold text-foreground pl-4.5">{b.motorPump ? b.pumpOnTime : '—'}</div>
                             </div>
-                            <div className="text-xs font-mono font-bold text-foreground pl-5.5">{!b.fireBurner ? b.burnerOffTime : '—'}</div>
-                          </div>
-                        </div>
-                        
-                        <div className="flex justify-between items-center px-1">
-                          <span className="text-xs font-medium text-muted-foreground">Total Duration</span>
-                          <span className="text-xs font-mono font-bold text-orange-500">{b.burnerDuration}</span>
-                        </div>
-                      </div>
-
-                      {/* Pump Status */}
-                      <div className="flex flex-col gap-2.5 mt-4 pt-4 border-t border-border/40">
-                        <div className="flex justify-between items-center">
-                          <span className="text-xs font-semibold text-muted-foreground">Pump Status</span>
-                          <span className={`text-[9px] px-2 py-0.5 rounded font-bold ${b.motorPump ? 'bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400' : 'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400'}`}>
-                            {b.motorPump ? "ON" : "OFF"}
-                          </span>
-                        </div>
-                        
-                        <div className="bg-secondary/30 border border-border/50 rounded-lg flex">
-                          <div className="flex-1 p-2.5 flex flex-col gap-1.5 border-r border-border/50">
-                            <div className="flex items-center gap-2 text-[10px] text-muted-foreground font-medium uppercase tracking-wider">
-                              <Activity className={`w-3.5 h-3.5 ${b.motorPump ? 'text-emerald-500' : 'text-muted-foreground/50'}`} /> ON
+                            <div className="flex-1 p-2 flex flex-col gap-1">
+                              <div className="flex items-center gap-1.5 text-[9px] text-muted-foreground font-medium uppercase tracking-wider">
+                                <Activity className={`w-3 h-3 ${!b.motorPump ? 'text-red-500' : 'text-muted-foreground/50'}`} /> OFF
+                              </div>
+                              <div className="text-[10px] font-mono font-bold text-foreground pl-4.5">{!b.motorPump ? b.pumpOffTime : '—'}</div>
                             </div>
-                            <div className="text-xs font-mono font-bold text-foreground pl-5.5">{b.motorPump ? b.pumpOnTime : '—'}</div>
                           </div>
-                          <div className="flex-1 p-2.5 flex flex-col gap-1.5">
-                            <div className="flex items-center gap-2 text-[10px] text-muted-foreground font-medium uppercase tracking-wider">
-                              <Activity className={`w-3.5 h-3.5 ${!b.motorPump ? 'text-red-500' : 'text-muted-foreground/50'}`} /> OFF
-                            </div>
-                            <div className="text-xs font-mono font-bold text-foreground pl-5.5">{!b.motorPump ? b.pumpOffTime : '—'}</div>
+                          
+                          <div className="flex justify-between items-center px-1">
+                            <span className="text-[10px] font-medium text-muted-foreground">Total Duration</span>
+                            <span className="text-[10px] font-mono font-bold text-emerald-600 dark:text-emerald-400">{b.pumpDuration}</span>
                           </div>
-                        </div>
-                        
-                        <div className="flex justify-between items-center px-1">
-                          <span className="text-xs font-medium text-muted-foreground">Total Duration</span>
-                          <span className="text-xs font-mono font-bold text-emerald-600 dark:text-emerald-400">{b.pumpDuration}</span>
                         </div>
                       </div>
 
