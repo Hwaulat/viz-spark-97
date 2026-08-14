@@ -52,31 +52,13 @@ const AREAS: AreaDef[] = [
   { id: "pted-bag-filter", name: "PTED Bag Filter", type: "temp-pressure", temp: "25.0", pressure: "3.2" },
 ];
 
-function MonitoringArea() {
-  return (
-    <div className="p-6 space-y-6">
-      {/* Header */}
-      <div className="flex items-end justify-between flex-wrap gap-3">
-        <div>
-          <div className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">
-            Monitoring System
-          </div>
-          <h1 className="text-2xl font-semibold mt-1 flex items-center gap-2">
-            <Activity className="h-6 w-6 text-primary" /> Monitoring Area
-          </h1>
-          <p className="text-sm text-muted-foreground mt-1">
-            Real-time overview of temperature and pressure for all processing areas.
-          </p>
-        </div>
-      </div>
 
-      {/* Grid of Sections */}
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {AREAS.map((area) => (
-          <Link
-            key={area.id}
+function AreaCard({ area }: { area: AreaDef }) {
+  return (
+    <Link
+            
             to={`/monitoring-area/${area.id}`}
-            className="block group"
+            className="block group h-full"
           >
             <Panel
               className="hover:border-primary/50 transition-colors h-full flex flex-col"
@@ -336,9 +318,57 @@ function MonitoringArea() {
               )}
             </Panel>
           </Link>
-        ))}
+  );
+}
+
+function MonitoringArea() {
+  const col1Areas = ["boiler-area"].map(id => AREAS.find(a => a.id === id)).filter(Boolean) as AreaDef[];
+  const col2Areas = ["flood-station", "degreasing", "pted-bag-filter"].map(id => AREAS.find(a => a.id === id)).filter(Boolean) as AreaDef[];
+  const col3Areas = ["pree-degreasing", "phosphate"].map(id => AREAS.find(a => a.id === id)).filter(Boolean) as AreaDef[];
+  const ovenAreas = ["oven-sealing", "oven-topcoat", "oven-ced"].map(id => AREAS.find(a => a.id === id)).filter(Boolean) as AreaDef[];
+
+  return (
+    <div className="p-6 space-y-6">
+      {/* Header */}
+      <div className="flex items-end justify-between flex-wrap gap-3">
+        <div>
+          <div className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">
+            Monitoring System
+          </div>
+          <h1 className="text-2xl font-semibold mt-1 flex items-center gap-2">
+            <Activity className="h-6 w-6 text-primary" /> Monitoring Area
+          </h1>
+          <p className="text-sm text-muted-foreground mt-1">
+            Real-time overview of temperature and pressure for all processing areas.
+          </p>
+        </div>
+      </div>
+
+      {/* Layout Grid */}
+      <div className="flex flex-col gap-6">
+        {/* Top Section */}
+        <div className="grid gap-4 lg:grid-cols-3">
+          {/* Column 1: Boiler Area */}
+          <div className="flex flex-col gap-4">
+            {col1Areas.map(area => <AreaCard key={area.id} area={area} />)}
+          </div>
+          
+          {/* Column 2: Flood, Degreasing, PTED */}
+          <div className="flex flex-col gap-4">
+            {col2Areas.map(area => <AreaCard key={area.id} area={area} />)}
+          </div>
+          
+          {/* Column 3: Pre Degreasing, Phosphate */}
+          <div className="flex flex-col gap-4">
+            {col3Areas.map(area => <AreaCard key={area.id} area={area} />)}
+          </div>
+        </div>
+
+        {/* Bottom Section: Ovens */}
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {ovenAreas.map(area => <AreaCard key={area.id} area={area} />)}
+        </div>
       </div>
     </div>
   );
 }
-
