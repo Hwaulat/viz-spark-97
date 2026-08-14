@@ -123,11 +123,6 @@ function MonitoringArea() {
                               <div className="text-[10px] font-mono font-bold text-foreground pl-4.5">{!b.running ? b.offTime : '—'}</div>
                             </div>
                           </div>
-                          
-                          <div className="flex justify-between items-center px-1">
-                            <span className="text-[10px] font-medium text-muted-foreground">Total Duration</span>
-                            <span className="text-[10px] font-mono font-bold text-blue-600 dark:text-blue-400">{b.boilerDuration}</span>
-                          </div>
                         </div>
 
                         {/* Pump Status */}
@@ -152,11 +147,6 @@ function MonitoringArea() {
                               </div>
                               <div className="text-[10px] font-mono font-bold text-foreground pl-4.5">{!b.motorPump ? b.pumpOffTime : '—'}</div>
                             </div>
-                          </div>
-                          
-                          <div className="flex justify-between items-center px-1">
-                            <span className="text-[10px] font-medium text-muted-foreground">Total Duration</span>
-                            <span className="text-[10px] font-mono font-bold text-emerald-600 dark:text-emerald-400">{b.pumpDuration}</span>
                           </div>
                         </div>
                       </div>
