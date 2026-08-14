@@ -15,7 +15,25 @@ export const Route = createFileRoute("/monitoring-area/$id")({
   component: MonitoringAreaDetails,
 });
 
+
+const MINUTE_DATA = Array.from({ length: 30 }, (_, i) => {
+  const time = new Date(Date.now() - (29 - i) * 60000);
+  return {
+    time: time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+    temp1_b1: +(200 + Math.random() * 20).toFixed(1),
+    temp2_b1: +(210 + Math.random() * 20).toFixed(1),
+    temp1_b2: +(195 + Math.random() * 20).toFixed(1),
+    temp2_b2: +(205 + Math.random() * 20).toFixed(1),
+    temp1_b3: +(202 + Math.random() * 20).toFixed(1),
+    temp2_b3: +(212 + Math.random() * 20).toFixed(1),
+    pressure: +(5 + Math.random() * 2).toFixed(2),
+    energy: +(50 + Math.random() * 10).toFixed(1),
+    gas: +(30 + Math.random() * 5).toFixed(1),
+  };
+});
+
 function MonitoringAreaDetails() {
+  const [historicalBoilerTab, setHistoricalBoilerTab] = useState("Boiler 1");
   const { id } = Route.useParams();
   const [activeTab, setActiveTab] = useState("Boiler Monitoring");
   const [timeFilter, setTimeFilter] = useState<"daily" | "monthly" | "yearly">("daily");
@@ -175,17 +193,17 @@ function MonitoringAreaDetails() {
                       <div className="flex justify-between text-xs mt-1 bg-background/50 rounded-lg p-2 border border-border/30">
                         <div className="flex flex-col gap-1.5 text-muted-foreground">
                           <span className="flex items-center gap-1.5 text-[10px] uppercase tracking-wider"><Power className="h-3.5 w-3.5 text-emerald-500" /> ON</span>
-                          <span className="text-foreground font-mono font-bold text-sm">{b.onTime}</span>
+                          <span className="text-foreground font-mono font-bold text-lg">{b.onTime}</span>
                         </div>
                         <div className="w-px bg-border/50 my-1" />
                         <div className="flex flex-col gap-1.5 text-muted-foreground">
                           <span className="flex items-center gap-1.5 text-[10px] uppercase tracking-wider"><Power className="h-3.5 w-3.5 text-destructive" /> OFF</span>
-                          <span className="text-foreground font-mono font-bold text-sm">{b.offTime}</span>
+                          <span className="text-foreground font-mono font-bold text-lg">{b.offTime}</span>
                         </div>
                       </div>
                       <div className="flex items-center justify-between mt-2 pt-2 border-t border-border/30 text-xs">
                           <span className="text-muted-foreground">Total Duration</span>
-                          <span className="text-foreground font-mono font-semibold text-primary">{b.boilerDuration}</span>
+                          <span className="text-foreground font-mono font-semibold text-primary text-lg">{b.boilerDuration}</span>
                       </div>
                     </div>
                     
@@ -197,17 +215,17 @@ function MonitoringAreaDetails() {
                       <div className="flex justify-between text-xs mt-1 bg-background/50 rounded-lg p-2 border border-border/30">
                         <div className="flex flex-col gap-1.5 text-muted-foreground">
                           <span className="flex items-center gap-1.5 text-[10px] uppercase tracking-wider"><Flame className="h-3.5 w-3.5 text-orange-500" /> ON</span>
-                          <span className="text-foreground font-mono font-bold text-sm">{b.burnerOnTime}</span>
+                          <span className="text-foreground font-mono font-bold text-lg">{b.burnerOnTime}</span>
                         </div>
                         <div className="w-px bg-border/50 my-1" />
                         <div className="flex flex-col gap-1.5 text-muted-foreground">
                           <span className="flex items-center gap-1.5 text-[10px] uppercase tracking-wider"><Flame className="h-3.5 w-3.5 text-gray-500" /> OFF</span>
-                          <span className="text-foreground font-mono font-bold text-sm">{b.burnerOffTime}</span>
+                          <span className="text-foreground font-mono font-bold text-lg">{b.burnerOffTime}</span>
                         </div>
                       </div>
                       <div className="flex items-center justify-between mt-2 pt-2 border-t border-border/30 text-xs">
                           <span className="text-muted-foreground">Total Duration</span>
-                          <span className="text-foreground font-mono font-semibold text-orange-500 dark:text-orange-400">{b.burnerDuration}</span>
+                          <span className="text-foreground font-mono font-semibold text-orange-500 dark:text-orange-400 text-lg">{b.burnerDuration}</span>
                       </div>
                     </div>
                     

@@ -76,8 +76,8 @@ function AreaCard({ area }: { area: AreaDef }) {
                           <Flame className={`h-4 w-4 ${b.running ? 'text-emerald-500' : 'text-gray-400'}`} /> {b.name}
                         </span>
                         <div className="flex gap-4 text-xs font-mono items-center">
-                          <span className="text-muted-foreground">T1: <span className="text-foreground font-bold text-sm">{b.temp1.toFixed(1)}°C</span></span>
-                          <span className="text-muted-foreground">T2: <span className="text-foreground font-bold text-sm">{b.temp2.toFixed(1)}°C</span></span>
+                          <span className="text-muted-foreground flex flex-col items-center">T1 <span className="text-foreground font-bold text-2xl mt-1">{b.temp1.toFixed(1)}°C</span></span>
+                          <span className="text-muted-foreground flex flex-col items-center">T2 <span className="text-foreground font-bold text-2xl mt-1">{b.temp2.toFixed(1)}°C</span></span>
                         </div>
                       </div>
 
@@ -96,13 +96,13 @@ function AreaCard({ area }: { area: AreaDef }) {
                               <div className="flex items-center gap-1.5 text-[9px] text-muted-foreground font-medium uppercase tracking-wider">
                                 <Power className={`w-3 h-3 ${b.running ? 'text-emerald-500' : 'text-muted-foreground/50'}`} /> ON
                               </div>
-                              <div className="text-[10px] font-mono font-bold text-foreground pl-4.5">{b.running ? b.onTime : '—'}</div>
+                              <div className="text-sm font-mono font-bold text-foreground pl-4.5">{b.running ? b.onTime : '—'}</div>
                             </div>
                             <div className="flex-1 p-2 flex flex-col gap-1">
                               <div className="flex items-center gap-1.5 text-[9px] text-muted-foreground font-medium uppercase tracking-wider">
                                 <Power className={`w-3 h-3 ${!b.running ? 'text-red-500' : 'text-muted-foreground/50'}`} /> OFF
                               </div>
-                              <div className="text-[10px] font-mono font-bold text-foreground pl-4.5">{!b.running ? b.offTime : '—'}</div>
+                              <div className="text-sm font-mono font-bold text-foreground pl-4.5">{!b.running ? b.offTime : '—'}</div>
                             </div>
                           </div>
                         </div>
@@ -121,13 +121,13 @@ function AreaCard({ area }: { area: AreaDef }) {
                               <div className="flex items-center gap-1.5 text-[9px] text-muted-foreground font-medium uppercase tracking-wider">
                                 <Activity className={`w-3 h-3 ${b.motorPump ? 'text-emerald-500' : 'text-muted-foreground/50'}`} /> ON
                               </div>
-                              <div className="text-[10px] font-mono font-bold text-foreground pl-4.5">{b.motorPump ? b.pumpOnTime : '—'}</div>
+                              <div className="text-sm font-mono font-bold text-foreground pl-4.5">{b.motorPump ? b.pumpOnTime : '—'}</div>
                             </div>
                             <div className="flex-1 p-2 flex flex-col gap-1">
                               <div className="flex items-center gap-1.5 text-[9px] text-muted-foreground font-medium uppercase tracking-wider">
                                 <Activity className={`w-3 h-3 ${!b.motorPump ? 'text-red-500' : 'text-muted-foreground/50'}`} /> OFF
                               </div>
-                              <div className="text-[10px] font-mono font-bold text-foreground pl-4.5">{!b.motorPump ? b.pumpOffTime : '—'}</div>
+                              <div className="text-sm font-mono font-bold text-foreground pl-4.5">{!b.motorPump ? b.pumpOffTime : '—'}</div>
                             </div>
                           </div>
                         </div>
@@ -276,19 +276,19 @@ function AreaCard({ area }: { area: AreaDef }) {
                   <div className="grid grid-cols-4 gap-1.5">
                     <div className="rounded bg-secondary/30 py-1.5 px-1 border border-border/50 flex flex-col items-center justify-center text-center">
                       <span className="text-[9px] text-muted-foreground">kW / kW/h</span>
-                      <span className="text-sm font-semibold font-mono mt-0.5 leading-none">{area.elec.kw} / {area.elec.kwh}</span>
+                      <span className="text-lg font-semibold font-mono mt-0.5 leading-none">{area.elec.kw} / {area.elec.kwh}</span>
                     </div>
                     <div className="rounded bg-secondary/30 py-1.5 px-1 border border-border/50 flex flex-col items-center justify-center text-center">
                       <span className="text-[9px] text-muted-foreground">kVar / kVar/h</span>
-                      <span className="text-sm font-semibold font-mono mt-0.5 leading-none">{area.elec.kvar} / {area.elec.kvarh}</span>
+                      <span className="text-lg font-semibold font-mono mt-0.5 leading-none">{area.elec.kvar} / {area.elec.kvarh}</span>
                     </div>
                     <div className="rounded bg-secondary/30 py-1.5 px-1 border border-border/50 flex flex-col items-center justify-center text-center">
                       <span className="text-[9px] text-muted-foreground">PF</span>
-                      <span className="text-base font-semibold font-mono mt-0.5 leading-none">{area.elec.pf}</span>
+                      <span className="text-xl font-semibold font-mono mt-0.5 leading-none">{area.elec.pf}</span>
                     </div>
                     <div className="rounded bg-secondary/30 py-1.5 px-1 border border-border/50 flex flex-col items-center justify-center text-center">
                       <span className="text-[9px] text-muted-foreground">H2</span>
-                      <span className="text-base font-semibold font-mono mt-0.5 leading-none">{area.elec.h2}</span>
+                      <span className="text-xl font-semibold font-mono mt-0.5 leading-none">{area.elec.h2}</span>
                     </div>
                   </div>
                 </div>
