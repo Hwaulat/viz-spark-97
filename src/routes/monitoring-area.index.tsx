@@ -76,9 +76,9 @@ function AreaCard({ area }: { area: AreaDef }) {
                           <Flame className={`h-4 w-4 ${b.running ? 'text-emerald-500' : 'text-gray-400'}`} /> {b.name}
                         </span>
                         <div className="flex gap-4 text-xs font-mono items-center">
-                          <span className="text-muted-foreground flex flex-col items-center">T1 <span className="text-foreground font-bold text-2xl mt-1">{b.temp1.toFixed(1)}°C</span></span>
-                          <span className="text-muted-foreground flex flex-col items-center">T2 <span className="text-foreground font-bold text-2xl mt-1">{b.temp2.toFixed(1)}°C</span></span>
-                        </div>
+    <span className="text-muted-foreground flex items-baseline gap-2">T1 <span className="text-foreground font-bold text-2xl">{b.temp1.toFixed(1)}°C</span></span>
+    <span className="text-muted-foreground flex items-baseline gap-2">T2 <span className="text-foreground font-bold text-2xl">{b.temp2.toFixed(1)}°C</span></span>
+  </div>
                       </div>
 
                       <div className="grid grid-cols-2 gap-4 mt-4 pt-4 border-t border-border/40">
@@ -203,7 +203,7 @@ function AreaCard({ area }: { area: AreaDef }) {
               )}
 
               {area.type === "temp-dual" && (
-                <div className="grid grid-cols-2 gap-3 mt-2">
+                <div className="flex flex-col gap-3 mt-2">
                   <div className="rounded-lg bg-secondary/50 p-2.5 border border-border/50 flex flex-col gap-1.5">
                     <div className="text-[10px] font-semibold text-muted-foreground text-center border-b border-border/50 pb-1.5">
                       Large Tank
