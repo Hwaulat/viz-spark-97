@@ -342,36 +342,8 @@ function MonitoringAreaDetails() {
                   </div>
 
                   {/* L-Shape Map Content */}
-                  <div className="relative w-full h-[550px] overflow-x-auto bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCI+CiAgPHJlY3Qgd2lkdGg9IjIwIiBoZWlnaHQ9IjIwIiBmaWxsPSJub25lIiBzdHJva2U9IiNlNWU3ZWIiIHN0cm9rZS13aWR0aD0iMC41Ii8+Cjwvc3ZnPg==')] dark:bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCI+CiAgPHJlY3Qgd2lkdGg9IjIwIiBoZWlnaHQ9IjIwIiBmaWxsPSJub25lIiBzdHJva2U9IiMzMzQxNTUiIHN0cm9rZS13aWR0aD0iMC41Ii8+Cjwvc3ZnPg==')]">
-                    <div className="absolute inset-0 min-w-[1200px]">
-                      {/* L-Shape Track Path */}
-                      <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ zIndex: 0 }}>
-                        <path
-                          d="M 1050 400 L 100 400 A 50 50 0 0 1 50 350 L 50 100 A 50 50 0 0 1 100 50 L 850 50 A 50 50 0 0 1 900 100 L 900 400"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="20"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          className="text-slate-200 dark:text-slate-800 opacity-80"
-                        />
-                      </svg>
-                      
-                      {/* Stations */}
-                      {LINE_TRACKING_STATIONS.map((st) => (
-                        <div
-                          key={st.id}
-                          className="absolute flex flex-col items-center justify-center transform -translate-x-1/2 -translate-y-1/2"
-                          style={{ left: st.x, top: st.y, zIndex: 10 }}
-                        >
-                          <div className={`w-5 h-5 rounded-full border-[2.5px] ${st.stuck ? 'border-orange-500 bg-orange-400' : st.occupied ? 'border-emerald-600 bg-emerald-500' : 'border-gray-400 bg-background'} shadow-sm`} />
-                          <span className="absolute -bottom-5 text-[8px] font-mono text-muted-foreground whitespace-nowrap">{st.id}</span>
-                          {st.since && (
-                            <span className={`absolute -top-5 text-[8px] font-mono px-1 rounded ${st.stuck ? 'bg-orange-100 text-orange-700' : 'bg-secondary text-foreground'}`}>{st.since}</span>
-                          )}
-                        </div>
-                      ))}
-                    </div>
+                  <div className="relative w-full h-[550px] overflow-auto flex items-center justify-center bg-background p-4">
+                    <img src="/Line-Tracking.svg" alt="Line Tracking Map" className="max-w-full h-auto object-contain drop-shadow-sm" />
                   </div>
                   
                   {/* Map Legend Footer */}
