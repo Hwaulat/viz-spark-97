@@ -41,7 +41,6 @@ interface AreaDef {
 }
 
 const AREAS: AreaDef[] = [
-  { id: "line-tracking", name: "Line Tracking", type: "line-tracking" },
   { id: "boiler-area", name: "Boiler Area", type: "boiler" },
   { id: "flood-station", name: "Flood Station", type: "temp-single", tempPV: "30.1", tempSP: "30.0" },
   { id: "pree-degreasing", name: "Pree Degreasing", type: "temp-dual", largeTank: { pv: "28.5", sp: "30.0" }, smallTank: { pv: "46.2", sp: "45.0" } },
