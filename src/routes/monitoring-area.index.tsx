@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Panel } from "@/components/panel";
-import { Activity, Thermometer, Gauge, ArrowRight, Flame, Zap } from "lucide-react";
+import { Activity, Thermometer, Gauge, ArrowRight, Flame, Zap, Power } from "lucide-react";
 import { BOILERS } from "@/lib/mock-data";
 
 export const Route = createFileRoute("/monitoring-area/")({
@@ -88,25 +88,104 @@ function MonitoringArea() {
               {area.type === "boiler" && (
                 <div className="grid gap-2 mt-2">
                   {BOILERS.map((b) => (
-                    <div key={b.id} className="rounded-md bg-secondary/50 p-2.5 border border-border/50 flex flex-col gap-1.5">
-                      <div className="flex justify-between items-center mb-3">
-                        <span className="text-xs font-semibold flex items-center gap-1.5">
-                          <Flame className={`h-3 w-3 ${b.fireBurner ? 'text-emerald-500' : 'text-gray-400'}`} /> {b.name}
+                    <div key={b.id} className="rounded-md bg-background p-3 border border-border/50 shadow-sm flex flex-col">
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm font-bold flex items-center gap-1.5">
+                          <Flame className={`h-4 w-4 ${b.running ? 'text-emerald-500' : 'text-gray-400'}`} /> {b.name}
                         </span>
-                        <div className="flex gap-4 text-[10px] font-mono items-center">
+                        <div className="flex gap-4 text-xs font-mono items-center">
                           <span className="text-muted-foreground">T1: <span className="text-foreground font-bold text-sm">{b.temp1.toFixed(1)}°C</span></span>
                           <span className="text-muted-foreground">T2: <span className="text-foreground font-bold text-sm">{b.temp2.toFixed(1)}°C</span></span>
                         </div>
                       </div>
-                      
-                      <div className="flex justify-between items-center mt-1 pt-2 border-t border-border/50">
-                        <div className="flex flex-col gap-0.5">
-                          <div className="text-[10px] text-muted-foreground">Burner: <span className={`font-semibold ${b.fireBurner ? 'text-emerald-500' : 'text-muted-foreground'}`}>{b.fireBurner ? 'ON' : 'OFF'}</span></div>
-                          <div className="text-[9px] text-muted-foreground/80">Since: {b.burnerTime} • {b.burnerDuration}</div>
+
+                      {/* Boiler Status */}
+                      <div className="flex flex-col gap-2.5 mt-4 pt-4 border-t border-border/40">
+                        <div className="flex justify-between items-center">
+                          <span className="text-xs font-semibold text-muted-foreground">Boiler Status</span>
+                          <span className={`text-[9px] px-2 py-0.5 rounded font-bold ${b.running ? 'bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400' : 'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400'}`}>
+                            {b.running ? "ON" : "OFF"}
+                          </span>
                         </div>
-                        <div className="flex flex-col gap-0.5 text-right">
-                          <div className="text-[10px] text-muted-foreground">Pump: <span className={`font-semibold ${b.motorPump ? 'text-emerald-500' : 'text-muted-foreground'}`}>{b.motorPump ? 'ON' : 'OFF'}</span></div>
-                          <div className="text-[9px] text-muted-foreground/80">Since: {b.pumpTime} • {b.pumpDuration}</div>
+                        
+                        <div className="bg-secondary/30 border border-border/50 rounded-lg flex">
+                          <div className="flex-1 p-2.5 flex flex-col gap-1.5 border-r border-border/50">
+                            <div className="flex items-center gap-2 text-[10px] text-muted-foreground font-medium uppercase tracking-wider">
+                              <Power className={`w-3.5 h-3.5 ${b.running ? 'text-emerald-500' : 'text-muted-foreground/50'}`} /> ON
+                            </div>
+                            <div className="text-xs font-mono font-bold text-foreground pl-5.5">{b.running ? b.onTime : '—'}</div>
+                          </div>
+                          <div className="flex-1 p-2.5 flex flex-col gap-1.5">
+                            <div className="flex items-center gap-2 text-[10px] text-muted-foreground font-medium uppercase tracking-wider">
+                              <Power className={`w-3.5 h-3.5 ${!b.running ? 'text-red-500' : 'text-muted-foreground/50'}`} /> OFF
+                            </div>
+                            <div className="text-xs font-mono font-bold text-foreground pl-5.5">{!b.running ? b.offTime : '—'}</div>
+                          </div>
+                        </div>
+                        
+                        <div className="flex justify-between items-center px-1">
+                          <span className="text-xs font-medium text-muted-foreground">Total Duration</span>
+                          <span className="text-xs font-mono font-bold text-blue-600 dark:text-blue-400">{b.boilerDuration}</span>
+                        </div>
+                      </div>
+
+                      {/* Burner Status */}
+                      <div className="flex flex-col gap-2.5 mt-4 pt-4 border-t border-border/40">
+                        <div className="flex justify-between items-center">
+                          <span className="text-xs font-semibold text-muted-foreground">Burner Status</span>
+                          <span className={`text-[9px] px-2 py-0.5 rounded font-bold ${b.fireBurner ? 'bg-orange-100 text-orange-600 dark:bg-orange-900/30 dark:text-orange-400' : 'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400'}`}>
+                            {b.fireBurner ? "ON" : "OFF"}
+                          </span>
+                        </div>
+                        
+                        <div className="bg-secondary/30 border border-border/50 rounded-lg flex">
+                          <div className="flex-1 p-2.5 flex flex-col gap-1.5 border-r border-border/50">
+                            <div className="flex items-center gap-2 text-[10px] text-muted-foreground font-medium uppercase tracking-wider">
+                              <Flame className={`w-3.5 h-3.5 ${b.fireBurner ? 'text-orange-500' : 'text-muted-foreground/50'}`} /> ON
+                            </div>
+                            <div className="text-xs font-mono font-bold text-foreground pl-5.5">{b.fireBurner ? b.burnerOnTime : '—'}</div>
+                          </div>
+                          <div className="flex-1 p-2.5 flex flex-col gap-1.5">
+                            <div className="flex items-center gap-2 text-[10px] text-muted-foreground font-medium uppercase tracking-wider">
+                              <Flame className={`w-3.5 h-3.5 ${!b.fireBurner ? 'text-red-500' : 'text-muted-foreground/50'}`} /> OFF
+                            </div>
+                            <div className="text-xs font-mono font-bold text-foreground pl-5.5">{!b.fireBurner ? b.burnerOffTime : '—'}</div>
+                          </div>
+                        </div>
+                        
+                        <div className="flex justify-between items-center px-1">
+                          <span className="text-xs font-medium text-muted-foreground">Total Duration</span>
+                          <span className="text-xs font-mono font-bold text-orange-500">{b.burnerDuration}</span>
+                        </div>
+                      </div>
+
+                      {/* Pump Status */}
+                      <div className="flex flex-col gap-2.5 mt-4 pt-4 border-t border-border/40">
+                        <div className="flex justify-between items-center">
+                          <span className="text-xs font-semibold text-muted-foreground">Pump Status</span>
+                          <span className={`text-[9px] px-2 py-0.5 rounded font-bold ${b.motorPump ? 'bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400' : 'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400'}`}>
+                            {b.motorPump ? "ON" : "OFF"}
+                          </span>
+                        </div>
+                        
+                        <div className="bg-secondary/30 border border-border/50 rounded-lg flex">
+                          <div className="flex-1 p-2.5 flex flex-col gap-1.5 border-r border-border/50">
+                            <div className="flex items-center gap-2 text-[10px] text-muted-foreground font-medium uppercase tracking-wider">
+                              <Activity className={`w-3.5 h-3.5 ${b.motorPump ? 'text-emerald-500' : 'text-muted-foreground/50'}`} /> ON
+                            </div>
+                            <div className="text-xs font-mono font-bold text-foreground pl-5.5">{b.motorPump ? b.pumpOnTime : '—'}</div>
+                          </div>
+                          <div className="flex-1 p-2.5 flex flex-col gap-1.5">
+                            <div className="flex items-center gap-2 text-[10px] text-muted-foreground font-medium uppercase tracking-wider">
+                              <Activity className={`w-3.5 h-3.5 ${!b.motorPump ? 'text-red-500' : 'text-muted-foreground/50'}`} /> OFF
+                            </div>
+                            <div className="text-xs font-mono font-bold text-foreground pl-5.5">{!b.motorPump ? b.pumpOffTime : '—'}</div>
+                          </div>
+                        </div>
+                        
+                        <div className="flex justify-between items-center px-1">
+                          <span className="text-xs font-medium text-muted-foreground">Total Duration</span>
+                          <span className="text-xs font-mono font-bold text-emerald-600 dark:text-emerald-400">{b.pumpDuration}</span>
                         </div>
                       </div>
 
