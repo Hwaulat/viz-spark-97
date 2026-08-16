@@ -438,7 +438,7 @@ function LineTracking() {
         }
         subtitle="Real-time position of skids along the CED line (U-loop layout)"
         right={
-          <span className="font-mono text-[11px] text-muted-foreground">
+          <span suppressHydrationWarning className="font-mono text-[11px] text-muted-foreground">
             {new Date().toLocaleString("en-GB", { hour12: false })}
           </span>
         }
@@ -458,7 +458,7 @@ function LineTracking() {
         <div className="rounded-md border border-border bg-background/60 grid-bg overflow-x-auto">
           <svg
             viewBox="0 0 1200 410"
-            className="w-full min-w-[900px]"
+            className="line-tracking-map w-full min-w-[900px]"
             preserveAspectRatio="xMidYMid meet"
           >
             {/* Zone backdrops */}

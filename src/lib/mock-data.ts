@@ -399,8 +399,8 @@ export const LINE_TRACKING_STATIONS = (() => {
 })();
 
 export const PROCESS_DETAIL_STATIONS = {
-  'pre-degreasing': { name: 'Pre-Degreasing', pv: 46.2, sp: 45.0, valve: 42, pump1: true, pump2: false },
-  'degreasing': { name: 'Degreasing', pv: 52.8, sp: 52.0, valve: 65, pump1: true, pump2: true },
+  'pre-degreasing': { name: 'Pre-Degreasing', pv: 46.2, sp: 45.0, valve: 42, pump1: true, pump2: false, alarm: false },
+  'degreasing': { name: 'Degreasing', pv: 52.8, sp: 52.0, valve: 65, pump1: true, pump2: true, alarm: false },
   'flood': { name: 'Flood', pv: 28.5, sp: 30.0, valve: 45, pump1: true, pump2: true, alarm: true },
-  'phosphate': { name: 'Phosphate', pv: 42.1, sp: 42.0, valve: 18, pump1: true, pump2: true }
+  'phosphate': { name: 'Phosphate', pv: 42.1, sp: 42.0, valve: 18, pump1: true, pump2: true, alarm: false }
 };
