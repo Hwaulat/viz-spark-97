@@ -5,6 +5,7 @@ import { BOILERS, BOILER_GAS, BOILER_USAGE_HISTORY, LINE_TRACKING_STATIONS, LINE
 import { Panel, StatusDot, ValueDisplay } from "@/components/panel";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import LineTrackingSvg from "@/assets/Line-Tracking.svg";
+import StationPreDegreasingSvg from "@/assets/Station-Pre-degreasing.svg";
 
 export const Route = createFileRoute("/monitoring-area/$id")({
   head: ({ params }) => ({
@@ -452,88 +453,33 @@ function MonitoringAreaDetails() {
                     return (
                       <div className="animate-in fade-in duration-300">
                         {/* Summary Cards */}
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                        <div className="grid grid-cols-2 gap-4 mb-6">
                           <Panel className="p-4 shadow-sm border border-border/50 bg-card/60">
                             <div className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1">PV Temperature</div>
                             <div className="flex items-baseline gap-1"><span className={`text-2xl font-mono font-bold ${data.alarm ? 'text-destructive' : 'text-emerald-500'}`}>{data.pv}</span><span className="text-xs">°C</span></div>
                           </Panel>
                           <Panel className="p-4 shadow-sm border border-border/50 bg-card/60">
-                            <div className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1">Setpoint</div>
+                            <div className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1">SP Temperature</div>
                             <div className="flex items-baseline gap-1"><span className="text-2xl font-mono font-bold">{data.sp}</span><span className="text-xs">°C</span></div>
-                          </Panel>
-                          <Panel className="p-4 shadow-sm border border-border/50 bg-card/60">
-                            <div className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1">Modulating Valve</div>
-                            <div className="flex items-baseline gap-1"><span className="text-2xl font-mono font-bold text-emerald-500">{data.valve}%</span></div>
-                          </Panel>
-                          <Panel className="p-4 shadow-sm border border-border/50 bg-card/60">
-                            <div className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1">Pumps (P1/P2)</div>
-                            <div className="flex items-baseline gap-2">
-                              <span className={`text-xl font-mono font-bold ${data.pump1 ? 'text-emerald-500' : 'text-muted-foreground'}`}>{data.pump1 ? 'ON' : 'OFF'}</span> 
-                              <span className="text-muted-foreground">/</span>
-                              <span className={`text-xl font-mono font-bold ${data.pump2 ? 'text-emerald-500' : 'text-muted-foreground'}`}>{data.pump2 ? 'ON' : 'OFF'}</span>
-                            </div>
                           </Panel>
                         </div>
 
-                        {/* P&ID Mimic */}
+                        {/* Station Illustration */}
                         <div className="border border-border/50 rounded-xl overflow-hidden bg-background">
                           <div className="flex justify-between items-center p-3 bg-secondary/30 border-b border-border/50">
                             <div className="flex items-center gap-2">
                               <Activity className="h-4 w-4 text-muted-foreground" />
-                              <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">P&ID Mimic — {data.name}</span>
+                              <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Station Diagram — {data.name}</span>
                             </div>
                             <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-orange-500/10 text-orange-600 border border-orange-500/20">READ-ONLY</span>
                           </div>
                           
-                          <div className="relative w-full h-[400px] bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCI+CiAgPHJlY3Qgd2lkdGg9IjIwIiBoZWlnaHQ9IjIwIiBmaWxsPSJub25lIiBzdHJva2U9IiNlNWU3ZWIiIHN0cm9rZS13aWR0aD0iMC41Ii8+Cjwvc3ZnPg==')] dark:bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCI+CiAgPHJlY3Qgd2lkdGg9IjIwIiBoZWlnaHQ9IjIwIiBmaWxsPSJub25lIiBzdHJva2U9IiMzMzQxNTUiIHN0cm9rZS13aWR0aD0iMC41Ii8+Cjwvc3ZnPg==')] flex items-center justify-center">
-                            
-                            {/* Piping */}
-                            <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ zIndex: 0 }}>
-                              <path d="M 200 200 L 300 200" stroke="currentColor" strokeWidth="2" className="text-slate-400 dark:text-slate-600" />
-                              <path d="M 500 200 L 700 200 L 700 80 L 500 80" fill="none" stroke="currentColor" strokeWidth="2" className="text-slate-400 dark:text-slate-600" />
-                              <path d="M 700 200 L 700 320 L 300 320 L 300 260" fill="none" stroke="currentColor" strokeWidth="2" className="text-slate-400 dark:text-slate-600" />
-                              <path d="M 550 200 L 550 140 L 750 140 L 750 80" fill="none" stroke="currentColor" strokeWidth="2" className="text-slate-400 dark:text-slate-600" />
-                            </svg>
-
-                            {/* Pump P1 */}
-                            <div className="absolute left-[180px] top-[200px] flex flex-col items-center transform -translate-x-1/2 -translate-y-1/2">
-                              <div className={`w-12 h-12 rounded-full border-2 flex items-center justify-center bg-background ${data.pump1 ? 'border-emerald-500' : 'border-muted-foreground'}`}>
-                                <div className={`w-4 h-4 rounded-full ${data.pump1 ? 'bg-emerald-500' : 'bg-muted-foreground'}`}></div>
-                              </div>
-                              <span className="text-[10px] font-mono mt-1 text-muted-foreground">Pump P1</span>
-                              <span className={`text-[9px] font-bold ${data.pump1 ? 'text-emerald-500' : 'text-muted-foreground'}`}>{data.pump1 ? 'ON' : 'OFF'}</span>
-                            </div>
-
-                            {/* Process Tank */}
-                            <div className="absolute left-[400px] top-[200px] transform -translate-x-1/2 -translate-y-1/2 w-[200px] h-[120px] rounded-lg border-2 border-primary/50 bg-background overflow-hidden flex flex-col shadow-md">
-                              <div className="bg-secondary/30 text-center py-1 border-b border-border text-[9px] font-bold text-muted-foreground uppercase tracking-widest z-10">Process Tank</div>
-                              <div className="text-center text-[10px] text-primary mt-1 z-10">Level: 78%</div>
-                              <div className="flex-1 flex flex-col items-center justify-center z-10">
-                                <span className="text-3xl font-mono font-bold">{data.pv}°C</span>
-                                <span className="text-[10px] text-muted-foreground mt-1">PV / SP {data.sp}°C</span>
-                              </div>
-                              {/* Water Level Fill */}
-                              <div className="absolute bottom-0 left-0 right-0 bg-primary/20 h-[78%] z-0 border-t border-primary/30"></div>
-                            </div>
-
-                            {/* Modulating Valve */}
-                            <div className="absolute left-[550px] top-[200px] flex flex-col items-center transform -translate-x-1/2 -translate-y-1/2 bg-background px-1">
-                              <div className="w-8 h-8 relative flex items-center justify-center text-emerald-500">
-                                <svg viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6"><path d="M4 4h16v3H4zM4 17h16v3H4zM12 12l8 5H4zM12 12l8-5H4z"/></svg>
-                              </div>
-                              <span className="text-[9px] font-mono mt-1 text-muted-foreground">VAM211</span>
-                              <span className="text-[9px] font-bold text-primary">Open {data.valve}%</span>
-                            </div>
-
-                            {/* Pump P2 */}
-                            <div className="absolute left-[700px] top-[200px] flex flex-col items-center transform -translate-x-1/2 -translate-y-1/2 bg-background p-1">
-                              <div className={`w-12 h-12 rounded-full border-2 flex items-center justify-center bg-background ${data.pump2 ? 'border-emerald-500' : 'border-muted-foreground'}`}>
-                                <div className={`w-4 h-4 rounded-full ${data.pump2 ? 'bg-emerald-500' : 'bg-muted-foreground'}`}></div>
-                              </div>
-                              <span className="text-[10px] font-mono mt-1 text-muted-foreground">Pump P2</span>
-                              <span className={`text-[9px] font-bold ${data.pump2 ? 'text-emerald-500' : 'text-muted-foreground'}`}>{data.pump2 ? 'ON' : 'OFF'}</span>
-                            </div>
-
+                          <div className="relative w-full overflow-auto flex items-center justify-center bg-background p-4 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCI+CiAgPHJlY3Qgd2lkdGg9IjIwIiBoZWlnaHQ9IjIwIiBmaWxsPSJub25lIiBzdHJva2U9IiNlNWU3ZWIiIHN0cm9rZS13aWR0aD0iMC41Ii8+Cjwvc3ZnPg==')] dark:bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCI+CiAgPHJlY3Qgd2lkdGg9IjIwIiBoZWlnaHQ9IjIwIiBmaWxsPSJub25lIiBzdHJva2U9IiMzMzQxNTUiIHN0cm9rZS13aWR0aD0iMC41Ii8+Cjwvc3ZnPg==')]">
+                            {processDetailTab === "pre-degreasing" ? (
+                              <img src={StationPreDegreasingSvg} alt={`Station ${data.name}`} className="w-full h-auto object-contain" />
+                            ) : (
+                              <div className="w-full h-[400px] flex items-center justify-center text-muted-foreground text-sm">Station diagram coming soon</div>
+                            )}
                           </div>
                         </div>
                       </div>
