@@ -438,7 +438,9 @@ function LineTracking() {
         }
         subtitle="Real-time position of skids along the CED line (U-loop layout)"
         right={
-          <ClientClock />
+          <span suppressHydrationWarning className="font-mono text-[11px] text-muted-foreground">
+            {new Date().toLocaleString("en-GB", { hour12: false })}
+          </span>
         }
       >
         {/* Zone legend */}

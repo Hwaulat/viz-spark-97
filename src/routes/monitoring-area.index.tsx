@@ -57,7 +57,8 @@ function AreaCard({ area }: { area: AreaDef }) {
   return (
     <Link
             
-            to={`/monitoring-area/${area.id}`}
+            to="/monitoring-area/$id"
+            params={{ id: area.id }}
             className="block group h-full"
           >
             <Panel
