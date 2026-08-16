@@ -413,26 +413,17 @@ function MonitoringAreaDetails() {
                       <span className="text-xs font-mono text-muted-foreground">{new Date().toLocaleString('en-GB')}</span>
                     </div>
                     <p className="text-foreground text-sm">Real-time position of skids along the CED line (U-loop layout)</p>
-                    <div className="flex flex-wrap gap-4 mt-2">
-                      {LINE_TRACKING_ZONES.map((z) => (
-                        <div key={z.key} className="flex items-center gap-1.5">
-                          <div className="w-3 h-3 rounded-full" style={{ backgroundColor: z.color }}></div>
-                          <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">{z.label}</span>
-                        </div>
-                      ))}
-                    </div>
                   </div>
 
                   {/* L-Shape Map Content */}
                   <div className="relative w-full min-h-[600px] overflow-auto flex items-center justify-center bg-background p-4 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCI+CiAgPHJlY3Qgd2lkdGg9IjIwIiBoZWlnaHQ9IjIwIiBmaWxsPSJub25lIiBzdHJva2U9IiNlNWU3ZWIiIHN0cm9rZS13aWR0aD0iMC41Ii8+Cjwvc3ZnPg==')] dark:bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCI+CiAgPHJlY3Qgd2lkdGg9IjIwIiBoZWlnaHQ9IjIwIiBmaWxsPSJub25lIiBzdHJva2U9IiMzMzQxNTUiIHN0cm9rZS13aWR0aD0iMC41Ii8+Cjwvc3ZnPg==')]">
-                    <img src={LineTrackingSvg} alt="Line Tracking Map" className="max-w-full h-auto object-contain drop-shadow-sm dark:invert dark:opacity-80" style={{ filter: "drop-shadow(0px 0px 4px rgba(0,0,0,0.2))" }} />
+                    <img src={LineTrackingSvg} alt="Line Tracking Map" className="drop-shadow-sm dark:invert dark:opacity-80" style={{ filter: "drop-shadow(0px 0px 4px rgba(0,0,0,0.2))" }} />
                   </div>
                   
                   {/* Map Legend Footer */}
                   <div className="flex gap-4 p-3 bg-secondary/10 border-t border-border/50 text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">
                     <div className="flex items-center gap-1.5"><div className="w-3 h-3 rounded-full bg-emerald-500"></div> GREEN = SKID PRESENT</div>
                     <div className="flex items-center gap-1.5"><div className="w-3 h-3 rounded-full border-[1.5px] border-gray-400"></div> EMPTY STATION</div>
-                    <div className="flex items-center gap-1.5"><div className="w-3 h-3 rounded-full bg-orange-500"></div> STUCK &gt; 5min</div>
                   </div>
                 </div>
               )}
