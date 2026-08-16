@@ -9,6 +9,7 @@ import StationPreDegreasingSvg from "@/assets/Station-Pre-degreasing.svg";
 import StationFloodPng from "@/assets/Flood.png";
 import StationPhosphatePng from "@/assets/Phosphate-1.png";
 import StationDegreasingPng from "@/assets/Degreasing-1.png";
+import MapsPtedAreaPng from "@/assets/Maps-Pted-Area.png";
 
 export const Route = createFileRoute("/monitoring-area/$id")({
   head: ({ params }) => ({
@@ -533,6 +534,39 @@ function MonitoringAreaDetails() {
                id === "pree-degreasing" ? "pre-degreasing" :
                id
              } />
+           </div>
+         </div>
+      ) : id === "pted-bag-filter" ? (
+        <div className="space-y-6">
+           <div className="bg-card border border-border rounded-xl shadow-sm p-6">
+             <div className="animate-in fade-in duration-300">
+               {/* Summary Cards */}
+               <div className="grid grid-cols-2 gap-4 mb-6">
+                  <Panel className="p-4 shadow-sm border border-border/50 bg-card/60">
+                    <div className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1">Temperature</div>
+                    <div className="flex items-baseline gap-1"><span className="text-2xl font-mono font-bold text-emerald-500">25.0</span><span className="text-xs">°C</span></div>
+                  </Panel>
+                  <Panel className="p-4 shadow-sm border border-border/50 bg-card/60">
+                    <div className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1">Pressure</div>
+                    <div className="flex items-baseline gap-1"><span className="text-2xl font-mono font-bold text-emerald-500">3.2</span><span className="text-xs">bar</span></div>
+                  </Panel>
+               </div>
+
+               {/* Station Illustration */}
+               <div className="border border-border/50 rounded-xl overflow-hidden bg-background">
+                 <div className="flex justify-between items-center p-3 bg-secondary/30 border-b border-border/50">
+                   <div className="flex items-center gap-2">
+                     <Activity className="h-4 w-4 text-muted-foreground" />
+                     <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Station Diagram — PTED Bag Filter</span>
+                   </div>
+                   <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-orange-500/10 text-orange-600 border border-orange-500/20">READ-ONLY</span>
+                 </div>
+                 
+                 <div className="relative w-full overflow-auto flex items-center justify-center p-4">
+                   <img src={MapsPtedAreaPng} alt="PTED Bag Filter" className="w-full h-auto object-contain mix-blend-multiply dark:mix-blend-screen dark:invert" />
+                 </div>
+               </div>
+             </div>
            </div>
         </div>
       ) : (
