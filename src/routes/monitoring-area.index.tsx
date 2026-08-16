@@ -41,7 +41,6 @@ interface AreaDef {
 }
 
 const AREAS: AreaDef[] = [
-  { id: "line-tracking", name: "Line Tracking", type: "line-tracking" },
   { id: "boiler-area", name: "Boiler Area", type: "boiler" },
   { id: "flood-station", name: "Flood Station", type: "temp-single", tempPV: "30.1", tempSP: "30.0" },
   { id: "pree-degreasing", name: "Pree Degreasing", type: "temp-dual", largeTank: { pv: "28.5", sp: "30.0" }, smallTank: { pv: "46.2", sp: "45.0" } },
@@ -319,21 +318,13 @@ function AreaCard({ area }: { area: AreaDef }) {
                 </div>
               )}
 
-              {area.type === "line-tracking" && (
-                <div className="grid gap-2 mt-2">
-                  <div className="rounded-md bg-secondary/50 p-2 border border-border/50 flex justify-between items-center text-xs">
-                    <span className="font-medium text-muted-foreground">Status</span>
-                    <span className="text-ok font-semibold">ONLINE</span>
-                  </div>
-                </div>
-              )}
             </Panel>
           </Link>
   );
 }
 
 function MonitoringArea() {
-  const col1Areas = ["boiler-area", "line-tracking"].map(id => AREAS.find(a => a.id === id)).filter(Boolean) as AreaDef[];
+  const col1Areas = ["boiler-area"].map(id => AREAS.find(a => a.id === id)).filter(Boolean) as AreaDef[];
   const col2Areas = ["flood-station", "degreasing", "pted-bag-filter"].map(id => AREAS.find(a => a.id === id)).filter(Boolean) as AreaDef[];
   const col3Areas = ["pree-degreasing", "phosphate"].map(id => AREAS.find(a => a.id === id)).filter(Boolean) as AreaDef[];
   const ovenAreas = ["oven-sealing", "oven-topcoat", "oven-ced"].map(id => AREAS.find(a => a.id === id)).filter(Boolean) as AreaDef[];
