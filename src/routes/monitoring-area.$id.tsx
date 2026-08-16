@@ -6,6 +6,7 @@ import { Panel, StatusDot, ValueDisplay } from "@/components/panel";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import LineTrackingSvg from "@/assets/Line-Tracking.svg";
 import StationPreDegreasingSvg from "@/assets/Station-Pre-degreasing.svg";
+import StationFloodPng from "@/assets/Flood.png";
 
 export const Route = createFileRoute("/monitoring-area/$id")({
   head: ({ params }) => ({
@@ -477,6 +478,8 @@ function MonitoringAreaDetails() {
                           <div className="relative w-full overflow-auto flex items-center justify-center p-4">
                             {processDetailTab === "pre-degreasing" ? (
                               <img src={StationPreDegreasingSvg} alt={`Station ${data.name}`} className="w-full h-auto object-contain" />
+                            ) : processDetailTab === "flood" ? (
+                              <img src={StationFloodPng} alt={`Station ${data.name}`} className="w-full h-auto object-contain mix-blend-multiply dark:mix-blend-screen dark:invert" />
                             ) : (
                               <div className="w-full h-[400px] flex items-center justify-center text-muted-foreground text-sm">Station diagram coming soon</div>
                             )}
