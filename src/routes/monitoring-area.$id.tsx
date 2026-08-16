@@ -8,6 +8,7 @@ import LineTrackingSvg from "@/assets/Line-Tracking.svg";
 import StationPreDegreasingSvg from "@/assets/Station-Pre-degreasing.svg";
 import StationFloodPng from "@/assets/Flood.png";
 import StationPhosphatePng from "@/assets/Phosphate-1.png";
+import StationDegreasingPng from "@/assets/Degreasing-1.png";
 
 export const Route = createFileRoute("/monitoring-area/$id")({
   head: ({ params }) => ({
@@ -455,8 +456,8 @@ function MonitoringAreaDetails() {
                     return (
                       <div className="animate-in fade-in duration-300">
                         {/* Summary Cards */}
-                        <div className={`grid ${processDetailTab === 'pre-degreasing' || processDetailTab === 'phosphate' ? 'grid-cols-2 md:grid-cols-4' : 'grid-cols-2'} gap-4 mb-6`}>
-                          {processDetailTab === "pre-degreasing" || processDetailTab === "phosphate" ? (
+                        <div className={`grid ${processDetailTab === 'pre-degreasing' || processDetailTab === 'phosphate' || processDetailTab === 'degreasing' ? 'grid-cols-2 md:grid-cols-4' : 'grid-cols-2'} gap-4 mb-6`}>
+                          {processDetailTab === "pre-degreasing" || processDetailTab === "phosphate" || processDetailTab === "degreasing" ? (
                             <>
                               <Panel className="p-4 shadow-sm border border-border/50 bg-card/60">
                                 <div className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1">PV Large Temperature</div>
@@ -502,6 +503,8 @@ function MonitoringAreaDetails() {
                           <div className="relative w-full overflow-auto flex items-center justify-center p-4">
                             {processDetailTab === "pre-degreasing" ? (
                               <img src={StationPreDegreasingSvg} alt={`Station ${data.name}`} className="w-full h-auto object-contain" />
+                            ) : processDetailTab === "degreasing" ? (
+                              <img src={StationDegreasingPng} alt={`Station ${data.name}`} className="w-full h-auto object-contain mix-blend-multiply dark:mix-blend-screen dark:invert" />
                             ) : processDetailTab === "flood" ? (
                               <img src={StationFloodPng} alt={`Station ${data.name}`} className="w-full h-auto object-contain mix-blend-multiply dark:mix-blend-screen dark:invert" />
                             ) : processDetailTab === "phosphate" ? (
