@@ -160,3 +160,12 @@
   background-size: 24px 24px;
   background-position: -1px -1px;
 }
+
+@layer components {
+  .line-tracking-map text {
+    fill: var(--muted-foreground);
+  }
+  .dark .line-tracking-map text {
+    fill: oklch(0.98 0 0);
+  }
+}

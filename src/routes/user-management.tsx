@@ -14,6 +14,7 @@ import {
   Trash2,
   X,
   Upload,
+  CheckCircle2,
 } from "lucide-react";
 import { useState } from "react";
 

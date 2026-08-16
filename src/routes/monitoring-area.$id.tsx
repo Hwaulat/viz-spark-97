@@ -410,7 +410,7 @@ function MonitoringAreaDetails() {
                         <Waves className="h-4 w-4 text-primary" />
                         <span className="font-semibold text-sm uppercase tracking-wider text-muted-foreground">Skid Tracking Map (Green = Skid Present)</span>
                       </div>
-                      <span className="text-xs font-mono text-muted-foreground">{new Date().toLocaleString('en-GB')}</span>
+                      <span suppressHydrationWarning className="text-xs font-mono text-muted-foreground">{new Date().toLocaleString('en-GB')}</span>
                     </div>
                     <p className="text-foreground text-sm">Real-time position of skids along the CED line (U-loop layout)</p>
                   </div>
