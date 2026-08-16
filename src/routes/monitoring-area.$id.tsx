@@ -540,18 +540,6 @@ function MonitoringAreaDetails() {
         <div className="space-y-6">
            <div className="bg-card border border-border rounded-xl shadow-sm p-6">
              <div className="animate-in fade-in duration-300">
-               {/* Summary Cards */}
-               <div className="grid grid-cols-2 gap-4 mb-6">
-                  <Panel className="p-4 shadow-sm border border-border/50 bg-card/60">
-                    <div className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1">Temperature</div>
-                    <div className="flex items-baseline gap-1"><span className="text-2xl font-mono font-bold text-emerald-500">25.0</span><span className="text-xs">°C</span></div>
-                  </Panel>
-                  <Panel className="p-4 shadow-sm border border-border/50 bg-card/60">
-                    <div className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1">Pressure</div>
-                    <div className="flex items-baseline gap-1"><span className="text-2xl font-mono font-bold text-emerald-500">3.2</span><span className="text-xs">bar</span></div>
-                  </Panel>
-               </div>
-
                {/* Station Illustration */}
                <div className="border border-border/50 rounded-xl overflow-hidden bg-background">
                  <div className="flex justify-between items-center p-3 bg-secondary/30 border-b border-border/50">

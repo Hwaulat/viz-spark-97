@@ -295,7 +295,7 @@ function AreaCard({ area }: { area: AreaDef }) {
                 </div>
               )}
 
-              {area.type === "temp-pressure" && (
+              {area.type === "temp-pressure" && area.id !== "pted-bag-filter" && (
                 <div className="grid grid-cols-2 gap-4 mt-2">
                   <div className="rounded-lg bg-secondary/50 p-3 border border-border/50">
                     <div className="flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-muted-foreground mb-1">
