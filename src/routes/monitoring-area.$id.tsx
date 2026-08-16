@@ -456,8 +456,8 @@ function MonitoringAreaDetails() {
                     return (
                       <div className="animate-in fade-in duration-300">
                         {/* Summary Cards */}
-                        <div className={`grid ${processDetailTab === 'pre-degreasing' || processDetailTab === 'phosphate' || processDetailTab === 'degreasing' ? 'grid-cols-2 md:grid-cols-4' : 'grid-cols-2'} gap-4 mb-6`}>
-                          {processDetailTab === "pre-degreasing" || processDetailTab === "phosphate" || processDetailTab === "degreasing" ? (
+                        <div className={`grid ${processDetailTab === 'pre-degreasing' || processDetailTab === 'phosphate' ? 'grid-cols-2 md:grid-cols-4' : 'grid-cols-2'} gap-4 mb-6`}>
+                          {processDetailTab === "pre-degreasing" || processDetailTab === "phosphate" ? (
                             <>
                               <Panel className="p-4 shadow-sm border border-border/50 bg-card/60">
                                 <div className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1">PV Large Temperature</div>
