@@ -8,7 +8,7 @@ import {
   Scripts,
 } from "@tanstack/react-router";
 import { useEffect, useState, type ReactNode } from "react";
-import { Activity, Flame, Waves, Thermometer, Gauge, Sun, Moon, Bell, PanelLeftClose, LayoutDashboard, FileText, History, Database, Users, ChevronDown, ClipboardCheck, Clock, ShieldCheck } from "lucide-react";
+import { Activity, Flame, Waves, Thermometer, Gauge, Sun, Moon, Bell, PanelLeftClose, PanelLeftOpen, LayoutDashboard, FileText, History, Database, Users, ChevronDown, ClipboardCheck, Clock, ShieldCheck } from "lucide-react";
 import { useRouterState } from "@tanstack/react-router";
 
 import appCss from "../styles.css?url";
@@ -112,14 +112,15 @@ const linkBase =
 const linkActive =
   "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm bg-sidebar-accent text-white shadow-md shadow-sidebar-accent/30";
 
-function Sidebar() {
+function Sidebar({ onNavigate, className = "" }: { onNavigate?: () => void; className?: string }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const dashboardActive = pathname === "/" || pathname.startsWith("/monitoring-area") || pathname.startsWith("/checksheet") || pathname.startsWith("/boiler");
   const [dashOpen, setDashOpen] = useState(dashboardActive);
   useEffect(() => { if (dashboardActive) setDashOpen(true); }, [dashboardActive]);
 
   return (
-    <aside className="hidden md:flex md:w-64 shrink-0 flex-col bg-sidebar text-sidebar-foreground">
+    <aside className={`flex w-64 shrink-0 flex-col bg-sidebar text-sidebar-foreground ${className}`}>
+
       <div className="flex items-center gap-3 px-5 py-5">
         <div className="grid h-10 w-10 place-items-center rounded-full bg-gradient-to-br from-sidebar-accent to-primary/60 shadow-lg">
           <Activity className="h-5 w-5 text-white" />
@@ -151,10 +152,12 @@ function Sidebar() {
                 key={c.label}
                 to={c.to as any}
                 params={c.params as any}
+                onClick={onNavigate}
                 activeOptions={{ exact: c.exact }}
                 className={linkBase + " py-2 text-[13px]"}
                 activeProps={{ className: linkActive + " py-2 text-[13px]" }}
               >
+
                 <c.icon className="h-3.5 w-3.5" />
                 {c.label}
               </Link>
@@ -201,7 +204,7 @@ function useTheme() {
   return { theme, toggle };
 }
 
-function TopBar() {
+function TopBar({ onToggleSidebar, collapsed }: { onToggleSidebar: () => void; collapsed: boolean }) {
   const { theme, toggle } = useTheme();
   const [ts, setTs] = useState("");
   useEffect(() => {
@@ -211,10 +214,15 @@ function TopBar() {
     return () => clearInterval(id);
   }, []);
   return (
-    <header className="flex h-16 items-center justify-between border-b border-border bg-card px-6">
-      <div className="flex items-center gap-3">
-        <button className="grid h-9 w-9 place-items-center rounded-md text-muted-foreground hover:bg-secondary" aria-label="collapse">
-          <PanelLeftClose className="h-4 w-4" />
+    <header className="flex h-16 items-center justify-between gap-2 border-b border-border bg-card px-3 sm:px-6">
+      <div className="flex min-w-0 items-center gap-3">
+        <button
+          onClick={onToggleSidebar}
+          className="grid h-9 w-9 shrink-0 place-items-center rounded-md text-muted-foreground hover:bg-secondary"
+          aria-label="Toggle sidebar"
+        >
+          {collapsed ? <PanelLeftOpen className="h-4 w-4" /> : <PanelLeftClose className="h-4 w-4" />}
+
         </button>
         <div className="hidden lg:flex items-center gap-2 text-xs text-muted-foreground">
           <span className="inline-flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-ok" />AC 220V</span>
@@ -251,15 +259,34 @@ function TopBar() {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const [collapsed, setCollapsed] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
   return (
     <QueryClientProvider client={queryClient}>
       <div className="flex min-h-screen">
-        <Sidebar />
+        {/* Desktop sidebar */}
+        <Sidebar className={`hidden ${collapsed ? "md:hidden" : "md:flex"}`} />
+
+        {/* Mobile drawer */}
+        {mobileOpen && (
+          <div className="fixed inset-0 z-50 md:hidden">
+            <div className="absolute inset-0 bg-black/50" onClick={() => setMobileOpen(false)} />
+            <Sidebar className="absolute left-0 top-0 h-full shadow-xl" onNavigate={() => setMobileOpen(false)} />
+          </div>
+        )}
+
         <div className="flex-1 flex flex-col min-w-0">
-          <TopBar />
-          <main className="flex-1 overflow-auto"><Outlet /></main>
+          <TopBar
+            collapsed={collapsed}
+            onToggleSidebar={() => {
+              if (typeof window !== "undefined" && window.innerWidth < 768) setMobileOpen((v) => !v);
+              else setCollapsed((v) => !v);
+            }}
+          />
+          <main className="flex-1 overflow-x-hidden overflow-y-auto"><Outlet /></main>
         </div>
       </div>
+
     </QueryClientProvider>
   );
 }
