@@ -219,7 +219,7 @@ function TopBar({ onToggleSidebar, collapsed }: { onToggleSidebar: () => void; c
         <button
           onClick={onToggleSidebar}
           className="grid h-9 w-9 shrink-0 place-items-center rounded-md text-muted-foreground hover:bg-secondary"
-          aria-label={collapsed ? "Open sidebar" : "Collapse sidebar"}
+          aria-label="Toggle sidebar"
         >
           {collapsed ? <PanelLeftOpen className="h-4 w-4" /> : <PanelLeftClose className="h-4 w-4" />}
 
