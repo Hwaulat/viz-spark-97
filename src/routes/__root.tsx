@@ -94,8 +94,15 @@ function RootShell({ children }: { children: ReactNode }) {
   );
 }
 
-const DASHBOARD_CHILDREN: { to: "/" | "/boiler" | "/checksheet" | "/monitoring-area"; label: string; icon: typeof Gauge; exact?: boolean }[] = [
-  { to: "/monitoring-area", label: "Monitoring Area", icon: Activity },
+const DASHBOARD_CHILDREN: {
+  to: "/" | "/boiler" | "/checksheet" | "/monitoring-area" | "/monitoring-area/$id";
+  params?: { id: string };
+  label: string;
+  icon: typeof Gauge;
+  exact?: boolean;
+}[] = [
+  { to: "/monitoring-area", label: "Monitoring Area", icon: Activity, exact: true },
+  { to: "/monitoring-area/$id", params: { id: "line-tracking" }, label: "Line Tracking", icon: Waves },
   { to: "/checksheet", label: "Dashboard Checksheet", icon: ClipboardCheck },
 ];
 
@@ -107,9 +114,7 @@ const linkActive =
 
 function Sidebar() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
-  const dashboardActive = DASHBOARD_CHILDREN.some((c) =>
-    c.exact ? pathname === c.to : pathname.startsWith(c.to),
-  );
+  const dashboardActive = pathname === "/" || pathname.startsWith("/monitoring-area") || pathname.startsWith("/checksheet") || pathname.startsWith("/boiler");
   const [dashOpen, setDashOpen] = useState(dashboardActive);
   useEffect(() => { if (dashboardActive) setDashOpen(true); }, [dashboardActive]);
 
@@ -143,8 +148,9 @@ function Sidebar() {
           <div className="ml-3 pl-3 border-l border-sidebar-border space-y-1">
             {DASHBOARD_CHILDREN.map((c) => (
               <Link
-                key={c.to}
-                to={c.to}
+                key={c.label}
+                to={c.to as any}
+                params={c.params as any}
                 activeOptions={{ exact: c.exact }}
                 className={linkBase + " py-2 text-[13px]"}
                 activeProps={{ className: linkActive + " py-2 text-[13px]" }}
