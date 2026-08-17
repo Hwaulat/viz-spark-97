@@ -22,7 +22,6 @@ export const Route = createFileRoute("/monitoring-area/$id")({
 });
 
 
-});
 
 function OvenDetailContent({ id }: { id: string }) {
   const [timeFilter, setTimeFilter] = useState<"daily" | "monthly" | "yearly">("daily");
