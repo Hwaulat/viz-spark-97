@@ -148,8 +148,9 @@ function Sidebar() {
           <div className="ml-3 pl-3 border-l border-sidebar-border space-y-1">
             {DASHBOARD_CHILDREN.map((c) => (
               <Link
-                key={c.to}
-                to={c.to}
+                key={c.label}
+                to={c.to as any}
+                params={c.params as any}
                 activeOptions={{ exact: c.exact }}
                 className={linkBase + " py-2 text-[13px]"}
                 activeProps={{ className: linkActive + " py-2 text-[13px]" }}
