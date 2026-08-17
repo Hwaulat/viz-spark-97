@@ -114,9 +114,7 @@ const linkActive =
 
 function Sidebar() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
-  const dashboardActive = DASHBOARD_CHILDREN.some((c) =>
-    c.exact ? pathname === c.to : pathname.startsWith(c.to),
-  );
+  const dashboardActive = pathname === "/" || pathname.startsWith("/monitoring-area") || pathname.startsWith("/checksheet") || pathname.startsWith("/boiler");
   const [dashOpen, setDashOpen] = useState(dashboardActive);
   useEffect(() => { if (dashboardActive) setDashOpen(true); }, [dashboardActive]);
 
