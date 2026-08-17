@@ -259,15 +259,34 @@ function TopBar({ onToggleSidebar, collapsed }: { onToggleSidebar: () => void; c
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const [collapsed, setCollapsed] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
   return (
     <QueryClientProvider client={queryClient}>
       <div className="flex min-h-screen">
-        <Sidebar />
+        {/* Desktop sidebar */}
+        <Sidebar className={`hidden ${collapsed ? "md:hidden" : "md:flex"}`} />
+
+        {/* Mobile drawer */}
+        {mobileOpen && (
+          <div className="fixed inset-0 z-50 md:hidden">
+            <div className="absolute inset-0 bg-black/50" onClick={() => setMobileOpen(false)} />
+            <Sidebar className="absolute left-0 top-0 h-full shadow-xl" onNavigate={() => setMobileOpen(false)} />
+          </div>
+        )}
+
         <div className="flex-1 flex flex-col min-w-0">
-          <TopBar />
-          <main className="flex-1 overflow-auto"><Outlet /></main>
+          <TopBar
+            collapsed={collapsed}
+            onToggleSidebar={() => {
+              if (typeof window !== "undefined" && window.innerWidth < 768) setMobileOpen((v) => !v);
+              else setCollapsed((v) => !v);
+            }}
+          />
+          <main className="flex-1 overflow-x-hidden overflow-y-auto"><Outlet /></main>
         </div>
       </div>
+
     </QueryClientProvider>
   );
 }
