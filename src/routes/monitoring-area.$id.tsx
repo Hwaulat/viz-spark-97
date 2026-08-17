@@ -248,7 +248,7 @@ const MINUTE_DATA = Array.from({ length: 30 }, (_, i) => {
 });
 
 function StationDetailContent({ tabKey }: { tabKey: string }) {
-  const data = PROCESS_DETAIL_STATIONS[tabKey as keyof typeof PROCESS_DETAIL_STATIONS];
+  const data = PROCESS_DETAIL_STATIONS[tabKey as keyof typeof PROCESS_DETAIL_STATIONS] as Record<string, any> | undefined;
   if (!data) return null;
   return (
     <div className="animate-in fade-in duration-300">
