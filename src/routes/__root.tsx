@@ -204,7 +204,7 @@ function useTheme() {
   return { theme, toggle };
 }
 
-function TopBar() {
+function TopBar({ onToggleSidebar, collapsed }: { onToggleSidebar: () => void; collapsed: boolean }) {
   const { theme, toggle } = useTheme();
   const [ts, setTs] = useState("");
   useEffect(() => {
@@ -214,10 +214,15 @@ function TopBar() {
     return () => clearInterval(id);
   }, []);
   return (
-    <header className="flex h-16 items-center justify-between border-b border-border bg-card px-6">
-      <div className="flex items-center gap-3">
-        <button className="grid h-9 w-9 place-items-center rounded-md text-muted-foreground hover:bg-secondary" aria-label="collapse">
-          <PanelLeftClose className="h-4 w-4" />
+    <header className="flex h-16 items-center justify-between gap-2 border-b border-border bg-card px-3 sm:px-6">
+      <div className="flex min-w-0 items-center gap-3">
+        <button
+          onClick={onToggleSidebar}
+          className="grid h-9 w-9 shrink-0 place-items-center rounded-md text-muted-foreground hover:bg-secondary"
+          aria-label={collapsed ? "Open sidebar" : "Collapse sidebar"}
+        >
+          {collapsed ? <PanelLeftOpen className="h-4 w-4" /> : <PanelLeftClose className="h-4 w-4" />}
+
         </button>
         <div className="hidden lg:flex items-center gap-2 text-xs text-muted-foreground">
           <span className="inline-flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-ok" />AC 220V</span>
