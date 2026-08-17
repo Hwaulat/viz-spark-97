@@ -82,7 +82,7 @@ function AreaCard({ area }: { area: AreaDef }) {
   </div>
                       </div>
 
-                      <div className="grid grid-cols-2 gap-4 mt-4 pt-4 border-t border-border/40">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4 pt-4 border-t border-border/40">
                         {/* Boiler Status */}
                         <div className="flex flex-col gap-2.5">
                           <div className="flex justify-between items-center">
