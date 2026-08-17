@@ -152,10 +152,12 @@ function Sidebar({ onNavigate, className = "" }: { onNavigate?: () => void; clas
                 key={c.label}
                 to={c.to as any}
                 params={c.params as any}
+                onClick={onNavigate}
                 activeOptions={{ exact: c.exact }}
                 className={linkBase + " py-2 text-[13px]"}
                 activeProps={{ className: linkActive + " py-2 text-[13px]" }}
               >
+
                 <c.icon className="h-3.5 w-3.5" />
                 {c.label}
               </Link>
