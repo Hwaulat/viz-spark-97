@@ -550,8 +550,10 @@ function MonitoringAreaDetails() {
                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-orange-500/10 text-orange-600 border border-orange-500/20">READ-ONLY</span>
                  </div>
                  
-                 <div className="relative w-full overflow-auto flex items-center justify-center p-4">
-                   <img src={MapsPtedAreaPng} alt="PTED Bag Filter" className="w-full h-auto object-contain mix-blend-multiply dark:mix-blend-screen dark:invert" />
+                 <div className="relative w-full overflow-hidden flex items-center justify-center p-4">
+                   <div className="w-full -mt-[12%]">
+                     <img src={MapsPtedAreaPng} alt="PTED Bag Filter" className="w-full h-auto object-contain mix-blend-multiply dark:mix-blend-screen dark:invert" style={{ clipPath: 'inset(12% 0 0 0)' }} />
+                   </div>
                  </div>
                </div>
              </div>
