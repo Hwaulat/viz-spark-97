@@ -1,9 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, useMemo } from "react";
 import { ArrowLeft, Activity, Flame, Gauge, Power, BarChart3, Filter, Waves } from "lucide-react";
-import { BOILERS, BOILER_GAS, BOILER_USAGE_HISTORY, LINE_TRACKING_STATIONS, LINE_TRACKING_ZONES, PROCESS_DETAIL_STATIONS } from "@/lib/mock-data";
+import { BOILERS, BOILER_GAS, BOILER_USAGE_HISTORY, LINE_TRACKING_STATIONS, LINE_TRACKING_ZONES, PROCESS_DETAIL_STATIONS, ovenElecDailyTrend, ovenElecMonthlyTrend, ovenElecYearlyTrend } from "@/lib/mock-data";
 import { Panel, StatusDot, ValueDisplay } from "@/components/panel";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
+import { LineChart, Line, AreaChart, Area, BarChart, Bar, ReferenceLine, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import LineTrackingSvg from "@/assets/Line-Tracking.svg";
 import StationPreDegreasingSvg from "@/assets/Station-Pre-degreasing.svg";
 import StationFloodPng from "@/assets/Flood.png";
@@ -21,6 +21,216 @@ export const Route = createFileRoute("/monitoring-area/$id")({
   component: MonitoringAreaDetails,
 });
 
+
+});
+
+function OvenDetailContent({ id }: { id: string }) {
+  const [timeFilter, setTimeFilter] = useState<"daily" | "monthly" | "yearly">("daily");
+  
+  const ovenData = useMemo(() => {
+    let baseKw = 50;
+    let baseVolt = 380;
+    let name = "Oven";
+    let elec = { amp: { min: "110", act: "125", max: "150" }, volt: { min: "370", act: "380", max: "390" }, kw: "45", kwh: "120", kvar: "12", kvarh: "30", pf: "0.95", h2: "0.5" };
+
+    if (id === "oven-sealing") {
+      name = "Oven Sealing";
+      baseKw = 45;
+    } else if (id === "oven-topcoat") {
+      name = "Oven Topcoat";
+      baseKw = 52;
+      elec = { amp: { min: "130", act: "145", max: "160" }, volt: { min: "375", act: "382", max: "395" }, kw: "52", kwh: "140", kvar: "15", kvarh: "35", pf: "0.96", h2: "0.4" };
+    } else if (id === "oven-ced") {
+      name = "Oven CED";
+      baseKw = 60;
+      elec = { amp: { min: "140", act: "155", max: "170" }, volt: { min: "378", act: "385", max: "398" }, kw: "60", kwh: "165", kvar: "18", kvarh: "42", pf: "0.94", h2: "0.6" };
+    }
+
+    const data = timeFilter === "daily" 
+      ? ovenElecDailyTrend(baseKw, baseVolt)
+      : timeFilter === "monthly" 
+        ? ovenElecMonthlyTrend(baseKw, baseVolt)
+        : ovenElecYearlyTrend(baseKw, baseVolt);
+
+    return { name, data, elec };
+  }, [id, timeFilter]);
+
+  const { name, data, elec } = ovenData;
+
+  return (
+    <div className="space-y-6 animate-in fade-in duration-300">
+      {/* Header & Filters */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+          <h2 className="text-xl font-bold flex items-center gap-2">
+            <Zap className="h-5 w-5 text-yellow-500" /> {name} Electrical Monitoring
+          </h2>
+          <p className="text-sm text-muted-foreground mt-1">Real-time and historical power analysis.</p>
+        </div>
+        <div className="flex bg-secondary/40 p-1 rounded-lg border border-border/50">
+          {(["daily", "monthly", "yearly"] as const).map(f => (
+            <button
+              key={f}
+              onClick={() => setTimeFilter(f)}
+              className={`px-4 py-1.5 text-xs font-semibold uppercase tracking-wider rounded-md transition-all ${
+                timeFilter === f 
+                  ? "bg-background text-foreground shadow-sm border border-border/50" 
+                  : "text-muted-foreground hover:text-foreground hover:bg-secondary/60"
+              }`}
+            >
+              {f}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Summary Cards */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <Panel className="p-4 bg-card/60">
+          <div className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-2 flex items-center gap-1.5">
+            <Activity className="h-3.5 w-3.5" /> Ampere Range
+          </div>
+          <div className="flex justify-between items-end">
+             <div className="flex flex-col"><span className="text-[10px] text-muted-foreground">MIN</span><span className="font-mono">{elec.amp.min}</span></div>
+             <div className="flex flex-col items-center"><span className="text-[10px] text-primary font-bold">ACT</span><span className="text-2xl font-mono font-bold text-primary">{elec.amp.act}</span></div>
+             <div className="flex flex-col text-right"><span className="text-[10px] text-muted-foreground">MAX</span><span className="font-mono">{elec.amp.max}</span></div>
+          </div>
+        </Panel>
+        <Panel className="p-4 bg-card/60">
+          <div className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-2 flex items-center gap-1.5">
+            <Activity className="h-3.5 w-3.5" /> Voltage Range
+          </div>
+          <div className="flex justify-between items-end">
+             <div className="flex flex-col"><span className="text-[10px] text-muted-foreground">MIN</span><span className="font-mono">{elec.volt.min}</span></div>
+             <div className="flex flex-col items-center"><span className="text-[10px] text-primary font-bold">ACT</span><span className="text-2xl font-mono font-bold text-primary">{elec.volt.act}</span></div>
+             <div className="flex flex-col text-right"><span className="text-[10px] text-muted-foreground">MAX</span><span className="font-mono">{elec.volt.max}</span></div>
+          </div>
+        </Panel>
+        <Panel className="p-4 bg-card/60">
+           <div className="flex justify-between h-full items-center">
+             <div className="text-center w-1/2 border-r border-border/50">
+               <div className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1">kW / kWh</div>
+               <div className="text-xl font-mono font-bold">{elec.kw} / {elec.kwh}</div>
+             </div>
+             <div className="text-center w-1/2">
+               <div className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1">kVar / kVarh</div>
+               <div className="text-xl font-mono font-bold">{elec.kvar} / {elec.kvarh}</div>
+             </div>
+           </div>
+        </Panel>
+        <Panel className="p-4 bg-card/60">
+           <div className="flex justify-between h-full items-center">
+             <div className="text-center w-1/2 border-r border-border/50">
+               <div className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1">Power Factor</div>
+               <div className="text-xl font-mono font-bold text-emerald-500">{elec.pf}</div>
+             </div>
+             <div className="text-center w-1/2">
+               <div className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1">H2</div>
+               <div className="text-xl font-mono font-bold">{elec.h2}</div>
+             </div>
+           </div>
+        </Panel>
+      </div>
+
+      {/* Charts Grid */}
+      <div className="grid lg:grid-cols-2 gap-6">
+        {/* Power Consumption (kW vs kVar) */}
+        <Panel title="Power Consumption Trend (kW vs kVar)" className="p-4 bg-card/60">
+          <div className="h-[250px] mt-4">
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                <defs>
+                  <linearGradient id="colorKw" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#f59e0b" stopOpacity={0.3}/>
+                    <stop offset="95%" stopColor="#f59e0b" stopOpacity={0}/>
+                  </linearGradient>
+                  <linearGradient id="colorKvar" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3}/>
+                    <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" vertical={false} />
+                <XAxis dataKey="time" stroke="hsl(var(--muted-foreground))" fontSize={11} tickMargin={8} />
+                <YAxis stroke="hsl(var(--muted-foreground))" fontSize={11} />
+                <Tooltip 
+                  contentStyle={{ backgroundColor: 'hsl(var(--card))', borderColor: 'hsl(var(--border))', borderRadius: '8px' }}
+                  itemStyle={{ color: 'hsl(var(--foreground))' }}
+                />
+                <Legend iconType="circle" wrapperStyle={{ fontSize: '11px' }} />
+                <Area type="monotone" dataKey="kw" name="Active Power (kW)" stroke="#f59e0b" fillOpacity={1} fill="url(#colorKw)" strokeWidth={2} />
+                <Area type="monotone" dataKey="kvar" name="Reactive Power (kVar)" stroke="#3b82f6" fillOpacity={1} fill="url(#colorKvar)" strokeWidth={2} />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
+        </Panel>
+
+        {/* Voltage & Ampere Stability */}
+        <Panel title="Voltage & Current Stability" className="p-4 bg-card/60">
+          <div className="h-[250px] mt-4">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" vertical={false} />
+                <XAxis dataKey="time" stroke="hsl(var(--muted-foreground))" fontSize={11} tickMargin={8} />
+                <YAxis yAxisId="left" stroke="hsl(var(--muted-foreground))" fontSize={11} domain={['dataMin - 10', 'dataMax + 10']} />
+                <YAxis yAxisId="right" orientation="right" stroke="hsl(var(--muted-foreground))" fontSize={11} domain={['dataMin - 20', 'dataMax + 20']} />
+                <Tooltip 
+                  contentStyle={{ backgroundColor: 'hsl(var(--card))', borderColor: 'hsl(var(--border))', borderRadius: '8px' }}
+                  itemStyle={{ color: 'hsl(var(--foreground))' }}
+                />
+                <Legend iconType="circle" wrapperStyle={{ fontSize: '11px' }} />
+                <ReferenceLine yAxisId="left" y={Number(elec.amp.max)} stroke="red" strokeDasharray="3 3" opacity={0.5} />
+                <ReferenceLine yAxisId="right" y={Number(elec.volt.min)} stroke="orange" strokeDasharray="3 3" opacity={0.5} />
+                <Line yAxisId="left" type="monotone" dataKey="amp" name="Current (A)" stroke="#ef4444" strokeWidth={2} dot={false} />
+                <Line yAxisId="right" type="stepAfter" dataKey="volt" name="Voltage (V)" stroke="#8b5cf6" strokeWidth={2} dot={false} />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        </Panel>
+
+        {/* Power Quality Trend */}
+        <Panel title="Power Quality (Power Factor)" className="p-4 bg-card/60">
+          <div className="h-[250px] mt-4">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" vertical={false} />
+                <XAxis dataKey="time" stroke="hsl(var(--muted-foreground))" fontSize={11} tickMargin={8} />
+                <YAxis domain={[0.8, 1.0]} stroke="hsl(var(--muted-foreground))" fontSize={11} />
+                <Tooltip 
+                  contentStyle={{ backgroundColor: 'hsl(var(--card))', borderColor: 'hsl(var(--border))', borderRadius: '8px' }}
+                  itemStyle={{ color: 'hsl(var(--foreground))' }}
+                />
+                <Legend iconType="circle" wrapperStyle={{ fontSize: '11px' }} />
+                <ReferenceLine y={0.85} stroke="red" strokeDasharray="3 3" label={{ position: 'insideBottomLeft', value: 'Min Limit 0.85', fill: 'red', fontSize: 10 }} />
+                <Line type="monotone" dataKey="pf" name="Power Factor" stroke="#10b981" strokeWidth={2} dot={false} />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        </Panel>
+
+        {/* Cumulative Energy */}
+        <Panel title="Cumulative Energy Usage" className="p-4 bg-card/60">
+          <div className="h-[250px] mt-4">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" vertical={false} />
+                <XAxis dataKey="time" stroke="hsl(var(--muted-foreground))" fontSize={11} tickMargin={8} />
+                <YAxis stroke="hsl(var(--muted-foreground))" fontSize={11} />
+                <Tooltip 
+                  contentStyle={{ backgroundColor: 'hsl(var(--card))', borderColor: 'hsl(var(--border))', borderRadius: '8px' }}
+                  itemStyle={{ color: 'hsl(var(--foreground))' }}
+                  cursor={{ fill: 'hsl(var(--muted))', opacity: 0.2 }}
+                />
+                <Legend iconType="circle" wrapperStyle={{ fontSize: '11px' }} />
+                <Bar dataKey="kwh" name="Energy (kWh)" fill="#f59e0b" radius={[2, 2, 0, 0]} />
+                <Bar dataKey="kvarh" name="Reactive (kVarh)" fill="#3b82f6" radius={[2, 2, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </Panel>
+      </div>
+    </div>
+  );
+}
 
 const MINUTE_DATA = Array.from({ length: 30 }, (_, i) => {
   const time = new Date(Date.now() - (29 - i) * 60000);
@@ -559,6 +769,8 @@ function MonitoringAreaDetails() {
              </div>
            </div>
         </div>
+      ) : ["oven-sealing", "oven-topcoat", "oven-ced"].includes(id) ? (
+        <OvenDetailContent id={id} />
       ) : (
         /* Placeholder Content */
         <div className="rounded-xl border border-dashed border-border p-12 text-center text-muted-foreground bg-secondary/20">

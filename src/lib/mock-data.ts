@@ -404,3 +404,42 @@ export const PROCESS_DETAIL_STATIONS = {
   'flood': { name: 'Flood', pv: 28.5, sp: 30.0, valve: 45, pump1: true, pump2: true, alarm: true },
   'phosphate': { name: 'Phosphate', pvLarge: 42.5, spLarge: 42.0, pvSmall: 42.1, spSmall: 42.0, valve: 18, pump1: true, pump2: true, alarm: false }
 };
+
+export function ovenElecDailyTrend(baseKw: number, baseVolt: number = 380) {
+  return Array.from({ length: 24 }, (_, h) => {
+    const time = `${String(h).padStart(2, '0')}:00`;
+    const noise = Math.sin(h / 3) * 0.1 + (Math.random() - 0.5) * 0.05;
+    const pf = Math.max(0.85, Math.min(0.99, 0.95 + noise));
+    const volt = baseVolt + (Math.random() - 0.5) * 10;
+    const kw = baseKw * (1 + (Math.random() - 0.5) * 0.15);
+    const kvar = kw * Math.tan(Math.acos(pf));
+    const amp = (kw * 1000) / (Math.sqrt(3) * volt * pf);
+    return { time, amp: +amp.toFixed(1), volt: +volt.toFixed(1), kw: +kw.toFixed(1), kvar: +kvar.toFixed(1), pf: +pf.toFixed(2), kwh: +(kw * 1).toFixed(1), kvarh: +(kvar * 1).toFixed(1) };
+  });
+}
+
+export function ovenElecMonthlyTrend(baseKw: number, baseVolt: number = 380) {
+  return Array.from({ length: 30 }, (_, d) => {
+    const time = `Day ${d + 1}`;
+    const noise = Math.sin(d / 4) * 0.08 + (Math.random() - 0.5) * 0.04;
+    const pf = Math.max(0.85, Math.min(0.99, 0.94 + noise));
+    const volt = baseVolt + (Math.random() - 0.5) * 12;
+    const kw = baseKw * (1 + (Math.random() - 0.5) * 0.2);
+    const kvar = kw * Math.tan(Math.acos(pf));
+    const amp = (kw * 1000) / (Math.sqrt(3) * volt * pf);
+    return { time, amp: +amp.toFixed(1), volt: +volt.toFixed(1), kw: +kw.toFixed(1), kvar: +kvar.toFixed(1), pf: +pf.toFixed(2), kwh: +(kw * 24).toFixed(1), kvarh: +(kvar * 24).toFixed(1) };
+  });
+}
+
+export function ovenElecYearlyTrend(baseKw: number, baseVolt: number = 380) {
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  return months.map((m, i) => {
+    const noise = Math.sin(i / 2) * 0.05 + (Math.random() - 0.5) * 0.03;
+    const pf = Math.max(0.85, Math.min(0.99, 0.96 + noise));
+    const volt = baseVolt + (Math.random() - 0.5) * 8;
+    const kw = baseKw * (1 + (Math.random() - 0.5) * 0.1);
+    const kvar = kw * Math.tan(Math.acos(pf));
+    const amp = (kw * 1000) / (Math.sqrt(3) * volt * pf);
+    return { time: m, amp: +amp.toFixed(1), volt: +volt.toFixed(1), kw: +kw.toFixed(1), kvar: +kvar.toFixed(1), pf: +pf.toFixed(2), kwh: +(kw * 24 * 30).toFixed(0), kvarh: +(kvar * 24 * 30).toFixed(0) };
+  });
+}
