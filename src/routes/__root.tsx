@@ -112,14 +112,15 @@ const linkBase =
 const linkActive =
   "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm bg-sidebar-accent text-white shadow-md shadow-sidebar-accent/30";
 
-function Sidebar() {
+function Sidebar({ onNavigate, className = "" }: { onNavigate?: () => void; className?: string }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const dashboardActive = pathname === "/" || pathname.startsWith("/monitoring-area") || pathname.startsWith("/checksheet") || pathname.startsWith("/boiler");
   const [dashOpen, setDashOpen] = useState(dashboardActive);
   useEffect(() => { if (dashboardActive) setDashOpen(true); }, [dashboardActive]);
 
   return (
-    <aside className="hidden md:flex md:w-64 shrink-0 flex-col bg-sidebar text-sidebar-foreground">
+    <aside className={`flex w-64 shrink-0 flex-col bg-sidebar text-sidebar-foreground ${className}`}>
+
       <div className="flex items-center gap-3 px-5 py-5">
         <div className="grid h-10 w-10 place-items-center rounded-full bg-gradient-to-br from-sidebar-accent to-primary/60 shadow-lg">
           <Activity className="h-5 w-5 text-white" />
