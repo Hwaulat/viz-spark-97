@@ -38,6 +38,12 @@ interface AreaDef {
     pf: string;
     h2: string;
   };
+  pted?: {
+    tempIn: string;
+    tempOut: string;
+    pressureIn: string;
+    pressureOut: string;
+  };
 }
 
 const AREAS: AreaDef[] = [
@@ -49,7 +55,7 @@ const AREAS: AreaDef[] = [
   { id: "oven-sealing", name: "Oven Sealing", type: "oven-elec", elec: { amp: { min: "110", act: "125", max: "150" }, volt: { min: "370", act: "380", max: "390" }, kw: "45", kwh: "120", kvar: "12", kvarh: "30", pf: "0.95", h2: "0.5" } },
   { id: "oven-topcoat", name: "Oven Topcoat", type: "oven-elec", elec: { amp: { min: "130", act: "145", max: "160" }, volt: { min: "375", act: "382", max: "395" }, kw: "52", kwh: "140", kvar: "15", kvarh: "35", pf: "0.96", h2: "0.4" } },
   { id: "oven-ced", name: "Oven CED", type: "oven-elec", elec: { amp: { min: "140", act: "155", max: "170" }, volt: { min: "378", act: "385", max: "398" }, kw: "60", kwh: "165", kvar: "18", kvarh: "42", pf: "0.94", h2: "0.6" } },
-  { id: "pted-bag-filter", name: "PTED Bag Filter", type: "temp-pressure", temp: "25.0", pressure: "3.2" },
+  { id: "pted-bag-filter", name: "PTED Bag Filter", type: "temp-pressure", temp: "25.0", pressure: "3.2", pted: { tempIn: "30.5", tempOut: "28.0", pressureIn: "4.5", pressureOut: "3.2" } },
 ];
 
 
@@ -313,6 +319,53 @@ function AreaCard({ area }: { area: AreaDef }) {
                     <div className="flex items-baseline gap-1">
                       <span className="text-2xl font-semibold tabular-nums">{area.pressure}</span>
                       <span className="text-xs text-muted-foreground">bar</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {area.id === "pted-bag-filter" && area.pted && (
+                <div className="grid grid-cols-2 gap-2 mt-3">
+                  <div className="rounded-lg bg-secondary/50 p-2.5 border border-border/50 flex flex-col gap-1.5">
+                    <div className="flex items-center gap-1 text-[10px] uppercase tracking-widest text-muted-foreground border-b border-border/50 pb-1.5 justify-center">
+                      <Thermometer className="h-3.5 w-3.5" /> Temperature
+                    </div>
+                    <div className="flex justify-between px-1 mt-0.5">
+                      <div className="flex flex-col items-start">
+                        <span className="text-muted-foreground/80 text-[9px] uppercase">IN</span>
+                        <div className="flex items-baseline gap-0.5">
+                          <span className="text-xl font-semibold tabular-nums text-foreground">{area.pted.tempIn}</span>
+                          <span className="text-[9px] text-muted-foreground">°C</span>
+                        </div>
+                      </div>
+                      <div className="flex flex-col items-end">
+                        <span className="text-muted-foreground/80 text-[9px] uppercase">OUT</span>
+                        <div className="flex items-baseline gap-0.5">
+                          <span className="text-xl font-semibold tabular-nums text-emerald-500">{area.pted.tempOut}</span>
+                          <span className="text-[9px] text-muted-foreground">°C</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="rounded-lg bg-secondary/50 p-2.5 border border-border/50 flex flex-col gap-1.5">
+                    <div className="flex items-center gap-1 text-[10px] uppercase tracking-widest text-muted-foreground border-b border-border/50 pb-1.5 justify-center">
+                      <Gauge className="h-3.5 w-3.5" /> Pressure
+                    </div>
+                    <div className="flex justify-between px-1 mt-0.5">
+                      <div className="flex flex-col items-start">
+                        <span className="text-muted-foreground/80 text-[9px] uppercase">IN</span>
+                        <div className="flex items-baseline gap-0.5">
+                          <span className="text-xl font-semibold tabular-nums text-foreground">{area.pted.pressureIn}</span>
+                          <span className="text-[9px] text-muted-foreground">bar</span>
+                        </div>
+                      </div>
+                      <div className="flex flex-col items-end">
+                        <span className="text-muted-foreground/80 text-[9px] uppercase">OUT</span>
+                        <div className="flex items-baseline gap-0.5">
+                          <span className="text-xl font-semibold tabular-nums text-blue-500">{area.pted.pressureOut}</span>
+                          <span className="text-[9px] text-muted-foreground">bar</span>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
