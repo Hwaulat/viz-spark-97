@@ -10,6 +10,7 @@ import StationFloodPng from "@/assets/Flood.png";
 import StationPhosphatePng from "@/assets/Phosphate-1.png";
 import StationDegreasingPng from "@/assets/Degreasing-1.png";
 import MapsPtedAreaPng from "@/assets/Maps-Pted-Area.png";
+import PreDegreasingPipingDiagram from "@/components/PreDegreasingPipingDiagram";
 
 export const Route = createFileRoute("/monitoring-area/$id")({
   head: ({ params }) => ({
@@ -299,7 +300,7 @@ function StationDetailContent({ tabKey }: { tabKey: string }) {
         
         <div className="relative w-full overflow-auto flex items-center justify-center p-4">
           {tabKey === "pre-degreasing" ? (
-            <img src={StationPreDegreasingSvg} alt={`Station ${data.name}`} className="w-full h-auto object-contain" />
+            <PreDegreasingPipingDiagram pvLarge={data.pvLarge} spLarge={data.spLarge} pvSmall={data.pvSmall} spSmall={data.spSmall} valve={data.valve} pump1={data.pump1} pump2={data.pump2} alarm={data.alarm} />
           ) : tabKey === "degreasing" ? (
             <img src={StationDegreasingPng} alt={`Station ${data.name}`} className="w-full h-auto object-contain mix-blend-multiply dark:mix-blend-screen dark:invert" />
           ) : tabKey === "flood" ? (
