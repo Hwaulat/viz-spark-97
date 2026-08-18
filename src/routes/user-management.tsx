@@ -582,7 +582,7 @@ function UserManagementPage() {
                 </button>
               </div>
               {/* Details Column */}
-              <div className="flex-1 grid grid-cols-2 gap-y-6 gap-x-4">
+              <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-y-6 gap-x-4">
                 <div>
                   <div className="text-xs text-muted-foreground mb-1">
                     Status
