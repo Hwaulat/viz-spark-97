@@ -5,12 +5,11 @@ import { BOILERS, BOILER_GAS, BOILER_USAGE_HISTORY, LINE_TRACKING_STATIONS, LINE
 import { Panel, StatusDot, ValueDisplay } from "@/components/panel";
 import { LineChart, Line, AreaChart, Area, BarChart, Bar, ReferenceLine, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import LineTrackingSvg from "@/assets/Line-Tracking.svg";
-import StationPreDegreasingSvg from "@/assets/Station-Pre-degreasing.svg";
+import StationPreDegreasingPng from "@/assets/Pre-degreasing.png";
 import StationFloodPng from "@/assets/Flood.png";
 import StationPhosphatePng from "@/assets/Phosphate-1.png";
-import StationDegreasingPng from "@/assets/Degreasing-1.png";
+import StationDegreasingPng from "@/assets/Degreasing.png";
 import MapsPtedAreaPng from "@/assets/Maps-Pted-Area.png";
-import AnimatedPreDegreasingDiagram from "@/components/AnimatedPreDegreasingDiagram";
 
 export const Route = createFileRoute("/monitoring-area/$id")({
   head: ({ params }) => ({
@@ -300,7 +299,7 @@ function StationDetailContent({ tabKey }: { tabKey: string }) {
         
         <div className="relative w-full overflow-auto flex items-center justify-center p-4">
           {tabKey === "pre-degreasing" ? (
-            <AnimatedPreDegreasingDiagram pvLarge={data.pvLarge} spLarge={data.spLarge} pvSmall={data.pvSmall} spSmall={data.spSmall} />
+            <img src={StationPreDegreasingPng} alt={`Station ${data.name}`} className="w-full h-auto object-contain mix-blend-multiply dark:mix-blend-screen dark:invert" />
           ) : tabKey === "degreasing" ? (
             <img src={StationDegreasingPng} alt={`Station ${data.name}`} className="w-full h-auto object-contain mix-blend-multiply dark:mix-blend-screen dark:invert" />
           ) : tabKey === "flood" ? (
