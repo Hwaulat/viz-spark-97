@@ -98,6 +98,26 @@ function generateSurfaceConditioningData(dates: string[], seedPrefix: string) {
   });
 }
 
+function generatePhosphateData(dates: string[], seedPrefix: string) {
+  return dates.map((date, i) => {
+    const baseTA = 21.0 + Math.sin(i * 0.6) * 1.5;
+    const baseFA = 0.7 + Math.cos(i * 0.5) * 0.15;
+    const baseAC = 4.0 + Math.sin(i * 0.7) * 0.8;
+    const baseTemp = 35 + Math.cos(i * 0.5) * 8;
+    return {
+      date: date.padStart(2, "0"),
+      morningTA: Number((baseTA + 0.5).toFixed(1)),
+      afternoonTA: Number((baseTA - 0.3).toFixed(1)),
+      morningFA: Number((baseFA + 0.05).toFixed(1)),
+      afternoonFA: Number((baseFA - 0.05).toFixed(1)),
+      morningAC: Number((baseAC + 0.2).toFixed(1)),
+      afternoonAC: Number((baseAC - 0.2).toFixed(1)),
+      morningTemp: Math.floor(baseTemp + 2),
+      afternoonTemp: Math.floor(baseTemp - 2),
+    };
+  });
+}
+
 const CONTROL_POINT_TABS = [
   "Pre-Degreasing",
   "Degreasing",
@@ -154,6 +174,11 @@ function DashboardChecksheet() {
     [activeControlPointTab, globalMonth]
   );
 
+  const dataPhosphate = useMemo(
+    () => generatePhosphateData(ALL_DAYS_AUG_2026, activeControlPointTab + globalMonth),
+    [activeControlPointTab, globalMonth]
+  );
+
   // Totals for summary cards (Waste Disposal)
   const totalMixing = dataWasteDisposal.reduce((acc, val) => acc + val.mixing, 0);
   const totalMini = dataWasteDisposal.reduce((acc, val) => acc + val.mini, 0);
@@ -171,6 +196,16 @@ function DashboardChecksheet() {
   const avgSurfaceAlkaliAfternoon = (dataSurfaceConditioning.reduce((acc, val) => acc + val.afternoonAlkali, 0) / dataSurfaceConditioning.length).toFixed(1);
   const avgSurfacePhMorning = (dataSurfaceConditioning.reduce((acc, val) => acc + val.morningPh, 0) / dataSurfaceConditioning.length).toFixed(1);
   const avgSurfacePhAfternoon = (dataSurfaceConditioning.reduce((acc, val) => acc + val.afternoonPh, 0) / dataSurfaceConditioning.length).toFixed(1);
+
+  // Averages for Phosphate
+  const avgPhosphateTAMorning = (dataPhosphate.reduce((acc, val) => acc + val.morningTA, 0) / dataPhosphate.length).toFixed(1);
+  const avgPhosphateTAAfternoon = (dataPhosphate.reduce((acc, val) => acc + val.afternoonTA, 0) / dataPhosphate.length).toFixed(1);
+  const avgPhosphateFAMorning = (dataPhosphate.reduce((acc, val) => acc + val.morningFA, 0) / dataPhosphate.length).toFixed(1);
+  const avgPhosphateFAAfternoon = (dataPhosphate.reduce((acc, val) => acc + val.afternoonFA, 0) / dataPhosphate.length).toFixed(1);
+  const avgPhosphateACMorning = (dataPhosphate.reduce((acc, val) => acc + val.morningAC, 0) / dataPhosphate.length).toFixed(1);
+  const avgPhosphateACAfternoon = (dataPhosphate.reduce((acc, val) => acc + val.afternoonAC, 0) / dataPhosphate.length).toFixed(1);
+  const avgPhosphateTempMorning = (dataPhosphate.reduce((acc, val) => acc + val.morningTemp, 0) / dataPhosphate.length).toFixed(1);
+  const avgPhosphateTempAfternoon = (dataPhosphate.reduce((acc, val) => acc + val.afternoonTemp, 0) / dataPhosphate.length).toFixed(1);
 
   // Y-Axis Ticks for Pressure charts
   const yTicks = [0.01, 0.015, 0.02, 0.025];
@@ -775,6 +810,297 @@ function DashboardChecksheet() {
                       />
                     </LineChart>
                   </ResponsiveContainer>
+                </div>
+              </div>
+            </>
+          )}
+
+          {/* Apply charts for Phosphate */}
+          {activeControlPointTab === "Phosphate" && (
+            <>
+              {/* ── Summary Cards ───────────────────────────────── */}
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                <DoubleSummaryCard
+                  label="Average Total Acid"
+                  value1={avgPhosphateTAMorning}
+                  label1="Morning"
+                  value2={avgPhosphateTAAfternoon}
+                  label2="Afternoon"
+                  iconBg="bg-primary/10"
+                  icon={<Beaker className="h-4.5 w-4.5 text-primary" />}
+                />
+                <DoubleSummaryCard
+                  label="Average Free Acid"
+                  value1={avgPhosphateFAMorning}
+                  label1="Morning"
+                  value2={avgPhosphateFAAfternoon}
+                  label2="Afternoon"
+                  iconBg="bg-primary/10"
+                  icon={<Beaker className="h-4.5 w-4.5 text-primary" />}
+                />
+                <DoubleSummaryCard
+                  label="Average Accelerator"
+                  value1={avgPhosphateACMorning}
+                  label1="Morning"
+                  value2={avgPhosphateACAfternoon}
+                  label2="Afternoon"
+                  iconBg="bg-primary/10"
+                  icon={<Beaker className="h-4.5 w-4.5 text-primary" />}
+                />
+                <DoubleSummaryCard
+                  label="Average Temperature"
+                  value1={`${avgPhosphateTempMorning} °C`}
+                  label1="Morning"
+                  value2={`${avgPhosphateTempAfternoon} °C`}
+                  label2="Afternoon"
+                  iconBg="bg-blue-500/10"
+                  icon={<Thermometer className="h-4.5 w-4.5 text-blue-500" />}
+                />
+              </div>
+
+              {/* ── Charts Grid (2x2) ───────────────────────────────── */}
+              <div className="grid gap-6 lg:grid-cols-2 mt-6">
+                {/* Chart 1: Total Acid (T.A) */}
+                <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
+                  <h2 className="text-lg font-semibold mb-6">Total Acid (T.A)</h2>
+                  <div className="w-full">
+                    <ResponsiveContainer width="100%" height={300}>
+                      <LineChart data={dataPhosphate} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
+                        <XAxis
+                          dataKey="date"
+                          tick={{ fontSize: 12, fill: "var(--muted-foreground)" }}
+                          tickLine={false}
+                          axisLine={false}
+                          dy={10}
+                        />
+                        <YAxis
+                          domain={[18.0, 24.0]}
+                          tickFormatter={(val) => val.toFixed(1)}
+                          tick={{ fontSize: 12, fill: "var(--muted-foreground)" }}
+                          tickLine={false}
+                          axisLine={false}
+                          dx={-10}
+                          label={{
+                            value: "T.A",
+                            angle: -90,
+                            position: "insideLeft",
+                            fill: "var(--muted-foreground)",
+                            fontSize: 12,
+                          }}
+                        />
+                        <Tooltip
+                          contentStyle={{
+                            background: "var(--card)",
+                            border: "1px solid var(--border)",
+                            borderRadius: 8,
+                            fontSize: 12,
+                          }}
+                        />
+                        <Legend wrapperStyle={{ fontSize: 12, paddingTop: 20 }} />
+                        <Line
+                          type="monotone"
+                          dataKey="morningTA"
+                          name="Morning"
+                          stroke="#22c55e"
+                          strokeWidth={2}
+                          dot={{ r: 4, fill: "#22c55e", strokeWidth: 2 }}
+                          activeDot={{ r: 6 }}
+                        />
+                        <Line
+                          type="monotone"
+                          dataKey="afternoonTA"
+                          name="Afternoon"
+                          stroke="#3b82f6"
+                          strokeWidth={2}
+                          dot={{ r: 4, fill: "#3b82f6", strokeWidth: 2 }}
+                          activeDot={{ r: 6 }}
+                        />
+                      </LineChart>
+                    </ResponsiveContainer>
+                  </div>
+                </div>
+
+                {/* Chart 2: Free Acid (F.A) */}
+                <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
+                  <h2 className="text-lg font-semibold mb-6">Free Acid (F.A)</h2>
+                  <div className="w-full">
+                    <ResponsiveContainer width="100%" height={300}>
+                      <LineChart data={dataPhosphate} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
+                        <XAxis
+                          dataKey="date"
+                          tick={{ fontSize: 12, fill: "var(--muted-foreground)" }}
+                          tickLine={false}
+                          axisLine={false}
+                          dy={10}
+                        />
+                        <YAxis
+                          domain={[0.4, 1.0]}
+                          tickFormatter={(val) => val.toFixed(1)}
+                          tick={{ fontSize: 12, fill: "var(--muted-foreground)" }}
+                          tickLine={false}
+                          axisLine={false}
+                          dx={-10}
+                          label={{
+                            value: "F.A",
+                            angle: -90,
+                            position: "insideLeft",
+                            fill: "var(--muted-foreground)",
+                            fontSize: 12,
+                          }}
+                        />
+                        <Tooltip
+                          contentStyle={{
+                            background: "var(--card)",
+                            border: "1px solid var(--border)",
+                            borderRadius: 8,
+                            fontSize: 12,
+                          }}
+                        />
+                        <Legend wrapperStyle={{ fontSize: 12, paddingTop: 20 }} />
+                        <Line
+                          type="monotone"
+                          dataKey="morningFA"
+                          name="Morning"
+                          stroke="#22c55e"
+                          strokeWidth={2}
+                          dot={{ r: 4, fill: "#22c55e", strokeWidth: 2 }}
+                          activeDot={{ r: 6 }}
+                        />
+                        <Line
+                          type="monotone"
+                          dataKey="afternoonFA"
+                          name="Afternoon"
+                          stroke="#3b82f6"
+                          strokeWidth={2}
+                          dot={{ r: 4, fill: "#3b82f6", strokeWidth: 2 }}
+                          activeDot={{ r: 6 }}
+                        />
+                      </LineChart>
+                    </ResponsiveContainer>
+                  </div>
+                </div>
+
+                {/* Chart 3: Accelerator (AC) */}
+                <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
+                  <h2 className="text-lg font-semibold mb-6">Accelerator (AC)</h2>
+                  <div className="w-full">
+                    <ResponsiveContainer width="100%" height={300}>
+                      <LineChart data={dataPhosphate} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
+                        <XAxis
+                          dataKey="date"
+                          tick={{ fontSize: 12, fill: "var(--muted-foreground)" }}
+                          tickLine={false}
+                          axisLine={false}
+                          dy={10}
+                        />
+                        <YAxis
+                          domain={[2.5, 5.5]}
+                          tickFormatter={(val) => val.toFixed(1)}
+                          tick={{ fontSize: 12, fill: "var(--muted-foreground)" }}
+                          tickLine={false}
+                          axisLine={false}
+                          dx={-10}
+                          label={{
+                            value: "AC",
+                            angle: -90,
+                            position: "insideLeft",
+                            fill: "var(--muted-foreground)",
+                            fontSize: 12,
+                          }}
+                        />
+                        <Tooltip
+                          contentStyle={{
+                            background: "var(--card)",
+                            border: "1px solid var(--border)",
+                            borderRadius: 8,
+                            fontSize: 12,
+                          }}
+                        />
+                        <Legend wrapperStyle={{ fontSize: 12, paddingTop: 20 }} />
+                        <Line
+                          type="monotone"
+                          dataKey="morningAC"
+                          name="Morning"
+                          stroke="#22c55e"
+                          strokeWidth={2}
+                          dot={{ r: 4, fill: "#22c55e", strokeWidth: 2 }}
+                          activeDot={{ r: 6 }}
+                        />
+                        <Line
+                          type="monotone"
+                          dataKey="afternoonAC"
+                          name="Afternoon"
+                          stroke="#3b82f6"
+                          strokeWidth={2}
+                          dot={{ r: 4, fill: "#3b82f6", strokeWidth: 2 }}
+                          activeDot={{ r: 6 }}
+                        />
+                      </LineChart>
+                    </ResponsiveContainer>
+                  </div>
+                </div>
+
+                {/* Chart 4: Temperature (°C) */}
+                <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
+                  <h2 className="text-lg font-semibold mb-6">Temperature (°C)</h2>
+                  <div className="w-full">
+                    <ResponsiveContainer width="100%" height={300}>
+                      <LineChart data={dataPhosphate} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
+                        <XAxis
+                          dataKey="date"
+                          tick={{ fontSize: 12, fill: "var(--muted-foreground)" }}
+                          tickLine={false}
+                          axisLine={false}
+                          dy={10}
+                        />
+                        <YAxis
+                          domain={[20, 50]}
+                          tick={{ fontSize: 12, fill: "var(--muted-foreground)" }}
+                          tickLine={false}
+                          axisLine={false}
+                          dx={-10}
+                          label={{
+                            value: "°C",
+                            angle: -90,
+                            position: "insideLeft",
+                            fill: "var(--muted-foreground)",
+                            fontSize: 12,
+                          }}
+                        />
+                        <Tooltip
+                          contentStyle={{
+                            background: "var(--card)",
+                            border: "1px solid var(--border)",
+                            borderRadius: 8,
+                            fontSize: 12,
+                          }}
+                        />
+                        <Legend wrapperStyle={{ fontSize: 12, paddingTop: 20 }} />
+                        <Line
+                          type="monotone"
+                          dataKey="morningTemp"
+                          name="Morning"
+                          stroke="#22c55e"
+                          strokeWidth={2}
+                          dot={{ r: 4, fill: "#22c55e", strokeWidth: 2 }}
+                          activeDot={{ r: 6 }}
+                        />
+                        <Line
+                          type="monotone"
+                          dataKey="afternoonTemp"
+                          name="Afternoon"
+                          stroke="#3b82f6"
+                          strokeWidth={2}
+                          dot={{ r: 4, fill: "#3b82f6", strokeWidth: 2 }}
+                          activeDot={{ r: 6 }}
+                        />
+                      </LineChart>
+                    </ResponsiveContainer>
+                  </div>
                 </div>
               </div>
             </>
