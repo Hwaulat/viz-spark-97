@@ -13,6 +13,7 @@ import {
   LayoutDashboard,
 } from "lucide-react";
 import { useState, useMemo } from "react";
+import { INSPECTIONS, getTrendDataForParameter } from "@/lib/checksheet-data";
 import {
   CartesianGrid,
   Line,
@@ -37,32 +38,22 @@ export const Route = createFileRoute("/checksheet")({
   component: DashboardChecksheet,
 });
 
-/* ── mock trend data ──────────────────────────────────────── */
-const TREND_DATA = [
-  { date: "01/06", value: 580 },
-  { date: "02/06", value: 620 },
-  { date: "03/06", value: 610 },
-  { date: "04/06", value: 640 },
-  { date: "05/06", value: 880 },
-  { date: "06/06", value: 780 },
-  { date: "07/06", value: 720 },
-  { date: "08/06", value: 810 },
-  { date: "09/06", value: 620 },
-];
-
 /* ── component ────────────────────────────────────────────── */
 function DashboardChecksheet() {
   const [partNumber, setPartNumber] = useState("Part Number - Name");
   const [parameter, setParameter] = useState("Point Stay Middle");
   const [timeFrame] = useState("01/06/2026 - 30/06/2026");
 
-  const totalInspection = 200;
-  const totalOk = 150;
-  const totalWaiting = 20;
-  const totalNg = 30;
-  const okPct = 96.5;
-  const ngPct = 3.5;
-  const waitingPct = 12.4;
+  const totalInspection = INSPECTIONS.length;
+  const totalOk = INSPECTIONS.filter(i => i.checked === "ok").length;
+  const totalWaiting = INSPECTIONS.filter(i => i.checked === "waiting").length;
+  const totalNg = INSPECTIONS.filter(i => i.checked === "ng").length;
+  
+  const okPct = totalInspection > 0 ? Number(((totalOk / totalInspection) * 100).toFixed(1)) : 0;
+  const ngPct = totalInspection > 0 ? Number(((totalNg / totalInspection) * 100).toFixed(1)) : 0;
+  const waitingPct = totalInspection > 0 ? Number(((totalWaiting / totalInspection) * 100).toFixed(1)) : 0;
+
+  const trendData = useMemo(() => getTrendDataForParameter(parameter), [parameter]);
 
   return (
     <div className="p-6 space-y-4">
@@ -160,7 +151,7 @@ function DashboardChecksheet() {
         <SummaryCard
           label="Total (OK)"
           value={totalOk}
-          sub="93.4%"
+          sub={`${okPct}%`}
           subColor="text-muted-foreground"
           iconBg="bg-ok/10"
           icon={<CheckCircle2 className="h-4.5 w-4.5 text-ok" />}
@@ -201,7 +192,7 @@ function DashboardChecksheet() {
             </span>
           </div>
           <ResponsiveContainer width="100%" height={200}>
-            <LineChart data={TREND_DATA}>
+            <LineChart data={trendData}>
               <CartesianGrid
                 strokeDasharray="3 3"
                 stroke="var(--border)"
@@ -259,29 +250,29 @@ function DashboardChecksheet() {
               Current Period Status Distribution
             </p>
           </div>
-          <div className="text-2xl font-semibold mb-5">96%</div>
+          <div className="text-2xl font-semibold mb-5">{okPct}%</div>
           <div className="w-full space-y-4">
             {/* Status OK */}
             <ProgressRow
               label="Status OK"
-              value="96.5%"
-              pct={96.5}
+              value={`${okPct}%`}
+              pct={okPct}
               barBg="bg-ok/15"
               barFill="bg-ok"
             />
             {/* Status NG */}
             <ProgressRow
               label="Status NG"
-              value="3.5%"
-              pct={3.5}
+              value={`${ngPct}%`}
+              pct={ngPct}
               barBg="bg-destructive/15"
               barFill="bg-destructive"
             />
             {/* Waiting */}
             <ProgressRow
               label="Waiting"
-              value="12.4%"
-              pct={12.4}
+              value={`${waitingPct}%`}
+              pct={waitingPct}
               barBg="bg-warn/15"
               barFill="bg-warn"
             />
