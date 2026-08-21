@@ -80,7 +80,22 @@ function DashboardChecksheet() {
       {/* ── Filter Report ───────────────────────────────── */}
       <div className="rounded-xl border border-border bg-card p-4 space-y-3">
         <h2 className="text-lg font-semibold">Filter Report</h2>
-        <div className="grid gap-3 md:grid-cols-4">
+        <div className="grid gap-3 md:grid-cols-[1fr_1fr_1fr_160px]">
+          {/* Area / Gedung */}
+          <div className="space-y-1.5">
+            <label className="text-sm font-semibold text-muted-foreground">
+              Area / Gedung
+            </label>
+            <div className="flex items-center gap-2 rounded-lg border border-border bg-card px-3 py-2.5">
+              <Search className="h-4 w-4 text-muted-foreground shrink-0" />
+              <input
+                className="flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
+                defaultValue="Gedung 1"
+              />
+              <ChevronDown className="h-4 w-4 text-muted-foreground shrink-0" />
+            </div>
+          </div>
+
           {/* Part Number & Name */}
           <div className="space-y-1.5">
             <label className="text-sm font-semibold text-muted-foreground">
@@ -116,21 +131,10 @@ function DashboardChecksheet() {
           {/* Time Frame */}
           <div className="space-y-1.5">
             <label className="text-sm font-semibold text-muted-foreground">
-              Time Frame
-            </label>
-            <div className="flex items-center gap-2 rounded-lg border border-border bg-card px-3 py-2.5">
-              <Calendar className="h-4 w-4 text-muted-foreground shrink-0" />
-              <span className="flex-1 text-sm">{timeFrame}</span>
-            </div>
-          </div>
-
-          {/* Create Report */}
-          <div className="space-y-1.5">
-            <label className="text-sm font-semibold text-transparent select-none">
-              Action
+              Time Frame <span className="text-destructive">*</span>
             </label>
             <button className="w-full rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground shadow-sm hover:opacity-90">
-              Create Report
+              Pilih Waktu
             </button>
           </div>
         </div>
@@ -247,7 +251,7 @@ function DashboardChecksheet() {
           <div className="text-center mb-3">
             <h3 className="text-lg font-semibold">Inspection Status</h3>
             <p className="text-xs text-muted-foreground">
-              Current Period Status Distribution
+              Distribusi Status Periode Saat Ini
             </p>
           </div>
           <div className="text-2xl font-semibold mb-5">{okPct}%</div>
