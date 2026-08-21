@@ -57,24 +57,33 @@ function generatePressureData(dates: string[], seedPrefix: string) {
   });
 }
 
+const TABS = [
+  "Cleaning Bag Filter & Control Preassure",
+  "Waste Disposal",
+  "Control Point",
+  "Equipment Pre-Treatment",
+  "Chemical CED",
+  "ED Ampere",
+];
+
 const FRIDAYS_AUG_2026 = ["07 Aug", "14 Aug", "21 Aug", "28 Aug"];
 const ALL_DAYS_AUG_2026 = Array.from({ length: 31 }, (_, i) => String(i + 1));
 
 function DashboardChecksheet() {
-  const [station1, setStation1] = useState(STATION_OPTIONS_1[0]);
-  const [month1, setMonth1] = useState(MONTH_OPTIONS[0]);
+  const [activeTab, setActiveTab] = useState(TABS[0]);
+  const [globalMonth, setGlobalMonth] = useState(MONTH_OPTIONS[0]);
 
+  const [station1, setStation1] = useState(STATION_OPTIONS_1[0]);
   const [station2, setStation2] = useState(STATION_OPTIONS_2[0]);
-  const [month2, setMonth2] = useState(MONTH_OPTIONS[0]);
 
   const dataBagFilter = useMemo(
-    () => generatePressureData(FRIDAYS_AUG_2026, station1 + month1),
-    [station1, month1]
+    () => generatePressureData(FRIDAYS_AUG_2026, station1 + globalMonth),
+    [station1, globalMonth]
   );
 
   const dataControlPressure = useMemo(
-    () => generatePressureData(ALL_DAYS_AUG_2026, station2 + month2),
-    [station2, month2]
+    () => generatePressureData(ALL_DAYS_AUG_2026, station2 + globalMonth),
+    [station2, globalMonth]
   );
 
   // Y-Axis Ticks
@@ -88,45 +97,68 @@ function DashboardChecksheet() {
         <h1 className="text-xl font-bold tracking-tight">Dashboard Checksheet</h1>
       </div>
 
-      {/* ── Card 1: Pressure by Cleaning Bag Filter ──────── */}
-      <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
-        <div className="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
-          <h2 className="text-lg font-semibold">Pressure by Cleaning Bag Filter</h2>
-          <div className="flex flex-wrap items-center gap-3">
-            {/* Station Filter */}
-            <div className="relative">
-              <select
-                className="appearance-none bg-background border border-border rounded-lg pl-3 pr-8 py-2 text-sm font-medium outline-none focus:ring-2 focus:ring-primary/20"
-                value={station1}
-                onChange={(e) => setStation1(e.target.value)}
-              >
-                {STATION_OPTIONS_1.map((opt) => (
-                  <option key={opt} value={opt}>
-                    {opt}
-                  </option>
-                ))}
-              </select>
-              <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
-            </div>
-            {/* Month Filter */}
-            <div className="relative">
-              <select
-                className="appearance-none bg-background border border-border rounded-lg pl-3 pr-8 py-2 text-sm font-medium outline-none focus:ring-2 focus:ring-primary/20"
-                value={month1}
-                onChange={(e) => setMonth1(e.target.value)}
-              >
-                {MONTH_OPTIONS.map((opt) => (
-                  <option key={opt} value={opt}>
-                    {opt}
-                  </option>
-                ))}
-              </select>
-              <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
-            </div>
-          </div>
+      {/* ── Tabs & Global Filter ────────────────────────── */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        {/* Tab List */}
+        <div className="flex items-center gap-1 rounded-lg bg-muted/50 p-1 overflow-x-auto border border-border">
+          {TABS.map((tab) => (
+            <button
+              key={tab}
+              className={`px-4 py-2 text-sm font-medium rounded-md whitespace-nowrap transition-colors ${
+                activeTab === tab
+                  ? "bg-background text-primary shadow-sm border border-border"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+              onClick={() => setActiveTab(tab)}
+            >
+              {tab}
+            </button>
+          ))}
         </div>
 
-        <div className="w-full">
+        {/* Global Month Filter */}
+        <div className="relative shrink-0">
+          <select
+            className="appearance-none bg-background border border-border rounded-lg pl-4 pr-10 py-2 text-sm font-medium outline-none focus:ring-2 focus:ring-primary/20"
+            value={globalMonth}
+            onChange={(e) => setGlobalMonth(e.target.value)}
+          >
+            {MONTH_OPTIONS.map((opt) => (
+              <option key={opt} value={opt}>
+                {opt}
+              </option>
+            ))}
+          </select>
+          <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+        </div>
+      </div>
+
+      {activeTab === TABS[0] && (
+        <>
+          {/* ── Card 1: Pressure by Cleaning Bag Filter ──────── */}
+          <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
+            <div className="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
+              <h2 className="text-lg font-semibold">Pressure by Cleaning Bag Filter</h2>
+              <div className="flex flex-wrap items-center gap-3">
+                {/* Station Filter */}
+                <div className="relative">
+                  <select
+                    className="appearance-none bg-background border border-border rounded-lg pl-3 pr-8 py-2 text-sm font-medium outline-none focus:ring-2 focus:ring-primary/20"
+                    value={station1}
+                    onChange={(e) => setStation1(e.target.value)}
+                  >
+                    {STATION_OPTIONS_1.map((opt) => (
+                      <option key={opt} value={opt}>
+                        {opt}
+                      </option>
+                    ))}
+                  </select>
+                  <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+                </div>
+              </div>
+            </div>
+
+            <div className="w-full">
           <ResponsiveContainer width="100%" height={300}>
             <LineChart data={dataBagFilter} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
@@ -198,21 +230,6 @@ function DashboardChecksheet() {
               </select>
               <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
             </div>
-            {/* Month Filter */}
-            <div className="relative">
-              <select
-                className="appearance-none bg-background border border-border rounded-lg pl-3 pr-8 py-2 text-sm font-medium outline-none focus:ring-2 focus:ring-primary/20"
-                value={month2}
-                onChange={(e) => setMonth2(e.target.value)}
-              >
-                {MONTH_OPTIONS.map((opt) => (
-                  <option key={opt} value={opt}>
-                    {opt}
-                  </option>
-                ))}
-              </select>
-              <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
-            </div>
           </div>
         </div>
 
@@ -267,6 +284,8 @@ function DashboardChecksheet() {
           </ResponsiveContainer>
         </div>
       </div>
+      </>
+      )}
     </div>
   );
 }
