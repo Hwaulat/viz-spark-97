@@ -351,30 +351,28 @@ function DashboardChecksheet() {
               <ResponsiveContainer width="100%" height={600}>
                 <BarChart
                   data={dataWasteDisposal}
-                  layout="vertical"
-                  margin={{ top: 0, right: 30, left: 20, bottom: 0 }}
+                  margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
                 >
-                  <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" horizontal={false} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
                   <XAxis
-                    type="number"
+                    dataKey="date"
                     tick={{ fontSize: 12, fill: "var(--muted-foreground)" }}
                     tickLine={false}
                     axisLine={false}
-                    label={{
-                      value: "Oil Weight (Drum)",
-                      position: "insideBottom",
-                      offset: -10,
-                      fill: "var(--muted-foreground)",
-                      fontSize: 12,
-                    }}
+                    dy={10}
                   />
                   <YAxis
-                    dataKey="date"
-                    type="category"
                     tick={{ fontSize: 12, fill: "var(--muted-foreground)" }}
                     tickLine={false}
                     axisLine={false}
                     dx={-10}
+                    label={{
+                      value: "Oil Weight (Drum)",
+                      angle: -90,
+                      position: "insideLeft",
+                      fill: "var(--muted-foreground)",
+                      fontSize: 12,
+                    }}
                   />
                   <Tooltip
                     contentStyle={{
@@ -385,9 +383,9 @@ function DashboardChecksheet() {
                     }}
                   />
                   <Legend wrapperStyle={{ fontSize: 12, paddingTop: 20 }} />
-                  <Bar dataKey="mixing" name="Mixing" fill="#3b82f6" radius={[0, 4, 4, 0]} />
-                  <Bar dataKey="mini" name="Mini" fill="#1d4ed8" radius={[0, 4, 4, 0]} />
-                  <Bar dataKey="pted" name="PTED" fill="#1e3a8a" radius={[0, 4, 4, 0]} />
+                  <Bar dataKey="mixing" name="Mixing" fill="#3b82f6" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="mini" name="Mini" fill="#1d4ed8" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="pted" name="PTED" fill="#1e3a8a" radius={[4, 4, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
