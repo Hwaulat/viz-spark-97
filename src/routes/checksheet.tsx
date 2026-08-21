@@ -1,10 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState, useMemo } from "react";
-import { ChevronDown, LayoutDashboard } from "lucide-react";
+import { ChevronDown, LayoutDashboard, Calendar, Droplet } from "lucide-react";
 import {
   CartesianGrid,
   Line,
   LineChart,
+  Bar,
+  BarChart,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -57,6 +59,17 @@ function generatePressureData(dates: string[], seedPrefix: string) {
   });
 }
 
+function generateWasteDisposalData(dates: string[], seedPrefix: string) {
+  return dates.map((date, i) => {
+    return {
+      date,
+      mixing: Math.floor(20 + Math.abs(Math.sin(i * 3.3)) * 80),
+      mini: Math.floor(10 + Math.abs(Math.cos(i * 2.4)) * 50),
+      pted: Math.floor(30 + Math.abs(Math.sin(i * 1.4)) * 70),
+    };
+  });
+}
+
 const TABS = [
   "Cleaning Bag Filter & Control Preassure",
   "Waste Disposal",
@@ -71,22 +84,35 @@ const ALL_DAYS_AUG_2026 = Array.from({ length: 31 }, (_, i) => String(i + 1));
 
 function DashboardChecksheet() {
   const [activeTab, setActiveTab] = useState(TABS[0]);
-  const [globalMonth, setGlobalMonth] = useState(MONTH_OPTIONS[0]);
+  
+  // Date range filter string for all sections
+  const [globalDateRange, setGlobalDateRange] = useState("01 Aug 2026 - 31 Aug 2026");
 
   const [station1, setStation1] = useState(STATION_OPTIONS_1[0]);
   const [station2, setStation2] = useState(STATION_OPTIONS_2[0]);
 
   const dataBagFilter = useMemo(
-    () => generatePressureData(FRIDAYS_AUG_2026, station1 + globalMonth),
-    [station1, globalMonth]
+    () => generatePressureData(FRIDAYS_AUG_2026, station1 + globalDateRange),
+    [station1, globalDateRange]
   );
 
   const dataControlPressure = useMemo(
-    () => generatePressureData(ALL_DAYS_AUG_2026, station2 + globalMonth),
-    [station2, globalMonth]
+    () => generatePressureData(ALL_DAYS_AUG_2026, station2 + globalDateRange),
+    [station2, globalDateRange]
   );
 
-  // Y-Axis Ticks
+  const dataWasteDisposal = useMemo(
+    () => generateWasteDisposalData(ALL_DAYS_AUG_2026, globalDateRange),
+    [globalDateRange]
+  );
+
+  // Totals for summary cards
+  const totalMixing = dataWasteDisposal.reduce((acc, val) => acc + val.mixing, 0);
+  const totalMini = dataWasteDisposal.reduce((acc, val) => acc + val.mini, 0);
+  const totalPted = dataWasteDisposal.reduce((acc, val) => acc + val.pted, 0);
+  const totalOilWeight = totalMixing + totalMini + totalPted;
+
+  // Y-Axis Ticks for Pressure charts
   const yTicks = [0.01, 0.015, 0.02, 0.025];
 
   return (
@@ -116,20 +142,13 @@ function DashboardChecksheet() {
           ))}
         </div>
 
-        {/* Global Month Filter */}
+        {/* Global Date Range Filter */}
         <div className="relative shrink-0">
-          <select
-            className="appearance-none bg-background border border-border rounded-lg pl-4 pr-10 py-2 text-sm font-medium outline-none focus:ring-2 focus:ring-primary/20"
-            value={globalMonth}
-            onChange={(e) => setGlobalMonth(e.target.value)}
-          >
-            {MONTH_OPTIONS.map((opt) => (
-              <option key={opt} value={opt}>
-                {opt}
-              </option>
-            ))}
-          </select>
-          <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+          <button className="flex items-center gap-2 bg-background border border-border rounded-lg pl-3 pr-4 py-2 text-sm font-medium hover:bg-muted/50 transition-colors">
+            <Calendar className="h-4 w-4 text-muted-foreground" />
+            {globalDateRange}
+            <ChevronDown className="h-4 w-4 text-muted-foreground ml-2" />
+          </button>
         </div>
       </div>
 
@@ -286,6 +305,128 @@ function DashboardChecksheet() {
       </div>
       </>
       )}
+
+      {activeTab === TABS[1] && (
+        <div className="space-y-6">
+          {/* ── Summary Cards ───────────────────────────────── */}
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            <SummaryCard
+              label="Total Oil Weight"
+              value={`${totalOilWeight} L`}
+              sub="Total Accumulation"
+              subColor="text-muted-foreground"
+              iconBg="bg-primary/10"
+              icon={<Droplet className="h-4.5 w-4.5 text-primary" />}
+            />
+            <SummaryCard
+              label="Oil Weight Mixing"
+              value={`${totalMixing} L`}
+              sub="Mixing Process"
+              subColor="text-blue-500"
+              iconBg="bg-blue-500/10"
+              icon={<Droplet className="h-4.5 w-4.5 text-blue-500" />}
+            />
+            <SummaryCard
+              label="Oil Weight Mini"
+              value={`${totalMini} L`}
+              sub="Mini Process"
+              subColor="text-blue-700"
+              iconBg="bg-blue-700/10"
+              icon={<Droplet className="h-4.5 w-4.5 text-blue-700" />}
+            />
+            <SummaryCard
+              label="Oil Weight PTED"
+              value={`${totalPted} L`}
+              sub="PTED Process"
+              subColor="text-blue-900"
+              iconBg="bg-blue-900/10"
+              icon={<Droplet className="h-4.5 w-4.5 text-blue-900" />}
+            />
+          </div>
+
+          {/* ── Chart Section ───────────────────────────────── */}
+          <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
+            <h2 className="text-lg font-semibold mb-6">Waste Disposal Trends</h2>
+            <div className="w-full">
+              <ResponsiveContainer width="100%" height={600}>
+                <BarChart
+                  data={dataWasteDisposal}
+                  layout="vertical"
+                  margin={{ top: 0, right: 30, left: 20, bottom: 0 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" horizontal={false} />
+                  <XAxis
+                    type="number"
+                    tick={{ fontSize: 12, fill: "var(--muted-foreground)" }}
+                    tickLine={false}
+                    axisLine={false}
+                    label={{
+                      value: "Oil Weight (Drum)",
+                      position: "insideBottom",
+                      offset: -10,
+                      fill: "var(--muted-foreground)",
+                      fontSize: 12,
+                    }}
+                  />
+                  <YAxis
+                    dataKey="date"
+                    type="category"
+                    tick={{ fontSize: 12, fill: "var(--muted-foreground)" }}
+                    tickLine={false}
+                    axisLine={false}
+                    dx={-10}
+                  />
+                  <Tooltip
+                    contentStyle={{
+                      background: "var(--card)",
+                      border: "1px solid var(--border)",
+                      borderRadius: 8,
+                      fontSize: 12,
+                    }}
+                  />
+                  <Legend wrapperStyle={{ fontSize: 12, paddingTop: 20 }} />
+                  <Bar dataKey="mixing" name="Mixing" fill="#3b82f6" radius={[0, 4, 4, 0]} />
+                  <Bar dataKey="mini" name="Mini" fill="#1d4ed8" radius={[0, 4, 4, 0]} />
+                  <Bar dataKey="pted" name="PTED" fill="#1e3a8a" radius={[0, 4, 4, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function SummaryCard({
+  label,
+  value,
+  sub,
+  subColor,
+  iconBg,
+  icon,
+}: {
+  label: string;
+  value: number | string;
+  sub: string;
+  subColor: string;
+  iconBg: string;
+  icon: React.ReactNode;
+}) {
+  return (
+    <div className="rounded-lg bg-card border border-border p-4 shadow-sm space-y-2">
+      <div className="flex items-center justify-between">
+        <span className="text-sm font-medium text-muted-foreground">{label}</span>
+        <div
+          className={`h-8 w-8 rounded-full flex items-center justify-center ${iconBg}`}
+        >
+          {icon}
+        </div>
+      </div>
+      <div>
+        <div className="text-2xl font-bold">{value}</div>
+        <div className={`text-xs ${subColor}`}>{sub}</div>
+      </div>
     </div>
   );
 }
