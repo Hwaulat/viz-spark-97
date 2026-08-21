@@ -118,6 +118,23 @@ function generatePhosphateData(dates: string[], seedPrefix: string) {
   });
 }
 
+function generateWRData(dates: string[], seedPrefix: string) {
+  return dates.map((date, i) => {
+    const baseWR2 = 1.3 + Math.sin(i * 0.9) * 0.4;
+    const baseWR4 = 1.3 + Math.cos(i * 0.7) * 0.4;
+    const baseWR5 = 0.3 + Math.sin(i * 0.8) * 0.2;
+    return {
+      date: date.padStart(2, "0"),
+      morningWR2: Number((baseWR2 + 0.1).toFixed(1)),
+      afternoonWR2: Number((baseWR2 - 0.05).toFixed(1)),
+      morningWR4: Number((baseWR4 + 0.1).toFixed(1)),
+      afternoonWR4: Number((baseWR4 - 0.05).toFixed(1)),
+      morningWR5: Number((baseWR5 + 0.05).toFixed(1)),
+      afternoonWR5: Number((baseWR5 - 0.05).toFixed(1)),
+    };
+  });
+}
+
 const CONTROL_POINT_TABS = [
   "Pre-Degreasing",
   "Degreasing",
@@ -179,6 +196,11 @@ function DashboardChecksheet() {
     [activeControlPointTab, globalMonth]
   );
 
+  const dataWR = useMemo(
+    () => generateWRData(ALL_DAYS_AUG_2026, activeControlPointTab + globalMonth),
+    [activeControlPointTab, globalMonth]
+  );
+
   // Totals for summary cards (Waste Disposal)
   const totalMixing = dataWasteDisposal.reduce((acc, val) => acc + val.mixing, 0);
   const totalMini = dataWasteDisposal.reduce((acc, val) => acc + val.mini, 0);
@@ -206,6 +228,14 @@ function DashboardChecksheet() {
   const avgPhosphateACAfternoon = (dataPhosphate.reduce((acc, val) => acc + val.afternoonAC, 0) / dataPhosphate.length).toFixed(1);
   const avgPhosphateTempMorning = (dataPhosphate.reduce((acc, val) => acc + val.morningTemp, 0) / dataPhosphate.length).toFixed(1);
   const avgPhosphateTempAfternoon = (dataPhosphate.reduce((acc, val) => acc + val.afternoonTemp, 0) / dataPhosphate.length).toFixed(1);
+
+  // Averages for WR 2,4,5
+  const avgWR2Morning = (dataWR.reduce((acc, val) => acc + val.morningWR2, 0) / dataWR.length).toFixed(1);
+  const avgWR2Afternoon = (dataWR.reduce((acc, val) => acc + val.afternoonWR2, 0) / dataWR.length).toFixed(1);
+  const avgWR4Morning = (dataWR.reduce((acc, val) => acc + val.morningWR4, 0) / dataWR.length).toFixed(1);
+  const avgWR4Afternoon = (dataWR.reduce((acc, val) => acc + val.afternoonWR4, 0) / dataWR.length).toFixed(1);
+  const avgWR5Morning = (dataWR.reduce((acc, val) => acc + val.morningWR5, 0) / dataWR.length).toFixed(1);
+  const avgWR5Afternoon = (dataWR.reduce((acc, val) => acc + val.afternoonWR5, 0) / dataWR.length).toFixed(1);
 
   // Y-Axis Ticks for Pressure charts
   const yTicks = [0.01, 0.015, 0.02, 0.025];
@@ -1092,6 +1122,228 @@ function DashboardChecksheet() {
                         <Line
                           type="monotone"
                           dataKey="afternoonTemp"
+                          name="Afternoon"
+                          stroke="#3b82f6"
+                          strokeWidth={2}
+                          dot={{ r: 4, fill: "#3b82f6", strokeWidth: 2 }}
+                          activeDot={{ r: 6 }}
+                        />
+                      </LineChart>
+                    </ResponsiveContainer>
+                  </div>
+                </div>
+              </div>
+            </>
+          )}
+
+          {/* Apply charts for WR 2,4,5 */}
+          {activeControlPointTab === "WR 2,4,5" && (
+            <>
+              {/* ── Summary Cards ───────────────────────────────── */}
+              <div className="grid gap-4 sm:grid-cols-3 lg:grid-cols-3">
+                <DoubleSummaryCard
+                  label="Average WR 2 (Free Alkali)"
+                  value1={avgWR2Morning}
+                  label1="Morning"
+                  value2={avgWR2Afternoon}
+                  label2="Afternoon"
+                  iconBg="bg-primary/10"
+                  icon={<Beaker className="h-4.5 w-4.5 text-primary" />}
+                />
+                <DoubleSummaryCard
+                  label="Average WR 4 (Total Acid)"
+                  value1={avgWR4Morning}
+                  label1="Morning"
+                  value2={avgWR4Afternoon}
+                  label2="Afternoon"
+                  iconBg="bg-primary/10"
+                  icon={<Beaker className="h-4.5 w-4.5 text-primary" />}
+                />
+                <DoubleSummaryCard
+                  label="Average WR 5 (Total Acid)"
+                  value1={avgWR5Morning}
+                  label1="Morning"
+                  value2={avgWR5Afternoon}
+                  label2="Afternoon"
+                  iconBg="bg-primary/10"
+                  icon={<Beaker className="h-4.5 w-4.5 text-primary" />}
+                />
+              </div>
+
+              {/* ── Charts Grid (WR 2 & 4 side-by-side, WR 5 full width) ───────────────────────────────── */}
+              <div className="grid gap-6 lg:grid-cols-2 mt-6">
+                {/* Chart 1: Water Rinse 2 (Free Alkali) */}
+                <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
+                  <h2 className="text-lg font-semibold mb-6">Water Rinse 2 (Free Alkali)</h2>
+                  <div className="w-full">
+                    <ResponsiveContainer width="100%" height={300}>
+                      <LineChart data={dataWR} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
+                        <XAxis
+                          dataKey="date"
+                          tick={{ fontSize: 12, fill: "var(--muted-foreground)" }}
+                          tickLine={false}
+                          axisLine={false}
+                          dy={10}
+                        />
+                        <YAxis
+                          domain={[0.0, 2.0]}
+                          tickFormatter={(val) => val.toFixed(1)}
+                          tick={{ fontSize: 12, fill: "var(--muted-foreground)" }}
+                          tickLine={false}
+                          axisLine={false}
+                          dx={-10}
+                          label={{
+                            value: "F.Alk",
+                            angle: -90,
+                            position: "insideLeft",
+                            fill: "var(--muted-foreground)",
+                            fontSize: 12,
+                          }}
+                        />
+                        <Tooltip
+                          contentStyle={{
+                            background: "var(--card)",
+                            border: "1px solid var(--border)",
+                            borderRadius: 8,
+                            fontSize: 12,
+                          }}
+                        />
+                        <Legend wrapperStyle={{ fontSize: 12, paddingTop: 20 }} />
+                        <Line
+                          type="monotone"
+                          dataKey="morningWR2"
+                          name="Morning"
+                          stroke="#22c55e"
+                          strokeWidth={2}
+                          dot={{ r: 4, fill: "#22c55e", strokeWidth: 2 }}
+                          activeDot={{ r: 6 }}
+                        />
+                        <Line
+                          type="monotone"
+                          dataKey="afternoonWR2"
+                          name="Afternoon"
+                          stroke="#3b82f6"
+                          strokeWidth={2}
+                          dot={{ r: 4, fill: "#3b82f6", strokeWidth: 2 }}
+                          activeDot={{ r: 6 }}
+                        />
+                      </LineChart>
+                    </ResponsiveContainer>
+                  </div>
+                </div>
+
+                {/* Chart 2: Water Rinse 4 (Total Acid) */}
+                <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
+                  <h2 className="text-lg font-semibold mb-6">Water Rinse 4 (Total Acid)</h2>
+                  <div className="w-full">
+                    <ResponsiveContainer width="100%" height={300}>
+                      <LineChart data={dataWR} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
+                        <XAxis
+                          dataKey="date"
+                          tick={{ fontSize: 12, fill: "var(--muted-foreground)" }}
+                          tickLine={false}
+                          axisLine={false}
+                          dy={10}
+                        />
+                        <YAxis
+                          domain={[0.0, 2.0]}
+                          tickFormatter={(val) => val.toFixed(1)}
+                          tick={{ fontSize: 12, fill: "var(--muted-foreground)" }}
+                          tickLine={false}
+                          axisLine={false}
+                          dx={-10}
+                          label={{
+                            value: "TA",
+                            angle: -90,
+                            position: "insideLeft",
+                            fill: "var(--muted-foreground)",
+                            fontSize: 12,
+                          }}
+                        />
+                        <Tooltip
+                          contentStyle={{
+                            background: "var(--card)",
+                            border: "1px solid var(--border)",
+                            borderRadius: 8,
+                            fontSize: 12,
+                          }}
+                        />
+                        <Legend wrapperStyle={{ fontSize: 12, paddingTop: 20 }} />
+                        <Line
+                          type="monotone"
+                          dataKey="morningWR4"
+                          name="Morning"
+                          stroke="#22c55e"
+                          strokeWidth={2}
+                          dot={{ r: 4, fill: "#22c55e", strokeWidth: 2 }}
+                          activeDot={{ r: 6 }}
+                        />
+                        <Line
+                          type="monotone"
+                          dataKey="afternoonWR4"
+                          name="Afternoon"
+                          stroke="#3b82f6"
+                          strokeWidth={2}
+                          dot={{ r: 4, fill: "#3b82f6", strokeWidth: 2 }}
+                          activeDot={{ r: 6 }}
+                        />
+                      </LineChart>
+                    </ResponsiveContainer>
+                  </div>
+                </div>
+
+                {/* Chart 3: Water Rinse 5 (Total Acid) */}
+                <div className="rounded-xl border border-border bg-card p-6 shadow-sm lg:col-span-2">
+                  <h2 className="text-lg font-semibold mb-6">Water Rinse 5 (Total Acid)</h2>
+                  <div className="w-full">
+                    <ResponsiveContainer width="100%" height={300}>
+                      <LineChart data={dataWR} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
+                        <XAxis
+                          dataKey="date"
+                          tick={{ fontSize: 12, fill: "var(--muted-foreground)" }}
+                          tickLine={false}
+                          axisLine={false}
+                          dy={10}
+                        />
+                        <YAxis
+                          domain={[0.0, 0.6]}
+                          tickFormatter={(val) => val.toFixed(1)}
+                          tick={{ fontSize: 12, fill: "var(--muted-foreground)" }}
+                          tickLine={false}
+                          axisLine={false}
+                          dx={-10}
+                          label={{
+                            value: "TA",
+                            angle: -90,
+                            position: "insideLeft",
+                            fill: "var(--muted-foreground)",
+                            fontSize: 12,
+                          }}
+                        />
+                        <Tooltip
+                          contentStyle={{
+                            background: "var(--card)",
+                            border: "1px solid var(--border)",
+                            borderRadius: 8,
+                            fontSize: 12,
+                          }}
+                        />
+                        <Legend wrapperStyle={{ fontSize: 12, paddingTop: 20 }} />
+                        <Line
+                          type="monotone"
+                          dataKey="morningWR5"
+                          name="Morning"
+                          stroke="#22c55e"
+                          strokeWidth={2}
+                          dot={{ r: 4, fill: "#22c55e", strokeWidth: 2 }}
+                          activeDot={{ r: 6 }}
+                        />
+                        <Line
+                          type="monotone"
+                          dataKey="afternoonWR5"
                           name="Afternoon"
                           stroke="#3b82f6"
                           strokeWidth={2}
