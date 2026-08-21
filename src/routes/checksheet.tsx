@@ -312,7 +312,7 @@ function DashboardChecksheet() {
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             <SummaryCard
               label="Total Oil Weight"
-              value={`${totalOilWeight} L`}
+              value={`${totalOilWeight} drum`}
               sub="Total Accumulation"
               subColor="text-muted-foreground"
               iconBg="bg-primary/10"
@@ -320,7 +320,7 @@ function DashboardChecksheet() {
             />
             <SummaryCard
               label="Oil Weight Mixing"
-              value={`${totalMixing} L`}
+              value={`${totalMixing} drum`}
               sub="Mixing Process"
               subColor="text-blue-500"
               iconBg="bg-blue-500/10"
@@ -328,7 +328,7 @@ function DashboardChecksheet() {
             />
             <SummaryCard
               label="Oil Weight Mini"
-              value={`${totalMini} L`}
+              value={`${totalMini} drum`}
               sub="Mini Process"
               subColor="text-blue-700"
               iconBg="bg-blue-700/10"
@@ -336,7 +336,7 @@ function DashboardChecksheet() {
             />
             <SummaryCard
               label="Oil Weight PTED"
-              value={`${totalPted} L`}
+              value={`${totalPted} drum`}
               sub="PTED Process"
               subColor="text-blue-900"
               iconBg="bg-blue-900/10"
