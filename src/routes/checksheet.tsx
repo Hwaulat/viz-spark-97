@@ -107,8 +107,8 @@ const ALL_DAYS_AUG_2026 = Array.from({ length: 31 }, (_, i) => String(i + 1));
 function DashboardChecksheet() {
   const [activeTab, setActiveTab] = useState(TABS[0]);
   
-  // Date range filter string for all sections
-  const [globalDateRange, setGlobalDateRange] = useState("01 Aug 2026 - 31 Aug 2026");
+  // Month filter for all sections
+  const [globalMonth, setGlobalMonth] = useState(MONTH_OPTIONS[0]);
 
   const [activeControlPointTab, setActiveControlPointTab] = useState(CONTROL_POINT_TABS[0]);
 
@@ -116,23 +116,23 @@ function DashboardChecksheet() {
   const [station2, setStation2] = useState(STATION_OPTIONS_2[0]);
 
   const dataBagFilter = useMemo(
-    () => generatePressureData(FRIDAYS_AUG_2026, station1 + globalDateRange),
-    [station1, globalDateRange]
+    () => generatePressureData(FRIDAYS_AUG_2026, station1 + globalMonth),
+    [station1, globalMonth]
   );
 
   const dataControlPressure = useMemo(
-    () => generatePressureData(ALL_DAYS_AUG_2026, station2 + globalDateRange),
-    [station2, globalDateRange]
+    () => generatePressureData(ALL_DAYS_AUG_2026, station2 + globalMonth),
+    [station2, globalMonth]
   );
 
   const dataWasteDisposal = useMemo(
-    () => generateWasteDisposalData(ALL_DAYS_AUG_2026, globalDateRange),
-    [globalDateRange]
+    () => generateWasteDisposalData(ALL_DAYS_AUG_2026, globalMonth),
+    [globalMonth]
   );
 
   const dataControlPoint = useMemo(
-    () => generateControlPointData(ALL_DAYS_AUG_2026, activeControlPointTab + globalDateRange),
-    [activeControlPointTab, globalDateRange]
+    () => generateControlPointData(ALL_DAYS_AUG_2026, activeControlPointTab + globalMonth),
+    [activeControlPointTab, globalMonth]
   );
 
   // Totals for summary cards (Waste Disposal)
@@ -177,13 +177,41 @@ function DashboardChecksheet() {
           ))}
         </div>
 
-        {/* Global Date Range Filter */}
-        <div className="relative shrink-0">
-          <button className="flex items-center gap-2 bg-background border border-border rounded-lg pl-3 pr-4 py-2 text-sm font-medium hover:bg-muted/50 transition-colors">
-            <Calendar className="h-4 w-4 text-muted-foreground" />
-            {globalDateRange}
-            <ChevronDown className="h-4 w-4 text-muted-foreground ml-2" />
-          </button>
+        {/* Right side Filters */}
+        <div className="flex flex-wrap items-center gap-3">
+          {/* Sub Tab Dropdown (Only for Control Point) */}
+          {activeTab === TABS[2] && (
+            <div className="relative shrink-0">
+              <select
+                className="appearance-none bg-background border border-border rounded-lg pl-3 pr-8 py-2 text-sm font-medium outline-none focus:ring-2 focus:ring-primary/20"
+                value={activeControlPointTab}
+                onChange={(e) => setActiveControlPointTab(e.target.value)}
+              >
+                {CONTROL_POINT_TABS.map((opt) => (
+                  <option key={opt} value={opt}>
+                    {opt}
+                  </option>
+                ))}
+              </select>
+              <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+            </div>
+          )}
+
+          {/* Global Month Filter */}
+          <div className="relative shrink-0">
+            <select
+              className="appearance-none bg-background border border-border rounded-lg pl-4 pr-10 py-2 text-sm font-medium outline-none focus:ring-2 focus:ring-primary/20"
+              value={globalMonth}
+              onChange={(e) => setGlobalMonth(e.target.value)}
+            >
+              {MONTH_OPTIONS.map((opt) => (
+                <option key={opt} value={opt}>
+                  {opt}
+                </option>
+              ))}
+            </select>
+            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+          </div>
         </div>
       </div>
 
@@ -430,28 +458,11 @@ function DashboardChecksheet() {
 
       {activeTab === TABS[2] && (
         <div className="space-y-6">
-          {/* Sub Tab List */}
-          <div className="flex items-center gap-1 rounded-lg bg-muted/50 p-1 overflow-x-auto border border-border w-fit">
-            {CONTROL_POINT_TABS.map((tab) => (
-              <button
-                key={tab}
-                className={`px-4 py-2 text-sm font-medium rounded-md whitespace-nowrap transition-colors ${
-                  activeControlPointTab === tab
-                    ? "bg-background text-primary shadow-sm border border-border"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
-                onClick={() => setActiveControlPointTab(tab)}
-              >
-                {tab}
-              </button>
-            ))}
-          </div>
-
           {/* Apply charts only for Pre-Degreasing and Degreasing */}
           {(activeControlPointTab === "Pre-Degreasing" || activeControlPointTab === "Degreasing") && (
             <>
               {/* ── Summary Cards ───────────────────────────────── */}
-              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              <div className="grid gap-4 sm:grid-cols-1 lg:grid-cols-2">
                 <DoubleSummaryCard
                   label="Average Free Alkali (T.Alk)"
                   value1={avgAlkaliMorning}
