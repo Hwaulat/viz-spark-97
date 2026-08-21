@@ -84,6 +84,20 @@ function generateControlPointData(dates: string[], seedPrefix: string) {
   });
 }
 
+function generateSurfaceConditioningData(dates: string[], seedPrefix: string) {
+  return dates.map((date, i) => {
+    const baseAlkali = 4.0 + Math.sin(i * 0.5) * 1.0;
+    const basePh = 9.5 + Math.cos(i * 0.5) * 0.5;
+    return {
+      date: date.padStart(2, "0"),
+      morningAlkali: Number((baseAlkali + 0.2).toFixed(1)),
+      afternoonAlkali: Number((baseAlkali - 0.2).toFixed(1)),
+      morningPh: Number((basePh + 0.2).toFixed(1)),
+      afternoonPh: Number((basePh - 0.2).toFixed(1)),
+    };
+  });
+}
+
 const CONTROL_POINT_TABS = [
   "Pre-Degreasing",
   "Degreasing",
@@ -135,6 +149,11 @@ function DashboardChecksheet() {
     [activeControlPointTab, globalMonth]
   );
 
+  const dataSurfaceConditioning = useMemo(
+    () => generateSurfaceConditioningData(ALL_DAYS_AUG_2026, activeControlPointTab + globalMonth),
+    [activeControlPointTab, globalMonth]
+  );
+
   // Totals for summary cards (Waste Disposal)
   const totalMixing = dataWasteDisposal.reduce((acc, val) => acc + val.mixing, 0);
   const totalMini = dataWasteDisposal.reduce((acc, val) => acc + val.mini, 0);
@@ -146,6 +165,12 @@ function DashboardChecksheet() {
   const avgAlkaliAfternoon = (dataControlPoint.reduce((acc, val) => acc + val.afternoonAlkali, 0) / dataControlPoint.length).toFixed(1);
   const avgTempMorning = (dataControlPoint.reduce((acc, val) => acc + val.morningTemp, 0) / dataControlPoint.length).toFixed(1);
   const avgTempAfternoon = (dataControlPoint.reduce((acc, val) => acc + val.afternoonTemp, 0) / dataControlPoint.length).toFixed(1);
+
+  // Averages for Surface Conditioning
+  const avgSurfaceAlkaliMorning = (dataSurfaceConditioning.reduce((acc, val) => acc + val.morningAlkali, 0) / dataSurfaceConditioning.length).toFixed(1);
+  const avgSurfaceAlkaliAfternoon = (dataSurfaceConditioning.reduce((acc, val) => acc + val.afternoonAlkali, 0) / dataSurfaceConditioning.length).toFixed(1);
+  const avgSurfacePhMorning = (dataSurfaceConditioning.reduce((acc, val) => acc + val.morningPh, 0) / dataSurfaceConditioning.length).toFixed(1);
+  const avgSurfacePhAfternoon = (dataSurfaceConditioning.reduce((acc, val) => acc + val.afternoonPh, 0) / dataSurfaceConditioning.length).toFixed(1);
 
   // Y-Axis Ticks for Pressure charts
   const yTicks = [0.01, 0.015, 0.02, 0.025];
@@ -593,6 +618,155 @@ function DashboardChecksheet() {
                       <Line
                         type="monotone"
                         dataKey="afternoonTemp"
+                        name="Afternoon"
+                        stroke="#3b82f6"
+                        strokeWidth={2}
+                        dot={{ r: 4, fill: "#3b82f6", strokeWidth: 2 }}
+                        activeDot={{ r: 6 }}
+                      />
+                    </LineChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+            </>
+          )}
+
+          {/* Apply charts for Surface Conditioning */}
+          {activeControlPointTab === "Surface Conditioning" && (
+            <>
+              {/* ── Summary Cards ───────────────────────────────── */}
+              <div className="grid gap-4 sm:grid-cols-1 lg:grid-cols-2">
+                <DoubleSummaryCard
+                  label="Average Total Alkali (T.Alk)"
+                  value1={avgSurfaceAlkaliMorning}
+                  label1="Morning"
+                  value2={avgSurfaceAlkaliAfternoon}
+                  label2="Afternoon"
+                  iconBg="bg-primary/10"
+                  icon={<Beaker className="h-4.5 w-4.5 text-primary" />}
+                />
+                <DoubleSummaryCard
+                  label="Average pH"
+                  value1={avgSurfacePhMorning}
+                  label1="Morning"
+                  value2={avgSurfacePhAfternoon}
+                  label2="Afternoon"
+                  iconBg="bg-blue-500/10"
+                  icon={<Beaker className="h-4.5 w-4.5 text-blue-500" />}
+                />
+              </div>
+
+              {/* ── Chart 1: Total Alkali ───────────────────────────────── */}
+              <div className="rounded-xl border border-border bg-card p-6 shadow-sm mt-6">
+                <h2 className="text-lg font-semibold mb-6">Total Alkali (T.Alk)</h2>
+                <div className="w-full">
+                  <ResponsiveContainer width="100%" height={300}>
+                    <LineChart data={dataSurfaceConditioning} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
+                      <XAxis
+                        dataKey="date"
+                        tick={{ fontSize: 12, fill: "var(--muted-foreground)" }}
+                        tickLine={false}
+                        axisLine={false}
+                        dy={10}
+                      />
+                      <YAxis
+                        domain={[2.2, 5.8]}
+                        tickFormatter={(val) => val.toFixed(1)}
+                        tick={{ fontSize: 12, fill: "var(--muted-foreground)" }}
+                        tickLine={false}
+                        axisLine={false}
+                        dx={-10}
+                        label={{
+                          value: "F.Alk",
+                          angle: -90,
+                          position: "insideLeft",
+                          fill: "var(--muted-foreground)",
+                          fontSize: 12,
+                        }}
+                      />
+                      <Tooltip
+                        contentStyle={{
+                          background: "var(--card)",
+                          border: "1px solid var(--border)",
+                          borderRadius: 8,
+                          fontSize: 12,
+                        }}
+                      />
+                      <Legend wrapperStyle={{ fontSize: 12, paddingTop: 20 }} />
+                      <Line
+                        type="monotone"
+                        dataKey="morningAlkali"
+                        name="Morning"
+                        stroke="#22c55e"
+                        strokeWidth={2}
+                        dot={{ r: 4, fill: "#22c55e", strokeWidth: 2 }}
+                        activeDot={{ r: 6 }}
+                      />
+                      <Line
+                        type="monotone"
+                        dataKey="afternoonAlkali"
+                        name="Afternoon"
+                        stroke="#3b82f6"
+                        strokeWidth={2}
+                        dot={{ r: 4, fill: "#3b82f6", strokeWidth: 2 }}
+                        activeDot={{ r: 6 }}
+                      />
+                    </LineChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+
+              {/* ── Chart 2: pH ───────────────────────────────── */}
+              <div className="rounded-xl border border-border bg-card p-6 shadow-sm mt-6">
+                <h2 className="text-lg font-semibold mb-6">pH</h2>
+                <div className="w-full">
+                  <ResponsiveContainer width="100%" height={300}>
+                    <LineChart data={dataSurfaceConditioning} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
+                      <XAxis
+                        dataKey="date"
+                        tick={{ fontSize: 12, fill: "var(--muted-foreground)" }}
+                        tickLine={false}
+                        axisLine={false}
+                        dy={10}
+                      />
+                      <YAxis
+                        domain={[8.0, 11.0]}
+                        tickFormatter={(val) => val.toFixed(1)}
+                        tick={{ fontSize: 12, fill: "var(--muted-foreground)" }}
+                        tickLine={false}
+                        axisLine={false}
+                        dx={-10}
+                        label={{
+                          value: "pH",
+                          angle: -90,
+                          position: "insideLeft",
+                          fill: "var(--muted-foreground)",
+                          fontSize: 12,
+                        }}
+                      />
+                      <Tooltip
+                        contentStyle={{
+                          background: "var(--card)",
+                          border: "1px solid var(--border)",
+                          borderRadius: 8,
+                          fontSize: 12,
+                        }}
+                      />
+                      <Legend wrapperStyle={{ fontSize: 12, paddingTop: 20 }} />
+                      <Line
+                        type="monotone"
+                        dataKey="morningPh"
+                        name="Morning"
+                        stroke="#22c55e"
+                        strokeWidth={2}
+                        dot={{ r: 4, fill: "#22c55e", strokeWidth: 2 }}
+                        activeDot={{ r: 6 }}
+                      />
+                      <Line
+                        type="monotone"
+                        dataKey="afternoonPh"
                         name="Afternoon"
                         stroke="#3b82f6"
                         strokeWidth={2}
