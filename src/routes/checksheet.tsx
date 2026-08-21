@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState, useMemo } from "react";
-import { ChevronDown, LayoutDashboard, Calendar, Droplet } from "lucide-react";
+import { ChevronDown, LayoutDashboard, Calendar, Droplet, Thermometer, Beaker } from "lucide-react";
 import {
   CartesianGrid,
   Line,
@@ -70,6 +70,28 @@ function generateWasteDisposalData(dates: string[], seedPrefix: string) {
   });
 }
 
+function generateControlPointData(dates: string[], seedPrefix: string) {
+  return dates.map((date, i) => {
+    const baseAlkali = 17.5 + Math.sin(i * 0.5) * 1.0;
+    const baseTemp = 35 + Math.cos(i * 0.5) * 8;
+    return {
+      date: date.padStart(2, "0"),
+      morningAlkali: Number((baseAlkali + 0.5).toFixed(1)),
+      afternoonAlkali: Number((baseAlkali - 0.2).toFixed(1)),
+      morningTemp: Math.floor(baseTemp + 2),
+      afternoonTemp: Math.floor(baseTemp - 2),
+    };
+  });
+}
+
+const CONTROL_POINT_TABS = [
+  "Pre-Degreasing",
+  "Degreasing",
+  "Surface Conditioning",
+  "Phosphate",
+  "WR 2,4,5"
+];
+
 const TABS = [
   "Cleaning Bag Filter & Control Preassure",
   "Waste Disposal",
@@ -87,6 +109,8 @@ function DashboardChecksheet() {
   
   // Date range filter string for all sections
   const [globalDateRange, setGlobalDateRange] = useState("01 Aug 2026 - 31 Aug 2026");
+
+  const [activeControlPointTab, setActiveControlPointTab] = useState(CONTROL_POINT_TABS[0]);
 
   const [station1, setStation1] = useState(STATION_OPTIONS_1[0]);
   const [station2, setStation2] = useState(STATION_OPTIONS_2[0]);
@@ -106,11 +130,22 @@ function DashboardChecksheet() {
     [globalDateRange]
   );
 
-  // Totals for summary cards
+  const dataControlPoint = useMemo(
+    () => generateControlPointData(ALL_DAYS_AUG_2026, activeControlPointTab + globalDateRange),
+    [activeControlPointTab, globalDateRange]
+  );
+
+  // Totals for summary cards (Waste Disposal)
   const totalMixing = dataWasteDisposal.reduce((acc, val) => acc + val.mixing, 0);
   const totalMini = dataWasteDisposal.reduce((acc, val) => acc + val.mini, 0);
   const totalPted = dataWasteDisposal.reduce((acc, val) => acc + val.pted, 0);
   const totalOilWeight = totalMixing + totalMini + totalPted;
+
+  // Averages for summary cards (Control Point)
+  const avgAlkaliMorning = (dataControlPoint.reduce((acc, val) => acc + val.morningAlkali, 0) / dataControlPoint.length).toFixed(1);
+  const avgAlkaliAfternoon = (dataControlPoint.reduce((acc, val) => acc + val.afternoonAlkali, 0) / dataControlPoint.length).toFixed(1);
+  const avgTempMorning = (dataControlPoint.reduce((acc, val) => acc + val.morningTemp, 0) / dataControlPoint.length).toFixed(1);
+  const avgTempAfternoon = (dataControlPoint.reduce((acc, val) => acc + val.afternoonTemp, 0) / dataControlPoint.length).toFixed(1);
 
   // Y-Axis Ticks for Pressure charts
   const yTicks = [0.01, 0.015, 0.02, 0.025];
@@ -392,6 +427,175 @@ function DashboardChecksheet() {
           </div>
         </div>
       )}
+
+      {activeTab === TABS[2] && (
+        <div className="space-y-6">
+          {/* Sub Tab List */}
+          <div className="flex items-center gap-1 rounded-lg bg-muted/50 p-1 overflow-x-auto border border-border w-fit">
+            {CONTROL_POINT_TABS.map((tab) => (
+              <button
+                key={tab}
+                className={`px-4 py-2 text-sm font-medium rounded-md whitespace-nowrap transition-colors ${
+                  activeControlPointTab === tab
+                    ? "bg-background text-primary shadow-sm border border-border"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+                onClick={() => setActiveControlPointTab(tab)}
+              >
+                {tab}
+              </button>
+            ))}
+          </div>
+
+          {/* Apply charts only for Pre-Degreasing and Degreasing */}
+          {(activeControlPointTab === "Pre-Degreasing" || activeControlPointTab === "Degreasing") && (
+            <>
+              {/* ── Summary Cards ───────────────────────────────── */}
+              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+                <DoubleSummaryCard
+                  label="Average Free Alkali (T.Alk)"
+                  value1={avgAlkaliMorning}
+                  label1="Morning"
+                  value2={avgAlkaliAfternoon}
+                  label2="Afternoon"
+                  iconBg="bg-primary/10"
+                  icon={<Beaker className="h-4.5 w-4.5 text-primary" />}
+                />
+                <DoubleSummaryCard
+                  label="Average Temperature"
+                  value1={`${avgTempMorning} °C`}
+                  label1="Morning"
+                  value2={`${avgTempAfternoon} °C`}
+                  label2="Afternoon"
+                  iconBg="bg-blue-500/10"
+                  icon={<Thermometer className="h-4.5 w-4.5 text-blue-500" />}
+                />
+              </div>
+
+              {/* ── Chart 1: Free Alkali ───────────────────────────────── */}
+              <div className="rounded-xl border border-border bg-card p-6 shadow-sm mt-6">
+                <h2 className="text-lg font-semibold mb-6">Free Alkali (T.Alk)</h2>
+                <div className="w-full">
+                  <ResponsiveContainer width="100%" height={300}>
+                    <LineChart data={dataControlPoint} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
+                      <XAxis
+                        dataKey="date"
+                        tick={{ fontSize: 12, fill: "var(--muted-foreground)" }}
+                        tickLine={false}
+                        axisLine={false}
+                        dy={10}
+                      />
+                      <YAxis
+                        domain={[16.0, 19.0]}
+                        tickFormatter={(val) => val.toFixed(1)}
+                        tick={{ fontSize: 12, fill: "var(--muted-foreground)" }}
+                        tickLine={false}
+                        axisLine={false}
+                        dx={-10}
+                        label={{
+                          value: "F.Alk",
+                          angle: -90,
+                          position: "insideLeft",
+                          fill: "var(--muted-foreground)",
+                          fontSize: 12,
+                        }}
+                      />
+                      <Tooltip
+                        contentStyle={{
+                          background: "var(--card)",
+                          border: "1px solid var(--border)",
+                          borderRadius: 8,
+                          fontSize: 12,
+                        }}
+                      />
+                      <Legend wrapperStyle={{ fontSize: 12, paddingTop: 20 }} />
+                      <Line
+                        type="monotone"
+                        dataKey="morningAlkali"
+                        name="Morning"
+                        stroke="#22c55e"
+                        strokeWidth={2}
+                        dot={{ r: 4, fill: "#22c55e", strokeWidth: 2 }}
+                        activeDot={{ r: 6 }}
+                      />
+                      <Line
+                        type="monotone"
+                        dataKey="afternoonAlkali"
+                        name="Afternoon"
+                        stroke="#3b82f6"
+                        strokeWidth={2}
+                        dot={{ r: 4, fill: "#3b82f6", strokeWidth: 2 }}
+                        activeDot={{ r: 6 }}
+                      />
+                    </LineChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+
+              {/* ── Chart 2: Temperature ───────────────────────────────── */}
+              <div className="rounded-xl border border-border bg-card p-6 shadow-sm mt-6">
+                <h2 className="text-lg font-semibold mb-6">Temperature (°C)</h2>
+                <div className="w-full">
+                  <ResponsiveContainer width="100%" height={300}>
+                    <LineChart data={dataControlPoint} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
+                      <XAxis
+                        dataKey="date"
+                        tick={{ fontSize: 12, fill: "var(--muted-foreground)" }}
+                        tickLine={false}
+                        axisLine={false}
+                        dy={10}
+                      />
+                      <YAxis
+                        domain={[20, 50]}
+                        tick={{ fontSize: 12, fill: "var(--muted-foreground)" }}
+                        tickLine={false}
+                        axisLine={false}
+                        dx={-10}
+                        label={{
+                          value: "°C",
+                          angle: -90,
+                          position: "insideLeft",
+                          fill: "var(--muted-foreground)",
+                          fontSize: 12,
+                        }}
+                      />
+                      <Tooltip
+                        contentStyle={{
+                          background: "var(--card)",
+                          border: "1px solid var(--border)",
+                          borderRadius: 8,
+                          fontSize: 12,
+                        }}
+                      />
+                      <Legend wrapperStyle={{ fontSize: 12, paddingTop: 20 }} />
+                      <Line
+                        type="monotone"
+                        dataKey="morningTemp"
+                        name="Morning"
+                        stroke="#22c55e"
+                        strokeWidth={2}
+                        dot={{ r: 4, fill: "#22c55e", strokeWidth: 2 }}
+                        activeDot={{ r: 6 }}
+                      />
+                      <Line
+                        type="monotone"
+                        dataKey="afternoonTemp"
+                        name="Afternoon"
+                        stroke="#3b82f6"
+                        strokeWidth={2}
+                        dot={{ r: 4, fill: "#3b82f6", strokeWidth: 2 }}
+                        activeDot={{ r: 6 }}
+                      />
+                    </LineChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+            </>
+          )}
+        </div>
+      )}
     </div>
   );
 }
@@ -424,6 +628,47 @@ function SummaryCard({
       <div>
         <div className="text-2xl font-bold">{value}</div>
         <div className={`text-xs ${subColor}`}>{sub}</div>
+      </div>
+    </div>
+  );
+}
+
+function DoubleSummaryCard({
+  label,
+  value1,
+  label1,
+  value2,
+  label2,
+  iconBg,
+  icon,
+}: {
+  label: string;
+  value1: number | string;
+  label1: string;
+  value2: number | string;
+  label2: string;
+  iconBg: string;
+  icon: React.ReactNode;
+}) {
+  return (
+    <div className="rounded-lg bg-card border border-border p-4 shadow-sm space-y-4">
+      <div className="flex items-center justify-between">
+        <span className="text-sm font-medium text-muted-foreground">{label}</span>
+        <div
+          className={`h-8 w-8 rounded-full flex items-center justify-center ${iconBg}`}
+        >
+          {icon}
+        </div>
+      </div>
+      <div className="flex gap-8">
+        <div>
+          <div className="text-xs text-muted-foreground">{label1}</div>
+          <div className="text-2xl font-bold">{value1}</div>
+        </div>
+        <div>
+          <div className="text-xs text-muted-foreground">{label2}</div>
+          <div className="text-2xl font-bold">{value2}</div>
+        </div>
       </div>
     </div>
   );
