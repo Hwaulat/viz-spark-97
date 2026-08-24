@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState, useMemo } from "react";
-import { ChevronDown, LayoutDashboard, Calendar, Droplet, Thermometer, Beaker } from "lucide-react";
+import { ChevronDown, LayoutDashboard, Calendar, Droplet, Thermometer, Beaker, CheckCircle, AlertTriangle, Wrench, AlertOctagon, X } from "lucide-react";
 import {
   CartesianGrid,
   Line,
@@ -155,6 +155,216 @@ const TABS = [
 const FRIDAYS_AUG_2026 = ["07 Aug", "14 Aug", "21 Aug", "28 Aug"];
 const ALL_DAYS_AUG_2026 = Array.from({ length: 31 }, (_, i) => String(i + 1));
 
+const EQUIPMENT_PT_STATION_OPTIONS = [
+  "Flood",
+  "Pre Degreasing",
+  "Degreasing",
+  "Surface Conditioning",
+  "Phosphate 1",
+  "Phosphate 2",
+  "WR 1 & 2",
+  "WR 3 & 4",
+  "WR 5",
+];
+
+interface EquipmentProblemRow {
+  equipmentName: string;
+  freq: string;
+  standard: string;
+  value: string;
+  valueColor: string;
+  problem: string;
+  followUpProblem: string;
+  followUpColor: string;
+  countermeasure: string;
+  countermeasureBy: string;
+}
+
+const EQUIPMENT_NAMES_BY_STATION: Record<string, string[]> = {
+  "Flood": [
+    "Tanki & Pipa",
+    "Pompa Flood Water Spray (Pus-111)",
+    "Tekanan Spray Flood Water (PRG-111C & PRG-1114)",
+    "Heat Exchanger 1",
+    "Heat Exchanger 2",
+    "Tekanan How Water Inlet",
+    "Pressure difference Liquid Inlet & Outlet (Hexc)",
+    "Spray Nozzle",
+    "Strainer Mesh",
+  ],
+  "Pre Degreasing": [
+    "Tanki & Pipa",
+    "Pompa Sirkulasi",
+    "Heater Element",
+    "Temperature Controller",
+    "Spray Nozzle",
+    "Strainer Mesh",
+    "Level Sensor",
+  ],
+  "Degreasing": [
+    "Tanki & Pipa",
+    "Pompa Sirkulasi",
+    "Heater Element",
+    "Temperature Controller",
+    "Spray Nozzle",
+    "Strainer Mesh",
+    "Oil Skimmer",
+    "Level Sensor",
+  ],
+  "Surface Conditioning": [
+    "Tanki & Pipa",
+    "Pompa Sirkulasi",
+    "Agitator Motor",
+    "Spray Nozzle",
+    "Strainer Mesh",
+    "Level Sensor",
+  ],
+  "Phosphate 1": [
+    "Tanki & Pipa",
+    "Pompa Sirkulasi",
+    "Heater Element",
+    "Temperature Controller",
+    "Spray Nozzle",
+    "Strainer Mesh",
+    "Sludge Filter",
+    "Level Sensor",
+  ],
+  "Phosphate 2": [
+    "Tanki & Pipa",
+    "Pompa Sirkulasi",
+    "Heater Element",
+    "Temperature Controller",
+    "Spray Nozzle",
+    "Strainer Mesh",
+    "Sludge Filter",
+    "Level Sensor",
+  ],
+  "WR 1 & 2": [
+    "Tanki & Pipa",
+    "Pompa Sirkulasi",
+    "Spray Nozzle",
+    "Strainer Mesh",
+    "Conductivity Meter",
+    "Level Sensor",
+  ],
+  "WR 3 & 4": [
+    "Tanki & Pipa",
+    "Pompa Sirkulasi",
+    "Spray Nozzle",
+    "Strainer Mesh",
+    "Conductivity Meter",
+    "Level Sensor",
+  ],
+  "WR 5": [
+    "Tanki & Pipa",
+    "Pompa Sirkulasi",
+    "Spray Nozzle",
+    "Strainer Mesh",
+    "DI Water Supply",
+    "Level Sensor",
+  ],
+};
+
+const STANDARDS = [
+  "Tidak ada kebocoran (Normal)",
+  "Suara normal, getaran normal, tidak ada kebocoran, panas motor normal",
+  "0.09 MPa - 0.16 MPa",
+  "Tidak ada kebocoran, getaran normal",
+  "Diatas 0.20 MPa",
+  "> 60°C",
+  "Dibawah 0.05 MPa",
+  "Tidak tersumbat, sudut normal (Standard)",
+];
+
+const FOLLOW_UPS = ["None", "Maintenance", "Painting", "Cleaning", "Replacement"];
+const FOLLOW_UP_COLORS: Record<string, string> = {
+  "None": "bg-gray-100 text-gray-600",
+  "Maintenance": "bg-orange-100 text-orange-600",
+  "Painting": "bg-red-100 text-red-600",
+  "Cleaning": "bg-blue-100 text-blue-600",
+  "Replacement": "bg-purple-100 text-purple-600",
+};
+
+function generateEquipmentData(station: string, month: string): EquipmentProblemRow[] {
+  const names = EQUIPMENT_NAMES_BY_STATION[station] || EQUIPMENT_NAMES_BY_STATION["Flood"];
+  const seed = station.length + month.length;
+
+  return names.map((name, i) => {
+    const hash = Math.abs(Math.sin((seed + i) * 13.7 + i * 5.3));
+    const statusRand = hash;
+    let value: string;
+    let valueColor: string;
+
+    if (statusRand < 0.55) {
+      value = "OK";
+      valueColor = "text-green-500";
+    } else if (statusRand < 0.75) {
+      value = "NG";
+      valueColor = "text-red-500";
+    } else {
+      value = "REPAIR";
+      valueColor = "text-orange-500";
+    }
+
+    // Numeric values for some items
+    const numericHash = Math.abs(Math.cos((seed + i) * 7.1));
+    if (i === 2 || i === 5 || i === 6 || i === 7) {
+      const numVal = (numericHash * 0.3 + 0.02).toFixed(2);
+      value = numVal;
+      valueColor = numericHash > 0.5 ? "text-green-500" : "text-orange-500";
+    }
+    if (i === 5) {
+      const tempVal = Math.floor(numericHash * 40 + 20);
+      value = `${tempVal}°C`;
+      valueColor = tempVal > 60 ? "text-green-500" : "text-orange-500";
+    }
+
+    const hasProblem = statusRand > 0.5;
+    const problemNames = ["Problem A", "Problem B", "Problem C"];
+    const problem = hasProblem ? problemNames[i % 3] : "-";
+
+    const followUpIdx = hasProblem ? (i % (FOLLOW_UPS.length - 1)) + 1 : 0;
+    const followUp = FOLLOW_UPS[followUpIdx];
+
+    const countermeasures = ["Counter Measure A", "Counter Measure B", "Counter Measure C"];
+    const counterPersons = ["Hasan", "Andre", "Budi", "Rini"];
+
+    return {
+      equipmentName: name,
+      freq: "1 x 1 Shift",
+      standard: STANDARDS[i % STANDARDS.length],
+      value,
+      valueColor,
+      problem,
+      followUpProblem: followUp,
+      followUpColor: FOLLOW_UP_COLORS[followUp],
+      countermeasure: hasProblem ? countermeasures[i % 3] : "-",
+      countermeasureBy: hasProblem ? counterPersons[i % 4] : "-",
+    };
+  });
+}
+
+function generateEquipmentTrendData(station: string, month: string) {
+  const seed = station.length * 3 + month.length * 7;
+  return Array.from({ length: 31 }, (_, i) => {
+    const day = i + 1;
+    const hash1 = Math.abs(Math.sin((seed + day) * 2.7));
+    const hash2 = Math.abs(Math.cos((seed + day) * 3.1));
+
+    const total = Math.floor(5 + hash1 * 8);
+    const ng = Math.floor(hash2 * 3);
+    const repair = Math.floor(Math.abs(Math.sin((seed + day) * 5.3)) * 2);
+    const ok = Math.max(0, total - ng - repair);
+
+    return {
+      date: String(day),
+      OK: ok,
+      NG: ng,
+      Repair: repair,
+    };
+  });
+}
+
 function DashboardChecksheet() {
   const [activeTab, setActiveTab] = useState(TABS[0]);
   
@@ -165,6 +375,30 @@ function DashboardChecksheet() {
 
   const [station1, setStation1] = useState(STATION_OPTIONS_1[0]);
   const [station2, setStation2] = useState(STATION_OPTIONS_2[0]);
+
+  // Equipment Pre-Treatment state
+  const [equipmentPTStation, setEquipmentPTStation] = useState(EQUIPMENT_PT_STATION_OPTIONS[0]);
+  const [showProblemModal, setShowProblemModal] = useState<string | null>(null);
+
+  // Equipment Pre-Treatment data
+  const equipmentData = useMemo(
+    () => generateEquipmentData(equipmentPTStation, globalMonth),
+    [equipmentPTStation, globalMonth]
+  );
+
+  const equipmentTrendData = useMemo(
+    () => generateEquipmentTrendData(equipmentPTStation, globalMonth),
+    [equipmentPTStation, globalMonth]
+  );
+
+  // Equipment Pre-Treatment summary totals
+  const eqTotalOK = equipmentData.filter(d => d.value === "OK").length +
+    equipmentTrendData.reduce((acc, d) => acc + d.OK, 0);
+  const eqTotalNG = equipmentData.filter(d => d.value === "NG").length +
+    equipmentTrendData.reduce((acc, d) => acc + d.NG, 0);
+  const eqTotalRepair = equipmentData.filter(d => d.value === "REPAIR").length +
+    equipmentTrendData.reduce((acc, d) => acc + d.Repair, 0);
+  const eqTotalProblem = equipmentData.filter(d => d.problem !== "-").length;
 
   const dataBagFilter = useMemo(
     () => generatePressureData(FRIDAYS_AUG_2026, station1 + globalMonth),
@@ -270,7 +504,7 @@ function DashboardChecksheet() {
         {/* Right side Filters */}
         <div className="flex flex-wrap items-center gap-3">
           {/* Sub Tab Dropdown (Only for Control Point) */}
-          {activeTab === TABS[2] && (
+           {activeTab === TABS[2] && (
             <div className="relative shrink-0">
               <select
                 className="appearance-none bg-background border border-border rounded-lg pl-3 pr-8 py-2 text-sm font-medium outline-none focus:ring-2 focus:ring-primary/20"
@@ -278,6 +512,24 @@ function DashboardChecksheet() {
                 onChange={(e) => setActiveControlPointTab(e.target.value)}
               >
                 {CONTROL_POINT_TABS.map((opt) => (
+                  <option key={opt} value={opt}>
+                    {opt}
+                  </option>
+                ))}
+              </select>
+              <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+            </div>
+          )}
+
+          {/* Station Dropdown (Only for Equipment Pre-Treatment) */}
+          {activeTab === TABS[3] && (
+            <div className="relative shrink-0">
+              <select
+                className="appearance-none bg-background border border-border rounded-lg pl-3 pr-8 py-2 text-sm font-medium outline-none focus:ring-2 focus:ring-primary/20"
+                value={equipmentPTStation}
+                onChange={(e) => setEquipmentPTStation(e.target.value)}
+              >
+                {EQUIPMENT_PT_STATION_OPTIONS.map((opt) => (
                   <option key={opt} value={opt}>
                     {opt}
                   </option>
@@ -1356,6 +1608,208 @@ function DashboardChecksheet() {
                 </div>
               </div>
             </>
+          )}
+        </div>
+      )}
+
+      {activeTab === TABS[3] && (
+        <div className="space-y-6">
+          {/* ── Summary Cards ───────────────────────────────── */}
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {/* Total OK */}
+            <div className="rounded-lg bg-card border border-border p-4 shadow-sm space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium text-muted-foreground">Total OK</span>
+                <div className="h-8 w-8 rounded-full flex items-center justify-center bg-green-500/10">
+                  <CheckCircle className="h-4.5 w-4.5 text-green-500" />
+                </div>
+              </div>
+              <div className="flex items-baseline gap-2">
+                <div className="text-2xl font-bold text-green-600">{eqTotalOK}</div>
+                <button
+                  className="text-xs text-primary hover:underline cursor-pointer font-medium"
+                  onClick={() => setShowProblemModal("OK")}
+                >
+                  details
+                </button>
+              </div>
+            </div>
+
+            {/* Total NG */}
+            <div className="rounded-lg bg-card border border-border p-4 shadow-sm space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium text-muted-foreground">Total NG</span>
+                <div className="h-8 w-8 rounded-full flex items-center justify-center bg-red-500/10">
+                  <AlertTriangle className="h-4.5 w-4.5 text-red-500" />
+                </div>
+              </div>
+              <div className="flex items-baseline gap-2">
+                <div className="text-2xl font-bold text-red-600">{eqTotalNG}</div>
+                <button
+                  className="text-xs text-primary hover:underline cursor-pointer font-medium"
+                  onClick={() => setShowProblemModal("NG")}
+                >
+                  details
+                </button>
+              </div>
+            </div>
+
+            {/* Total Repair */}
+            <div className="rounded-lg bg-card border border-border p-4 shadow-sm space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium text-muted-foreground">Total Repair</span>
+                <div className="h-8 w-8 rounded-full flex items-center justify-center bg-orange-500/10">
+                  <Wrench className="h-4.5 w-4.5 text-orange-500" />
+                </div>
+              </div>
+              <div className="flex items-baseline gap-2">
+                <div className="text-2xl font-bold text-orange-600">{eqTotalRepair}</div>
+                <button
+                  className="text-xs text-primary hover:underline cursor-pointer font-medium"
+                  onClick={() => setShowProblemModal("REPAIR")}
+                >
+                  details
+                </button>
+              </div>
+            </div>
+
+            {/* Total Problem */}
+            <div className="rounded-lg bg-card border border-border p-4 shadow-sm space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium text-muted-foreground">Total Problem</span>
+                <div className="h-8 w-8 rounded-full flex items-center justify-center bg-purple-500/10">
+                  <AlertOctagon className="h-4.5 w-4.5 text-purple-500" />
+                </div>
+              </div>
+              <div className="flex items-baseline gap-2">
+                <div className="text-2xl font-bold text-purple-600">{eqTotalProblem}</div>
+                <button
+                  className="text-xs text-primary hover:underline cursor-pointer font-medium"
+                  onClick={() => setShowProblemModal("PROBLEM")}
+                >
+                  details
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* ── Bar Chart: Measurement Trends ───────────────────────────────── */}
+          <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
+            <h2 className="text-lg font-semibold mb-6">Measurement Trends</h2>
+            <div className="w-full">
+              <ResponsiveContainer width="100%" height={400}>
+                <BarChart
+                  data={equipmentTrendData}
+                  margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
+                  <XAxis
+                    dataKey="date"
+                    tick={{ fontSize: 12, fill: "var(--muted-foreground)" }}
+                    tickLine={false}
+                    axisLine={false}
+                    dy={10}
+                  />
+                  <YAxis
+                    tick={{ fontSize: 12, fill: "var(--muted-foreground)" }}
+                    tickLine={false}
+                    axisLine={false}
+                    dx={-10}
+                  />
+                  <Tooltip
+                    contentStyle={{
+                      background: "var(--card)",
+                      border: "1px solid var(--border)",
+                      borderRadius: 8,
+                      fontSize: 12,
+                    }}
+                  />
+                  <Legend wrapperStyle={{ fontSize: 12, paddingTop: 20 }} />
+                  <Bar dataKey="OK" name="OK" fill="#22c55e" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="NG" name="NG" fill="#ef4444" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="Repair" name="Repair" fill="#f97316" radius={[4, 4, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+
+          {/* ── Problem Detail Modal ───────────────────────────────── */}
+          {showProblemModal && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+              <div className="bg-card rounded-xl border border-border shadow-xl w-full max-w-6xl max-h-[85vh] flex flex-col">
+                {/* Modal Header */}
+                <div className="flex items-center justify-between p-6 border-b border-border">
+                  <h3 className="text-lg font-semibold">
+                    {showProblemModal === "PROBLEM"
+                      ? "Problem List"
+                      : `${showProblemModal} Detail — ${equipmentPTStation}`}
+                  </h3>
+                  <button
+                    className="h-8 w-8 rounded-full flex items-center justify-center hover:bg-muted transition-colors"
+                    onClick={() => setShowProblemModal(null)}
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                </div>
+
+                {/* Modal Body */}
+                <div className="p-6 overflow-auto flex-1">
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-sm">
+                      <thead>
+                        <tr className="border-b border-border">
+                          <th className="text-left py-3 px-3 font-semibold text-muted-foreground uppercase text-xs tracking-wider">Equipment Name</th>
+                          <th className="text-left py-3 px-3 font-semibold text-muted-foreground uppercase text-xs tracking-wider">Freq</th>
+                          <th className="text-left py-3 px-3 font-semibold text-muted-foreground uppercase text-xs tracking-wider">Standard</th>
+                          <th className="text-left py-3 px-3 font-semibold text-muted-foreground uppercase text-xs tracking-wider">Value</th>
+                          <th className="text-left py-3 px-3 font-semibold text-muted-foreground uppercase text-xs tracking-wider">Problem</th>
+                          <th className="text-left py-3 px-3 font-semibold text-muted-foreground uppercase text-xs tracking-wider">Follow Up Problem</th>
+                          <th className="text-left py-3 px-3 font-semibold text-muted-foreground uppercase text-xs tracking-wider">Countermeasure</th>
+                          <th className="text-left py-3 px-3 font-semibold text-muted-foreground uppercase text-xs tracking-wider">Countermeasure By</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {equipmentData
+                          .filter((row) => {
+                            if (showProblemModal === "OK") return row.value === "OK";
+                            if (showProblemModal === "NG") return row.value === "NG";
+                            if (showProblemModal === "REPAIR") return row.value === "REPAIR";
+                            if (showProblemModal === "PROBLEM") return row.problem !== "-";
+                            return true;
+                          })
+                          .map((row, idx) => (
+                            <tr key={idx} className="border-b border-border/50 hover:bg-muted/30 transition-colors">
+                              <td className="py-3 px-3 font-medium">{row.equipmentName}</td>
+                              <td className="py-3 px-3 text-muted-foreground">{row.freq}</td>
+                              <td className="py-3 px-3 text-muted-foreground max-w-[250px]">{row.standard}</td>
+                              <td className={`py-3 px-3 font-semibold ${row.valueColor}`}>{row.value}</td>
+                              <td className="py-3 px-3 text-muted-foreground">{row.problem}</td>
+                              <td className="py-3 px-3">
+                                <span className={`inline-block px-2.5 py-1 rounded-full text-xs font-medium ${row.followUpColor}`}>
+                                  {row.followUpProblem}
+                                </span>
+                              </td>
+                              <td className="py-3 px-3 text-muted-foreground">{row.countermeasure}</td>
+                              <td className="py-3 px-3 text-muted-foreground">{row.countermeasureBy}</td>
+                            </tr>
+                          ))}
+                      </tbody>
+                    </table>
+                    {equipmentData.filter((row) => {
+                      if (showProblemModal === "OK") return row.value === "OK";
+                      if (showProblemModal === "NG") return row.value === "NG";
+                      if (showProblemModal === "REPAIR") return row.value === "REPAIR";
+                      if (showProblemModal === "PROBLEM") return row.problem !== "-";
+                      return true;
+                    }).length === 0 && (
+                      <div className="text-center py-8 text-muted-foreground">
+                        No data available for this filter.
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
           )}
         </div>
       )}
