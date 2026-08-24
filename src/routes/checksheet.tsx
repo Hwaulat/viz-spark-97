@@ -365,6 +365,175 @@ function generateEquipmentTrendData(station: string, month: string) {
   });
 }
 
+const CHEMICAL_CED_STATION_OPTIONS = [
+  "Anolyte Tank",
+  "Catholyte Tank",
+  "ED Tank",
+  "UF Tank",
+  "DI Tank",
+  "Rinse Tank 1",
+  "Rinse Tank 2",
+  "Oven Curing",
+];
+
+const CHEMICAL_CED_NAMES_BY_STATION: Record<string, string[]> = {
+  "Anolyte Tank": [
+    "Tanki & Pipa",
+    "Pompa Sirkulasi Anolyte",
+    "Conductivity Meter",
+    "pH Meter",
+    "Temperature Sensor",
+    "Level Sensor",
+    "Filter Bag",
+  ],
+  "Catholyte Tank": [
+    "Tanki & Pipa",
+    "Pompa Sirkulasi Catholyte",
+    "Conductivity Meter",
+    "pH Meter",
+    "Temperature Sensor",
+    "Level Sensor",
+    "Filter Bag",
+  ],
+  "ED Tank": [
+    "Tanki & Pipa",
+    "Pompa Sirkulasi ED",
+    "Rectifier",
+    "Agitator Motor",
+    "Temperature Controller",
+    "Conductivity Meter",
+    "pH Meter",
+    "Filter Bag",
+    "Level Sensor",
+  ],
+  "UF Tank": [
+    "Tanki & Pipa",
+    "Pompa UF",
+    "UF Membrane",
+    "Pressure Gauge IN",
+    "Pressure Gauge OUT",
+    "Flow Meter",
+    "Level Sensor",
+  ],
+  "DI Tank": [
+    "Tanki & Pipa",
+    "Pompa DI",
+    "DI Resin",
+    "Conductivity Meter",
+    "Pressure Gauge",
+    "Level Sensor",
+  ],
+  "Rinse Tank 1": [
+    "Tanki & Pipa",
+    "Pompa Sirkulasi",
+    "Spray Nozzle",
+    "Conductivity Meter",
+    "Level Sensor",
+    "Strainer Mesh",
+  ],
+  "Rinse Tank 2": [
+    "Tanki & Pipa",
+    "Pompa Sirkulasi",
+    "Spray Nozzle",
+    "Conductivity Meter",
+    "Level Sensor",
+    "Strainer Mesh",
+  ],
+  "Oven Curing": [
+    "Burner Unit",
+    "Blower Motor",
+    "Temperature Controller",
+    "Thermocouple",
+    "Exhaust Fan",
+    "Conveyor Chain",
+    "Safety Valve",
+  ],
+};
+
+const CED_STANDARDS = [
+  "Tidak ada kebocoran (Normal)",
+  "Suara normal, getaran normal",
+  "Sesuai parameter setting",
+  "Tidak ada kerusakan, fungsi normal",
+  "Dalam range standar operasi",
+  "Tekanan stabil sesuai standar",
+  "Tidak tersumbat (Normal)",
+  "Flow rate sesuai standar",
+];
+
+function generateChemicalCEDData(station: string, month: string): EquipmentProblemRow[] {
+  const names = CHEMICAL_CED_NAMES_BY_STATION[station] || CHEMICAL_CED_NAMES_BY_STATION["Anolyte Tank"];
+  const seed = station.length * 2 + month.length * 3;
+
+  return names.map((name, i) => {
+    const hash = Math.abs(Math.sin((seed + i) * 11.3 + i * 7.1));
+    let value: string;
+    let valueColor: string;
+
+    if (hash < 0.55) {
+      value = "OK";
+      valueColor = "text-green-500";
+    } else if (hash < 0.75) {
+      value = "NG";
+      valueColor = "text-red-500";
+    } else {
+      value = "REPAIR";
+      valueColor = "text-orange-500";
+    }
+
+    const numericHash = Math.abs(Math.cos((seed + i) * 9.3));
+    if (i === 2 || i === 4 || i === 5) {
+      const numVal = (numericHash * 0.5 + 0.1).toFixed(2);
+      value = numVal;
+      valueColor = numericHash > 0.5 ? "text-green-500" : "text-orange-500";
+    }
+
+    const hasProblem = hash > 0.5;
+    const problemNames = ["Problem A", "Problem B", "Problem C"];
+    const problem = hasProblem ? problemNames[i % 3] : "-";
+
+    const followUpIdx = hasProblem ? (i % (FOLLOW_UPS.length - 1)) + 1 : 0;
+    const followUp = FOLLOW_UPS[followUpIdx];
+
+    const countermeasures = ["Counter Measure A", "Counter Measure B", "Counter Measure C"];
+    const counterPersons = ["Hasan", "Andre", "Budi", "Rini"];
+
+    return {
+      equipmentName: name,
+      freq: "1 x 1 Shift",
+      standard: CED_STANDARDS[i % CED_STANDARDS.length],
+      value,
+      valueColor,
+      problem,
+      followUpProblem: followUp,
+      followUpColor: FOLLOW_UP_COLORS[followUp],
+      countermeasure: hasProblem ? countermeasures[i % 3] : "-",
+      countermeasureBy: hasProblem ? counterPersons[i % 4] : "-",
+    };
+  });
+}
+
+function generateChemicalCEDTrendData(station: string, month: string) {
+  const seed = station.length * 5 + month.length * 11;
+  return Array.from({ length: 31 }, (_, i) => {
+    const day = i + 1;
+    const hash1 = Math.abs(Math.sin((seed + day) * 3.9));
+    const hash2 = Math.abs(Math.cos((seed + day) * 4.3));
+
+    const total = Math.floor(4 + hash1 * 7);
+    const ng = Math.floor(hash2 * 2);
+    const repair = Math.floor(Math.abs(Math.sin((seed + day) * 6.1)) * 2);
+    const ok = Math.max(0, total - ng - repair);
+
+    return {
+      date: String(day),
+      OK: ok,
+      NG: ng,
+      Repair: repair,
+    };
+  });
+}
+
 function DashboardChecksheet() {
   const [activeTab, setActiveTab] = useState(TABS[0]);
   
@@ -399,6 +568,30 @@ function DashboardChecksheet() {
   const eqTotalRepair = equipmentData.filter(d => d.value === "REPAIR").length +
     equipmentTrendData.reduce((acc, d) => acc + d.Repair, 0);
   const eqTotalProblem = equipmentData.filter(d => d.problem !== "-").length;
+
+  // Chemical CED state
+  const [chemicalCEDStation, setChemicalCEDStation] = useState(CHEMICAL_CED_STATION_OPTIONS[0]);
+  const [showCEDProblemModal, setShowCEDProblemModal] = useState<string | null>(null);
+
+  // Chemical CED data
+  const cedData = useMemo(
+    () => generateChemicalCEDData(chemicalCEDStation, globalMonth),
+    [chemicalCEDStation, globalMonth]
+  );
+
+  const cedTrendData = useMemo(
+    () => generateChemicalCEDTrendData(chemicalCEDStation, globalMonth),
+    [chemicalCEDStation, globalMonth]
+  );
+
+  // Chemical CED summary totals
+  const cedTotalOK = cedData.filter(d => d.value === "OK").length +
+    cedTrendData.reduce((acc, d) => acc + d.OK, 0);
+  const cedTotalNG = cedData.filter(d => d.value === "NG").length +
+    cedTrendData.reduce((acc, d) => acc + d.NG, 0);
+  const cedTotalRepair = cedData.filter(d => d.value === "REPAIR").length +
+    cedTrendData.reduce((acc, d) => acc + d.Repair, 0);
+  const cedTotalProblem = cedData.filter(d => d.problem !== "-").length;
 
   const dataBagFilter = useMemo(
     () => generatePressureData(FRIDAYS_AUG_2026, station1 + globalMonth),
@@ -530,6 +723,24 @@ function DashboardChecksheet() {
                 onChange={(e) => setEquipmentPTStation(e.target.value)}
               >
                 {EQUIPMENT_PT_STATION_OPTIONS.map((opt) => (
+                  <option key={opt} value={opt}>
+                    {opt}
+                  </option>
+                ))}
+              </select>
+              <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+            </div>
+          )}
+
+          {/* Station Dropdown (Only for Chemical CED) */}
+          {activeTab === TABS[4] && (
+            <div className="relative shrink-0">
+              <select
+                className="appearance-none bg-background border border-border rounded-lg pl-3 pr-8 py-2 text-sm font-medium outline-none focus:ring-2 focus:ring-primary/20"
+                value={chemicalCEDStation}
+                onChange={(e) => setChemicalCEDStation(e.target.value)}
+              >
+                {CHEMICAL_CED_STATION_OPTIONS.map((opt) => (
                   <option key={opt} value={opt}>
                     {opt}
                   </option>
@@ -1784,6 +1995,176 @@ function DashboardChecksheet() {
                       if (showProblemModal === "PROBLEM") return row.problem !== "-";
                       return true;
                     }).length === 0 && (
+                      <div className="text-center py-8 text-muted-foreground">
+                        No data available for this filter.
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {activeTab === TABS[4] && (
+        <div className="space-y-6">
+          {/* ── Summary Cards ───────────────────────────────── */}
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {/* Total OK */}
+            <div className="rounded-lg bg-card border border-border p-4 shadow-sm space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium text-muted-foreground">Total OK</span>
+                <div className="h-8 w-8 rounded-full flex items-center justify-center bg-green-500/10">
+                  <CheckCircle className="h-4.5 w-4.5 text-green-500" />
+                </div>
+              </div>
+              <div>
+                <div className="text-2xl font-bold text-green-600">{cedTotalOK}</div>
+              </div>
+            </div>
+
+            {/* Total NG */}
+            <div className="rounded-lg bg-card border border-border p-4 shadow-sm space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium text-muted-foreground">Total NG</span>
+                <div className="h-8 w-8 rounded-full flex items-center justify-center bg-red-500/10">
+                  <AlertTriangle className="h-4.5 w-4.5 text-red-500" />
+                </div>
+              </div>
+              <div>
+                <div className="text-2xl font-bold text-red-600">{cedTotalNG}</div>
+              </div>
+            </div>
+
+            {/* Total Repair */}
+            <div className="rounded-lg bg-card border border-border p-4 shadow-sm space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium text-muted-foreground">Total Repair</span>
+                <div className="h-8 w-8 rounded-full flex items-center justify-center bg-orange-500/10">
+                  <Wrench className="h-4.5 w-4.5 text-orange-500" />
+                </div>
+              </div>
+              <div>
+                <div className="text-2xl font-bold text-orange-600">{cedTotalRepair}</div>
+              </div>
+            </div>
+
+            {/* Total Problem */}
+            <div className="rounded-lg bg-card border border-border p-4 shadow-sm space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium text-muted-foreground">Total Problem</span>
+                <div className="h-8 w-8 rounded-full flex items-center justify-center bg-purple-500/10">
+                  <AlertOctagon className="h-4.5 w-4.5 text-purple-500" />
+                </div>
+              </div>
+              <div className="flex items-baseline gap-2">
+                <div className="text-2xl font-bold text-purple-600">{cedTotalProblem}</div>
+                <button
+                  className="text-xs text-primary hover:underline cursor-pointer font-medium"
+                  onClick={() => setShowCEDProblemModal("PROBLEM")}
+                >
+                  details
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* ── Bar Chart: Measurement Trends ───────────────────────────────── */}
+          <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
+            <h2 className="text-lg font-semibold mb-6">Measurement Trends</h2>
+            <div className="w-full">
+              <ResponsiveContainer width="100%" height={400}>
+                <BarChart
+                  data={cedTrendData}
+                  margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
+                  <XAxis
+                    dataKey="date"
+                    tick={{ fontSize: 12, fill: "var(--muted-foreground)" }}
+                    tickLine={false}
+                    axisLine={false}
+                    dy={10}
+                  />
+                  <YAxis
+                    tick={{ fontSize: 12, fill: "var(--muted-foreground)" }}
+                    tickLine={false}
+                    axisLine={false}
+                    dx={-10}
+                  />
+                  <Tooltip
+                    contentStyle={{
+                      background: "var(--card)",
+                      border: "1px solid var(--border)",
+                      borderRadius: 8,
+                      fontSize: 12,
+                    }}
+                  />
+                  <Legend wrapperStyle={{ fontSize: 12, paddingTop: 20 }} />
+                  <Bar dataKey="OK" name="OK" fill="#22c55e" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="NG" name="NG" fill="#ef4444" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="Repair" name="Repair" fill="#f97316" radius={[4, 4, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+
+          {/* ── Problem Detail Modal ───────────────────────────────── */}
+          {showCEDProblemModal && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+              <div className="bg-card rounded-xl border border-border shadow-xl w-full max-w-6xl max-h-[85vh] flex flex-col">
+                {/* Modal Header */}
+                <div className="flex items-center justify-between p-6 border-b border-border">
+                  <h3 className="text-lg font-semibold">
+                    Problem List — {chemicalCEDStation}
+                  </h3>
+                  <button
+                    className="h-8 w-8 rounded-full flex items-center justify-center hover:bg-muted transition-colors"
+                    onClick={() => setShowCEDProblemModal(null)}
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                </div>
+
+                {/* Modal Body */}
+                <div className="p-6 overflow-auto flex-1">
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-sm">
+                      <thead>
+                        <tr className="border-b border-border">
+                          <th className="text-left py-3 px-3 font-semibold text-muted-foreground uppercase text-xs tracking-wider">Equipment Name</th>
+                          <th className="text-left py-3 px-3 font-semibold text-muted-foreground uppercase text-xs tracking-wider">Freq</th>
+                          <th className="text-left py-3 px-3 font-semibold text-muted-foreground uppercase text-xs tracking-wider">Standard</th>
+                          <th className="text-left py-3 px-3 font-semibold text-muted-foreground uppercase text-xs tracking-wider">Value</th>
+                          <th className="text-left py-3 px-3 font-semibold text-muted-foreground uppercase text-xs tracking-wider">Problem</th>
+                          <th className="text-left py-3 px-3 font-semibold text-muted-foreground uppercase text-xs tracking-wider">Follow Up Problem</th>
+                          <th className="text-left py-3 px-3 font-semibold text-muted-foreground uppercase text-xs tracking-wider">Countermeasure</th>
+                          <th className="text-left py-3 px-3 font-semibold text-muted-foreground uppercase text-xs tracking-wider">Countermeasure By</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {cedData
+                          .filter((row) => row.problem !== "-")
+                          .map((row, idx) => (
+                            <tr key={idx} className="border-b border-border/50 hover:bg-muted/30 transition-colors">
+                              <td className="py-3 px-3 font-medium">{row.equipmentName}</td>
+                              <td className="py-3 px-3 text-muted-foreground">{row.freq}</td>
+                              <td className="py-3 px-3 text-muted-foreground max-w-[250px]">{row.standard}</td>
+                              <td className={`py-3 px-3 font-semibold ${row.valueColor}`}>{row.value}</td>
+                              <td className="py-3 px-3 text-muted-foreground">{row.problem}</td>
+                              <td className="py-3 px-3">
+                                <span className={`inline-block px-2.5 py-1 rounded-full text-xs font-medium ${row.followUpColor}`}>
+                                  {row.followUpProblem}
+                                </span>
+                              </td>
+                              <td className="py-3 px-3 text-muted-foreground">{row.countermeasure}</td>
+                              <td className="py-3 px-3 text-muted-foreground">{row.countermeasureBy}</td>
+                            </tr>
+                          ))}
+                      </tbody>
+                    </table>
+                    {cedData.filter((row) => row.problem !== "-").length === 0 && (
                       <div className="text-center py-8 text-muted-foreground">
                         No data available for this filter.
                       </div>
