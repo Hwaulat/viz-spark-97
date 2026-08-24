@@ -2270,48 +2270,50 @@ function DashboardChecksheet() {
                   />
                   <Legend wrapperStyle={{ fontSize: 12, paddingTop: 20 }} />
                   
-                  {edAmpereToggle === "RM & LM" ? (
-                    <>
-                      <Line
-                        type="monotone"
-                        dataKey="RM"
-                        name="RM"
-                        stroke="#3b82f6"
-                        strokeWidth={2}
-                        dot={{ r: 4, fill: "#3b82f6", strokeWidth: 2 }}
-                        activeDot={{ r: 6 }}
-                      />
-                      <Line
-                        type="monotone"
-                        dataKey="LM"
-                        name="LM"
-                        stroke="#22c55e"
-                        strokeWidth={2}
-                        dot={{ r: 4, fill: "#22c55e", strokeWidth: 2 }}
-                        activeDot={{ r: 6 }}
-                      />
-                    </>
-                  ) : (
-                    <>
-                      <Line
-                        type="monotone"
-                        dataKey="RB"
-                        name="RB"
-                        stroke="#f97316"
-                        strokeWidth={2}
-                        dot={{ r: 4, fill: "#f97316", strokeWidth: 2 }}
-                        activeDot={{ r: 6 }}
-                      />
-                      <Line
-                        type="monotone"
-                        dataKey="LB"
-                        name="LB"
-                        stroke="#a855f7"
-                        strokeWidth={2}
-                        dot={{ r: 4, fill: "#a855f7", strokeWidth: 2 }}
-                        activeDot={{ r: 6 }}
-                      />
-                    </>
+                  {edAmpereToggle === "RM & LM" && (
+                    <Line
+                      type="monotone"
+                      dataKey="RM"
+                      name="RM"
+                      stroke="#3b82f6"
+                      strokeWidth={2}
+                      dot={{ r: 4, fill: "#3b82f6", strokeWidth: 2 }}
+                      activeDot={{ r: 6 }}
+                    />
+                  )}
+                  {edAmpereToggle === "RM & LM" && (
+                    <Line
+                      type="monotone"
+                      dataKey="LM"
+                      name="LM"
+                      stroke="#22c55e"
+                      strokeWidth={2}
+                      dot={{ r: 4, fill: "#22c55e", strokeWidth: 2 }}
+                      activeDot={{ r: 6 }}
+                    />
+                  )}
+
+                  {edAmpereToggle === "RB & LB" && (
+                    <Line
+                      type="monotone"
+                      dataKey="RB"
+                      name="RB"
+                      stroke="#f97316"
+                      strokeWidth={2}
+                      dot={{ r: 4, fill: "#f97316", strokeWidth: 2 }}
+                      activeDot={{ r: 6 }}
+                    />
+                  )}
+                  {edAmpereToggle === "RB & LB" && (
+                    <Line
+                      type="monotone"
+                      dataKey="LB"
+                      name="LB"
+                      stroke="#a855f7"
+                      strokeWidth={2}
+                      dot={{ r: 4, fill: "#a855f7", strokeWidth: 2 }}
+                      activeDot={{ r: 6 }}
+                    />
                   )}
                 </LineChart>
               </ResponsiveContainer>
