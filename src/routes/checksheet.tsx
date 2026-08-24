@@ -1624,14 +1624,8 @@ function DashboardChecksheet() {
                   <CheckCircle className="h-4.5 w-4.5 text-green-500" />
                 </div>
               </div>
-              <div className="flex items-baseline gap-2">
+              <div>
                 <div className="text-2xl font-bold text-green-600">{eqTotalOK}</div>
-                <button
-                  className="text-xs text-primary hover:underline cursor-pointer font-medium"
-                  onClick={() => setShowProblemModal("OK")}
-                >
-                  details
-                </button>
               </div>
             </div>
 
@@ -1643,14 +1637,8 @@ function DashboardChecksheet() {
                   <AlertTriangle className="h-4.5 w-4.5 text-red-500" />
                 </div>
               </div>
-              <div className="flex items-baseline gap-2">
+              <div>
                 <div className="text-2xl font-bold text-red-600">{eqTotalNG}</div>
-                <button
-                  className="text-xs text-primary hover:underline cursor-pointer font-medium"
-                  onClick={() => setShowProblemModal("NG")}
-                >
-                  details
-                </button>
               </div>
             </div>
 
@@ -1662,14 +1650,8 @@ function DashboardChecksheet() {
                   <Wrench className="h-4.5 w-4.5 text-orange-500" />
                 </div>
               </div>
-              <div className="flex items-baseline gap-2">
+              <div>
                 <div className="text-2xl font-bold text-orange-600">{eqTotalRepair}</div>
-                <button
-                  className="text-xs text-primary hover:underline cursor-pointer font-medium"
-                  onClick={() => setShowProblemModal("REPAIR")}
-                >
-                  details
-                </button>
               </div>
             </div>
 
