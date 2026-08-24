@@ -534,6 +534,25 @@ function generateChemicalCEDTrendData(station: string, month: string) {
   });
 }
 
+function generateEDAmpereData(month: string) {
+  const seed = month.length * 13;
+  return Array.from({ length: 5 }, (_, i) => {
+    const week = i + 1;
+    const h1 = Math.abs(Math.sin((seed + week) * 4.7));
+    const h2 = Math.abs(Math.cos((seed + week) * 3.2));
+    const h3 = Math.abs(Math.sin((seed + week) * 5.9));
+    const h4 = Math.abs(Math.cos((seed + week) * 6.1));
+
+    return {
+      week: `Week ${week}`,
+      RM: Number((180 + h1 * 40).toFixed(1)),
+      LM: Number((170 + h2 * 45).toFixed(1)),
+      RB: Number((160 + h3 * 50).toFixed(1)),
+      LB: Number((155 + h4 * 48).toFixed(1)),
+    };
+  });
+}
+
 function DashboardChecksheet() {
   const [activeTab, setActiveTab] = useState(TABS[0]);
   
@@ -592,6 +611,15 @@ function DashboardChecksheet() {
   const cedTotalRepair = cedData.filter(d => d.value === "REPAIR").length +
     cedTrendData.reduce((acc, d) => acc + d.Repair, 0);
   const cedTotalProblem = cedData.filter(d => d.problem !== "-").length;
+
+  // ED Ampere state
+  const [edAmpereToggle, setEdAmpereToggle] = useState<"RM & LM" | "RB & LB">("RM & LM");
+
+  // ED Ampere data
+  const edAmpereData = useMemo(
+    () => generateEDAmpereData(globalMonth),
+    [globalMonth]
+  );
 
   const dataBagFilter = useMemo(
     () => generatePressureData(FRIDAYS_AUG_2026, station1 + globalMonth),
@@ -747,6 +775,32 @@ function DashboardChecksheet() {
                 ))}
               </select>
               <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+            </div>
+          )}
+
+          {/* ED Ampere Toggle */}
+          {activeTab === TABS[5] && (
+            <div className="flex bg-muted rounded-lg p-1">
+              <button
+                className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${
+                  edAmpereToggle === "RM & LM"
+                    ? "bg-background text-foreground shadow-sm"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+                onClick={() => setEdAmpereToggle("RM & LM")}
+              >
+                RM & LM
+              </button>
+              <button
+                className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${
+                  edAmpereToggle === "RB & LB"
+                    ? "bg-background text-foreground shadow-sm"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+                onClick={() => setEdAmpereToggle("RB & LB")}
+              >
+                RB & LB
+              </button>
             </div>
           )}
 
@@ -2174,6 +2228,95 @@ function DashboardChecksheet() {
               </div>
             </div>
           )}
+        </div>
+      )}
+
+      {activeTab === TABS[5] && (
+        <div className="space-y-6">
+          <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
+            <h2 className="text-lg font-semibold mb-6">ED Ampere Trends — {edAmpereToggle}</h2>
+            <div className="w-full">
+              <ResponsiveContainer width="100%" height={400}>
+                <LineChart data={edAmpereData} margin={{ top: 10, right: 30, left: 20, bottom: 20 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
+                  <XAxis
+                    dataKey="week"
+                    tick={{ fontSize: 12, fill: "var(--muted-foreground)" }}
+                    tickLine={false}
+                    axisLine={false}
+                    dy={10}
+                  />
+                  <YAxis
+                    domain={['auto', 'auto']}
+                    tick={{ fontSize: 12, fill: "var(--muted-foreground)" }}
+                    tickLine={false}
+                    axisLine={false}
+                    dx={-10}
+                    label={{
+                      value: "Ampere",
+                      angle: -90,
+                      position: "insideLeft",
+                      fill: "var(--muted-foreground)",
+                      fontSize: 12,
+                    }}
+                  />
+                  <Tooltip
+                    contentStyle={{
+                      background: "var(--card)",
+                      border: "1px solid var(--border)",
+                      borderRadius: 8,
+                      fontSize: 12,
+                    }}
+                  />
+                  <Legend wrapperStyle={{ fontSize: 12, paddingTop: 20 }} />
+                  
+                  {edAmpereToggle === "RM & LM" ? (
+                    <>
+                      <Line
+                        type="monotone"
+                        dataKey="RM"
+                        name="RM"
+                        stroke="#3b82f6"
+                        strokeWidth={2}
+                        dot={{ r: 4, fill: "#3b82f6", strokeWidth: 2 }}
+                        activeDot={{ r: 6 }}
+                      />
+                      <Line
+                        type="monotone"
+                        dataKey="LM"
+                        name="LM"
+                        stroke="#22c55e"
+                        strokeWidth={2}
+                        dot={{ r: 4, fill: "#22c55e", strokeWidth: 2 }}
+                        activeDot={{ r: 6 }}
+                      />
+                    </>
+                  ) : (
+                    <>
+                      <Line
+                        type="monotone"
+                        dataKey="RB"
+                        name="RB"
+                        stroke="#f97316"
+                        strokeWidth={2}
+                        dot={{ r: 4, fill: "#f97316", strokeWidth: 2 }}
+                        activeDot={{ r: 6 }}
+                      />
+                      <Line
+                        type="monotone"
+                        dataKey="LB"
+                        name="LB"
+                        stroke="#a855f7"
+                        strokeWidth={2}
+                        dot={{ r: 4, fill: "#a855f7", strokeWidth: 2 }}
+                        activeDot={{ r: 6 }}
+                      />
+                    </>
+                  )}
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
         </div>
       )}
     </div>
