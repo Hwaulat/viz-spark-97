@@ -1,10 +1,15 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { AlertTriangle, Activity, Zap, Gauge, Flame, Waves, Thermometer, ArrowRight } from "lucide-react";
 import { Panel, StatusDot } from "@/components/panel";
 import { ALARMS, energyTrend } from "@/lib/mock-data";
 import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis, Legend } from "recharts";
 
 export const Route = createFileRoute("/")({
+  beforeLoad: () => {
+    throw redirect({
+      to: '/monitoring-area',
+    })
+  },
   head: () => ({
     meta: [
       { title: "Overview — Utility Monitoring System" },
