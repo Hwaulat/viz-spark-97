@@ -6,7 +6,7 @@ import { BOILERS } from "@/lib/mock-data";
 export const Route = createFileRoute("/monitoring-area/")({
   head: () => ({
     meta: [
-      { title: "Monitoring Area — Utility Monitoring System" },
+      { title: "Monitoring Area 03 — Utility Monitoring System" },
       {
         name: "description",
         content: "Overview of temperature and pressure across all areas.",
@@ -375,7 +375,7 @@ function MonitoringArea() {
             Monitoring System
           </div>
           <h1 className="text-2xl font-semibold mt-1 flex items-center gap-2">
-            <Activity className="h-6 w-6 text-primary" /> Monitoring Area
+            <Activity className="h-6 w-6 text-primary" /> Monitoring Area 03
           </h1>
           <p className="text-sm text-muted-foreground mt-1">
             Real-time overview of temperature and pressure for all processing areas.

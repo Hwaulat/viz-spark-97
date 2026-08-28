@@ -101,7 +101,7 @@ const DASHBOARD_CHILDREN: {
   icon: typeof Gauge;
   exact?: boolean;
 }[] = [
-  { to: "/monitoring-area", label: "Monitoring Area", icon: Activity, exact: true },
+  { to: "/monitoring-area", label: "Monitoring Area 03", icon: Activity, exact: true },
   { to: "/monitoring-area/$id", params: { id: "line-tracking" }, label: "Line Tracking", icon: Waves },
   { to: "/checksheet", label: "Dashboard Checksheet", icon: ClipboardCheck },
 ];

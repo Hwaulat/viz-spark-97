@@ -326,7 +326,7 @@ function MonitoringAreaDetails() {
             to="/monitoring-area"
             className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground"
           >
-            <ArrowLeft className="h-3.5 w-3.5" /> Back to Monitoring Area
+            <ArrowLeft className="h-3.5 w-3.5" /> Back to Monitoring Area 03
           </Link>
           <div className="mt-2 text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">
             Area Details
