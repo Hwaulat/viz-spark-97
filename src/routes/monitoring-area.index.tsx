@@ -49,9 +49,9 @@ interface AreaDef {
 const AREAS: AreaDef[] = [
   { id: "boiler-area", name: "Boiler Area", type: "boiler" },
   { id: "flood-station", name: "Flood Station", type: "temp-single", tempPV: "30.1", tempSP: "30.0" },
-  { id: "pree-degreasing", name: "Pree Degreasing", type: "temp-dual", largeTank: { pv: "28.5", sp: "30.0" }, smallTank: { pv: "46.2", sp: "45.0" } },
+  { id: "pree-degreasing", name: "Pree Degreasing", type: "temp-single", tempPV: "46.2", tempSP: "45.0" },
   { id: "degreasing", name: "Degreasing", type: "temp-single", tempPV: "35.0", tempSP: "35.0" },
-  { id: "phosphate", name: "Phosphate", type: "temp-dual", largeTank: { pv: "42.5", sp: "42.0" }, smallTank: { pv: "42.1", sp: "42.0" } },
+  { id: "phosphate", name: "Phosphate", type: "temp-single", tempPV: "42.5", tempSP: "42.0" },
   { id: "oven-sealing", name: "Oven Sealing", type: "oven-elec", elec: { amp: { min: "110", act: "125", max: "150" }, volt: { min: "370", act: "380", max: "390" }, kw: "45", kwh: "120", kvar: "12", kvarh: "30", pf: "0.95", h2: "0.5" } },
   { id: "oven-topcoat", name: "Oven Topcoat", type: "oven-elec", elec: { amp: { min: "130", act: "145", max: "160" }, volt: { min: "375", act: "382", max: "395" }, kw: "52", kwh: "140", kvar: "15", kvarh: "35", pf: "0.96", h2: "0.4" } },
   { id: "oven-ced", name: "Oven CED", type: "oven-elec", elec: { amp: { min: "140", act: "155", max: "170" }, volt: { min: "378", act: "385", max: "398" }, kw: "60", kwh: "165", kvar: "18", kvarh: "42", pf: "0.94", h2: "0.6" } },
