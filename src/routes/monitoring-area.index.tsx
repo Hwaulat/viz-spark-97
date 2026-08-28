@@ -16,7 +16,7 @@ export const Route = createFileRoute("/monitoring-area/")({
   component: MonitoringArea,
 });
 
-type AreaCardType = "boiler" | "temp-single" | "temp-dual" | "oven-elec" | "temp-pressure" | "line-tracking";
+type AreaCardType = "boiler" | "temp-single" | "temp-dual" | "oven" | "temp-pressure" | "line-tracking";
 
 interface AreaDef {
   id: string;
@@ -28,15 +28,11 @@ interface AreaDef {
   tempSP?: string;
   largeTank?: { pv: string; sp: string };
   smallTank?: { pv: string; sp: string };
-  elec?: {
-    amp: { min: string; act: string; max: string };
-    volt: { min: string; act: string; max: string };
-    kw: string;
-    kwh: string;
-    kvar: string;
-    kvarh: string;
-    pf: string;
-    h2: string;
+  oven?: {
+    temperature: string;
+    elecUsage: string;
+    gasUsage: string;
+    pressureGas: string;
   };
   pted?: {
     tempIn: string;
@@ -52,9 +48,9 @@ const AREAS: AreaDef[] = [
   { id: "pree-degreasing", name: "Pree Degreasing", type: "temp-single", tempPV: "46.2", tempSP: "45.0" },
   { id: "degreasing", name: "Degreasing", type: "temp-single", tempPV: "35.0", tempSP: "35.0" },
   { id: "phosphate", name: "Phosphate", type: "temp-single", tempPV: "42.5", tempSP: "42.0" },
-  { id: "oven-sealing", name: "Oven Sealing", type: "oven-elec", elec: { amp: { min: "110", act: "125", max: "150" }, volt: { min: "370", act: "380", max: "390" }, kw: "45", kwh: "120", kvar: "12", kvarh: "30", pf: "0.95", h2: "0.5" } },
-  { id: "oven-topcoat", name: "Oven Topcoat", type: "oven-elec", elec: { amp: { min: "130", act: "145", max: "160" }, volt: { min: "375", act: "382", max: "395" }, kw: "52", kwh: "140", kvar: "15", kvarh: "35", pf: "0.96", h2: "0.4" } },
-  { id: "oven-ced", name: "Oven CED", type: "oven-elec", elec: { amp: { min: "140", act: "155", max: "170" }, volt: { min: "378", act: "385", max: "398" }, kw: "60", kwh: "165", kvar: "18", kvarh: "42", pf: "0.94", h2: "0.6" } },
+  { id: "oven-sealing", name: "Oven Sealing", type: "oven", oven: { temperature: "160.0", elecUsage: "120", gasUsage: "45", pressureGas: "2.1" } },
+  { id: "oven-topcoat", name: "Oven Topcoat", type: "oven", oven: { temperature: "175.5", elecUsage: "140", gasUsage: "52", pressureGas: "2.4" } },
+  { id: "oven-ced", name: "Oven CED", type: "oven", oven: { temperature: "185.0", elecUsage: "165", gasUsage: "60", pressureGas: "2.8" } },
   { id: "pted-bag-filter", name: "PTED Bag Filter", type: "temp-pressure", temp: "25.0", pressure: "3.2", pted: { tempIn: "30.5", tempOut: "28.0", pressureIn: "4.5", pressureOut: "3.2" } },
 ];
 
@@ -256,46 +252,34 @@ function AreaCard({ area }: { area: AreaDef }) {
                 </div>
               )}
 
-              {area.type === "oven-elec" && area.elec && (
-                <div className="grid gap-2 mt-2">
-                  <div className="grid grid-cols-2 gap-2">
-                    <div className="rounded bg-secondary/50 p-2 border border-border/50 flex flex-col">
-                      <div className="flex items-center gap-1.5 text-[10px] uppercase tracking-wider text-muted-foreground mb-1">
-                        <Zap className="h-3.5 w-3.5 text-yellow-500" /> Ampere
-                      </div>
-                      <div className="flex justify-between items-end px-1 font-mono flex-1">
-                        <span className="text-muted-foreground flex flex-col items-start"><span className="text-[9px]">MIN</span><span className="text-xs font-semibold">{area.elec.amp.min}</span></span>
-                        <span className="text-blue-500 flex flex-col items-center"><span className="text-[9px] text-muted-foreground">ACT</span><span className="text-2xl font-bold leading-none tabular-nums">{area.elec.amp.act}</span></span>
-                        <span className="text-muted-foreground flex flex-col items-end"><span className="text-[9px]">MAX</span><span className="text-xs font-semibold">{area.elec.amp.max}</span></span>
-                      </div>
-                    </div>
-                    <div className="rounded bg-secondary/50 p-2 border border-border/50 flex flex-col">
-                      <div className="flex items-center gap-1.5 text-[10px] uppercase tracking-wider text-muted-foreground mb-1">
-                        <Zap className="h-3.5 w-3.5 text-yellow-500" /> Voltage
-                      </div>
-                      <div className="flex justify-between items-end px-1 font-mono flex-1">
-                        <span className="text-muted-foreground flex flex-col items-start"><span className="text-[9px]">MIN</span><span className="text-xs font-semibold">{area.elec.volt.min}</span></span>
-                        <span className="text-blue-500 flex flex-col items-center"><span className="text-[9px] text-muted-foreground">ACT</span><span className="text-2xl font-bold leading-none tabular-nums">{area.elec.volt.act}</span></span>
-                        <span className="text-muted-foreground flex flex-col items-end"><span className="text-[9px]">MAX</span><span className="text-xs font-semibold">{area.elec.volt.max}</span></span>
-                      </div>
+              {area.type === "oven" && area.oven && (
+                <div className="grid grid-cols-2 gap-2 mt-2">
+                  <div className="rounded bg-secondary/50 p-2 border border-border/50 flex flex-col justify-center items-center text-center">
+                    <span className="text-[10px] text-muted-foreground uppercase tracking-widest mb-1 flex items-center gap-1"><Thermometer className="h-3 w-3" /> Temp</span>
+                    <div className="flex items-baseline gap-1">
+                      <span className="text-xl font-bold font-mono">{area.oven.temperature}</span>
+                      <span className="text-[10px] text-muted-foreground">°C</span>
                     </div>
                   </div>
-                  <div className="grid grid-cols-4 gap-1.5">
-                    <div className="rounded bg-secondary/30 py-1.5 px-1 border border-border/50 flex flex-col items-center justify-center text-center">
-                      <span className="text-[9px] text-muted-foreground">kW / kW/h</span>
-                      <span className="text-lg font-semibold font-mono mt-0.5 leading-none">{area.elec.kw} / {area.elec.kwh}</span>
+                  <div className="rounded bg-secondary/50 p-2 border border-border/50 flex flex-col justify-center items-center text-center">
+                    <span className="text-[10px] text-muted-foreground uppercase tracking-widest mb-1 flex items-center gap-1"><Zap className="h-3 w-3 text-yellow-500" /> Elec Usage</span>
+                    <div className="flex items-baseline gap-1">
+                      <span className="text-xl font-bold font-mono">{area.oven.elecUsage}</span>
+                      <span className="text-[10px] text-muted-foreground">kWh/day</span>
                     </div>
-                    <div className="rounded bg-secondary/30 py-1.5 px-1 border border-border/50 flex flex-col items-center justify-center text-center">
-                      <span className="text-[9px] text-muted-foreground">kVar / kVar/h</span>
-                      <span className="text-lg font-semibold font-mono mt-0.5 leading-none">{area.elec.kvar} / {area.elec.kvarh}</span>
+                  </div>
+                  <div className="rounded bg-secondary/50 p-2 border border-border/50 flex flex-col justify-center items-center text-center">
+                    <span className="text-[10px] text-muted-foreground uppercase tracking-widest mb-1 flex items-center gap-1"><Flame className="h-3 w-3 text-orange-500" /> Gas Usage</span>
+                    <div className="flex items-baseline gap-1">
+                      <span className="text-xl font-bold font-mono">{area.oven.gasUsage}</span>
+                      <span className="text-[10px] text-muted-foreground">m³/day</span>
                     </div>
-                    <div className="rounded bg-secondary/30 py-1.5 px-1 border border-border/50 flex flex-col items-center justify-center text-center">
-                      <span className="text-[9px] text-muted-foreground">PF</span>
-                      <span className="text-xl font-semibold font-mono mt-0.5 leading-none">{area.elec.pf}</span>
-                    </div>
-                    <div className="rounded bg-secondary/30 py-1.5 px-1 border border-border/50 flex flex-col items-center justify-center text-center">
-                      <span className="text-[9px] text-muted-foreground">H2</span>
-                      <span className="text-xl font-semibold font-mono mt-0.5 leading-none">{area.elec.h2}</span>
+                  </div>
+                  <div className="rounded bg-secondary/50 p-2 border border-border/50 flex flex-col justify-center items-center text-center">
+                    <span className="text-[10px] text-muted-foreground uppercase tracking-widest mb-1 flex items-center gap-1"><Gauge className="h-3 w-3" /> Gas Press</span>
+                    <div className="flex items-baseline gap-1">
+                      <span className="text-xl font-bold font-mono">{area.oven.pressureGas}</span>
+                      <span className="text-[10px] text-muted-foreground">bar</span>
                     </div>
                   </div>
                 </div>
