@@ -52,18 +52,14 @@ const AREAS: AreaDef[] = [
 
 
 function AreaCard({ area }: { area: AreaDef }) {
-  return (
-    <Link
-            
-            to="/monitoring-area/$id"
-            params={{ id: area.id }}
-            className="block group h-full"
-          >
+  const isPtedWrapper = area.type === "pted-wrapper";
+
+  const content = (
             <Panel
-              className="hover:border-primary/50 transition-colors h-full flex flex-col"
+              className={`h-full flex flex-col ${!isPtedWrapper ? 'hover:border-primary/50 transition-colors' : ''}`}
               title={area.name}
               right={
-                <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
+                !isPtedWrapper && <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
               }
             >
               {area.type === "boiler" && (
@@ -358,13 +354,13 @@ function AreaCard({ area }: { area: AreaDef }) {
                     <h3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-3 flex items-center gap-1.5"><Activity className="h-4 w-4" /> PTED Equipment</h3>
                     <div className="flex flex-col gap-3 flex-1">
                       {[
-                        { name: "Flood Station", pv: "30.1", sp: "30.0" },
-                        { name: "Pree Degreasing", pv: "46.2", sp: "45.0" },
-                        { name: "Degreasing", pv: "35.0", sp: "35.0" },
-                        { name: "Phosphate", pv: "42.5", sp: "42.0" }
+                        { name: "Flood Station", id: "flood-station", pv: "30.1", sp: "30.0" },
+                        { name: "Pree Degreasing", id: "pree-degreasing", pv: "46.2", sp: "45.0" },
+                        { name: "Degreasing", id: "degreasing", pv: "35.0", sp: "35.0" },
+                        { name: "Phosphate", id: "phosphate", pv: "42.5", sp: "42.0" }
                       ].map(eq => (
-                        <div key={eq.name} className="flex items-center justify-between p-3 rounded-lg bg-secondary/30 border border-border/50 flex-1 hover:bg-secondary/50 transition-colors">
-                          <span className="text-sm font-semibold">{eq.name}</span>
+                        <Link to="/monitoring-area/$id" params={{ id: eq.id }} key={eq.name} className="flex items-center justify-between p-3 rounded-lg bg-secondary/30 border border-border/50 flex-1 hover:bg-secondary/80 hover:border-primary/50 transition-all group">
+                          <span className="text-sm font-semibold group-hover:text-primary transition-colors flex items-center gap-2">{eq.name} <ArrowRight className="h-3 w-3 opacity-0 -ml-2 group-hover:opacity-100 group-hover:ml-0 transition-all" /></span>
                           <div className="flex gap-6">
                             <div className="flex flex-col items-end">
                               <span className="text-[9px] text-muted-foreground uppercase flex items-center gap-1"><Thermometer className="h-3 w-3" /> Temp PV</span>
@@ -375,14 +371,17 @@ function AreaCard({ area }: { area: AreaDef }) {
                               <div className="flex items-baseline gap-1 mt-0.5"><span className="font-mono font-bold text-lg">{eq.sp}</span><span className="text-[10px] text-muted-foreground">°C</span></div>
                             </div>
                           </div>
-                        </div>
+                        </Link>
                       ))}
                     </div>
                   </div>
 
                   {/* Bag Filter Card */}
-                  <div className="border border-border/50 rounded-lg p-4 bg-background flex flex-col h-full">
-                    <h3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-3 flex items-center gap-1.5"><Filter className="h-4 w-4" /> Bag Filter</h3>
+                  <Link to="/monitoring-area/$id" params={{ id: "pted-bag-filter" }} className="border border-border/50 rounded-lg p-4 bg-background flex flex-col h-full hover:border-primary/50 transition-colors group">
+                    <h3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-3 flex items-center justify-between gap-1.5 group-hover:text-primary transition-colors">
+                      <span className="flex items-center gap-1.5"><Filter className="h-4 w-4" /> Bag Filter</span>
+                      <ArrowRight className="h-3 w-3 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    </h3>
                     
                     <div className="grid grid-cols-3 gap-2 mb-4">
                       {[
@@ -422,12 +421,21 @@ function AreaCard({ area }: { area: AreaDef }) {
                         </div>
                       </div>
                     </div>
-                  </div>
+                  </Link>
                 </div>
               )}
 
             </Panel>
-          </Link>
+  );
+
+  if (isPtedWrapper) {
+    return <div className="block h-full">{content}</div>;
+  }
+
+  return (
+    <Link to="/monitoring-area/$id" params={{ id: area.id }} className="block group h-full">
+      {content}
+    </Link>
   );
 }
 
