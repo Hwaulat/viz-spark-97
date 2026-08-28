@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Panel } from "@/components/panel";
-import { Activity, Thermometer, Gauge, ArrowRight, Flame, Zap, Power } from "lucide-react";
+import { Activity, Thermometer, Gauge, ArrowRight, Flame, Zap, Power, Filter, Waves } from "lucide-react";
 import { BOILERS } from "@/lib/mock-data";
 
 export const Route = createFileRoute("/monitoring-area/")({
@@ -16,7 +16,7 @@ export const Route = createFileRoute("/monitoring-area/")({
   component: MonitoringArea,
 });
 
-type AreaCardType = "boiler" | "temp-single" | "temp-dual" | "oven" | "temp-pressure" | "line-tracking";
+type AreaCardType = "boiler" | "temp-single" | "temp-dual" | "oven" | "temp-pressure" | "line-tracking" | "pted-wrapper";
 
 interface AreaDef {
   id: string;
@@ -44,14 +44,10 @@ interface AreaDef {
 
 const AREAS: AreaDef[] = [
   { id: "boiler-area", name: "Boiler Area", type: "boiler" },
-  { id: "flood-station", name: "Flood Station", type: "temp-single", tempPV: "30.1", tempSP: "30.0" },
-  { id: "pree-degreasing", name: "Pree Degreasing", type: "temp-single", tempPV: "46.2", tempSP: "45.0" },
-  { id: "degreasing", name: "Degreasing", type: "temp-single", tempPV: "35.0", tempSP: "35.0" },
-  { id: "phosphate", name: "Phosphate", type: "temp-single", tempPV: "42.5", tempSP: "42.0" },
+  { id: "pted-area", name: "PTED Area", type: "pted-wrapper" },
   { id: "oven-sealing", name: "Oven Sealing", type: "oven", oven: { temperature: "160.0", elecUsage: "120", gasUsage: "45", pressureGas: "2.1" } },
   { id: "oven-topcoat", name: "Oven Topcoat", type: "oven", oven: { temperature: "175.5", elecUsage: "140", gasUsage: "52", pressureGas: "2.4" } },
   { id: "oven-ced", name: "Oven CED", type: "oven", oven: { temperature: "185.0", elecUsage: "165", gasUsage: "60", pressureGas: "2.8" } },
-  { id: "pted-bag-filter", name: "PTED Bag Filter", type: "temp-pressure", temp: "25.0", pressure: "3.2", pted: { tempIn: "30.5", tempOut: "28.0", pressureIn: "4.5", pressureOut: "3.2" } },
 ];
 
 
@@ -355,6 +351,81 @@ function AreaCard({ area }: { area: AreaDef }) {
                 </div>
               )}
 
+              {area.type === "pted-wrapper" && (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2 h-full">
+                  {/* PTED Equipment Card */}
+                  <div className="border border-border/50 rounded-lg p-4 bg-background flex flex-col h-full">
+                    <h3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-3 flex items-center gap-1.5"><Activity className="h-4 w-4" /> PTED Equipment</h3>
+                    <div className="flex flex-col gap-3 flex-1">
+                      {[
+                        { name: "Flood Station", pv: "30.1", sp: "30.0" },
+                        { name: "Pree Degreasing", pv: "46.2", sp: "45.0" },
+                        { name: "Degreasing", pv: "35.0", sp: "35.0" },
+                        { name: "Phosphate", pv: "42.5", sp: "42.0" }
+                      ].map(eq => (
+                        <div key={eq.name} className="flex items-center justify-between p-3 rounded-lg bg-secondary/30 border border-border/50 flex-1 hover:bg-secondary/50 transition-colors">
+                          <span className="text-sm font-semibold">{eq.name}</span>
+                          <div className="flex gap-6">
+                            <div className="flex flex-col items-end">
+                              <span className="text-[9px] text-muted-foreground uppercase flex items-center gap-1"><Thermometer className="h-3 w-3" /> Temp PV</span>
+                              <div className="flex items-baseline gap-1 mt-0.5"><span className="font-mono font-bold text-lg">{eq.pv}</span><span className="text-[10px] text-muted-foreground">°C</span></div>
+                            </div>
+                            <div className="flex flex-col items-end">
+                              <span className="text-[9px] text-muted-foreground uppercase flex items-center gap-1"><Thermometer className="h-3 w-3" /> Temp SP</span>
+                              <div className="flex items-baseline gap-1 mt-0.5"><span className="font-mono font-bold text-lg">{eq.sp}</span><span className="text-[10px] text-muted-foreground">°C</span></div>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Bag Filter Card */}
+                  <div className="border border-border/50 rounded-lg p-4 bg-background flex flex-col h-full">
+                    <h3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-3 flex items-center gap-1.5"><Filter className="h-4 w-4" /> Bag Filter</h3>
+                    
+                    <div className="grid grid-cols-3 gap-2 mb-4">
+                      {[
+                        { name: "Pre Degreasing", val: "45.5" },
+                        { name: "Degreasing", val: "34.8" },
+                        { name: "DI 1", val: "25.0" },
+                        { name: "DI 2", val: "25.1" },
+                        { name: "WR 5", val: "24.9" },
+                        { name: "CED 1", val: "28.5" },
+                        { name: "CED 2", val: "28.3" },
+                        { name: "UF 1", val: "26.2" },
+                        { name: "UF 2", val: "26.0" }
+                      ].map(t => (
+                        <div key={t.name} className="flex flex-col p-2 rounded bg-secondary/30 border border-border/50 justify-between">
+                          <span className="text-[9px] text-muted-foreground uppercase tracking-wider mb-1 font-medium">{t.name}</span>
+                          <div className="flex items-baseline gap-1 mt-auto">
+                            <span className="font-mono text-base font-bold text-emerald-500">{t.val}</span>
+                            <span className="text-[9px] text-muted-foreground">°C</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-3 mt-auto">
+                      <div className="p-3 rounded-lg bg-secondary/30 border border-border/50 flex flex-col gap-2">
+                        <span className="text-[10px] font-semibold text-muted-foreground uppercase flex items-center gap-1.5 border-b border-border/50 pb-2"><Gauge className="h-3.5 w-3.5" /> HE Pressure</span>
+                        <div className="flex justify-between mt-1">
+                          <div className="flex flex-col"><span className="text-[9px] text-muted-foreground mb-0.5">IN</span><span className="font-mono text-sm font-bold">4.5 bar</span></div>
+                          <div className="flex flex-col items-end"><span className="text-[9px] text-muted-foreground mb-0.5">OUT</span><span className="font-mono text-sm font-bold text-blue-500">3.2 bar</span></div>
+                        </div>
+                      </div>
+                      <div className="p-3 rounded-lg bg-secondary/30 border border-border/50 flex flex-col gap-2">
+                        <span className="text-[10px] font-semibold text-muted-foreground uppercase flex items-center gap-1.5 border-b border-border/50 pb-2"><Waves className="h-3.5 w-3.5" /> UF Module</span>
+                        <div className="flex flex-col mt-1">
+                          <span className="text-[9px] text-muted-foreground mb-0.5">Flowmeter</span>
+                          <span className="font-mono text-sm font-bold text-emerald-500">15.0 m³/h</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
             </Panel>
           </Link>
   );
@@ -362,8 +433,7 @@ function AreaCard({ area }: { area: AreaDef }) {
 
 function MonitoringArea() {
   const col1Areas = ["boiler-area"].map(id => AREAS.find(a => a.id === id)).filter(Boolean) as AreaDef[];
-  const col2Areas = ["flood-station", "degreasing", "pted-bag-filter"].map(id => AREAS.find(a => a.id === id)).filter(Boolean) as AreaDef[];
-  const col3Areas = ["pree-degreasing", "phosphate"].map(id => AREAS.find(a => a.id === id)).filter(Boolean) as AreaDef[];
+  const ptedArea = AREAS.find(a => a.id === "pted-area");
   const ovenAreas = ["oven-sealing", "oven-topcoat", "oven-ced"].map(id => AREAS.find(a => a.id === id)).filter(Boolean) as AreaDef[];
 
   return (
@@ -392,14 +462,9 @@ function MonitoringArea() {
             {col1Areas.map(area => <AreaCard key={area.id} area={area} />)}
           </div>
           
-          {/* Column 2: Flood, Degreasing, PTED */}
-          <div className="flex flex-col gap-4">
-            {col2Areas.map(area => <AreaCard key={area.id} area={area} />)}
-          </div>
-          
-          {/* Column 3: Pre Degreasing, Phosphate */}
-          <div className="flex flex-col gap-4">
-            {col3Areas.map(area => <AreaCard key={area.id} area={area} />)}
+          {/* Column 2 & 3: PTED Area */}
+          <div className="flex flex-col gap-4 lg:col-span-2">
+            {ptedArea && <AreaCard area={ptedArea} />}
           </div>
         </div>
 
