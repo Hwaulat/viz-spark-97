@@ -253,38 +253,15 @@ function StationDetailContent({ tabKey }: { tabKey: string }) {
   return (
     <div className="animate-in fade-in duration-300">
       {/* Summary Cards */}
-      <div className={`grid ${tabKey === 'pre-degreasing' || tabKey === 'phosphate' ? 'grid-cols-2 md:grid-cols-4' : 'grid-cols-2'} gap-4 mb-6`}>
-        {tabKey === "pre-degreasing" || tabKey === "phosphate" ? (
-          <>
-            <Panel className="p-4 shadow-sm border border-border/50 bg-card/60">
-              <div className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1">PV Large Temperature</div>
-              <div className="flex items-baseline gap-1"><span className={`text-2xl font-mono font-bold ${data.alarm ? 'text-destructive' : 'text-emerald-500'}`}>{data.pvLarge}</span><span className="text-xs">°C</span></div>
-            </Panel>
-            <Panel className="p-4 shadow-sm border border-border/50 bg-card/60">
-              <div className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1">SP Large Temperature</div>
-              <div className="flex items-baseline gap-1"><span className="text-2xl font-mono font-bold">{data.spLarge}</span><span className="text-xs">°C</span></div>
-            </Panel>
-            <Panel className="p-4 shadow-sm border border-border/50 bg-card/60">
-              <div className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1">PV Small Temperature</div>
-              <div className="flex items-baseline gap-1"><span className={`text-2xl font-mono font-bold ${data.alarm ? 'text-destructive' : 'text-emerald-500'}`}>{data.pvSmall}</span><span className="text-xs">°C</span></div>
-            </Panel>
-            <Panel className="p-4 shadow-sm border border-border/50 bg-card/60">
-              <div className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1">SP Small Temperature</div>
-              <div className="flex items-baseline gap-1"><span className="text-2xl font-mono font-bold">{data.spSmall}</span><span className="text-xs">°C</span></div>
-            </Panel>
-          </>
-        ) : (
-          <>
-            <Panel className="p-4 shadow-sm border border-border/50 bg-card/60">
-              <div className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1">PV Temperature</div>
-              <div className="flex items-baseline gap-1"><span className={`text-2xl font-mono font-bold ${data.alarm ? 'text-destructive' : 'text-emerald-500'}`}>{data.pv}</span><span className="text-xs">°C</span></div>
-            </Panel>
-            <Panel className="p-4 shadow-sm border border-border/50 bg-card/60">
-              <div className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1">SP Temperature</div>
-              <div className="flex items-baseline gap-1"><span className="text-2xl font-mono font-bold">{data.sp}</span><span className="text-xs">°C</span></div>
-            </Panel>
-          </>
-        )}
+      <div className="grid grid-cols-2 gap-4 mb-6">
+        <Panel className="p-4 shadow-sm border border-border/50 bg-card/60">
+          <div className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1">PV Temperature</div>
+          <div className="flex items-baseline gap-1"><span className={`text-2xl font-mono font-bold ${data.alarm ? 'text-destructive' : 'text-emerald-500'}`}>{data.pv}</span><span className="text-xs">°C</span></div>
+        </Panel>
+        <Panel className="p-4 shadow-sm border border-border/50 bg-card/60">
+          <div className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1">SP Temperature</div>
+          <div className="flex items-baseline gap-1"><span className="text-2xl font-mono font-bold">{data.sp}</span><span className="text-xs">°C</span></div>
+        </Panel>
       </div>
 
       {/* Station Illustration */}
