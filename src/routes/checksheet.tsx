@@ -375,6 +375,7 @@ function generateEquipmentTrendData(station: string, month: string) {
       OK: ok,
       NG: ng,
       Repair: repair,
+      standard: 10,
     };
   });
 }
@@ -544,6 +545,7 @@ function generateChemicalCEDTrendData(station: string, month: string) {
       OK: ok,
       NG: ng,
       Repair: repair,
+      standard: 10,
     };
   });
 }
@@ -563,6 +565,7 @@ function generateEDAmpereData(month: string) {
       LM: Number((170 + h2 * 45).toFixed(1)),
       RB: Number((160 + h3 * 50).toFixed(1)),
       LB: Number((155 + h4 * 48).toFixed(1)),
+      standard: 200,
     };
   });
 }
@@ -909,8 +912,7 @@ function DashboardChecksheet() {
                 activeDot={{ r: 6 }}
               />
               <Line type="monotone" dataKey="standard" name="Standard" stroke="#ef4444" strokeWidth={2} dot={false} strokeDasharray="5 5" />
-                      <Line type="monotone" dataKey="standard" name="Standard" stroke="#ef4444" strokeWidth={2} dot={false} strokeDasharray="5 5" />
-                    </LineChart>
+            </LineChart>
           </ResponsiveContainer>
         </div>
       </div>
@@ -918,7 +920,7 @@ function DashboardChecksheet() {
       {/* ── Card 2: Pressure by Control Pressure ─────────── */}
       <div className="rounded-xl border border-border bg-card p-6 shadow-sm mt-6">
         <div className="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
-          <h2 className="text-lg font-semibold">Pressure by Control Pressure</h2>
+          <h2 className="text-lg font-semibold">Control Preassure</h2>
           <div className="flex flex-wrap items-center gap-3">
             {/* Station Filter */}
             <div className="relative">
@@ -985,6 +987,7 @@ function DashboardChecksheet() {
                 dot={{ r: 4, fill: "#f97316", strokeWidth: 2 }}
                 activeDot={{ r: 6 }}
               />
+              <Line type="monotone" dataKey="standard" name="Standard" stroke="#ef4444" strokeWidth={2} dot={false} strokeDasharray="5 5" />
             </LineChart>
           </ResponsiveContainer>
         </div>
@@ -2345,6 +2348,7 @@ function DashboardChecksheet() {
                       activeDot={{ r: 6 }}
                     />
                   )}
+                  <Line type="monotone" dataKey="standard" name="Standard" stroke="#ef4444" strokeWidth={2} dot={false} strokeDasharray="5 5" />
                 </LineChart>
               </ResponsiveContainer>
             </div>
