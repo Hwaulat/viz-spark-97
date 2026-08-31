@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, useMemo } from "react";
-import { ArrowLeft, Activity, Flame, Gauge, Power, BarChart3, Filter, Waves, Zap } from "lucide-react";
+import { ArrowLeft, Activity, Flame, Gauge, Power, BarChart3, Filter, Waves, Zap, Thermometer } from "lucide-react";
 import { BOILERS, BOILER_GAS, BOILER_USAGE_HISTORY, LINE_TRACKING_STATIONS, LINE_TRACKING_ZONES, PROCESS_DETAIL_STATIONS, ovenElecDailyTrend, ovenElecMonthlyTrend, ovenElecYearlyTrend } from "@/lib/mock-data";
 import { Panel, StatusDot, ValueDisplay } from "@/components/panel";
 import { LineChart, Line, AreaChart, Area, BarChart, Bar, ReferenceLine, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
@@ -62,72 +62,40 @@ function OvenDetailContent({ id }: { id: string }) {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h2 className="text-xl font-bold flex items-center gap-2">
-            <Zap className="h-5 w-5 text-yellow-500" /> {name} Electrical Monitoring
+            <Activity className="h-5 w-5 text-primary" /> {name} Monitoring
           </h2>
-          <p className="text-sm text-muted-foreground mt-1">Real-time and historical power analysis.</p>
-        </div>
-        <div className="flex bg-secondary/40 p-1 rounded-lg border border-border/50">
-          {(["daily", "monthly", "yearly"] as const).map(f => (
-            <button
-              key={f}
-              onClick={() => setTimeFilter(f)}
-              className={`px-4 py-1.5 text-xs font-semibold uppercase tracking-wider rounded-md transition-all ${
-                timeFilter === f 
-                  ? "bg-background text-foreground shadow-sm border border-border/50" 
-                  : "text-muted-foreground hover:text-foreground hover:bg-secondary/60"
-              }`}
-            >
-              {f}
-            </button>
-          ))}
+          <p className="text-sm text-muted-foreground mt-1">Real-time and historical process analysis.</p>
         </div>
       </div>
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <Panel className="p-4 bg-card/60">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <Panel className="p-4 bg-card/60 flex flex-col justify-center items-center text-center">
           <div className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-2 flex items-center gap-1.5">
-            <Activity className="h-3.5 w-3.5" /> Ampere Range
+            <Thermometer className="h-3.5 w-3.5" /> Temperature 1
           </div>
-          <div className="flex justify-between items-end">
-             <div className="flex flex-col"><span className="text-[10px] text-muted-foreground">MIN</span><span className="font-mono">{elec.amp.min}</span></div>
-             <div className="flex flex-col items-center"><span className="text-[10px] text-primary font-bold">ACT</span><span className="text-2xl font-mono font-bold text-primary">{elec.amp.act}</span></div>
-             <div className="flex flex-col text-right"><span className="text-[10px] text-muted-foreground">MAX</span><span className="font-mono">{elec.amp.max}</span></div>
+          <div className="flex items-baseline gap-1">
+            <span className="text-3xl font-mono font-bold text-foreground">{data[data.length - 1]?.temp1?.toFixed(1) || "0.0"}</span>
+            <span className="text-sm text-muted-foreground">°C</span>
           </div>
         </Panel>
-        <Panel className="p-4 bg-card/60">
+        <Panel className="p-4 bg-card/60 flex flex-col justify-center items-center text-center">
           <div className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-2 flex items-center gap-1.5">
-            <Activity className="h-3.5 w-3.5" /> Voltage Range
+            <Thermometer className="h-3.5 w-3.5" /> Temperature 2
           </div>
-          <div className="flex justify-between items-end">
-             <div className="flex flex-col"><span className="text-[10px] text-muted-foreground">MIN</span><span className="font-mono">{elec.volt.min}</span></div>
-             <div className="flex flex-col items-center"><span className="text-[10px] text-primary font-bold">ACT</span><span className="text-2xl font-mono font-bold text-primary">{elec.volt.act}</span></div>
-             <div className="flex flex-col text-right"><span className="text-[10px] text-muted-foreground">MAX</span><span className="font-mono">{elec.volt.max}</span></div>
+          <div className="flex items-baseline gap-1">
+            <span className="text-3xl font-mono font-bold text-foreground">{data[data.length - 1]?.temp2?.toFixed(1) || "0.0"}</span>
+            <span className="text-sm text-muted-foreground">°C</span>
           </div>
         </Panel>
-        <Panel className="p-4 bg-card/60">
-           <div className="flex justify-between h-full items-center">
-             <div className="text-center w-1/2 border-r border-border/50">
-               <div className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1">kW / kWh</div>
-               <div className="text-xl font-mono font-bold">{elec.kw} / {elec.kwh}</div>
-             </div>
-             <div className="text-center w-1/2">
-               <div className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1">kVar / kVarh</div>
-               <div className="text-xl font-mono font-bold">{elec.kvar} / {elec.kvarh}</div>
-             </div>
-           </div>
-        </Panel>
-        <Panel className="p-4 bg-card/60">
-           <div className="flex justify-between h-full items-center">
-             <div className="text-center w-1/2 border-r border-border/50">
-               <div className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1">Power Factor</div>
-               <div className="text-xl font-mono font-bold text-emerald-500">{elec.pf}</div>
-             </div>
-             <div className="text-center w-1/2">
-               <div className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1">H2</div>
-               <div className="text-xl font-mono font-bold">{elec.h2}</div>
-             </div>
-           </div>
+        <Panel className="p-4 bg-card/60 flex flex-col justify-center items-center text-center">
+          <div className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-2 flex items-center gap-1.5">
+            <Gauge className="h-3.5 w-3.5" /> Pressure
+          </div>
+          <div className="flex items-baseline gap-1">
+            <span className="text-3xl font-mono font-bold text-foreground">{data[data.length - 1]?.pressure?.toFixed(2) || "0.00"}</span>
+            <span className="text-sm text-muted-foreground">bar</span>
+          </div>
         </Panel>
       </div>
 
