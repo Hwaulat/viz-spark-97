@@ -2,10 +2,10 @@ import { cn } from "@/lib/utils";
 import type { ReactNode } from "react";
 
 export function Panel({
-  title, subtitle, right, children, className, tone = "default",
+  title, subtitle, right, children, className, bodyClassName, tone = "default",
 }: {
   title?: ReactNode; subtitle?: ReactNode; right?: ReactNode;
-  children: ReactNode; className?: string;
+  children: ReactNode; className?: string; bodyClassName?: string;
   tone?: "default" | "ok" | "warn" | "danger";
 }) {
   const toneBorder = {
@@ -28,7 +28,7 @@ export function Panel({
           {right}
         </header>
       )}
-      <div className="p-4">{children}</div>
+      <div className={cn("p-4", bodyClassName)}>{children}</div>
     </section>
   );
 }

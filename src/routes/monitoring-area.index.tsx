@@ -57,6 +57,7 @@ function AreaCard({ area }: { area: AreaDef }) {
   const content = (
             <Panel
               className={`h-full flex flex-col ${!isPtedWrapper ? 'hover:border-primary/50 transition-colors' : ''}`}
+              bodyClassName={isPtedWrapper ? 'flex-1 flex flex-col' : ''}
               title={area.name}
               right={
                 !isPtedWrapper && <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
