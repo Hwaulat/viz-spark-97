@@ -414,7 +414,11 @@ export function ovenElecDailyTrend(baseKw: number, baseVolt: number = 380) {
     const kw = baseKw * (1 + (Math.random() - 0.5) * 0.15);
     const kvar = kw * Math.tan(Math.acos(pf));
     const amp = (kw * 1000) / (Math.sqrt(3) * volt * pf);
-    return { time, amp: +amp.toFixed(1), volt: +volt.toFixed(1), kw: +kw.toFixed(1), kvar: +kvar.toFixed(1), pf: +pf.toFixed(2), kwh: +(kw * 1).toFixed(1), kvarh: +(kvar * 1).toFixed(1) };
+    const gas = 50 + Math.random() * 10;
+    const temp1 = 180 + Math.random() * 5;
+    const temp2 = 180 + Math.random() * 5;
+    const pressure = 2.0 + Math.random() * 0.5;
+    return { time, amp: +amp.toFixed(1), volt: +volt.toFixed(1), kw: +kw.toFixed(1), kvar: +kvar.toFixed(1), pf: +pf.toFixed(2), kwh: +(kw * 1).toFixed(1), kvarh: +(kvar * 1).toFixed(1), gas: +gas.toFixed(1), temp1: +temp1.toFixed(1), temp2: +temp2.toFixed(1), pressure: +pressure.toFixed(2) };
   });
 }
 
@@ -427,7 +431,11 @@ export function ovenElecMonthlyTrend(baseKw: number, baseVolt: number = 380) {
     const kw = baseKw * (1 + (Math.random() - 0.5) * 0.2);
     const kvar = kw * Math.tan(Math.acos(pf));
     const amp = (kw * 1000) / (Math.sqrt(3) * volt * pf);
-    return { time, amp: +amp.toFixed(1), volt: +volt.toFixed(1), kw: +kw.toFixed(1), kvar: +kvar.toFixed(1), pf: +pf.toFixed(2), kwh: +(kw * 24).toFixed(1), kvarh: +(kvar * 24).toFixed(1) };
+    const gas = 50 * 24 + Math.random() * 200;
+    const temp1 = 180 + Math.random() * 5;
+    const temp2 = 180 + Math.random() * 5;
+    const pressure = 2.0 + Math.random() * 0.5;
+    return { time, amp: +amp.toFixed(1), volt: +volt.toFixed(1), kw: +kw.toFixed(1), kvar: +kvar.toFixed(1), pf: +pf.toFixed(2), kwh: +(kw * 24).toFixed(1), kvarh: +(kvar * 24).toFixed(1), gas: +gas.toFixed(1), temp1: +temp1.toFixed(1), temp2: +temp2.toFixed(1), pressure: +pressure.toFixed(2) };
   });
 }
 
@@ -440,6 +448,10 @@ export function ovenElecYearlyTrend(baseKw: number, baseVolt: number = 380) {
     const kw = baseKw * (1 + (Math.random() - 0.5) * 0.1);
     const kvar = kw * Math.tan(Math.acos(pf));
     const amp = (kw * 1000) / (Math.sqrt(3) * volt * pf);
-    return { time: m, amp: +amp.toFixed(1), volt: +volt.toFixed(1), kw: +kw.toFixed(1), kvar: +kvar.toFixed(1), pf: +pf.toFixed(2), kwh: +(kw * 24 * 30).toFixed(0), kvarh: +(kvar * 24 * 30).toFixed(0) };
+    const gas = 50 * 24 * 30 + Math.random() * 5000;
+    const temp1 = 180 + Math.random() * 5;
+    const temp2 = 180 + Math.random() * 5;
+    const pressure = 2.0 + Math.random() * 0.5;
+    return { time: m, amp: +amp.toFixed(1), volt: +volt.toFixed(1), kw: +kw.toFixed(1), kvar: +kvar.toFixed(1), pf: +pf.toFixed(2), kwh: +(kw * 24 * 30).toFixed(0), kvarh: +(kvar * 24 * 30).toFixed(0), gas: +gas.toFixed(0), temp1: +temp1.toFixed(1), temp2: +temp2.toFixed(1), pressure: +pressure.toFixed(2) };
   });
 }

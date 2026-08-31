@@ -133,8 +133,8 @@ function OvenDetailContent({ id }: { id: string }) {
 
       {/* Charts Grid */}
       <div className="grid lg:grid-cols-2 gap-6">
-        {/* Power Consumption (kW vs kVar) */}
-        <Panel title="Power Consumption Trend (kW vs kVar)" className="p-4 bg-card/60">
+        {/* Power Consumption (kW) */}
+        <Panel title="Power Consumption Trend" className="p-4 bg-card/60">
           <div className="h-[250px] mt-4">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
@@ -142,10 +142,6 @@ function OvenDetailContent({ id }: { id: string }) {
                   <linearGradient id="colorKw" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="5%" stopColor="#f59e0b" stopOpacity={0.3}/>
                     <stop offset="95%" stopColor="#f59e0b" stopOpacity={0}/>
-                  </linearGradient>
-                  <linearGradient id="colorKvar" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3}/>
-                    <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" vertical={false} />
@@ -157,51 +153,7 @@ function OvenDetailContent({ id }: { id: string }) {
                 />
                 <Legend iconType="circle" wrapperStyle={{ fontSize: '11px' }} />
                 <Area type="monotone" dataKey="kw" name="Active Power (kW)" stroke="#f59e0b" fillOpacity={1} fill="url(#colorKw)" strokeWidth={2} />
-                <Area type="monotone" dataKey="kvar" name="Reactive Power (kVar)" stroke="#3b82f6" fillOpacity={1} fill="url(#colorKvar)" strokeWidth={2} />
               </AreaChart>
-            </ResponsiveContainer>
-          </div>
-        </Panel>
-
-        {/* Voltage & Ampere Stability */}
-        <Panel title="Voltage & Current Stability" className="p-4 bg-card/60">
-          <div className="h-[250px] mt-4">
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" vertical={false} />
-                <XAxis dataKey="time" stroke="hsl(var(--muted-foreground))" fontSize={11} tickMargin={8} />
-                <YAxis yAxisId="left" stroke="hsl(var(--muted-foreground))" fontSize={11} domain={['dataMin - 10', 'dataMax + 10']} />
-                <YAxis yAxisId="right" orientation="right" stroke="hsl(var(--muted-foreground))" fontSize={11} domain={['dataMin - 20', 'dataMax + 20']} />
-                <Tooltip 
-                  contentStyle={{ backgroundColor: 'hsl(var(--card))', borderColor: 'hsl(var(--border))', borderRadius: '8px' }}
-                  itemStyle={{ color: 'hsl(var(--foreground))' }}
-                />
-                <Legend iconType="circle" wrapperStyle={{ fontSize: '11px' }} />
-                <ReferenceLine yAxisId="left" y={Number(elec.amp.max)} stroke="red" strokeDasharray="3 3" opacity={0.5} />
-                <ReferenceLine yAxisId="right" y={Number(elec.volt.min)} stroke="orange" strokeDasharray="3 3" opacity={0.5} />
-                <Line yAxisId="left" type="monotone" dataKey="amp" name="Current (A)" stroke="#ef4444" strokeWidth={2} dot={false} />
-                <Line yAxisId="right" type="stepAfter" dataKey="volt" name="Voltage (V)" stroke="#8b5cf6" strokeWidth={2} dot={false} />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
-        </Panel>
-
-        {/* Power Quality Trend */}
-        <Panel title="Power Quality (Power Factor)" className="p-4 bg-card/60">
-          <div className="h-[250px] mt-4">
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" vertical={false} />
-                <XAxis dataKey="time" stroke="hsl(var(--muted-foreground))" fontSize={11} tickMargin={8} />
-                <YAxis domain={[0.8, 1.0]} stroke="hsl(var(--muted-foreground))" fontSize={11} />
-                <Tooltip 
-                  contentStyle={{ backgroundColor: 'hsl(var(--card))', borderColor: 'hsl(var(--border))', borderRadius: '8px' }}
-                  itemStyle={{ color: 'hsl(var(--foreground))' }}
-                />
-                <Legend iconType="circle" wrapperStyle={{ fontSize: '11px' }} />
-                <ReferenceLine y={0.85} stroke="red" strokeDasharray="3 3" label={{ position: 'insideBottomLeft', value: 'Min Limit 0.85', fill: 'red', fontSize: 10 }} />
-                <Line type="monotone" dataKey="pf" name="Power Factor" stroke="#10b981" strokeWidth={2} dot={false} />
-              </LineChart>
             </ResponsiveContainer>
           </div>
         </Panel>
@@ -221,8 +173,66 @@ function OvenDetailContent({ id }: { id: string }) {
                 />
                 <Legend iconType="circle" wrapperStyle={{ fontSize: '11px' }} />
                 <Bar dataKey="kwh" name="Energy (kWh)" fill="#f59e0b" radius={[2, 2, 0, 0]} />
-                <Bar dataKey="kvarh" name="Reactive (kVarh)" fill="#3b82f6" radius={[2, 2, 0, 0]} />
               </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </Panel>
+
+        {/* Cumulative Gas */}
+        <Panel title="Cumulative Gas Usage" className="p-4 bg-card/60">
+          <div className="h-[250px] mt-4">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" vertical={false} />
+                <XAxis dataKey="time" stroke="hsl(var(--muted-foreground))" fontSize={11} tickMargin={8} />
+                <YAxis stroke="hsl(var(--muted-foreground))" fontSize={11} />
+                <Tooltip 
+                  contentStyle={{ backgroundColor: 'hsl(var(--card))', borderColor: 'hsl(var(--border))', borderRadius: '8px' }}
+                  itemStyle={{ color: 'hsl(var(--foreground))' }}
+                  cursor={{ fill: 'hsl(var(--muted))', opacity: 0.2 }}
+                />
+                <Legend iconType="circle" wrapperStyle={{ fontSize: '11px' }} />
+                <Bar dataKey="gas" name="Gas (m³)" fill="#10b981" radius={[2, 2, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </Panel>
+
+        {/* Temperature Trend */}
+        <Panel title="Temperature Trend" className="p-4 bg-card/60">
+          <div className="h-[250px] mt-4">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" vertical={false} />
+                <XAxis dataKey="time" stroke="hsl(var(--muted-foreground))" fontSize={11} tickMargin={8} />
+                <YAxis stroke="hsl(var(--muted-foreground))" fontSize={11} domain={['dataMin - 5', 'dataMax + 5']} />
+                <Tooltip 
+                  contentStyle={{ backgroundColor: 'hsl(var(--card))', borderColor: 'hsl(var(--border))', borderRadius: '8px' }}
+                  itemStyle={{ color: 'hsl(var(--foreground))' }}
+                />
+                <Legend iconType="circle" wrapperStyle={{ fontSize: '11px' }} />
+                <Line type="monotone" dataKey="temp1" name="Temperature 1 (°C)" stroke="#ef4444" strokeWidth={2} dot={false} />
+                <Line type="monotone" dataKey="temp2" name="Temperature 2 (°C)" stroke="#3b82f6" strokeWidth={2} dot={false} />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        </Panel>
+
+        {/* Pressure Trend */}
+        <Panel title="Pressure Trend" className="p-4 bg-card/60">
+          <div className="h-[250px] mt-4">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" vertical={false} />
+                <XAxis dataKey="time" stroke="hsl(var(--muted-foreground))" fontSize={11} tickMargin={8} />
+                <YAxis stroke="hsl(var(--muted-foreground))" fontSize={11} domain={['dataMin - 0.5', 'dataMax + 0.5']} />
+                <Tooltip 
+                  contentStyle={{ backgroundColor: 'hsl(var(--card))', borderColor: 'hsl(var(--border))', borderRadius: '8px' }}
+                  itemStyle={{ color: 'hsl(var(--foreground))' }}
+                />
+                <Legend iconType="circle" wrapperStyle={{ fontSize: '11px' }} />
+                <Line type="monotone" dataKey="pressure" name="Pressure (bar)" stroke="#8b5cf6" strokeWidth={2} dot={false} />
+              </LineChart>
             </ResponsiveContainer>
           </div>
         </Panel>
