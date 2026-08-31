@@ -398,11 +398,11 @@ function AreaCard({ area }: { area: AreaDef }) {
                         { name: "UF 1", val: "26.2", id: "bag-filter-uf1" },
                         { name: "UF 2", val: "26.0", id: "bag-filter-uf2" }
                       ].map(t => (
-                        <Link to="/monitoring-area/$id" params={{ id: t.id }} key={t.name} className="flex flex-col p-2 rounded bg-secondary/30 border border-border/50 justify-between hover:border-primary/50 hover:bg-secondary/80 transition-colors group">
-                          <span className="text-[9px] text-muted-foreground uppercase tracking-wider mb-1 font-medium group-hover:text-primary transition-colors">{t.name}</span>
-                          <div className="flex items-baseline gap-1 mt-auto">
-                            <span className="font-mono text-base font-bold text-emerald-500">{t.val}</span>
-                            <span className="text-[9px] text-muted-foreground">°C</span>
+                        <Link to="/monitoring-area/$id" params={{ id: t.id }} key={t.name} className="flex flex-col p-3 rounded bg-secondary/30 border border-border/50 justify-center gap-1 hover:border-primary/50 hover:bg-secondary/80 transition-colors group">
+                          <span className="text-[10px] text-muted-foreground uppercase tracking-wider font-medium group-hover:text-primary transition-colors">{t.name}</span>
+                          <div className="flex items-baseline gap-1">
+                            <span className="font-mono text-xl font-bold text-emerald-500">{t.val}</span>
+                            <span className="text-[10px] text-muted-foreground">°C</span>
                           </div>
                         </Link>
                       ))}
