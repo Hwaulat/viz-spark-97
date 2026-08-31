@@ -401,8 +401,8 @@ function AreaCard({ area }: { area: AreaDef }) {
                         <Link to="/monitoring-area/$id" params={{ id: t.id }} key={t.name} className="flex flex-col p-3 rounded bg-secondary/30 border border-border/50 justify-center gap-1 hover:border-primary/50 hover:bg-secondary/80 transition-colors group">
                           <span className="text-[10px] text-muted-foreground uppercase tracking-wider font-medium group-hover:text-primary transition-colors">{t.name}</span>
                           <div className="flex items-baseline gap-1">
-                            <span className="font-mono text-2xl font-bold text-emerald-500">{t.val}</span>
-                            <span className="text-xs text-muted-foreground">°C</span>
+                            <span className="font-mono text-3xl font-bold text-emerald-500">{t.val}</span>
+                            <span className="text-sm text-muted-foreground">°C</span>
                           </div>
                         </Link>
                       ))}
@@ -412,15 +412,15 @@ function AreaCard({ area }: { area: AreaDef }) {
                       <Link to="/monitoring-area/$id" params={{ id: "bag-filter-he-pressure" }} className="p-3 rounded-lg bg-secondary/30 border border-border/50 flex flex-col gap-2 hover:border-primary/50 hover:bg-secondary/80 transition-colors group">
                         <span className="text-[10px] font-semibold text-muted-foreground uppercase flex items-center gap-1.5 border-b border-border/50 pb-2 group-hover:text-primary transition-colors"><Gauge className="h-3.5 w-3.5" /> HE Pressure</span>
                         <div className="flex justify-between mt-1 items-end">
-                          <div className="flex flex-col"><span className="text-[9px] text-muted-foreground mb-0.5">IN</span><span className="font-mono text-xl font-bold">4.5 <span className="text-xs font-normal">bar</span></span></div>
-                          <div className="flex flex-col items-end"><span className="text-[9px] text-muted-foreground mb-0.5">OUT</span><span className="font-mono text-xl font-bold text-blue-500">3.2 <span className="text-xs font-normal">bar</span></span></div>
+                          <div className="flex flex-col"><span className="text-[9px] text-muted-foreground mb-0.5">IN</span><span className="font-mono text-2xl font-bold">4.5 <span className="text-sm font-normal text-muted-foreground">bar</span></span></div>
+                          <div className="flex flex-col items-end"><span className="text-[9px] text-muted-foreground mb-0.5">OUT</span><span className="font-mono text-2xl font-bold text-blue-500">3.2 <span className="text-sm font-normal text-muted-foreground/70">bar</span></span></div>
                         </div>
                       </Link>
                       <Link to="/monitoring-area/$id" params={{ id: "bag-filter-uf-module" }} className="p-3 rounded-lg bg-secondary/30 border border-border/50 flex flex-col gap-2 hover:border-primary/50 hover:bg-secondary/80 transition-colors group">
                         <span className="text-[10px] font-semibold text-muted-foreground uppercase flex items-center gap-1.5 border-b border-border/50 pb-2 group-hover:text-primary transition-colors"><Waves className="h-3.5 w-3.5" /> UF Module</span>
                         <div className="flex flex-col mt-1">
                           <span className="text-[9px] text-muted-foreground mb-0.5">Flowmeter</span>
-                          <span className="font-mono text-xl font-bold text-emerald-500">15.0 <span className="text-xs font-normal">m³/h</span></span>
+                          <span className="font-mono text-2xl font-bold text-emerald-500">15.0 <span className="text-sm font-normal text-muted-foreground">m³/h</span></span>
                         </div>
                       </Link>
                     </div>
