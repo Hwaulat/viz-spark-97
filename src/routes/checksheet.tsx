@@ -7,6 +7,7 @@ import {
   LineChart,
   Bar,
   BarChart,
+  ComposedChart,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -55,6 +56,7 @@ function generatePressureData(dates: string[], seedPrefix: string) {
       date,
       IN: Number(baseIn.toFixed(4)),
       OUT: Number(baseOut.toFixed(4)),
+      standard: 0.02,
     };
   });
 }
@@ -66,6 +68,7 @@ function generateWasteDisposalData(dates: string[], seedPrefix: string) {
       mixing: Math.floor(20 + Math.abs(Math.sin(i * 3.3)) * 80),
       mini: Math.floor(10 + Math.abs(Math.cos(i * 2.4)) * 50),
       pted: Math.floor(30 + Math.abs(Math.sin(i * 1.4)) * 70),
+      standard: 70,
     };
   });
 }
@@ -78,8 +81,10 @@ function generateControlPointData(dates: string[], seedPrefix: string) {
       date: date.padStart(2, "0"),
       morningAlkali: Number((baseAlkali + 0.5).toFixed(1)),
       afternoonAlkali: Number((baseAlkali - 0.2).toFixed(1)),
+      standardAlkali: 18.0,
       morningTemp: Math.floor(baseTemp + 2),
       afternoonTemp: Math.floor(baseTemp - 2),
+      standardTemp: 40,
     };
   });
 }
@@ -92,8 +97,10 @@ function generateSurfaceConditioningData(dates: string[], seedPrefix: string) {
       date: date.padStart(2, "0"),
       morningAlkali: Number((baseAlkali + 0.2).toFixed(1)),
       afternoonAlkali: Number((baseAlkali - 0.2).toFixed(1)),
+      standardAlkali: 4.5,
       morningPh: Number((basePh + 0.2).toFixed(1)),
       afternoonPh: Number((basePh - 0.2).toFixed(1)),
+      standardPh: 9.8,
     };
   });
 }
@@ -108,12 +115,16 @@ function generatePhosphateData(dates: string[], seedPrefix: string) {
       date: date.padStart(2, "0"),
       morningTA: Number((baseTA + 0.5).toFixed(1)),
       afternoonTA: Number((baseTA - 0.3).toFixed(1)),
+      standardTA: 22.0,
       morningFA: Number((baseFA + 0.05).toFixed(1)),
       afternoonFA: Number((baseFA - 0.05).toFixed(1)),
+      standardFA: 0.8,
       morningAC: Number((baseAC + 0.2).toFixed(1)),
       afternoonAC: Number((baseAC - 0.2).toFixed(1)),
+      standardAC: 4.5,
       morningTemp: Math.floor(baseTemp + 2),
       afternoonTemp: Math.floor(baseTemp - 2),
+      standardTemp: 40,
     };
   });
 }
@@ -127,10 +138,13 @@ function generateWRData(dates: string[], seedPrefix: string) {
       date: date.padStart(2, "0"),
       morningWR2: Number((baseWR2 + 0.1).toFixed(1)),
       afternoonWR2: Number((baseWR2 - 0.05).toFixed(1)),
+      standardWR2: 1.5,
       morningWR4: Number((baseWR4 + 0.1).toFixed(1)),
       afternoonWR4: Number((baseWR4 - 0.05).toFixed(1)),
+      standardWR4: 1.5,
       morningWR5: Number((baseWR5 + 0.05).toFixed(1)),
       afternoonWR5: Number((baseWR5 - 0.05).toFixed(1)),
+      standardWR5: 0.5,
     };
   });
 }
@@ -894,7 +908,9 @@ function DashboardChecksheet() {
                 dot={{ r: 4, fill: "#f97316", strokeWidth: 2 }}
                 activeDot={{ r: 6 }}
               />
-            </LineChart>
+              <Line type="monotone" dataKey="standard" name="Standard" stroke="#ef4444" strokeWidth={2} dot={false} strokeDasharray="5 5" />
+                      <Line type="monotone" dataKey="standard" name="Standard" stroke="#ef4444" strokeWidth={2} dot={false} strokeDasharray="5 5" />
+                    </LineChart>
           </ResponsiveContainer>
         </div>
       </div>
@@ -1019,7 +1035,7 @@ function DashboardChecksheet() {
             <h2 className="text-lg font-semibold mb-6">Waste Disposal Trends</h2>
             <div className="w-full">
               <ResponsiveContainer width="100%" height={600}>
-                <BarChart
+                <ComposedChart
                   data={dataWasteDisposal}
                   margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
                 >
@@ -1056,7 +1072,8 @@ function DashboardChecksheet() {
                   <Bar dataKey="mixing" name="Mixing" fill="#3b82f6" radius={[4, 4, 0, 0]} />
                   <Bar dataKey="mini" name="Mini" fill="#1d4ed8" radius={[4, 4, 0, 0]} />
                   <Bar dataKey="pted" name="PTED" fill="#1e3a8a" radius={[4, 4, 0, 0]} />
-                </BarChart>
+                  <Line type="monotone" dataKey="standard" name="Standard" stroke="#ef4444" strokeWidth={2} dot={false} strokeDasharray="5 5" />
+                </ComposedChart>
               </ResponsiveContainer>
             </div>
           </div>
@@ -1146,6 +1163,7 @@ function DashboardChecksheet() {
                         dot={{ r: 4, fill: "#3b82f6", strokeWidth: 2 }}
                         activeDot={{ r: 6 }}
                       />
+                      <Line type="monotone" dataKey="standardAlkali" name="Standard" stroke="#ef4444" strokeWidth={2} dot={false} strokeDasharray="5 5" />
                     </LineChart>
                   </ResponsiveContainer>
                 </div>
@@ -1206,6 +1224,7 @@ function DashboardChecksheet() {
                         dot={{ r: 4, fill: "#3b82f6", strokeWidth: 2 }}
                         activeDot={{ r: 6 }}
                       />
+                      <Line type="monotone" dataKey="standardTemp" name="Standard" stroke="#ef4444" strokeWidth={2} dot={false} strokeDasharray="5 5" />
                     </LineChart>
                   </ResponsiveContainer>
                 </div>
@@ -1294,6 +1313,7 @@ function DashboardChecksheet() {
                         dot={{ r: 4, fill: "#3b82f6", strokeWidth: 2 }}
                         activeDot={{ r: 6 }}
                       />
+                      <Line type="monotone" dataKey="standardAlkali" name="Standard" stroke="#ef4444" strokeWidth={2} dot={false} strokeDasharray="5 5" />
                     </LineChart>
                   </ResponsiveContainer>
                 </div>
@@ -1355,6 +1375,7 @@ function DashboardChecksheet() {
                         dot={{ r: 4, fill: "#3b82f6", strokeWidth: 2 }}
                         activeDot={{ r: 6 }}
                       />
+                      <Line type="monotone" dataKey="standardPh" name="Standard" stroke="#ef4444" strokeWidth={2} dot={false} strokeDasharray="5 5" />
                     </LineChart>
                   </ResponsiveContainer>
                 </div>
@@ -1463,7 +1484,8 @@ function DashboardChecksheet() {
                           dot={{ r: 4, fill: "#3b82f6", strokeWidth: 2 }}
                           activeDot={{ r: 6 }}
                         />
-                      </LineChart>
+                        <Line type="monotone" dataKey="standardTA" name="Standard" stroke="#ef4444" strokeWidth={2} dot={false} strokeDasharray="5 5" />
+                    </LineChart>
                     </ResponsiveContainer>
                   </div>
                 </div>
@@ -1524,7 +1546,8 @@ function DashboardChecksheet() {
                           dot={{ r: 4, fill: "#3b82f6", strokeWidth: 2 }}
                           activeDot={{ r: 6 }}
                         />
-                      </LineChart>
+                        <Line type="monotone" dataKey="standardFA" name="Standard" stroke="#ef4444" strokeWidth={2} dot={false} strokeDasharray="5 5" />
+                    </LineChart>
                     </ResponsiveContainer>
                   </div>
                 </div>
@@ -1585,7 +1608,8 @@ function DashboardChecksheet() {
                           dot={{ r: 4, fill: "#3b82f6", strokeWidth: 2 }}
                           activeDot={{ r: 6 }}
                         />
-                      </LineChart>
+                        <Line type="monotone" dataKey="standardAC" name="Standard" stroke="#ef4444" strokeWidth={2} dot={false} strokeDasharray="5 5" />
+                    </LineChart>
                     </ResponsiveContainer>
                   </div>
                 </div>
@@ -1645,7 +1669,8 @@ function DashboardChecksheet() {
                           dot={{ r: 4, fill: "#3b82f6", strokeWidth: 2 }}
                           activeDot={{ r: 6 }}
                         />
-                      </LineChart>
+                        <Line type="monotone" dataKey="standardTemp" name="Standard" stroke="#ef4444" strokeWidth={2} dot={false} strokeDasharray="5 5" />
+                    </LineChart>
                     </ResponsiveContainer>
                   </div>
                 </div>
@@ -1745,7 +1770,8 @@ function DashboardChecksheet() {
                           dot={{ r: 4, fill: "#3b82f6", strokeWidth: 2 }}
                           activeDot={{ r: 6 }}
                         />
-                      </LineChart>
+                        <Line type="monotone" dataKey="standardWR2" name="Standard" stroke="#ef4444" strokeWidth={2} dot={false} strokeDasharray="5 5" />
+                    </LineChart>
                     </ResponsiveContainer>
                   </div>
                 </div>
@@ -1806,7 +1832,8 @@ function DashboardChecksheet() {
                           dot={{ r: 4, fill: "#3b82f6", strokeWidth: 2 }}
                           activeDot={{ r: 6 }}
                         />
-                      </LineChart>
+                        <Line type="monotone" dataKey="standardWR4" name="Standard" stroke="#ef4444" strokeWidth={2} dot={false} strokeDasharray="5 5" />
+                    </LineChart>
                     </ResponsiveContainer>
                   </div>
                 </div>
@@ -1867,7 +1894,8 @@ function DashboardChecksheet() {
                           dot={{ r: 4, fill: "#3b82f6", strokeWidth: 2 }}
                           activeDot={{ r: 6 }}
                         />
-                      </LineChart>
+                        <Line type="monotone" dataKey="standardWR5" name="Standard" stroke="#ef4444" strokeWidth={2} dot={false} strokeDasharray="5 5" />
+                    </LineChart>
                     </ResponsiveContainer>
                   </div>
                 </div>
@@ -1945,7 +1973,7 @@ function DashboardChecksheet() {
             <h2 className="text-lg font-semibold mb-6">Measurement Trends</h2>
             <div className="w-full">
               <ResponsiveContainer width="100%" height={400}>
-                <BarChart
+                <ComposedChart
                   data={equipmentTrendData}
                   margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
                 >
@@ -1975,7 +2003,8 @@ function DashboardChecksheet() {
                   <Bar dataKey="OK" name="OK" fill="#22c55e" radius={[4, 4, 0, 0]} />
                   <Bar dataKey="NG" name="NG" fill="#ef4444" radius={[4, 4, 0, 0]} />
                   <Bar dataKey="Repair" name="Repair" fill="#f97316" radius={[4, 4, 0, 0]} />
-                </BarChart>
+                  <Line type="monotone" dataKey="standard" name="Standard" stroke="#ef4444" strokeWidth={2} dot={false} strokeDasharray="5 5" />
+                </ComposedChart>
               </ResponsiveContainer>
             </div>
           </div>
@@ -2129,7 +2158,7 @@ function DashboardChecksheet() {
             <h2 className="text-lg font-semibold mb-6">Measurement Trends</h2>
             <div className="w-full">
               <ResponsiveContainer width="100%" height={400}>
-                <BarChart
+                <ComposedChart
                   data={cedTrendData}
                   margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
                 >
@@ -2159,7 +2188,8 @@ function DashboardChecksheet() {
                   <Bar dataKey="OK" name="OK" fill="#22c55e" radius={[4, 4, 0, 0]} />
                   <Bar dataKey="NG" name="NG" fill="#ef4444" radius={[4, 4, 0, 0]} />
                   <Bar dataKey="Repair" name="Repair" fill="#f97316" radius={[4, 4, 0, 0]} />
-                </BarChart>
+                  <Line type="monotone" dataKey="standard" name="Standard" stroke="#ef4444" strokeWidth={2} dot={false} strokeDasharray="5 5" />
+                </ComposedChart>
               </ResponsiveContainer>
             </div>
           </div>
