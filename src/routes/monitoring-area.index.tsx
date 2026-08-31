@@ -365,14 +365,14 @@ function AreaCard({ area }: { area: AreaDef }) {
                       ].map(eq => (
                         <Link to="/monitoring-area/$id" params={{ id: eq.id }} key={eq.name} className="flex items-center justify-between p-3 rounded-lg bg-secondary/30 border border-border/50 flex-1 hover:bg-secondary/80 hover:border-primary/50 transition-all group">
                           <span className="text-sm font-semibold group-hover:text-primary transition-colors flex items-center gap-2">{eq.name} <ArrowRight className="h-3 w-3 opacity-0 -ml-2 group-hover:opacity-100 group-hover:ml-0 transition-all" /></span>
-                          <div className="flex gap-6">
+                          <div className="flex gap-5">
                             <div className="flex flex-col items-end">
                               <span className="text-[9px] text-muted-foreground uppercase flex items-center gap-1"><Thermometer className="h-3 w-3" /> Temp PV</span>
-                              <div className="flex items-baseline gap-1 mt-0.5"><span className="font-mono font-bold text-lg">{eq.pv}</span><span className="text-[10px] text-muted-foreground">°C</span></div>
+                              <div className="flex items-baseline gap-1 mt-0.5"><span className="font-mono font-bold text-3xl">{eq.pv}</span><span className="text-sm text-muted-foreground">°C</span></div>
                             </div>
                             <div className="flex flex-col items-end">
                               <span className="text-[9px] text-muted-foreground uppercase flex items-center gap-1"><Thermometer className="h-3 w-3" /> Temp SP</span>
-                              <div className="flex items-baseline gap-1 mt-0.5"><span className="font-mono font-bold text-lg">{eq.sp}</span><span className="text-[10px] text-muted-foreground">°C</span></div>
+                              <div className="flex items-baseline gap-1 mt-0.5"><span className="font-mono font-bold text-3xl">{eq.sp}</span><span className="text-sm text-muted-foreground">°C</span></div>
                             </div>
                           </div>
                         </Link>
@@ -412,15 +412,30 @@ function AreaCard({ area }: { area: AreaDef }) {
                       <Link to="/monitoring-area/$id" params={{ id: "bag-filter-he-pressure" }} className="p-3 rounded-lg bg-secondary/30 border border-border/50 flex flex-col gap-2 hover:border-primary/50 hover:bg-secondary/80 transition-colors group">
                         <span className="text-[10px] font-semibold text-muted-foreground uppercase flex items-center gap-1.5 border-b border-border/50 pb-2 group-hover:text-primary transition-colors"><Gauge className="h-3.5 w-3.5" /> HE Pressure</span>
                         <div className="flex justify-between mt-1 items-end">
-                          <div className="flex flex-col"><span className="text-[9px] text-muted-foreground mb-0.5">IN</span><span className="font-mono text-2xl font-bold">4.5 <span className="text-sm font-normal text-muted-foreground">bar</span></span></div>
-                          <div className="flex flex-col items-end"><span className="text-[9px] text-muted-foreground mb-0.5">OUT</span><span className="font-mono text-2xl font-bold text-blue-500">3.2 <span className="text-sm font-normal text-muted-foreground/70">bar</span></span></div>
+                          <div className="flex flex-col">
+                            <span className="text-[9px] text-muted-foreground mb-0.5">IN</span>
+                            <div className="flex items-baseline gap-1 whitespace-nowrap">
+                              <span className="font-mono text-2xl font-bold">4.5</span>
+                              <span className="text-xs font-normal text-muted-foreground">bar</span>
+                            </div>
+                          </div>
+                          <div className="flex flex-col items-end">
+                            <span className="text-[9px] text-muted-foreground mb-0.5">OUT</span>
+                            <div className="flex items-baseline gap-1 whitespace-nowrap">
+                              <span className="font-mono text-2xl font-bold text-blue-500">3.2</span>
+                              <span className="text-xs font-normal text-muted-foreground/70">bar</span>
+                            </div>
+                          </div>
                         </div>
                       </Link>
                       <Link to="/monitoring-area/$id" params={{ id: "bag-filter-uf-module" }} className="p-3 rounded-lg bg-secondary/30 border border-border/50 flex flex-col gap-2 hover:border-primary/50 hover:bg-secondary/80 transition-colors group">
                         <span className="text-[10px] font-semibold text-muted-foreground uppercase flex items-center gap-1.5 border-b border-border/50 pb-2 group-hover:text-primary transition-colors"><Waves className="h-3.5 w-3.5" /> UF Module</span>
                         <div className="flex flex-col mt-1">
                           <span className="text-[9px] text-muted-foreground mb-0.5">Flowmeter</span>
-                          <span className="font-mono text-2xl font-bold text-emerald-500">15.0 <span className="text-sm font-normal text-muted-foreground">m³/h</span></span>
+                          <div className="flex items-baseline gap-1 whitespace-nowrap">
+                            <span className="font-mono text-2xl font-bold text-emerald-500">15.0</span>
+                            <span className="text-xs font-normal text-muted-foreground">m³/h</span>
+                          </div>
                         </div>
                       </Link>
                     </div>

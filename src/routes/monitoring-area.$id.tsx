@@ -256,11 +256,11 @@ function StationDetailContent({ tabKey }: { tabKey: string }) {
       <div className="grid grid-cols-2 gap-4 mb-6">
         <Panel className="p-4 shadow-sm border border-border/50 bg-card/60">
           <div className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1">PV Temperature</div>
-          <div className="flex items-baseline gap-1"><span className={`text-2xl font-mono font-bold ${data.alarm ? 'text-destructive' : 'text-emerald-500'}`}>{data.pv}</span><span className="text-xs">°C</span></div>
+          <div className="flex items-baseline gap-1"><span className={`text-3xl font-mono font-bold ${data.alarm ? 'text-destructive' : 'text-emerald-500'}`}>{data.pv}</span><span className="text-sm">°C</span></div>
         </Panel>
         <Panel className="p-4 shadow-sm border border-border/50 bg-card/60">
           <div className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1">SP Temperature</div>
-          <div className="flex items-baseline gap-1"><span className="text-2xl font-mono font-bold">{data.sp}</span><span className="text-xs">°C</span></div>
+          <div className="flex items-baseline gap-1"><span className="text-3xl font-mono font-bold">{data.sp}</span><span className="text-sm">°C</span></div>
         </Panel>
       </div>
 
