@@ -32,10 +32,9 @@ interface AreaDef {
   largeTank?: { pv: string; sp: string };
   smallTank?: { pv: string; sp: string };
   oven?: {
-    temperature: string;
-    elecUsage: string;
-    gasUsage: string;
-    pressureGas: string;
+    temp1: string;
+    temp2: string;
+    pressure: string;
   };
   pted?: {
     tempIn: string;
@@ -48,9 +47,9 @@ interface AreaDef {
 const AREAS: AreaDef[] = [
   { id: "boiler-area", name: "Boiler Area", type: "boiler" },
   { id: "pted-area", name: "PTED Area", type: "pted-wrapper" },
-  { id: "oven-sealing", name: "Oven Sealing", type: "oven", oven: { temperature: "160.0", elecUsage: "120", gasUsage: "45", pressureGas: "2.1" } },
-  { id: "oven-topcoat", name: "Oven Topcoat", type: "oven", oven: { temperature: "175.5", elecUsage: "140", gasUsage: "52", pressureGas: "2.4" } },
-  { id: "oven-ced", name: "Oven CED", type: "oven", oven: { temperature: "185.0", elecUsage: "165", gasUsage: "60", pressureGas: "2.8" } },
+  { id: "oven-sealing", name: "Oven Sealing", type: "oven", oven: { temp1: "160.0", temp2: "158.5", pressure: "2.1" } },
+  { id: "oven-topcoat", name: "Oven Topcoat", type: "oven", oven: { temp1: "175.5", temp2: "174.0", pressure: "2.4" } },
+  { id: "oven-ced", name: "Oven CED", type: "oven", oven: { temp1: "185.0", temp2: "182.5", pressure: "2.8" } },
 ];
 
 function BagFilterItemDialog({ item, children }: { item: { name: string, val: string, val2?: string, id: string, unit?: string, valName?: string, val2Name?: string }, children: React.ReactNode }) {
@@ -309,32 +308,25 @@ function AreaCard({ area }: { area: AreaDef }) {
               )}
 
               {area.type === "oven" && area.oven && (
-                <div className="grid grid-cols-2 gap-2 mt-2">
+                <div className="grid grid-cols-3 gap-2 mt-2">
                   <div className="rounded bg-secondary/50 p-2 border border-border/50 flex flex-col justify-center items-center text-center">
-                    <span className="text-[10px] text-muted-foreground uppercase tracking-widest mb-1 flex items-center gap-1"><Thermometer className="h-3 w-3" /> Temp</span>
+                    <span className="text-[10px] text-muted-foreground uppercase tracking-widest mb-1 flex items-center gap-1"><Thermometer className="h-3 w-3" /> Temp 1</span>
                     <div className="flex items-baseline gap-1">
-                      <span className="text-xl font-bold font-mono">{area.oven.temperature}</span>
+                      <span className="text-xl font-bold font-mono">{area.oven.temp1}</span>
                       <span className="text-[10px] text-muted-foreground">°C</span>
                     </div>
                   </div>
                   <div className="rounded bg-secondary/50 p-2 border border-border/50 flex flex-col justify-center items-center text-center">
-                    <span className="text-[10px] text-muted-foreground uppercase tracking-widest mb-1 flex items-center gap-1"><Zap className="h-3 w-3 text-yellow-500" /> Elec Usage</span>
+                    <span className="text-[10px] text-muted-foreground uppercase tracking-widest mb-1 flex items-center gap-1"><Thermometer className="h-3 w-3" /> Temp 2</span>
                     <div className="flex items-baseline gap-1">
-                      <span className="text-xl font-bold font-mono">{area.oven.elecUsage}</span>
-                      <span className="text-[10px] text-muted-foreground">kWh/day</span>
+                      <span className="text-xl font-bold font-mono">{area.oven.temp2}</span>
+                      <span className="text-[10px] text-muted-foreground">°C</span>
                     </div>
                   </div>
                   <div className="rounded bg-secondary/50 p-2 border border-border/50 flex flex-col justify-center items-center text-center">
-                    <span className="text-[10px] text-muted-foreground uppercase tracking-widest mb-1 flex items-center gap-1"><Flame className="h-3 w-3 text-orange-500" /> Gas Usage</span>
+                    <span className="text-[10px] text-muted-foreground uppercase tracking-widest mb-1 flex items-center gap-1"><Gauge className="h-3 w-3" /> Pressure</span>
                     <div className="flex items-baseline gap-1">
-                      <span className="text-xl font-bold font-mono">{area.oven.gasUsage}</span>
-                      <span className="text-[10px] text-muted-foreground">m³/day</span>
-                    </div>
-                  </div>
-                  <div className="rounded bg-secondary/50 p-2 border border-border/50 flex flex-col justify-center items-center text-center">
-                    <span className="text-[10px] text-muted-foreground uppercase tracking-widest mb-1 flex items-center gap-1"><Gauge className="h-3 w-3" /> Gas Press</span>
-                    <div className="flex items-baseline gap-1">
-                      <span className="text-xl font-bold font-mono">{area.oven.pressureGas}</span>
+                      <span className="text-xl font-bold font-mono">{area.oven.pressure}</span>
                       <span className="text-[10px] text-muted-foreground">bar</span>
                     </div>
                   </div>
