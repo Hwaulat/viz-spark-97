@@ -496,22 +496,22 @@ function MonitoringAreaDetails() {
               </div>
 
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                <Panel className="p-4" title={<span className="text-muted-foreground">Total Energy</span>} subtitle={`${timeFilter} aggregate`}>
+                <Panel className="p-4" title={<span className="text-muted-foreground">Total Energy</span>}>
                   <div className="mt-2 text-2xl font-bold font-mono text-blue-500">
                     {summary.totalEnergy.toLocaleString()} <span className="text-xs font-normal text-muted-foreground">kWh</span>
                   </div>
                 </Panel>
-                <Panel className="p-4" title={<span className="text-muted-foreground">Avg Energy / {timeFilter.replace('ly', '')}</span>} subtitle={`Average per ${timeFilter.replace('ly', '')}`}>
+                <Panel className="p-4" title={<span className="text-muted-foreground">Avg Energy / {timeFilter.replace('ly', '')}</span>}>
                   <div className="mt-2 text-2xl font-bold font-mono text-blue-400">
                     {summary.avgEnergy.toLocaleString()} <span className="text-xs font-normal text-muted-foreground">kWh</span>
                   </div>
                 </Panel>
-                <Panel className="p-4" title={<span className="text-muted-foreground">Total Gas</span>} subtitle={`${timeFilter} aggregate`}>
+                <Panel className="p-4" title={<span className="text-muted-foreground">Total Gas</span>}>
                   <div className="mt-2 text-2xl font-bold font-mono text-emerald-500">
                     {summary.totalGas.toLocaleString()} <span className="text-xs font-normal text-muted-foreground">m³</span>
                   </div>
                 </Panel>
-                <Panel className="p-4" title={<span className="text-muted-foreground">Avg Gas / {timeFilter.replace('ly', '')}</span>} subtitle={`Average per ${timeFilter.replace('ly', '')}`}>
+                <Panel className="p-4" title={<span className="text-muted-foreground">Avg Gas / {timeFilter.replace('ly', '')}</span>}>
                   <div className="mt-2 text-2xl font-bold font-mono text-emerald-400">
                     {summary.avgGas.toLocaleString()} <span className="text-xs font-normal text-muted-foreground">m³</span>
                   </div>
