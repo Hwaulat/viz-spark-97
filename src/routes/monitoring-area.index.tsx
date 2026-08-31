@@ -69,6 +69,9 @@ function AreaCard({ area }: { area: AreaDef }) {
                       <div className="flex justify-between items-center">
                         <span className="text-sm font-bold flex items-center gap-1.5">
                           <Flame className={`h-4 w-4 ${b.running ? 'text-emerald-500' : 'text-gray-400'}`} /> {b.name}
+                          {b.id === 1 && <span className="ml-1 text-[9px] px-1.5 py-0.5 rounded font-bold bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400">OK</span>}
+                          {b.id === 2 && <span className="ml-1 text-[9px] px-1.5 py-0.5 rounded font-bold bg-orange-100 text-orange-600 dark:bg-orange-900/30 dark:text-orange-400">OK</span>}
+                          {b.id === 3 && <span className="ml-1 text-[9px] px-1.5 py-0.5 rounded font-bold bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400">NG</span>}
                         </span>
                         <div className="flex gap-4 text-xs font-mono items-center">
     <span className="text-muted-foreground flex items-baseline gap-2">T1 <span className="text-foreground font-bold text-2xl">{b.temp1.toFixed(1)}°C</span></span>
@@ -377,51 +380,50 @@ function AreaCard({ area }: { area: AreaDef }) {
                   </div>
 
                   {/* Bag Filter Card */}
-                  <Link to="/monitoring-area/$id" params={{ id: "pted-bag-filter" }} className="border border-border/50 rounded-lg p-4 bg-background flex flex-col h-full hover:border-primary/50 transition-colors group">
-                    <h3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-3 flex items-center justify-between gap-1.5 group-hover:text-primary transition-colors">
-                      <span className="flex items-center gap-1.5"><Filter className="h-4 w-4" /> Bag Filter</span>
-                      <ArrowRight className="h-3 w-3 opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <div className="border border-border/50 rounded-lg p-4 bg-background flex flex-col h-full">
+                    <h3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-3 flex items-center gap-1.5">
+                      <Filter className="h-4 w-4" /> Bag Filter
                     </h3>
                     
-                    <div className="grid grid-cols-3 gap-2 mb-4">
+                    <div className="grid grid-cols-3 gap-2 mb-4 flex-1">
                       {[
-                        { name: "Pre Degreasing", val: "45.5" },
-                        { name: "Degreasing", val: "34.8" },
-                        { name: "DI 1", val: "25.0" },
-                        { name: "DI 2", val: "25.1" },
-                        { name: "WR 5", val: "24.9" },
-                        { name: "CED 1", val: "28.5" },
-                        { name: "CED 2", val: "28.3" },
-                        { name: "UF 1", val: "26.2" },
-                        { name: "UF 2", val: "26.0" }
+                        { name: "Pre Degreasing", val: "45.5", id: "bag-filter-pre-deg" },
+                        { name: "Degreasing", val: "34.8", id: "bag-filter-deg" },
+                        { name: "DI 1", val: "25.0", id: "bag-filter-di1" },
+                        { name: "DI 2", val: "25.1", id: "bag-filter-di2" },
+                        { name: "WR 5", val: "24.9", id: "bag-filter-wr5" },
+                        { name: "CED 1", val: "28.5", id: "bag-filter-ced1" },
+                        { name: "CED 2", val: "28.3", id: "bag-filter-ced2" },
+                        { name: "UF 1", val: "26.2", id: "bag-filter-uf1" },
+                        { name: "UF 2", val: "26.0", id: "bag-filter-uf2" }
                       ].map(t => (
-                        <div key={t.name} className="flex flex-col p-2 rounded bg-secondary/30 border border-border/50 justify-between">
-                          <span className="text-[9px] text-muted-foreground uppercase tracking-wider mb-1 font-medium">{t.name}</span>
+                        <Link to="/monitoring-area/$id" params={{ id: t.id }} key={t.name} className="flex flex-col p-2 rounded bg-secondary/30 border border-border/50 justify-between hover:border-primary/50 hover:bg-secondary/80 transition-colors group">
+                          <span className="text-[9px] text-muted-foreground uppercase tracking-wider mb-1 font-medium group-hover:text-primary transition-colors">{t.name}</span>
                           <div className="flex items-baseline gap-1 mt-auto">
                             <span className="font-mono text-base font-bold text-emerald-500">{t.val}</span>
                             <span className="text-[9px] text-muted-foreground">°C</span>
                           </div>
-                        </div>
+                        </Link>
                       ))}
                     </div>
 
                     <div className="grid grid-cols-2 gap-3 mt-auto">
-                      <div className="p-3 rounded-lg bg-secondary/30 border border-border/50 flex flex-col gap-2">
-                        <span className="text-[10px] font-semibold text-muted-foreground uppercase flex items-center gap-1.5 border-b border-border/50 pb-2"><Gauge className="h-3.5 w-3.5" /> HE Pressure</span>
+                      <Link to="/monitoring-area/$id" params={{ id: "bag-filter-he-pressure" }} className="p-3 rounded-lg bg-secondary/30 border border-border/50 flex flex-col gap-2 hover:border-primary/50 hover:bg-secondary/80 transition-colors group">
+                        <span className="text-[10px] font-semibold text-muted-foreground uppercase flex items-center gap-1.5 border-b border-border/50 pb-2 group-hover:text-primary transition-colors"><Gauge className="h-3.5 w-3.5" /> HE Pressure</span>
                         <div className="flex justify-between mt-1">
                           <div className="flex flex-col"><span className="text-[9px] text-muted-foreground mb-0.5">IN</span><span className="font-mono text-sm font-bold">4.5 bar</span></div>
                           <div className="flex flex-col items-end"><span className="text-[9px] text-muted-foreground mb-0.5">OUT</span><span className="font-mono text-sm font-bold text-blue-500">3.2 bar</span></div>
                         </div>
-                      </div>
-                      <div className="p-3 rounded-lg bg-secondary/30 border border-border/50 flex flex-col gap-2">
-                        <span className="text-[10px] font-semibold text-muted-foreground uppercase flex items-center gap-1.5 border-b border-border/50 pb-2"><Waves className="h-3.5 w-3.5" /> UF Module</span>
+                      </Link>
+                      <Link to="/monitoring-area/$id" params={{ id: "bag-filter-uf-module" }} className="p-3 rounded-lg bg-secondary/30 border border-border/50 flex flex-col gap-2 hover:border-primary/50 hover:bg-secondary/80 transition-colors group">
+                        <span className="text-[10px] font-semibold text-muted-foreground uppercase flex items-center gap-1.5 border-b border-border/50 pb-2 group-hover:text-primary transition-colors"><Waves className="h-3.5 w-3.5" /> UF Module</span>
                         <div className="flex flex-col mt-1">
                           <span className="text-[9px] text-muted-foreground mb-0.5">Flowmeter</span>
                           <span className="font-mono text-sm font-bold text-emerald-500">15.0 m³/h</span>
                         </div>
-                      </div>
+                      </Link>
                     </div>
-                  </Link>
+                  </div>
                 </div>
               )}
 
@@ -471,7 +473,7 @@ function MonitoringArea() {
           </div>
           
           {/* Column 2 & 3: PTED Area */}
-          <div className="flex flex-col gap-4 lg:col-span-2">
+          <div className="flex flex-col gap-4 lg:col-span-2 h-full">
             {ptedArea && <AreaCard area={ptedArea} />}
           </div>
         </div>
