@@ -1,7 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useMemo } from "react";
 import { Panel } from "@/components/panel";
 import { Activity, Thermometer, Gauge, ArrowRight, Flame, Zap, Power, Filter, Waves } from "lucide-react";
 import { BOILERS } from "@/lib/mock-data";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 
 export const Route = createFileRoute("/monitoring-area/")({
   head: () => ({
@@ -50,6 +53,55 @@ const AREAS: AreaDef[] = [
   { id: "oven-ced", name: "Oven CED", type: "oven", oven: { temperature: "185.0", elecUsage: "165", gasUsage: "60", pressureGas: "2.8" } },
 ];
 
+function BagFilterItemDialog({ item, children }: { item: { name: string, val: string, val2?: string, id: string, unit?: string, valName?: string, val2Name?: string }, children: React.ReactNode }) {
+  const data = useMemo(() => {
+    const base1 = parseFloat(item.val);
+    const base2 = item.val2 ? parseFloat(item.val2) : undefined;
+    return Array.from({ length: 30 }, (_, i) => {
+      const time = new Date(Date.now() - (29 - i) * 60000);
+      const res: any = {
+        time: time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        value1: +(base1 + (Math.random() * (base1 * 0.05) - (base1 * 0.025))).toFixed(1),
+      };
+      if (base2 !== undefined) {
+        res.value2 = +(base2 + (Math.random() * (base2 * 0.05) - (base2 * 0.025))).toFixed(1);
+      }
+      return res;
+    });
+  }, [item.val, item.val2]);
+  
+  const unit = item.unit || "°C";
+
+  return (
+    <Dialog>
+      <DialogTrigger asChild>
+        {children}
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[600px]">
+        <DialogHeader>
+          <DialogTitle>{item.name} - Historical Trend</DialogTitle>
+        </DialogHeader>
+        <div className="h-[300px] mt-4">
+          <ResponsiveContainer width="100%" height="100%">
+            <LineChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--border))" />
+              <XAxis dataKey="time" tick={{ fontSize: 10 }} tickMargin={10} stroke="hsl(var(--muted-foreground))" />
+              <YAxis tick={{ fontSize: 10 }} stroke="hsl(var(--muted-foreground))" domain={['dataMin - 1', 'dataMax + 1']} />
+              <Tooltip 
+                contentStyle={{ backgroundColor: 'hsl(var(--card))', borderColor: 'hsl(var(--border))', borderRadius: '8px' }}
+                itemStyle={{ color: 'hsl(var(--foreground))' }}
+              />
+              <Line type="monotone" dataKey="value1" name={item.valName || `Value (${unit})`} stroke="#10b981" strokeWidth={2} dot={false} activeDot={{ r: 4 }} />
+              {item.val2 !== undefined && (
+                <Line type="monotone" dataKey="value2" name={item.val2Name || `Value 2 (${unit})`} stroke="#3b82f6" strokeWidth={2} dot={false} activeDot={{ r: 4 }} />
+              )}
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+}
 
 function AreaCard({ area }: { area: AreaDef }) {
   const isPtedWrapper = area.type === "pted-wrapper";
@@ -398,46 +450,52 @@ function AreaCard({ area }: { area: AreaDef }) {
                         { name: "UF 1", val: "26.2", id: "bag-filter-uf1" },
                         { name: "UF 2", val: "26.0", id: "bag-filter-uf2" }
                       ].map(t => (
-                        <Link to="/monitoring-area/$id" params={{ id: t.id }} key={t.name} className="flex flex-col p-3 rounded bg-secondary/30 border border-border/50 justify-center gap-1 hover:border-primary/50 hover:bg-secondary/80 transition-colors group">
-                          <span className="text-[10px] text-muted-foreground uppercase tracking-wider font-medium group-hover:text-primary transition-colors">{t.name}</span>
-                          <div className="flex items-baseline gap-1">
-                            <span className="font-mono text-3xl font-bold text-emerald-500">{t.val}</span>
-                            <span className="text-sm text-muted-foreground">°C</span>
-                          </div>
-                        </Link>
+                        <BagFilterItemDialog key={t.name} item={t}>
+                          <button className="flex flex-col text-left p-3 rounded bg-secondary/30 border border-border/50 justify-center gap-1 hover:border-primary/50 hover:bg-secondary/80 transition-colors group w-full">
+                            <span className="text-[10px] text-muted-foreground uppercase tracking-wider font-medium group-hover:text-primary transition-colors">{t.name}</span>
+                            <div className="flex items-baseline gap-1">
+                              <span className="font-mono text-3xl font-bold text-emerald-500">{t.val}</span>
+                              <span className="text-sm text-muted-foreground">°C</span>
+                            </div>
+                          </button>
+                        </BagFilterItemDialog>
                       ))}
                     </div>
 
                     <div className="grid grid-cols-2 gap-3 mt-auto">
-                      <Link to="/monitoring-area/$id" params={{ id: "bag-filter-he-pressure" }} className="p-3 rounded-lg bg-secondary/30 border border-border/50 flex flex-col gap-2 hover:border-primary/50 hover:bg-secondary/80 transition-colors group">
-                        <span className="text-[10px] font-semibold text-muted-foreground uppercase flex items-center gap-1.5 border-b border-border/50 pb-2 group-hover:text-primary transition-colors"><Gauge className="h-3.5 w-3.5" /> HE Pressure</span>
-                        <div className="flex justify-between mt-1 items-end">
-                          <div className="flex flex-col">
-                            <span className="text-[9px] text-muted-foreground mb-0.5">IN</span>
-                            <div className="flex items-baseline gap-1 whitespace-nowrap">
-                              <span className="font-mono text-2xl font-bold">4.5</span>
-                              <span className="text-xs font-normal text-muted-foreground">bar</span>
+                      <BagFilterItemDialog item={{ name: "HE Pressure", val: "4.5", val2: "3.2", id: "bag-filter-he-pressure", unit: "bar", valName: "IN (bar)", val2Name: "OUT (bar)" }}>
+                        <button className="p-3 rounded-lg bg-secondary/30 border border-border/50 flex flex-col gap-2 hover:border-primary/50 hover:bg-secondary/80 transition-colors group text-left w-full">
+                          <span className="text-[10px] font-semibold text-muted-foreground uppercase flex items-center gap-1.5 border-b border-border/50 pb-2 group-hover:text-primary transition-colors"><Gauge className="h-3.5 w-3.5" /> HE Pressure</span>
+                          <div className="flex justify-between mt-1 items-end">
+                            <div className="flex flex-col">
+                              <span className="text-[9px] text-muted-foreground mb-0.5">IN</span>
+                              <div className="flex items-baseline gap-1 whitespace-nowrap">
+                                <span className="font-mono text-2xl font-bold">4.5</span>
+                                <span className="text-xs font-normal text-muted-foreground">bar</span>
+                              </div>
+                            </div>
+                            <div className="flex flex-col items-end">
+                              <span className="text-[9px] text-muted-foreground mb-0.5">OUT</span>
+                              <div className="flex items-baseline gap-1 whitespace-nowrap">
+                                <span className="font-mono text-2xl font-bold text-blue-500">3.2</span>
+                                <span className="text-xs font-normal text-muted-foreground/70">bar</span>
+                              </div>
                             </div>
                           </div>
-                          <div className="flex flex-col items-end">
-                            <span className="text-[9px] text-muted-foreground mb-0.5">OUT</span>
+                        </button>
+                      </BagFilterItemDialog>
+                      <BagFilterItemDialog item={{ name: "UF Module", val: "15.0", id: "bag-filter-uf-module", unit: "m³/h" }}>
+                        <button className="p-3 rounded-lg bg-secondary/30 border border-border/50 flex flex-col gap-2 hover:border-primary/50 hover:bg-secondary/80 transition-colors group text-left w-full">
+                          <span className="text-[10px] font-semibold text-muted-foreground uppercase flex items-center gap-1.5 border-b border-border/50 pb-2 group-hover:text-primary transition-colors"><Waves className="h-3.5 w-3.5" /> UF Module</span>
+                          <div className="flex flex-col mt-1">
+                            <span className="text-[9px] text-muted-foreground mb-0.5">Flowmeter</span>
                             <div className="flex items-baseline gap-1 whitespace-nowrap">
-                              <span className="font-mono text-2xl font-bold text-blue-500">3.2</span>
-                              <span className="text-xs font-normal text-muted-foreground/70">bar</span>
+                              <span className="font-mono text-2xl font-bold text-emerald-500">15.0</span>
+                              <span className="text-xs font-normal text-muted-foreground">m³/h</span>
                             </div>
                           </div>
-                        </div>
-                      </Link>
-                      <Link to="/monitoring-area/$id" params={{ id: "bag-filter-uf-module" }} className="p-3 rounded-lg bg-secondary/30 border border-border/50 flex flex-col gap-2 hover:border-primary/50 hover:bg-secondary/80 transition-colors group">
-                        <span className="text-[10px] font-semibold text-muted-foreground uppercase flex items-center gap-1.5 border-b border-border/50 pb-2 group-hover:text-primary transition-colors"><Waves className="h-3.5 w-3.5" /> UF Module</span>
-                        <div className="flex flex-col mt-1">
-                          <span className="text-[9px] text-muted-foreground mb-0.5">Flowmeter</span>
-                          <div className="flex items-baseline gap-1 whitespace-nowrap">
-                            <span className="font-mono text-2xl font-bold text-emerald-500">15.0</span>
-                            <span className="text-xs font-normal text-muted-foreground">m³/h</span>
-                          </div>
-                        </div>
-                      </Link>
+                        </button>
+                      </BagFilterItemDialog>
                     </div>
                   </div>
                 </div>
