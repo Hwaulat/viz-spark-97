@@ -4,7 +4,7 @@ import { Panel } from "@/components/panel";
 import { Activity, Thermometer, Gauge, ArrowRight, Flame, Zap, Power, Filter, Waves } from "lucide-react";
 import { BOILERS } from "@/lib/mock-data";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine, Legend } from "recharts";
 
 export const Route = createFileRoute("/monitoring-area/")({
   head: () => ({
@@ -60,7 +60,7 @@ function BagFilterItemDialog({ item, children }: { item: { name: string, val: st
     return Array.from({ length: 30 }, (_, i) => {
       const time = new Date(Date.now() - (29 - i) * 60000);
       const res: any = {
-        time: time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        time: time.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }),
         value1: +(base1 + (Math.random() * (base1 * 0.05) - (base1 * 0.025))).toFixed(1),
       };
       if (base2 !== undefined) {
@@ -69,6 +69,9 @@ function BagFilterItemDialog({ item, children }: { item: { name: string, val: st
       return res;
     });
   }, [item.val, item.val2]);
+  
+  const minLimit1 = +(parseFloat(item.val) * 0.95).toFixed(1);
+  const minLimit2 = item.val2 ? +(parseFloat(item.val2) * 0.95).toFixed(1) : undefined;
   
   const unit = item.unit || "°C";
 
@@ -91,9 +94,14 @@ function BagFilterItemDialog({ item, children }: { item: { name: string, val: st
                 contentStyle={{ backgroundColor: 'hsl(var(--card))', borderColor: 'hsl(var(--border))', borderRadius: '8px' }}
                 itemStyle={{ color: 'hsl(var(--foreground))' }}
               />
-              <Line type="monotone" dataKey="value1" name={item.valName || `Value (${unit})`} stroke="#10b981" strokeWidth={2} dot={false} activeDot={{ r: 4 }} />
+              <Legend iconType="circle" wrapperStyle={{ fontSize: '11px', paddingTop: '10px' }} />
+              <ReferenceLine y={minLimit1} stroke="red" strokeDasharray="3 3" label={{ position: 'insideBottomLeft', value: 'Min Limit', fill: 'red', fontSize: 10 }} />
+              <Line type="monotone" dataKey="value1" name={item.valName || `Value (${unit})`} stroke="#3b82f6" strokeWidth={2} dot={false} activeDot={{ r: 4 }} />
               {item.val2 !== undefined && (
-                <Line type="monotone" dataKey="value2" name={item.val2Name || `Value 2 (${unit})`} stroke="#3b82f6" strokeWidth={2} dot={false} activeDot={{ r: 4 }} />
+                <>
+                  <ReferenceLine y={minLimit2} stroke="orange" strokeDasharray="3 3" label={{ position: 'insideBottomLeft', value: 'Min Limit 2', fill: 'orange', fontSize: 10 }} />
+                  <Line type="monotone" dataKey="value2" name={item.val2Name || `Value 2 (${unit})`} stroke="#10b981" strokeWidth={2} dot={false} activeDot={{ r: 4 }} />
+                </>
               )}
             </LineChart>
           </ResponsiveContainer>
