@@ -112,6 +112,14 @@ function BagFilterItemDialog({ item, children }: { item: { name: string, val: st
 
 function AreaCard({ area }: { area: AreaDef }) {
   const isPtedWrapper = area.type === "pted-wrapper";
+  
+  const getLimitColor = (val: string | number | undefined, min: number, max: number, defaultClass: string = "text-foreground") => {
+    if (val === undefined) return defaultClass;
+    const v = typeof val === "string" ? parseFloat(val) : val;
+    if (isNaN(v)) return defaultClass;
+    if (v < min || v > max) return "text-destructive font-bold";
+    return defaultClass;
+  };
 
   const content = (
             <Panel
@@ -134,8 +142,8 @@ function AreaCard({ area }: { area: AreaDef }) {
                           {b.id === 3 && <span className="ml-1 text-[9px] px-1.5 py-0.5 rounded font-bold bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400">NG</span>}
                         </span>
                         <div className="flex gap-4 text-xs font-mono items-center">
-    <span className="text-muted-foreground flex items-baseline gap-2">T1 <span className="text-foreground font-bold text-2xl">{b.temp1.toFixed(1)}°C</span></span>
-    <span className="text-muted-foreground flex items-baseline gap-2">T2 <span className="text-foreground font-bold text-2xl">{b.temp2.toFixed(1)}°C</span></span>
+    <span className="text-muted-foreground flex items-baseline gap-2">T1 <span className={`font-bold text-2xl ${getLimitColor(b.temp1, 175, 188)}`}>{b.temp1.toFixed(1)}°C</span></span>
+    <span className="text-muted-foreground flex items-baseline gap-2">T2 <span className={`font-bold text-2xl ${getLimitColor(b.temp2, 175, 188)}`}>{b.temp2.toFixed(1)}°C</span></span>
   </div>
                       </div>
 
@@ -270,7 +278,7 @@ function AreaCard({ area }: { area: AreaDef }) {
                       <div className="flex flex-col items-start">
                         <span className="text-muted-foreground/80 text-[9px] uppercase">PV</span>
                         <div className="flex items-baseline gap-0.5">
-                          <span className="text-2xl font-semibold tabular-nums">{area.largeTank?.pv}</span>
+                          <span className={`text-2xl font-semibold tabular-nums ${getLimitColor(area.largeTank?.pv, parseFloat(area.largeTank?.sp || "0") - 2, parseFloat(area.largeTank?.sp || "0") + 2)}`}>{area.largeTank?.pv}</span>
                           <span className="text-[10px] text-muted-foreground">°C</span>
                         </div>
                       </div>
@@ -291,7 +299,7 @@ function AreaCard({ area }: { area: AreaDef }) {
                       <div className="flex flex-col items-start">
                         <span className="text-muted-foreground/80 text-[9px] uppercase">PV</span>
                         <div className="flex items-baseline gap-0.5">
-                          <span className="text-2xl font-semibold tabular-nums">{area.smallTank?.pv}</span>
+                          <span className={`text-2xl font-semibold tabular-nums ${getLimitColor(area.smallTank?.pv, parseFloat(area.smallTank?.sp || "0") - 2, parseFloat(area.smallTank?.sp || "0") + 2)}`}>{area.smallTank?.pv}</span>
                           <span className="text-[10px] text-muted-foreground">°C</span>
                         </div>
                       </div>
@@ -312,21 +320,21 @@ function AreaCard({ area }: { area: AreaDef }) {
                   <div className="rounded bg-secondary/50 p-2 border border-border/50 flex flex-col justify-center items-center text-center">
                     <span className="text-[10px] text-muted-foreground uppercase tracking-widest mb-1 flex items-center gap-1"><Thermometer className="h-3 w-3" /> Temp 1</span>
                     <div className="flex items-baseline gap-1">
-                      <span className="text-xl font-bold font-mono">{area.oven.temp1}</span>
+                      <span className={`text-xl font-bold font-mono ${getLimitColor(area.oven.temp1, parseFloat(area.oven.temp1) - 5, parseFloat(area.oven.temp1) + 5)}`}>{area.oven.temp1}</span>
                       <span className="text-[10px] text-muted-foreground">°C</span>
                     </div>
                   </div>
                   <div className="rounded bg-secondary/50 p-2 border border-border/50 flex flex-col justify-center items-center text-center">
                     <span className="text-[10px] text-muted-foreground uppercase tracking-widest mb-1 flex items-center gap-1"><Thermometer className="h-3 w-3" /> Temp 2</span>
                     <div className="flex items-baseline gap-1">
-                      <span className="text-xl font-bold font-mono">{area.oven.temp2}</span>
+                      <span className={`text-xl font-bold font-mono ${getLimitColor(area.oven.temp2, parseFloat(area.oven.temp2) - 5, parseFloat(area.oven.temp2) + 5)}`}>{area.oven.temp2}</span>
                       <span className="text-[10px] text-muted-foreground">°C</span>
                     </div>
                   </div>
                   <div className="rounded bg-secondary/50 p-2 border border-border/50 flex flex-col justify-center items-center text-center">
                     <span className="text-[10px] text-muted-foreground uppercase tracking-widest mb-1 flex items-center gap-1"><Gauge className="h-3 w-3" /> Pressure</span>
                     <div className="flex items-baseline gap-1">
-                      <span className="text-xl font-bold font-mono">{area.oven.pressure}</span>
+                      <span className={`text-xl font-bold font-mono ${getLimitColor(area.oven.pressure, 1.8, 3.0)}`}>{area.oven.pressure}</span>
                       <span className="text-[10px] text-muted-foreground">bar</span>
                     </div>
                   </div>
@@ -420,11 +428,11 @@ function AreaCard({ area }: { area: AreaDef }) {
                           <div className="flex gap-5">
                             <div className="flex flex-col items-end">
                               <span className="text-[9px] text-muted-foreground uppercase flex items-center gap-1"><Thermometer className="h-3 w-3" /> Temp PV</span>
-                              <div className="flex items-baseline gap-1 mt-0.5"><span className="font-mono font-bold text-3xl">{eq.pv}</span><span className="text-sm text-muted-foreground">°C</span></div>
+                              <div className="flex items-baseline gap-1 mt-0.5"><span className={`font-mono font-bold text-3xl ${getLimitColor(eq.pv, parseFloat(eq.sp) - 2, parseFloat(eq.sp) + 2)}`}>{eq.pv}</span><span className="text-sm text-muted-foreground">°C</span></div>
                             </div>
                             <div className="flex flex-col items-end">
                               <span className="text-[9px] text-muted-foreground uppercase flex items-center gap-1"><Thermometer className="h-3 w-3" /> Temp SP</span>
-                              <div className="flex items-baseline gap-1 mt-0.5"><span className="font-mono font-bold text-3xl">{eq.sp}</span><span className="text-sm text-muted-foreground">°C</span></div>
+                              <div className="flex items-baseline gap-1 mt-0.5"><span className="font-mono font-bold text-3xl text-foreground">{eq.sp}</span><span className="text-sm text-muted-foreground">°C</span></div>
                             </div>
                           </div>
                         </Link>
@@ -454,7 +462,7 @@ function AreaCard({ area }: { area: AreaDef }) {
                           <button className="flex flex-col text-left p-3 rounded bg-secondary/30 border border-border/50 justify-center gap-1 hover:border-primary/50 hover:bg-secondary/80 transition-colors group w-full">
                             <span className="text-[10px] text-muted-foreground uppercase tracking-wider font-medium group-hover:text-primary transition-colors">{t.name}</span>
                             <div className="flex items-baseline gap-1">
-                              <span className="font-mono text-3xl font-bold text-emerald-500">{t.val}</span>
+                              <span className={`font-mono text-3xl font-bold ${getLimitColor(t.val, 20, 35, "text-emerald-500")}`}>{t.val}</span>
                               <span className="text-sm text-muted-foreground">°C</span>
                             </div>
                           </button>
@@ -470,14 +478,14 @@ function AreaCard({ area }: { area: AreaDef }) {
                             <div className="flex flex-col">
                               <span className="text-[9px] text-muted-foreground mb-0.5">IN</span>
                               <div className="flex items-baseline gap-1 whitespace-nowrap">
-                                <span className="font-mono text-2xl font-bold">4.5</span>
+                                <span className={`font-mono text-2xl font-bold ${getLimitColor("4.5", 4.0, 5.0)}`}>4.5</span>
                                 <span className="text-xs font-normal text-muted-foreground">bar</span>
                               </div>
                             </div>
                             <div className="flex flex-col items-end">
                               <span className="text-[9px] text-muted-foreground mb-0.5">OUT</span>
                               <div className="flex items-baseline gap-1 whitespace-nowrap">
-                                <span className="font-mono text-2xl font-bold text-blue-500">3.2</span>
+                                <span className={`font-mono text-2xl font-bold ${getLimitColor("3.2", 2.0, 4.0, "text-blue-500")}`}>3.2</span>
                                 <span className="text-xs font-normal text-muted-foreground/70">bar</span>
                               </div>
                             </div>
@@ -490,7 +498,7 @@ function AreaCard({ area }: { area: AreaDef }) {
                           <div className="flex flex-col mt-1">
                             <span className="text-[9px] text-muted-foreground mb-0.5">Flowmeter</span>
                             <div className="flex items-baseline gap-1 whitespace-nowrap">
-                              <span className="font-mono text-2xl font-bold text-emerald-500">15.0</span>
+                              <span className={`font-mono text-2xl font-bold ${getLimitColor("15.0", 10.0, 20.0, "text-emerald-500")}`}>15.0</span>
                               <span className="text-xs font-normal text-muted-foreground">m³/h</span>
                             </div>
                           </div>
