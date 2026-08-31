@@ -64,7 +64,6 @@ function OvenDetailContent({ id }: { id: string }) {
           <h2 className="text-xl font-bold flex items-center gap-2">
             <Activity className="h-5 w-5 text-primary" /> {name} Monitoring
           </h2>
-          <p className="text-sm text-muted-foreground mt-1">Real-time and historical process analysis.</p>
         </div>
       </div>
 
