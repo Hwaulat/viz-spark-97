@@ -495,6 +495,21 @@ function AreaCard({ area }: { area: AreaDef }) {
                         </button>
                       </BagFilterItemDialog>
                       
+                      <BagFilterItemDialog item={{ name: "UF Module", val: "15.0", id: "bag-filter-uf-module", unit: "L/Min", minStd: 10, maxStd: 20 }}>
+                        <button className="p-3 rounded-lg bg-secondary/30 border border-border/50 flex flex-col gap-2 hover:border-primary/50 hover:bg-secondary/80 transition-colors group text-left w-full h-full">
+                          <span className="text-[10px] font-semibold text-muted-foreground uppercase flex items-center gap-1.5 border-b border-border/50 pb-2 group-hover:text-primary transition-colors"><Waves className="h-3.5 w-3.5" /> UF Module</span>
+                          <div className="flex flex-col mt-1">
+                            <span className="text-[9px] text-muted-foreground mb-0.5">Flowmeter</span>
+                            <div className="flex items-baseline gap-1 whitespace-nowrap">
+                              <span className={`font-mono text-3xl font-bold ${getLimitColor("15.0", 10.0, 20.0, "text-emerald-500")}`}>15.0</span>
+                              <span className="text-xs font-normal text-muted-foreground">L/Min</span>
+                            </div>
+                          </div>
+                        </button>
+                      </BagFilterItemDialog>
+                    </div>
+
+                    <div className="mt-auto">
                       <BagFilterItemDialog item={{ name: "HE Pressure", val: "4.5", val2: "3.2", id: "bag-filter-he-pressure", unit: "bar", valName: "IN (bar)", val2Name: "OUT (bar)", minStd: 4.0, maxStd: 5.0, minStd2: 2.0, maxStd2: 4.0 }}>
                         <button className="p-3 rounded-lg bg-secondary/30 border border-border/50 flex flex-col gap-2 hover:border-primary/50 hover:bg-secondary/80 transition-colors group text-left w-full h-full">
                           <span className="text-[10px] font-semibold text-muted-foreground uppercase flex items-center gap-1.5 border-b border-border/50 pb-2 group-hover:text-primary transition-colors"><Gauge className="h-3.5 w-3.5" /> HE Pressure</span>
@@ -512,21 +527,6 @@ function AreaCard({ area }: { area: AreaDef }) {
                                 <span className={`font-mono text-3xl font-bold ${getLimitColor("3.2", 2.0, 4.0, "text-blue-500")}`}>3.2</span>
                                 <span className="text-xs font-normal text-muted-foreground/70">bar</span>
                               </div>
-                            </div>
-                          </div>
-                        </button>
-                      </BagFilterItemDialog>
-                    </div>
-
-                    <div className="mt-auto">
-                      <BagFilterItemDialog item={{ name: "UF Module", val: "15.0", id: "bag-filter-uf-module", unit: "L/Min", minStd: 10, maxStd: 20 }}>
-                        <button className="p-3 rounded-lg bg-secondary/30 border border-border/50 flex flex-col gap-2 hover:border-primary/50 hover:bg-secondary/80 transition-colors group text-left w-full h-full">
-                          <span className="text-[10px] font-semibold text-muted-foreground uppercase flex items-center gap-1.5 border-b border-border/50 pb-2 group-hover:text-primary transition-colors"><Waves className="h-3.5 w-3.5" /> UF Module</span>
-                          <div className="flex flex-col mt-1">
-                            <span className="text-[9px] text-muted-foreground mb-0.5">Flowmeter</span>
-                            <div className="flex items-baseline gap-1 whitespace-nowrap">
-                              <span className={`font-mono text-3xl font-bold ${getLimitColor("15.0", 10.0, 20.0, "text-emerald-500")}`}>15.0</span>
-                              <span className="text-xs font-normal text-muted-foreground">L/Min</span>
                             </div>
                           </div>
                         </button>
