@@ -52,7 +52,7 @@ const AREAS: AreaDef[] = [
   { id: "oven-ced", name: "Oven CED", type: "oven", oven: { temp1: "185.0", temp2: "182.5", pressure: "2.8" } },
 ];
 
-function BagFilterItemDialog({ item, children }: { item: { name: string, val: string, val2?: string, id: string, unit?: string, valName?: string, val2Name?: string }, children: React.ReactNode }) {
+function BagFilterItemDialog({ item, children }: { item: { name: string, val: string, val2?: string, id: string, unit?: string, valName?: string, val2Name?: string, minStd?: number, maxStd?: number, minStd2?: number, maxStd2?: number }, children: React.ReactNode }) {
   const data = useMemo(() => {
     const base1 = parseFloat(item.val);
     const base2 = item.val2 ? parseFloat(item.val2) : undefined;
@@ -69,8 +69,10 @@ function BagFilterItemDialog({ item, children }: { item: { name: string, val: st
     });
   }, [item.val, item.val2]);
   
-  const minLimit1 = +(parseFloat(item.val) * 0.95).toFixed(1);
-  const minLimit2 = item.val2 ? +(parseFloat(item.val2) * 0.95).toFixed(1) : undefined;
+  const minLimit1 = item.minStd !== undefined ? item.minStd : +(parseFloat(item.val) * 0.95).toFixed(1);
+  const maxLimit1 = item.maxStd;
+  const minLimit2 = item.minStd2 !== undefined ? item.minStd2 : (item.val2 ? +(parseFloat(item.val2) * 0.95).toFixed(1) : undefined);
+  const maxLimit2 = item.maxStd2;
   
   const unit = item.unit || "°C";
 
@@ -94,11 +96,13 @@ function BagFilterItemDialog({ item, children }: { item: { name: string, val: st
                 itemStyle={{ color: 'hsl(var(--foreground))' }}
               />
               <Legend iconType="circle" wrapperStyle={{ fontSize: '11px', paddingTop: '10px' }} />
-              <ReferenceLine y={minLimit1} stroke="red" strokeDasharray="3 3" label={{ position: 'insideBottomLeft', value: 'Min Limit', fill: 'red', fontSize: 10 }} />
+              {minLimit1 !== undefined && <ReferenceLine y={minLimit1} stroke="red" strokeDasharray="3 3" label={{ position: 'insideBottomLeft', value: `Min Limit ${item.minStd !== undefined ? `(${item.minStd})` : ''}`, fill: 'red', fontSize: 10 }} />}
+              {maxLimit1 !== undefined && <ReferenceLine y={maxLimit1} stroke="red" strokeDasharray="3 3" label={{ position: 'insideTopLeft', value: `Max Limit (${item.maxStd})`, fill: 'red', fontSize: 10 }} />}
               <Line type="monotone" dataKey="value1" name={item.valName || `Value (${unit})`} stroke="#3b82f6" strokeWidth={2} dot={false} activeDot={{ r: 4 }} />
               {item.val2 !== undefined && (
                 <>
-                  <ReferenceLine y={minLimit2} stroke="orange" strokeDasharray="3 3" label={{ position: 'insideBottomLeft', value: 'Min Limit 2', fill: 'orange', fontSize: 10 }} />
+                  {minLimit2 !== undefined && <ReferenceLine y={minLimit2} stroke="orange" strokeDasharray="3 3" label={{ position: 'insideBottomLeft', value: `Min Limit 2 ${item.minStd2 !== undefined ? `(${item.minStd2})` : ''}`, fill: 'orange', fontSize: 10 }} />}
+                  {maxLimit2 !== undefined && <ReferenceLine y={maxLimit2} stroke="orange" strokeDasharray="3 3" label={{ position: 'insideTopLeft', value: `Max Limit 2 (${item.maxStd2})`, fill: 'orange', fontSize: 10 }} />}
                   <Line type="monotone" dataKey="value2" name={item.val2Name || `Value 2 (${unit})`} stroke="#10b981" strokeWidth={2} dot={false} activeDot={{ r: 4 }} />
                 </>
               )}
@@ -470,8 +474,8 @@ function AreaCard({ area }: { area: AreaDef }) {
                       ))}
                     </div>
 
-                    <div className="grid grid-cols-2 gap-3 mt-auto">
-                      <BagFilterItemDialog item={{ name: "HE Pressure", val: "4.5", val2: "3.2", id: "bag-filter-he-pressure", unit: "bar", valName: "IN (bar)", val2Name: "OUT (bar)" }}>
+                    <div className="grid grid-cols-3 gap-3 mt-auto">
+                      <BagFilterItemDialog item={{ name: "HE Pressure", val: "4.5", val2: "3.2", id: "bag-filter-he-pressure", unit: "bar", valName: "IN (bar)", val2Name: "OUT (bar)", minStd: 4.0, maxStd: 5.0, minStd2: 2.0, maxStd2: 4.0 }}>
                         <button className="p-3 rounded-lg bg-secondary/30 border border-border/50 flex flex-col gap-2 hover:border-primary/50 hover:bg-secondary/80 transition-colors group text-left w-full">
                           <span className="text-[10px] font-semibold text-muted-foreground uppercase flex items-center gap-1.5 border-b border-border/50 pb-2 group-hover:text-primary transition-colors"><Gauge className="h-3.5 w-3.5" /> HE Pressure</span>
                           <div className="flex justify-between mt-1 items-end">
@@ -492,14 +496,33 @@ function AreaCard({ area }: { area: AreaDef }) {
                           </div>
                         </button>
                       </BagFilterItemDialog>
-                      <BagFilterItemDialog item={{ name: "UF Module", val: "15.0", id: "bag-filter-uf-module", unit: "m³/h" }}>
-                        <button className="p-3 rounded-lg bg-secondary/30 border border-border/50 flex flex-col gap-2 hover:border-primary/50 hover:bg-secondary/80 transition-colors group text-left w-full">
+                      <BagFilterItemDialog item={{ name: "UF Module", val: "15.0", id: "bag-filter-uf-module", unit: "L/Min", minStd: 10, maxStd: 20 }}>
+                        <button className="p-3 rounded-lg bg-secondary/30 border border-border/50 flex flex-col gap-2 hover:border-primary/50 hover:bg-secondary/80 transition-colors group text-left w-full h-full">
                           <span className="text-[10px] font-semibold text-muted-foreground uppercase flex items-center gap-1.5 border-b border-border/50 pb-2 group-hover:text-primary transition-colors"><Waves className="h-3.5 w-3.5" /> UF Module</span>
                           <div className="flex flex-col mt-1">
                             <span className="text-[9px] text-muted-foreground mb-0.5">Flowmeter</span>
                             <div className="flex items-baseline gap-1 whitespace-nowrap">
                               <span className={`font-mono text-2xl font-bold ${getLimitColor("15.0", 10.0, 20.0, "text-emerald-500")}`}>15.0</span>
-                              <span className="text-xs font-normal text-muted-foreground">m³/h</span>
+                              <span className="text-xs font-normal text-muted-foreground">L/Min</span>
+                            </div>
+                          </div>
+                        </button>
+                      </BagFilterItemDialog>
+                      <BagFilterItemDialog item={{ name: "UF 1 & UF 2 Tank", val: "120.5", val2: "118.2", id: "bag-filter-uf-tank", unit: "µS/cm", valName: "UF 1 Cond", val2Name: "UF 2 Cond", minStd: 100, maxStd: 150, minStd2: 100, maxStd2: 150 }}>
+                        <button className="p-3 rounded-lg bg-secondary/30 border border-border/50 flex flex-col gap-2 hover:border-primary/50 hover:bg-secondary/80 transition-colors group text-left w-full h-full">
+                          <span className="text-[10px] font-semibold text-muted-foreground uppercase flex items-center gap-1.5 border-b border-border/50 pb-2 group-hover:text-primary transition-colors"><Waves className="h-3.5 w-3.5" /> UF 1 & 2 Tank</span>
+                          <div className="flex justify-between mt-1 items-end h-full">
+                            <div className="flex flex-col">
+                              <span className="text-[9px] text-muted-foreground mb-0.5">UF 1</span>
+                              <div className="flex items-baseline gap-1 whitespace-nowrap">
+                                <span className={`font-mono text-2xl font-bold ${getLimitColor("120.5", 100, 150)}`}>120.5</span>
+                              </div>
+                            </div>
+                            <div className="flex flex-col items-end">
+                              <span className="text-[9px] text-muted-foreground mb-0.5">UF 2</span>
+                              <div className="flex items-baseline gap-1 whitespace-nowrap">
+                                <span className={`font-mono text-2xl font-bold ${getLimitColor("118.2", 100, 150, "text-blue-500")}`}>118.2</span>
+                              </div>
                             </div>
                           </div>
                         </button>

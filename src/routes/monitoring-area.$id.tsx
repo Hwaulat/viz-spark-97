@@ -241,6 +241,32 @@ function StationDetailContent({ tabKey }: { tabKey: string }) {
         </Panel>
       </div>
 
+      {/* Temperature Trend Chart */}
+      <Panel className="mb-6" title="Temperature Trends">
+        <div className="h-[300px] w-full p-4">
+          <ResponsiveContainer width="100%" height="100%">
+            <LineChart 
+              data={Array.from({ length: 30 }, (_, i) => {
+                const time = new Date(Date.now() - (29 - i) * 60000);
+                return {
+                  time: time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                  pv: +(parseFloat(data.pv) + (Math.random() * 2 - 1)).toFixed(1),
+                };
+              })} 
+              margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
+            >
+              <CartesianGrid strokeDasharray="3 3" vertical={false} opacity={0.3} />
+              <XAxis dataKey="time" tick={{ fontSize: 10 }} tickMargin={10} />
+              <YAxis tick={{ fontSize: 10 }} domain={['dataMin - 2', 'dataMax + 2']} />
+              <Tooltip contentStyle={{ backgroundColor: "rgba(0,0,0,0.8)", borderRadius: "8px", border: "1px solid rgba(255,255,255,0.1)" }} itemStyle={{ fontSize: 12 }} />
+              <Legend wrapperStyle={{ fontSize: "12px", paddingTop: "10px" }} />
+              <ReferenceLine y={parseFloat(data.sp)} stroke="#ef4444" strokeDasharray="3 3" label={{ position: 'insideBottomLeft', value: `Set Point (${data.sp}°C)`, fill: '#ef4444', fontSize: 10 }} />
+              <Line type="monotone" dataKey="pv" name="Actual Temp" stroke="#3b82f6" strokeWidth={2} dot={false} activeDot={{ r: 4 }} />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
+      </Panel>
+
       {/* Station Illustration */}
       <div className="border border-border/50 rounded-xl overflow-hidden bg-background">
         <div className="flex justify-between items-center p-3 bg-secondary/30 border-b border-border/50">
