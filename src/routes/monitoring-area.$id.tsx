@@ -331,7 +331,7 @@ function MonitoringAreaDetails() {
             <div className="grid gap-4 sm:grid-cols-3">
               <ValueDisplay label="Gas Flow" value={BOILER_GAS.instantFlow} unit="m³/h" tone="warn" />
               <ValueDisplay label="Gas Pressure" value={BOILER_GAS.gasPressure} unit="bar" tone="ok" />
-              <ValueDisplay label="Power Panel" value={BOILER_GAS.powerPanel} unit="kW" tone="default" />
+              <ValueDisplay label="Power Panel" value={BOILER_GAS.powerPanel} unit="kw/h" tone="default" />
             </div>
           </Panel>
 
@@ -571,6 +571,8 @@ function MonitoringAreaDetails() {
                             <YAxis tick={{ fontSize: 10 }} />
                             <Tooltip contentStyle={{ backgroundColor: "rgba(0,0,0,0.8)", borderRadius: "8px", border: "1px solid rgba(255,255,255,0.1)" }} itemStyle={{ fontSize: 12 }} />
                             <Legend wrapperStyle={{ fontSize: "12px", paddingTop: "10px" }} />
+                            <ReferenceLine y={190} stroke="#ef4444" strokeDasharray="3 3" label={{ position: 'insideBottomLeft', value: 'Min Std (190°C)', fill: '#ef4444', fontSize: 10 }} />
+                            <ReferenceLine y={230} stroke="#ef4444" strokeDasharray="3 3" label={{ position: 'insideTopLeft', value: 'Max Std (230°C)', fill: '#ef4444', fontSize: 10 }} />
                             <Line type="monotone" dataKey={historicalBoilerTab === "Boiler 1" ? "temp1_b1" : historicalBoilerTab === "Boiler 2" ? "temp1_b2" : "temp1_b3"} name="Actual Temp 1" stroke="#f97316" strokeWidth={2} dot={false} activeDot={{ r: 4 }} />
                             <Line type="monotone" dataKey={historicalBoilerTab === "Boiler 1" ? "temp2_b1" : historicalBoilerTab === "Boiler 2" ? "temp2_b2" : "temp2_b3"} name="Actual Temp 2" stroke="#ef4444" strokeWidth={2} dot={false} activeDot={{ r: 4 }} />
                           </LineChart>
@@ -588,6 +590,8 @@ function MonitoringAreaDetails() {
                             <YAxis tick={{ fontSize: 10 }} />
                             <Tooltip contentStyle={{ backgroundColor: "rgba(0,0,0,0.8)", borderRadius: "8px", border: "1px solid rgba(255,255,255,0.1)" }} itemStyle={{ fontSize: 12 }} />
                             <Legend wrapperStyle={{ fontSize: "12px", paddingTop: "10px" }} />
+                            <ReferenceLine y={4} stroke="#ef4444" strokeDasharray="3 3" label={{ position: 'insideBottomLeft', value: 'Min Std (4 bar)', fill: '#ef4444', fontSize: 10 }} />
+                            <ReferenceLine y={8} stroke="#ef4444" strokeDasharray="3 3" label={{ position: 'insideTopLeft', value: 'Max Std (8 bar)', fill: '#ef4444', fontSize: 10 }} />
                             <Line type="monotone" dataKey="pressure" name="Pressure (bar)" stroke="#3b82f6" strokeWidth={2} dot={false} activeDot={{ r: 4 }} />
                           </LineChart>
                         </ResponsiveContainer>
