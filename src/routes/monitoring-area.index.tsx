@@ -81,23 +81,24 @@ function BagFilterItemDialog({ item, children }: { item: { name: string, val: st
       <DialogTrigger asChild>
         {children}
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[600px]">
-        <DialogHeader>
-          <DialogTitle>{item.name} - Historical Trend</DialogTitle>
+      <DialogContent className="sm:max-w-[900px] p-6">
+        <DialogHeader className="border-b border-border/50 pb-4 mb-2">
+          <DialogTitle className="uppercase text-xs font-bold text-muted-foreground tracking-wider text-left">{item.name} TRENDS</DialogTitle>
         </DialogHeader>
-        <div className="h-[300px] mt-4">
+        <div className="h-[350px] w-full">
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--border))" />
-              <XAxis dataKey="time" tick={{ fontSize: 10 }} tickMargin={10} stroke="hsl(var(--muted-foreground))" />
-              <YAxis tick={{ fontSize: 10 }} stroke="hsl(var(--muted-foreground))" domain={['dataMin - 1', 'dataMax + 1']} />
+              <CartesianGrid strokeDasharray="3 3" vertical={true} horizontal={false} stroke="hsl(var(--border))" opacity={0.5} />
+              <XAxis dataKey="time" tick={{ fontSize: 10 }} tickMargin={10} stroke="hsl(var(--muted-foreground))" axisLine={{ stroke: 'hsl(var(--border))' }} tickLine={false} />
+              <YAxis tick={{ fontSize: 10 }} stroke="hsl(var(--muted-foreground))" domain={['dataMin - 1', 'dataMax + 1']} axisLine={{ stroke: 'hsl(var(--border))' }} tickLine={false} />
               <Tooltip 
-                contentStyle={{ backgroundColor: 'hsl(var(--card))', borderColor: 'hsl(var(--border))', borderRadius: '8px' }}
-                itemStyle={{ color: 'hsl(var(--foreground))' }}
+                contentStyle={{ backgroundColor: 'rgba(0,0,0,0.8)', borderColor: 'rgba(255,255,255,0.1)', borderRadius: '8px' }}
+                itemStyle={{ color: '#fff', fontSize: '12px' }}
+                labelStyle={{ color: '#aaa', fontSize: '12px', marginBottom: '4px' }}
               />
               <Legend iconType="circle" wrapperStyle={{ fontSize: '11px', paddingTop: '10px' }} />
-              {minLimit1 !== undefined && <ReferenceLine y={minLimit1} stroke="red" strokeDasharray="3 3" label={{ position: 'insideBottomLeft', value: `Min Limit ${item.minStd !== undefined ? `(${item.minStd})` : ''}`, fill: 'red', fontSize: 10 }} />}
-              {maxLimit1 !== undefined && <ReferenceLine y={maxLimit1} stroke="red" strokeDasharray="3 3" label={{ position: 'insideTopLeft', value: `Max Limit (${item.maxStd})`, fill: 'red', fontSize: 10 }} />}
+              {minLimit1 !== undefined && <ReferenceLine y={minLimit1} stroke="#ef4444" strokeDasharray="3 3" label={{ position: 'insideBottomLeft', value: `Min Limit ${item.minStd !== undefined ? `(${item.minStd})` : ''}`, fill: '#ef4444', fontSize: 10 }} />}
+              {maxLimit1 !== undefined && <ReferenceLine y={maxLimit1} stroke="#ef4444" strokeDasharray="3 3" label={{ position: 'insideTopLeft', value: `Max Limit (${item.maxStd})`, fill: '#ef4444', fontSize: 10 }} />}
               <Line type="monotone" dataKey="value1" name={item.valName || `Value (${unit})`} stroke="#3b82f6" strokeWidth={2} dot={false} activeDot={{ r: 4 }} />
               {item.val2 !== undefined && (
                 <>
