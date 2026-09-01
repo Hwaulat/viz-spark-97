@@ -241,8 +241,33 @@ function StationDetailContent({ tabKey }: { tabKey: string }) {
         </Panel>
       </div>
 
+      {/* Station Illustration */}
+      <div className="border border-border/50 rounded-xl overflow-hidden bg-background mb-6">
+        <div className="flex justify-between items-center p-3 bg-secondary/30 border-b border-border/50">
+          <div className="flex items-center gap-2">
+            <Activity className="h-4 w-4 text-muted-foreground" />
+            <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Station Diagram — {data.name}</span>
+          </div>
+          <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-orange-500/10 text-orange-600 border border-orange-500/20">READ-ONLY</span>
+        </div>
+        
+        <div className="relative w-full overflow-auto flex items-center justify-center p-4">
+          {tabKey === "pre-degreasing" ? (
+            <img src={StationPreDegreasingPng} alt={`Station ${data.name}`} className="w-full h-auto object-contain mix-blend-multiply dark:mix-blend-screen dark:invert" />
+          ) : tabKey === "degreasing" ? (
+            <img src={StationDegreasingPng} alt={`Station ${data.name}`} className="w-full h-auto object-contain mix-blend-multiply dark:mix-blend-screen dark:invert" />
+          ) : tabKey === "flood" ? (
+            <img src={StationFloodPng} alt={`Station ${data.name}`} className="w-full h-auto object-contain mix-blend-multiply dark:mix-blend-screen dark:invert" />
+          ) : tabKey === "phosphate" ? (
+            <img src={StationPhosphatePng} alt={`Station ${data.name}`} className="w-full h-auto object-contain mix-blend-multiply dark:mix-blend-screen dark:invert" />
+          ) : (
+            <div className="w-full h-[400px] flex items-center justify-center text-muted-foreground text-sm">Station diagram coming soon</div>
+          )}
+        </div>
+      </div>
+
       {/* Temperature Trend Chart */}
-      <Panel className="mb-6" title="Temperature Trends">
+      <Panel title="Temperature Trends">
         <div className="h-[300px] w-full p-4">
           <ResponsiveContainer width="100%" height="100%">
             <LineChart 
@@ -266,31 +291,6 @@ function StationDetailContent({ tabKey }: { tabKey: string }) {
           </ResponsiveContainer>
         </div>
       </Panel>
-
-      {/* Station Illustration */}
-      <div className="border border-border/50 rounded-xl overflow-hidden bg-background">
-        <div className="flex justify-between items-center p-3 bg-secondary/30 border-b border-border/50">
-          <div className="flex items-center gap-2">
-            <Activity className="h-4 w-4 text-muted-foreground" />
-            <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Station Diagram — {data.name}</span>
-          </div>
-          <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-orange-500/10 text-orange-600 border border-orange-500/20">READ-ONLY</span>
-        </div>
-        
-        <div className="relative w-full overflow-auto flex items-center justify-center p-4">
-          {tabKey === "pre-degreasing" ? (
-            <img src={StationPreDegreasingPng} alt={`Station ${data.name}`} className="w-full h-auto object-contain mix-blend-multiply dark:mix-blend-screen dark:invert" />
-          ) : tabKey === "degreasing" ? (
-            <img src={StationDegreasingPng} alt={`Station ${data.name}`} className="w-full h-auto object-contain mix-blend-multiply dark:mix-blend-screen dark:invert" />
-          ) : tabKey === "flood" ? (
-            <img src={StationFloodPng} alt={`Station ${data.name}`} className="w-full h-auto object-contain mix-blend-multiply dark:mix-blend-screen dark:invert" />
-          ) : tabKey === "phosphate" ? (
-            <img src={StationPhosphatePng} alt={`Station ${data.name}`} className="w-full h-auto object-contain mix-blend-multiply dark:mix-blend-screen dark:invert" />
-          ) : (
-            <div className="w-full h-[400px] flex items-center justify-center text-muted-foreground text-sm">Station diagram coming soon</div>
-          )}
-        </div>
-      </div>
     </div>
   );
 }
