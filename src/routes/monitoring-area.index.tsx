@@ -52,7 +52,7 @@ const AREAS: AreaDef[] = [
   { id: "oven-ced", name: "Oven CED", type: "oven", oven: { temp1: "185.0", temp2: "182.5", pressure: "2.8" } },
 ];
 
-function BagFilterItemDialog({ item, children }: { item: { name: string, val: string, val2?: string, id: string, unit?: string, valName?: string, val2Name?: string, minStd?: number, maxStd?: number, minStd2?: number, maxStd2?: number }, children: React.ReactNode }) {
+function BagFilterItemDialog({ item, children }: { item: { name: string, val: string, val2?: string, id: string, unit?: string, valName?: string, val2Name?: string, minStd?: number, maxStd?: number, minStd2?: number, maxStd2?: number, minStdName?: string, maxStdName?: string, minStd2Name?: string, maxStd2Name?: string }, children: React.ReactNode }) {
   const data = useMemo(() => {
     const base1 = parseFloat(item.val);
     const base2 = item.val2 ? parseFloat(item.val2) : undefined;
@@ -97,13 +97,13 @@ function BagFilterItemDialog({ item, children }: { item: { name: string, val: st
                 labelStyle={{ color: '#aaa', fontSize: '12px', marginBottom: '4px' }}
               />
               <Legend iconType="circle" wrapperStyle={{ fontSize: '11px', paddingTop: '10px' }} />
-              {minLimit1 !== undefined && <ReferenceLine y={minLimit1} stroke="#ef4444" strokeDasharray="3 3" label={{ position: 'insideBottomLeft', value: `Min Limit ${item.minStd !== undefined ? `(${item.minStd})` : ''}`, fill: '#ef4444', fontSize: 10 }} />}
-              {maxLimit1 !== undefined && <ReferenceLine y={maxLimit1} stroke="#ef4444" strokeDasharray="3 3" label={{ position: 'insideTopLeft', value: `Max Limit (${item.maxStd})`, fill: '#ef4444', fontSize: 10 }} />}
+              {minLimit1 !== undefined && <ReferenceLine y={minLimit1} stroke="#ef4444" strokeDasharray="3 3" label={{ position: 'insideBottomLeft', value: `${item.minStdName || 'Standard MIN'} ${item.minStd !== undefined ? `(${item.minStd})` : ''}`, fill: '#ef4444', fontSize: 10 }} />}
+              {maxLimit1 !== undefined && <ReferenceLine y={maxLimit1} stroke="#ef4444" strokeDasharray="3 3" label={{ position: 'insideTopLeft', value: `${item.maxStdName || 'Standard MAX'} ${item.maxStd !== undefined ? `(${item.maxStd})` : ''}`, fill: '#ef4444', fontSize: 10 }} />}
               <Line type="monotone" dataKey="value1" name={item.valName || `Value (${unit})`} stroke="#3b82f6" strokeWidth={2} dot={false} activeDot={{ r: 4 }} />
               {item.val2 !== undefined && (
                 <>
-                  {minLimit2 !== undefined && <ReferenceLine y={minLimit2} stroke="orange" strokeDasharray="3 3" label={{ position: 'insideBottomLeft', value: `Min Limit 2 ${item.minStd2 !== undefined ? `(${item.minStd2})` : ''}`, fill: 'orange', fontSize: 10 }} />}
-                  {maxLimit2 !== undefined && <ReferenceLine y={maxLimit2} stroke="orange" strokeDasharray="3 3" label={{ position: 'insideTopLeft', value: `Max Limit 2 (${item.maxStd2})`, fill: 'orange', fontSize: 10 }} />}
+                  {minLimit2 !== undefined && <ReferenceLine y={minLimit2} stroke="orange" strokeDasharray="3 3" label={{ position: 'insideBottomLeft', value: `${item.minStd2Name || 'Standard MIN'} ${item.minStd2 !== undefined ? `(${item.minStd2})` : ''}`, fill: 'orange', fontSize: 10 }} />}
+                  {maxLimit2 !== undefined && <ReferenceLine y={maxLimit2} stroke="orange" strokeDasharray="3 3" label={{ position: 'insideTopLeft', value: `${item.maxStd2Name || 'Standard MAX'} ${item.maxStd2 !== undefined ? `(${item.maxStd2})` : ''}`, fill: 'orange', fontSize: 10 }} />}
                   <Line type="monotone" dataKey="value2" name={item.val2Name || `Value 2 (${unit})`} stroke="#10b981" strokeWidth={2} dot={false} activeDot={{ r: 4 }} />
                 </>
               )}
@@ -453,15 +453,16 @@ function AreaCard({ area }: { area: AreaDef }) {
                     
                     <div className="grid grid-cols-3 gap-2 mb-4 flex-1">
                       {[
-                        { name: "Pre Degreasing", val: "45.5", id: "bag-filter-pre-deg" },
-                        { name: "Degreasing", val: "34.8", id: "bag-filter-deg" },
-                        { name: "DI 1", val: "25.0", id: "bag-filter-di1" },
-                        { name: "DI 2", val: "25.1", id: "bag-filter-di2" },
-                        { name: "WR 5", val: "24.9", id: "bag-filter-wr5" },
-                        { name: "CED 1", val: "28.5", id: "bag-filter-ced1" },
-                        { name: "CED 2", val: "28.3", id: "bag-filter-ced2" },
-                        { name: "UF 1", val: "26.2", id: "bag-filter-uf1" },
-                        { name: "UF 2", val: "26.0", id: "bag-filter-uf2" }
+                        { name: "Pre Degreasing", val: "45.5", id: "bag-filter-pre-deg", minStd: 20, maxStd: 35 },
+                        { name: "Degreasing", val: "34.8", id: "bag-filter-deg", minStd: 20, maxStd: 35 },
+                        { name: "DI 1", val: "25.0", id: "bag-filter-di1", minStd: 20, maxStd: 35 },
+                        { name: "DI 2", val: "25.1", id: "bag-filter-di2", minStd: 20, maxStd: 35 },
+                        { name: "WR 5", val: "24.9", id: "bag-filter-wr5", minStd: 20, maxStd: 35 },
+                        { name: "CED 1", val: "28.5", id: "bag-filter-ced1", minStd: 20, maxStd: 35 },
+                        { name: "CED 2", val: "28.3", id: "bag-filter-ced2", minStd: 20, maxStd: 35 },
+                        { name: "UF 1", val: "26.2", id: "bag-filter-uf1", minStd: 20, maxStd: 35 },
+                        { name: "UF 2", val: "26.0", id: "bag-filter-uf2", minStd: 20, maxStd: 35 }
+
                       ].map(t => (
                         <BagFilterItemDialog key={t.name} item={t}>
                           <button className="flex flex-col text-left p-3 rounded bg-secondary/30 border border-border/50 justify-center gap-1 hover:border-primary/50 hover:bg-secondary/80 transition-colors group w-full">
@@ -476,7 +477,7 @@ function AreaCard({ area }: { area: AreaDef }) {
                     </div>
 
                     <div className="grid grid-cols-2 gap-3 mb-3">
-                      <BagFilterItemDialog item={{ name: "UF 1 & UF 2 Tank", val: "120.5", val2: "118.2", id: "bag-filter-uf-tank", unit: "µS/cm", valName: "UF 1 Cond", val2Name: "UF 2 Cond", minStd: 100, maxStd: 150, minStd2: 100, maxStd2: 150 }}>
+                      <BagFilterItemDialog item={{ name: "UF 1 & UF 2 Tank", val: "120.5", val2: "118.2", id: "bag-filter-uf-tank", unit: "µS/cm", valName: "UF 1 Cond", val2Name: "UF 2 Cond", minStd: 100, maxStd: 150, minStd2: 100, maxStd2: 150, minStdName: "Standard Conductivity 1 MIN", maxStdName: "Standard Conductivity 1 MAX", minStd2Name: "Standard Conductivity 2 MIN", maxStd2Name: "Standard Conductivity 2 MAX" }}>
                         <button className="p-3 rounded-lg bg-secondary/30 border border-border/50 flex flex-col gap-2 hover:border-primary/50 hover:bg-secondary/80 transition-colors group text-left w-full h-full">
                           <span className="text-[10px] font-semibold text-muted-foreground uppercase flex items-center gap-1.5 border-b border-border/50 pb-2 group-hover:text-primary transition-colors"><Waves className="h-3.5 w-3.5" /> UF 1 & 2 Tank</span>
                           <div className="flex justify-between mt-1 items-end h-full">
