@@ -84,7 +84,8 @@ function generateControlPointData(dates: string[], seedPrefix: string) {
       standardAlkali: 18.0,
       morningTemp: Math.floor(baseTemp + 2),
       afternoonTemp: Math.floor(baseTemp - 2),
-      standardTemp: 40,
+      standardTempMin: 35,
+      standardTempMax: 45,
     };
   });
 }
@@ -97,10 +98,12 @@ function generateSurfaceConditioningData(dates: string[], seedPrefix: string) {
       date: date.padStart(2, "0"),
       morningAlkali: Number((baseAlkali + 0.2).toFixed(1)),
       afternoonAlkali: Number((baseAlkali - 0.2).toFixed(1)),
-      standardAlkali: 4.5,
+      standardAlkaliMin: 4.0,
+      standardAlkaliMax: 5.0,
       morningPh: Number((basePh + 0.2).toFixed(1)),
       afternoonPh: Number((basePh - 0.2).toFixed(1)),
-      standardPh: 9.8,
+      standardPhMin: 9.0,
+      standardPhMax: 10.0,
     };
   });
 }
@@ -115,16 +118,20 @@ function generatePhosphateData(dates: string[], seedPrefix: string) {
       date: date.padStart(2, "0"),
       morningTA: Number((baseTA + 0.5).toFixed(1)),
       afternoonTA: Number((baseTA - 0.3).toFixed(1)),
-      standardTA: 22.0,
+      standardTAMin: 20.0,
+      standardTAMax: 24.0,
       morningFA: Number((baseFA + 0.05).toFixed(1)),
       afternoonFA: Number((baseFA - 0.05).toFixed(1)),
-      standardFA: 0.8,
+      standardFAMin: 0.6,
+      standardFAMax: 1.0,
       morningAC: Number((baseAC + 0.2).toFixed(1)),
       afternoonAC: Number((baseAC - 0.2).toFixed(1)),
-      standardAC: 4.5,
+      standardACMin: 3.5,
+      standardACMax: 5.5,
       morningTemp: Math.floor(baseTemp + 2),
       afternoonTemp: Math.floor(baseTemp - 2),
-      standardTemp: 40,
+      standardTempMin: 35,
+      standardTempMax: 45,
     };
   });
 }
@@ -1075,7 +1082,6 @@ function DashboardChecksheet() {
                   <Bar dataKey="mixing" name="Mixing" fill="#3b82f6" radius={[4, 4, 0, 0]} />
                   <Bar dataKey="mini" name="Mini" fill="#1d4ed8" radius={[4, 4, 0, 0]} />
                   <Bar dataKey="pted" name="PTED" fill="#1e3a8a" radius={[4, 4, 0, 0]} />
-                  <Line type="monotone" dataKey="standard" name="Standard" stroke="#ef4444" strokeWidth={2} dot={false} strokeDasharray="5 5" />
                 </ComposedChart>
               </ResponsiveContainer>
             </div>
@@ -1227,7 +1233,8 @@ function DashboardChecksheet() {
                         dot={{ r: 4, fill: "#3b82f6", strokeWidth: 2 }}
                         activeDot={{ r: 6 }}
                       />
-                      <Line type="monotone" dataKey="standardTemp" name="Standard" stroke="#ef4444" strokeWidth={2} dot={false} strokeDasharray="5 5" />
+                      <Line type="monotone" dataKey="standardTempMin" name="Standard Min" stroke="#ef4444" strokeWidth={2} dot={false} strokeDasharray="5 5" opacity={0.7} />
+                      <Line type="monotone" dataKey="standardTempMax" name="Standard Max" stroke="#ef4444" strokeWidth={2} dot={false} strokeDasharray="5 5" opacity={0.7} />
                     </LineChart>
                   </ResponsiveContainer>
                 </div>
@@ -1316,7 +1323,8 @@ function DashboardChecksheet() {
                         dot={{ r: 4, fill: "#3b82f6", strokeWidth: 2 }}
                         activeDot={{ r: 6 }}
                       />
-                      <Line type="monotone" dataKey="standardAlkali" name="Standard" stroke="#ef4444" strokeWidth={2} dot={false} strokeDasharray="5 5" />
+                      <Line type="monotone" dataKey="standardAlkaliMin" name="Standard Min" stroke="#ef4444" strokeWidth={2} dot={false} strokeDasharray="5 5" opacity={0.7} />
+                      <Line type="monotone" dataKey="standardAlkaliMax" name="Standard Max" stroke="#ef4444" strokeWidth={2} dot={false} strokeDasharray="5 5" opacity={0.7} />
                     </LineChart>
                   </ResponsiveContainer>
                 </div>
@@ -1378,7 +1386,8 @@ function DashboardChecksheet() {
                         dot={{ r: 4, fill: "#3b82f6", strokeWidth: 2 }}
                         activeDot={{ r: 6 }}
                       />
-                      <Line type="monotone" dataKey="standardPh" name="Standard" stroke="#ef4444" strokeWidth={2} dot={false} strokeDasharray="5 5" />
+                      <Line type="monotone" dataKey="standardPhMin" name="Standard Min" stroke="#ef4444" strokeWidth={2} dot={false} strokeDasharray="5 5" opacity={0.7} />
+                      <Line type="monotone" dataKey="standardPhMax" name="Standard Max" stroke="#ef4444" strokeWidth={2} dot={false} strokeDasharray="5 5" opacity={0.7} />
                     </LineChart>
                   </ResponsiveContainer>
                 </div>
@@ -1487,7 +1496,8 @@ function DashboardChecksheet() {
                           dot={{ r: 4, fill: "#3b82f6", strokeWidth: 2 }}
                           activeDot={{ r: 6 }}
                         />
-                        <Line type="monotone" dataKey="standardTA" name="Standard" stroke="#ef4444" strokeWidth={2} dot={false} strokeDasharray="5 5" />
+                        <Line type="monotone" dataKey="standardTAMin" name="Standard Min" stroke="#ef4444" strokeWidth={2} dot={false} strokeDasharray="5 5" opacity={0.7} />
+                        <Line type="monotone" dataKey="standardTAMax" name="Standard Max" stroke="#ef4444" strokeWidth={2} dot={false} strokeDasharray="5 5" opacity={0.7} />
                     </LineChart>
                     </ResponsiveContainer>
                   </div>
@@ -1549,7 +1559,8 @@ function DashboardChecksheet() {
                           dot={{ r: 4, fill: "#3b82f6", strokeWidth: 2 }}
                           activeDot={{ r: 6 }}
                         />
-                        <Line type="monotone" dataKey="standardFA" name="Standard" stroke="#ef4444" strokeWidth={2} dot={false} strokeDasharray="5 5" />
+                        <Line type="monotone" dataKey="standardFAMin" name="Standard Min" stroke="#ef4444" strokeWidth={2} dot={false} strokeDasharray="5 5" opacity={0.7} />
+                        <Line type="monotone" dataKey="standardFAMax" name="Standard Max" stroke="#ef4444" strokeWidth={2} dot={false} strokeDasharray="5 5" opacity={0.7} />
                     </LineChart>
                     </ResponsiveContainer>
                   </div>
@@ -1611,7 +1622,8 @@ function DashboardChecksheet() {
                           dot={{ r: 4, fill: "#3b82f6", strokeWidth: 2 }}
                           activeDot={{ r: 6 }}
                         />
-                        <Line type="monotone" dataKey="standardAC" name="Standard" stroke="#ef4444" strokeWidth={2} dot={false} strokeDasharray="5 5" />
+                        <Line type="monotone" dataKey="standardACMin" name="Standard Min" stroke="#ef4444" strokeWidth={2} dot={false} strokeDasharray="5 5" opacity={0.7} />
+                        <Line type="monotone" dataKey="standardACMax" name="Standard Max" stroke="#ef4444" strokeWidth={2} dot={false} strokeDasharray="5 5" opacity={0.7} />
                     </LineChart>
                     </ResponsiveContainer>
                   </div>
@@ -1672,7 +1684,8 @@ function DashboardChecksheet() {
                           dot={{ r: 4, fill: "#3b82f6", strokeWidth: 2 }}
                           activeDot={{ r: 6 }}
                         />
-                        <Line type="monotone" dataKey="standardTemp" name="Standard" stroke="#ef4444" strokeWidth={2} dot={false} strokeDasharray="5 5" />
+                        <Line type="monotone" dataKey="standardTempMin" name="Standard Min" stroke="#ef4444" strokeWidth={2} dot={false} strokeDasharray="5 5" opacity={0.7} />
+                        <Line type="monotone" dataKey="standardTempMax" name="Standard Max" stroke="#ef4444" strokeWidth={2} dot={false} strokeDasharray="5 5" opacity={0.7} />
                     </LineChart>
                     </ResponsiveContainer>
                   </div>
