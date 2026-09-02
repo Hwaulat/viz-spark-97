@@ -622,6 +622,8 @@ function MonitoringAreaDetails() {
                             <ReferenceLine y={230} stroke="#ef4444" strokeDasharray="3 3" label={{ position: 'insideTopLeft', value: 'Max Std (230°C)', fill: '#ef4444', fontSize: 10 }} />
                             <Line type="monotone" dataKey={historicalBoilerTab === "Boiler 1" ? "temp1_b1" : historicalBoilerTab === "Boiler 2" ? "temp1_b2" : "temp1_b3"} name="Actual Temp 1" stroke="#f97316" strokeWidth={2} dot={false} activeDot={{ r: 4 }} />
                             <Line type="monotone" dataKey={historicalBoilerTab === "Boiler 1" ? "temp2_b1" : historicalBoilerTab === "Boiler 2" ? "temp2_b2" : "temp2_b3"} name="Actual Temp 2" stroke="#ef4444" strokeWidth={2} dot={false} activeDot={{ r: 4 }} />
+                            <Line type="monotone" dataKey="none_max" name="Max Std (230°C)" stroke="#ef4444" strokeDasharray="3 3" strokeWidth={2} dot={false} activeDot={false} />
+                            <Line type="monotone" dataKey="none_min" name="Min Std (190°C)" stroke="#ef4444" strokeDasharray="3 3" strokeWidth={2} dot={false} activeDot={false} />
                           </LineChart>
                         </ResponsiveContainer>
                       </div>
@@ -640,6 +642,8 @@ function MonitoringAreaDetails() {
                             <ReferenceLine y={4} stroke="#ef4444" strokeDasharray="3 3" label={{ position: 'insideBottomLeft', value: 'Min Std (4 bar)', fill: '#ef4444', fontSize: 10 }} />
                             <ReferenceLine y={8} stroke="#ef4444" strokeDasharray="3 3" label={{ position: 'insideTopLeft', value: 'Max Std (8 bar)', fill: '#ef4444', fontSize: 10 }} />
                             <Line type="monotone" dataKey="pressure" name="Pressure (bar)" stroke="#3b82f6" strokeWidth={2} dot={false} activeDot={{ r: 4 }} />
+                            <Line type="monotone" dataKey="none_max" name="Max Std (8 bar)" stroke="#ef4444" strokeDasharray="3 3" strokeWidth={2} dot={false} activeDot={false} />
+                            <Line type="monotone" dataKey="none_min" name="Min Std (4 bar)" stroke="#ef4444" strokeDasharray="3 3" strokeWidth={2} dot={false} activeDot={false} />
                           </LineChart>
                         </ResponsiveContainer>
                       </div>
