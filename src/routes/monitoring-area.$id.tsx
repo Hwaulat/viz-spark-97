@@ -10,6 +10,7 @@ import StationFloodPng from "@/assets/Flood.png";
 import StationPhosphatePng from "@/assets/Phosphate-1.png";
 import StationDegreasingPng from "@/assets/Degreasing.png";
 import MapsPtedAreaPng from "@/assets/Maps-Pted-Area.png";
+import DegreasingPipingDiagram from "@/components/DegreasingPipingDiagram";
 
 export const Route = createFileRoute("/monitoring-area/$id")({
   head: ({ params }) => ({
@@ -56,17 +57,20 @@ function OvenDetailContent({ id }: { id: string }) {
 
   const { name, data, elec } = ovenData;
 
+  const temp1Min = Math.min(...data.map((d: any) => d.temp1));
+  const temp1Max = Math.max(...data.map((d: any) => d.temp1));
+  const temp2Min = Math.min(...data.map((d: any) => d.temp2));
+  const temp2Max = Math.max(...data.map((d: any) => d.temp2));
+  const pressureMin = Math.min(...data.map((d: any) => d.pressure));
+  const pressureMax = Math.max(...data.map((d: any) => d.pressure));
+
+  const chartData = data.map((d: any) => ({
+    ...d,
+    temp1Min, temp1Max, temp2Min, temp2Max, pressureMin, pressureMax
+  }));
+
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
-      {/* Header & Filters */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <div>
-          <h2 className="text-xl font-bold flex items-center gap-2">
-            <Activity className="h-5 w-5 text-primary" /> {name} Monitoring
-          </h2>
-        </div>
-      </div>
-
       {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Panel className="p-4 bg-card/60 flex flex-col justify-center items-center text-center">
@@ -77,6 +81,10 @@ function OvenDetailContent({ id }: { id: string }) {
             <span className="text-3xl font-mono font-bold text-foreground">{data[data.length - 1]?.temp1?.toFixed(1) || "0.0"}</span>
             <span className="text-sm text-muted-foreground">°C</span>
           </div>
+          <div className="flex gap-3 mt-2 text-[10px] font-mono font-semibold">
+            <span className="text-emerald-500/90">MIN: {temp1Min.toFixed(1)}</span>
+            <span className="text-rose-500/90">MAX: {temp1Max.toFixed(1)}</span>
+          </div>
         </Panel>
         <Panel className="p-4 bg-card/60 flex flex-col justify-center items-center text-center">
           <div className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-2 flex items-center gap-1.5">
@@ -86,6 +94,10 @@ function OvenDetailContent({ id }: { id: string }) {
             <span className="text-3xl font-mono font-bold text-foreground">{data[data.length - 1]?.temp2?.toFixed(1) || "0.0"}</span>
             <span className="text-sm text-muted-foreground">°C</span>
           </div>
+          <div className="flex gap-3 mt-2 text-[10px] font-mono font-semibold">
+            <span className="text-emerald-500/90">MIN: {temp2Min.toFixed(1)}</span>
+            <span className="text-rose-500/90">MAX: {temp2Max.toFixed(1)}</span>
+          </div>
         </Panel>
         <Panel className="p-4 bg-card/60 flex flex-col justify-center items-center text-center">
           <div className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-2 flex items-center gap-1.5">
@@ -94,6 +106,10 @@ function OvenDetailContent({ id }: { id: string }) {
           <div className="flex items-baseline gap-1">
             <span className="text-3xl font-mono font-bold text-foreground">{data[data.length - 1]?.pressure?.toFixed(2) || "0.00"}</span>
             <span className="text-sm text-muted-foreground">bar</span>
+          </div>
+          <div className="flex gap-3 mt-2 text-[10px] font-mono font-semibold">
+            <span className="text-emerald-500/90">MIN: {pressureMin.toFixed(2)}</span>
+            <span className="text-rose-500/90">MAX: {pressureMax.toFixed(2)}</span>
           </div>
         </Panel>
       </div>
@@ -169,7 +185,7 @@ function OvenDetailContent({ id }: { id: string }) {
         <Panel title="Temperature Trend" className="p-4 bg-card/60">
           <div className="h-[250px] mt-4">
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+              <LineChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" vertical={false} />
                 <XAxis dataKey="time" stroke="hsl(var(--muted-foreground))" fontSize={11} tickMargin={8} />
                 <YAxis stroke="hsl(var(--muted-foreground))" fontSize={11} domain={['dataMin - 5', 'dataMax + 5']} />
@@ -178,8 +194,12 @@ function OvenDetailContent({ id }: { id: string }) {
                   itemStyle={{ color: 'hsl(var(--foreground))' }}
                 />
                 <Legend iconType="circle" wrapperStyle={{ fontSize: '11px' }} />
-                <Line type="monotone" dataKey="temp1" name="Temperature 1 (°C)" stroke="#ef4444" strokeWidth={2} dot={false} />
-                <Line type="monotone" dataKey="temp2" name="Temperature 2 (°C)" stroke="#3b82f6" strokeWidth={2} dot={false} />
+                <Line type="monotone" dataKey="temp1" name="Temp 1 (°C)" stroke="#ef4444" strokeWidth={2} dot={false} />
+                <Line type="monotone" dataKey="temp2" name="Temp 2 (°C)" stroke="#3b82f6" strokeWidth={2} dot={false} />
+                <Line type="monotone" dataKey="temp1Min" name="Temp 1 Min" stroke="#ef4444" strokeDasharray="3 3" strokeWidth={1.5} opacity={0.6} dot={false} />
+                <Line type="monotone" dataKey="temp1Max" name="Temp 1 Max" stroke="#ef4444" strokeDasharray="3 3" strokeWidth={1.5} opacity={0.6} dot={false} />
+                <Line type="monotone" dataKey="temp2Min" name="Temp 2 Min" stroke="#3b82f6" strokeDasharray="3 3" strokeWidth={1.5} opacity={0.6} dot={false} />
+                <Line type="monotone" dataKey="temp2Max" name="Temp 2 Max" stroke="#3b82f6" strokeDasharray="3 3" strokeWidth={1.5} opacity={0.6} dot={false} />
               </LineChart>
             </ResponsiveContainer>
           </div>
@@ -189,7 +209,7 @@ function OvenDetailContent({ id }: { id: string }) {
         <Panel title="Pressure Trend" className="p-4 bg-card/60">
           <div className="h-[250px] mt-4">
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+              <LineChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" vertical={false} />
                 <XAxis dataKey="time" stroke="hsl(var(--muted-foreground))" fontSize={11} tickMargin={8} />
                 <YAxis stroke="hsl(var(--muted-foreground))" fontSize={11} domain={['dataMin - 0.5', 'dataMax + 0.5']} />
@@ -199,6 +219,8 @@ function OvenDetailContent({ id }: { id: string }) {
                 />
                 <Legend iconType="circle" wrapperStyle={{ fontSize: '11px' }} />
                 <Line type="monotone" dataKey="pressure" name="Pressure (bar)" stroke="#8b5cf6" strokeWidth={2} dot={false} />
+                <Line type="monotone" dataKey="pressureMin" name="Pressure Min" stroke="#8b5cf6" strokeDasharray="3 3" strokeWidth={1.5} opacity={0.6} dot={false} />
+                <Line type="monotone" dataKey="pressureMax" name="Pressure Max" stroke="#8b5cf6" strokeDasharray="3 3" strokeWidth={1.5} opacity={0.6} dot={false} />
               </LineChart>
             </ResponsiveContainer>
           </div>
@@ -255,7 +277,14 @@ function StationDetailContent({ tabKey }: { tabKey: string }) {
           {tabKey === "pre-degreasing" ? (
             <img src={StationPreDegreasingPng} alt={`Station ${data.name}`} className="w-full h-auto object-contain mix-blend-multiply dark:mix-blend-screen dark:invert" />
           ) : tabKey === "degreasing" ? (
-            <img src={StationDegreasingPng} alt={`Station ${data.name}`} className="w-full h-auto object-contain mix-blend-multiply dark:mix-blend-screen dark:invert" />
+            <DegreasingPipingDiagram 
+              pv={parseFloat(data.pv)} 
+              sp={parseFloat(data.sp)} 
+              valve={data.valve || 0} 
+              pump1={data.pump1 || false} 
+              pump2={data.pump2 || false} 
+              alarm={data.alarm || false} 
+            />
           ) : tabKey === "flood" ? (
             <img src={StationFloodPng} alt={`Station ${data.name}`} className="w-full h-auto object-contain mix-blend-multiply dark:mix-blend-screen dark:invert" />
           ) : tabKey === "phosphate" ? (
