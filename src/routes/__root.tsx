@@ -169,22 +169,6 @@ function Sidebar({ onNavigate, className = "" }: { onNavigate?: () => void; clas
           Operations
         </div>
         <Link
-          to="/report"
-          className={linkBase}
-          activeProps={{ className: linkActive }}
-        >
-          <FileText className="h-4 w-4" />
-          Report
-        </Link>
-        <Link
-          to="/log-history"
-          className={linkBase}
-          activeProps={{ className: linkActive }}
-        >
-          <History className="h-4 w-4" />
-          Log History
-        </Link>
-        <Link
           to="/master-data"
           className={linkBase}
           activeProps={{ className: linkActive }}
@@ -201,6 +185,7 @@ function Sidebar({ onNavigate, className = "" }: { onNavigate?: () => void; clas
           User Management
         </Link>
       </nav>
+
 
 
 
