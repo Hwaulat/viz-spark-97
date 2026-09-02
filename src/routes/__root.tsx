@@ -165,8 +165,28 @@ function Sidebar({ onNavigate, className = "" }: { onNavigate?: () => void; clas
           </div>
         )}
 
-
+        <div className="px-5 pt-4 pb-2 text-[10px] font-semibold uppercase tracking-widest text-sidebar-muted">
+          Operations
+        </div>
+        <Link
+          to="/master-data"
+          className={linkBase}
+          activeProps={{ className: linkActive }}
+        >
+          <Database className="h-4 w-4" />
+          Master Data
+        </Link>
+        <Link
+          to="/user-management"
+          className={linkBase}
+          activeProps={{ className: linkActive }}
+        >
+          <Users className="h-4 w-4" />
+          User Management
+        </Link>
       </nav>
+
+
 
 
       <div className="p-4 mt-2">
