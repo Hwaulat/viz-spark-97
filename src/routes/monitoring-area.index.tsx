@@ -476,7 +476,7 @@ function AreaCard({ area }: { area: AreaDef }) {
                       ))}
                     </div>
 
-                    <div className="grid grid-cols-2 gap-3 mb-3">
+                    <div className="flex flex-col gap-3 mb-3">
                       <BagFilterItemDialog item={{ name: "UF 1 & UF 2 Tank", val: "120.5", val2: "118.2", id: "bag-filter-uf-tank", unit: "µS/cm", valName: "UF 1 Cond", val2Name: "UF 2 Cond", minStd: 100, maxStd: 150, minStd2: 100, maxStd2: 150, minStdName: "Standard Conductivity 1 MIN", maxStdName: "Standard Conductivity 1 MAX", minStd2Name: "Standard Conductivity 2 MIN", maxStd2Name: "Standard Conductivity 2 MAX" }}>
                         <button className="p-3 rounded-lg bg-secondary/30 border border-border/50 flex flex-col gap-2 hover:border-primary/50 hover:bg-secondary/80 transition-colors group text-left w-full h-full">
                           <span className="text-[10px] font-semibold text-muted-foreground uppercase flex items-center gap-1.5 border-b border-border/50 pb-2 group-hover:text-primary transition-colors"><Waves className="h-3.5 w-3.5" /> UF 1 & 2 Tank</span>
