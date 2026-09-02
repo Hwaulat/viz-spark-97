@@ -117,10 +117,6 @@ function Sidebar({ onNavigate, className = "" }: { onNavigate?: () => void; clas
   const [dashOpen, setDashOpen] = useState(dashboardActive);
   useEffect(() => { if (dashboardActive) setDashOpen(true); }, [dashboardActive]);
 
-  const masterDataActive = pathname.startsWith("/master-data");
-  const [masterDataOpen, setMasterDataOpen] = useState(masterDataActive);
-  useEffect(() => { if (masterDataActive) setMasterDataOpen(true); }, [masterDataActive]);
-
   return (
     <aside className={`flex w-64 shrink-0 flex-col bg-sidebar text-sidebar-foreground ${className}`}>
 
