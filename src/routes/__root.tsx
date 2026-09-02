@@ -112,6 +112,7 @@ const MASTER_DATA_CHILDREN = [
   { to: "/master-data/uom", label: "Unit of Measurement" },
   { to: "/master-data/colors", label: "Colors" },
   { to: "/master-data/type", label: "Type" },
+  { to: "/master-data/standard", label: "Standard" },
 ];
 
 const linkBase =
