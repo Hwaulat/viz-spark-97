@@ -8,7 +8,7 @@ import {
   Scripts,
 } from "@tanstack/react-router";
 import { useEffect, useState, type ReactNode } from "react";
-import { Activity, Flame, Waves, Thermometer, Gauge, Sun, Moon, Bell, PanelLeftClose, PanelLeftOpen, LayoutDashboard, FileText, History, Database, Users, ChevronDown, ClipboardCheck, Clock, ShieldCheck } from "lucide-react";
+import { Activity, Flame, Waves, Thermometer, Gauge, Sun, Moon, Bell, PanelLeftClose, PanelLeftOpen, LayoutDashboard, FileText, History, Users, ChevronDown, ClipboardCheck, Clock, ShieldCheck } from "lucide-react";
 import { useRouterState } from "@tanstack/react-router";
 
 import appCss from "../styles.css?url";
@@ -106,15 +106,6 @@ const DASHBOARD_CHILDREN: {
   { to: "/checksheet", label: "Dashboard Checksheet", icon: ClipboardCheck },
 ];
 
-const MASTER_DATA_CHILDREN = [
-  { to: "/master-data/equipment", label: "Equipment" },
-  { to: "/master-data/station", label: "Station" },
-  { to: "/master-data/uom", label: "Unit of Measurement" },
-  { to: "/master-data/colors", label: "Colors" },
-  { to: "/master-data/type", label: "Type" },
-  { to: "/master-data/standard", label: "Standard" },
-];
-
 const linkBase =
   "group flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-sidebar-foreground/75 hover:bg-white/5 hover:text-sidebar-foreground transition";
 const linkActive =
@@ -125,10 +116,6 @@ function Sidebar({ onNavigate, className = "" }: { onNavigate?: () => void; clas
   const dashboardActive = pathname === "/" || pathname.startsWith("/monitoring-area") || pathname.startsWith("/checksheet") || pathname.startsWith("/boiler");
   const [dashOpen, setDashOpen] = useState(dashboardActive);
   useEffect(() => { if (dashboardActive) setDashOpen(true); }, [dashboardActive]);
-
-  const masterDataActive = pathname.startsWith("/master-data");
-  const [masterDataOpen, setMasterDataOpen] = useState(masterDataActive);
-  useEffect(() => { if (masterDataActive) setMasterDataOpen(true); }, [masterDataActive]);
 
   return (
     <aside className={`flex w-64 shrink-0 flex-col bg-sidebar text-sidebar-foreground ${className}`}>
@@ -177,7 +164,8 @@ function Sidebar({ onNavigate, className = "" }: { onNavigate?: () => void; clas
           </div>
         )}
 
-        <div className="px-5 pt-4 pb-2 text-[10px] font-semibold uppercase tracking-widest text-sidebar-muted">
+        {/* Master Data hidden temporarily */}
+        {/* <div className="px-5 pt-4 pb-2 text-[10px] font-semibold uppercase tracking-widest text-sidebar-muted">
           Operations
         </div>
         
@@ -205,7 +193,7 @@ function Sidebar({ onNavigate, className = "" }: { onNavigate?: () => void; clas
               </Link>
             ))}
           </div>
-        )}
+        )} */}
         <Link
           to="/user-management"
           className={linkBase}
