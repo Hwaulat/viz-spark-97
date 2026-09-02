@@ -2019,7 +2019,6 @@ function DashboardChecksheet() {
                   <Bar dataKey="OK" name="OK" fill="#22c55e" radius={[4, 4, 0, 0]} />
                   <Bar dataKey="NG" name="NG" fill="#ef4444" radius={[4, 4, 0, 0]} />
                   <Bar dataKey="Repair" name="Repair" fill="#f97316" radius={[4, 4, 0, 0]} />
-                  <Line type="monotone" dataKey="standard" name="Standard" stroke="#ef4444" strokeWidth={2} dot={false} strokeDasharray="5 5" />
                 </ComposedChart>
               </ResponsiveContainer>
             </div>
@@ -2204,7 +2203,6 @@ function DashboardChecksheet() {
                   <Bar dataKey="OK" name="OK" fill="#22c55e" radius={[4, 4, 0, 0]} />
                   <Bar dataKey="NG" name="NG" fill="#ef4444" radius={[4, 4, 0, 0]} />
                   <Bar dataKey="Repair" name="Repair" fill="#f97316" radius={[4, 4, 0, 0]} />
-                  <Line type="monotone" dataKey="standard" name="Standard" stroke="#ef4444" strokeWidth={2} dot={false} strokeDasharray="5 5" />
                 </ComposedChart>
               </ResponsiveContainer>
             </div>
@@ -2361,7 +2359,6 @@ function DashboardChecksheet() {
                       activeDot={{ r: 6 }}
                     />
                   )}
-                  <Line type="monotone" dataKey="standard" name="Standard" stroke="#ef4444" strokeWidth={2} dot={false} strokeDasharray="5 5" />
                 </LineChart>
               </ResponsiveContainer>
             </div>
