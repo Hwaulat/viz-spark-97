@@ -9,9 +9,8 @@ import StationPreDegreasingPng from "@/assets/Pre-degreasing.png";
 import StationFloodPng from "@/assets/Flood.png";
 import StationPhosphatePng from "@/assets/Phosphate-1.png";
 import StationDegreasingPng from "@/assets/Degreasing.png";
+import StationDegreasingNewPng from "@/assets/Degreasing-New.png";
 import MapsPtedAreaPng from "@/assets/Maps-Pted-Area.png";
-import DegreasingPipingDiagram from "@/components/DegreasingPipingDiagram";
-
 export const Route = createFileRoute("/monitoring-area/$id")({
   head: ({ params }) => ({
     meta: [
@@ -277,14 +276,7 @@ function StationDetailContent({ tabKey }: { tabKey: string }) {
           {tabKey === "pre-degreasing" ? (
             <img src={StationPreDegreasingPng} alt={`Station ${data.name}`} className="w-full h-auto object-contain mix-blend-multiply dark:mix-blend-screen dark:invert" />
           ) : tabKey === "degreasing" ? (
-            <DegreasingPipingDiagram 
-              pv={parseFloat(data.pv)} 
-              sp={parseFloat(data.sp)} 
-              valve={data.valve || 0} 
-              pump1={data.pump1 || false} 
-              pump2={data.pump2 || false} 
-              alarm={data.alarm || false} 
-            />
+            <img src={StationDegreasingNewPng} alt={`Station ${data.name}`} className="w-full h-auto object-contain mix-blend-multiply dark:mix-blend-screen dark:invert" />
           ) : tabKey === "flood" ? (
             <img src={StationFloodPng} alt={`Station ${data.name}`} className="w-full h-auto object-contain mix-blend-multiply dark:mix-blend-screen dark:invert" />
           ) : tabKey === "phosphate" ? (
