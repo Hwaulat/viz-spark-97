@@ -1,124 +1,339 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Panel } from "@/components/panel";
-import { Plus, Save, Search, Settings2 } from "lucide-react";
 import { useState } from "react";
+import { Search, Plus, Edit2, Trash2, X, FileText, CheckCircle2, Save, PlusCircle } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
 
 export const Route = createFileRoute("/master-data")({
   head: () => ({
     meta: [
-      { title: "Master Data — Utility Monitoring System" },
-      { name: "description", content: "Configure parameter standards: min, max, and alarm thresholds for Boiler, CED, and Oven." },
+      { title: "Master Data — Equipment Standards" },
+      { name: "description", content: "Master Data for Equipment, Frequency, and Standards." },
     ],
   }),
   component: MasterDataPage,
 });
 
-type Param = {
-  id: string; area: "Boiler" | "CED" | "Oven"; equipment: string;
-  parameter: string; unit: string; min: number; max: number; sp: number; deadband: number; active: boolean;
+type StandardItem = {
+  id: string;
+  freq: string;
+  standard: string;
 };
 
-const PARAMS: Param[] = [
-  { id: "BLR-01-T1", area: "Boiler", equipment: "Boiler 1", parameter: "Steam Temperature 1", unit: "°C", min: 175, max: 195, sp: 185, deadband: 2, active: true },
-  { id: "BLR-01-T2", area: "Boiler", equipment: "Boiler 1", parameter: "Steam Temperature 2", unit: "°C", min: 175, max: 195, sp: 185, deadband: 2, active: true },
-  { id: "BLR-02-T1", area: "Boiler", equipment: "Boiler 2", parameter: "Steam Temperature 1", unit: "°C", min: 175, max: 195, sp: 185, deadband: 2, active: true },
-  { id: "BLR-PR-01", area: "Boiler", equipment: "Boiler 1", parameter: "Steam Pressure", unit: "bar", min: 6, max: 10, sp: 8, deadband: 0.3, active: true },
-  { id: "CED-PH-01", area: "CED", equipment: "Phosphating Tank", parameter: "pH Level", unit: "pH", min: 3.0, max: 3.6, sp: 3.3, deadband: 0.1, active: true },
-  { id: "CED-TP-01", area: "CED", equipment: "Degreasing Tank", parameter: "Bath Temperature", unit: "°C", min: 45, max: 55, sp: 50, deadband: 1, active: true },
-  { id: "CED-CD-01", area: "CED", equipment: "E-Coat Rectifier", parameter: "DC Voltage", unit: "V", min: 250, max: 320, sp: 285, deadband: 5, active: true },
-  { id: "CED-SK-01", area: "CED", equipment: "Line Conveyor", parameter: "Skid Cycle Time", unit: "min", min: 3, max: 6, sp: 4.5, deadband: 0.3, active: true },
-  { id: "OVN-Z1-T", area: "Oven", equipment: "Oven Zone 1", parameter: "Zone Temperature", unit: "°C", min: 180, max: 190, sp: 185, deadband: 2, active: true },
-  { id: "OVN-Z2-T", area: "Oven", equipment: "Oven Zone 2", parameter: "Zone Temperature", unit: "°C", min: 185, max: 195, sp: 190, deadband: 2, active: true },
-  { id: "OVN-Z3-T", area: "Oven", equipment: "Oven Zone 3", parameter: "Zone Temperature", unit: "°C", min: 175, max: 185, sp: 180, deadband: 2, active: true },
-  { id: "OVN-KWH", area: "Oven", equipment: "Oven Main Meter", parameter: "Instant Power", unit: "kW", min: 800, max: 1400, sp: 1200, deadband: 30, active: true },
+type EquipmentData = {
+  id: string;
+  name: string;
+  standards: StandardItem[];
+};
+
+const INITIAL_DATA: EquipmentData[] = [
+  {
+    id: "EQ-001",
+    name: "Taki & Pipa",
+    standards: [{ id: "S-1", freq: "1 x 1 Shift", standard: "Tidak ada kebocoran (Normal)" }],
+  },
+  {
+    id: "EQ-002",
+    name: "Pompa Flood Water Spray (Pus-111)",
+    standards: [{ id: "S-2", freq: "1 x 1 Shift", standard: "0.09 MPa - 0.16 MPa" }],
+  },
+  {
+    id: "EQ-003",
+    name: "Tekanan Spray Flood Water (PRG-111C & PRG-1114)",
+    standards: [{ id: "S-3", freq: "1 x 1 Shift", standard: "Tidak ada kebocoran getaran normal" }],
+  },
+  {
+    id: "EQ-004",
+    name: "Heat Exchanger 1",
+    standards: [{ id: "S-4", freq: "1 x 1 Shift", standard: "Diatas 0.20 MPa" }],
+  },
+  {
+    id: "EQ-005",
+    name: "Heat Exchanger 2",
+    standards: [{ id: "S-5", freq: "1 x 1 Shift", standard: "Diatas 0.20 MPa" }],
+  },
+  {
+    id: "EQ-006",
+    name: "Tekanan Hot Water Inlet",
+    standards: [{ id: "S-6", freq: "1 x 1 Shift", standard: "Diatas 0.20 MPa" }],
+  },
+  {
+    id: "EQ-007",
+    name: "Spray Nozzle",
+    standards: [{ id: "S-7", freq: "1 x 1 Shift", standard: "Diatas 0.20 MPa" }],
+  },
+  {
+    id: "EQ-008",
+    name: "Strainer Mesh",
+    standards: [{ id: "S-8", freq: "1 x 1 Shift", standard: "0.09 MPa - 0.16 MPa" }],
+  },
+  {
+    id: "EQ-009",
+    name: "Temperatur Hot Water Inlet",
+    standards: [{ id: "S-9", freq: "1 x 1 Shift", standard: "0.09 MPa - 0.16 MPa" }],
+  },
+  {
+    id: "EQ-010",
+    name: "Pressure difference Liquid Inlet & Outlet (Hexc)",
+    standards: [{ id: "S-10", freq: "1 x 1 Shift", standard: "0.09 MPa - 0.16 MPa" }],
+  },
 ];
 
-const TABS: Array<Param["area"] | "All"> = ["All", "Boiler", "CED", "Oven"];
-
 function MasterDataPage() {
-  const [tab, setTab] = useState<(typeof TABS)[number]>("All");
+  const [data, setData] = useState<EquipmentData[]>(INITIAL_DATA);
   const [q, setQ] = useState("");
-  const rows = PARAMS.filter((p) => (tab === "All" || p.area === tab) && (q === "" || `${p.equipment} ${p.parameter} ${p.id}`.toLowerCase().includes(q.toLowerCase())));
+  
+  // Modal state
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editId, setEditId] = useState<string | null>(null);
+  const [formName, setFormName] = useState("");
+  const [formStandards, setFormStandards] = useState<StandardItem[]>([]);
+
+  // Filtered rows for the table. Flattening so each standard is its own row if needed, 
+  // grouping by equipment if needed. We'll map through equipments, and inside, map through standards.
+  const rows = data.flatMap(eq => {
+    return eq.standards
+      .filter(s => eq.name.toLowerCase().includes(q.toLowerCase()) || s.standard.toLowerCase().includes(q.toLowerCase()))
+      .map((s, idx) => ({
+        ...s,
+        equipmentId: eq.id,
+        equipmentName: eq.name,
+        isFirst: idx === 0,
+        rowSpan: eq.standards.length
+      }));
+  });
+
+  const openCreateModal = () => {
+    setEditId(null);
+    setFormName("");
+    setFormStandards([{ id: Date.now().toString(), freq: "", standard: "" }]);
+    setIsModalOpen(true);
+  };
+
+  const openEditModal = (eq: EquipmentData) => {
+    setEditId(eq.id);
+    setFormName(eq.name);
+    setFormStandards([...eq.standards]);
+    setIsModalOpen(true);
+  };
+
+  const handleDelete = (id: string) => {
+    setData(prev => prev.filter(item => item.id !== id));
+  };
+
+  const saveModal = () => {
+    if (!formName.trim()) return;
+    
+    if (editId) {
+      setData(prev => prev.map(item => item.id === editId ? { ...item, name: formName, standards: formStandards } : item));
+    } else {
+      setData(prev => [...prev, { id: "EQ-" + Date.now(), name: formName, standards: formStandards }]);
+    }
+    setIsModalOpen(false);
+  };
+
+  const addFormStandard = () => {
+    setFormStandards(prev => [...prev, { id: Date.now().toString(), freq: "", standard: "" }]);
+  };
+
+  const updateFormStandard = (id: string, field: "freq" | "standard", value: string) => {
+    setFormStandards(prev => prev.map(s => s.id === id ? { ...s, [field]: value } : s));
+  };
+
+  const removeFormStandard = (id: string) => {
+    setFormStandards(prev => prev.filter(s => s.id !== id));
+  };
 
   return (
     <div className="p-6 space-y-6">
-      <div className="flex items-end justify-between flex-wrap gap-3">
-        <div>
-          <div className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">Master Data</div>
-          <h1 className="text-2xl font-semibold mt-1">Parameter Configuration</h1>
-          <p className="text-sm text-muted-foreground mt-1">Configure operating standards — min, max, setpoint, and deadband for each parameter.</p>
-        </div>
-        <div className="flex items-center gap-2">
-          <button className="inline-flex items-center gap-2 rounded-md border border-border bg-card px-3 py-2 text-xs hover:bg-secondary"><Save className="h-3.5 w-3.5" />Save Changes</button>
-          <button className="inline-flex items-center gap-2 rounded-md bg-primary px-3 py-2 text-xs font-medium text-primary-foreground hover:opacity-90"><Plus className="h-3.5 w-3.5" />New Parameter</button>
-        </div>
+      {/* Page Title */}
+      <div className="flex flex-col gap-1">
+        <h1 className="text-2xl font-semibold text-foreground">Equipment</h1>
+        <p className="text-sm text-muted-foreground">Master data configuration for equipment monitoring standards.</p>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {[
-          { l: "Total Parameters", v: PARAMS.length.toString() },
-          { l: "Boiler", v: PARAMS.filter((p) => p.area === "Boiler").length.toString() },
-          { l: "CED", v: PARAMS.filter((p) => p.area === "CED").length.toString() },
-          { l: "Oven", v: PARAMS.filter((p) => p.area === "Oven").length.toString() },
-        ].map((k) => (
-          <Panel key={k.l} title={k.l}>
-            <div className="text-3xl font-semibold font-mono tabular-nums">{k.v}</div>
-          </Panel>
-        ))}
-      </div>
-
-      <Panel
-        title={<span className="inline-flex items-center gap-2"><Settings2 className="h-3.5 w-3.5" />Parameter Standards</span>}
-        right={
-          <div className="flex items-center gap-2">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
-              <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search parameter…" className="h-8 w-64 rounded-md border border-border bg-card pl-9 pr-3 text-xs outline-none focus:ring-2 focus:ring-primary/40" />
-            </div>
-            <div className="flex rounded-md border border-border overflow-hidden text-[11px] font-mono">
-              {TABS.map((t) => (
-                <button key={t} onClick={() => setTab(t)} className={`px-3 py-1.5 ${tab === t ? "bg-primary text-primary-foreground" : "hover:bg-secondary"}`}>{t.toUpperCase()}</button>
-              ))}
-            </div>
+      {/* Main Container */}
+      <div className="bg-card border border-border rounded-lg shadow-sm flex flex-col overflow-hidden">
+        {/* Header Actions */}
+        <div className="p-4 border-b border-border/50 flex items-center justify-between gap-4 bg-secondary/10">
+          <div className="relative max-w-md w-full">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <input 
+              value={q} 
+              onChange={(e) => setQ(e.target.value)} 
+              placeholder="Search equipment..." 
+              className="h-10 w-full rounded-md border border-border bg-background pl-9 pr-4 text-sm outline-none focus:ring-2 focus:ring-primary/40 transition-shadow" 
+            />
           </div>
-        }
-      >
-        <div className="overflow-x-auto -mx-4 -my-4">
-          <table className="w-full text-sm">
-            <thead className="bg-secondary/50 text-[10px] uppercase tracking-widest text-muted-foreground">
+          <button 
+            onClick={openCreateModal}
+            className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground hover:bg-primary/90 transition-colors whitespace-nowrap"
+          >
+            <Plus className="h-4 w-4" /> Add Data
+          </button>
+        </div>
+
+        {/* Data Table */}
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm text-left">
+            <thead className="bg-secondary/40 text-[11px] uppercase tracking-wider text-muted-foreground border-b border-border/50">
               <tr>
-                {["ID", "Area", "Equipment", "Parameter", "Unit", "Min", "Setpoint", "Max", "Deadband", "Status"].map((h) => (
-                  <th key={h} className="text-left font-semibold px-4 py-2.5">{h}</th>
-                ))}
+                <th className="px-6 py-3 font-semibold w-24">Action</th>
+                <th className="px-6 py-3 font-semibold">Equipment name</th>
+                <th className="px-6 py-3 font-semibold w-48">Freq</th>
+                <th className="px-6 py-3 font-semibold">Standard</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-border">
-              {rows.map((p) => (
-                <tr key={p.id} className="hover:bg-secondary/40">
-                  <td className="px-4 py-2 font-mono text-xs">{p.id}</td>
-                  <td className="px-4 py-2"><span className="rounded bg-secondary px-2 py-0.5 text-[10px] uppercase">{p.area}</span></td>
-                  <td className="px-4 py-2 text-xs">{p.equipment}</td>
-                  <td className="px-4 py-2 text-xs text-foreground">{p.parameter}</td>
-                  <td className="px-4 py-2 text-xs font-mono text-muted-foreground">{p.unit}</td>
-                  <td className="px-4 py-2"><input defaultValue={p.min} className="w-20 rounded border border-border bg-background px-2 py-1 text-xs font-mono outline-none focus:ring-2 focus:ring-primary/40" /></td>
-                  <td className="px-4 py-2"><input defaultValue={p.sp} className="w-20 rounded border border-border bg-background px-2 py-1 text-xs font-mono outline-none focus:ring-2 focus:ring-primary/40" /></td>
-                  <td className="px-4 py-2"><input defaultValue={p.max} className="w-20 rounded border border-border bg-background px-2 py-1 text-xs font-mono outline-none focus:ring-2 focus:ring-primary/40" /></td>
-                  <td className="px-4 py-2"><input defaultValue={p.deadband} className="w-20 rounded border border-border bg-background px-2 py-1 text-xs font-mono outline-none focus:ring-2 focus:ring-primary/40" /></td>
-                  <td className="px-4 py-2">
-                    <label className="inline-flex items-center gap-2 cursor-pointer">
-                      <input type="checkbox" defaultChecked={p.active} className="peer sr-only" />
-                      <span className="relative h-4 w-8 rounded-full bg-muted peer-checked:bg-primary transition">
-                        <span className="absolute left-0.5 top-0.5 h-3 w-3 rounded-full bg-white transition peer-checked:translate-x-4" />
-                      </span>
-                      <span className="text-[10px] font-mono text-muted-foreground">{p.active ? "ACTIVE" : "OFF"}</span>
-                    </label>
+            <tbody className="divide-y divide-border/50">
+              {rows.length > 0 ? (
+                rows.map((row, i) => (
+                  <tr key={`${row.equipmentId}-${row.id}`} className="hover:bg-secondary/20 transition-colors group">
+                    {/* Render equipment name and action only on the first row of an equipment group */}
+                    {row.isFirst ? (
+                      <>
+                        <td className="px-6 py-3" rowSpan={row.rowSpan}>
+                          <div className="flex items-center gap-2">
+                            <button 
+                              onClick={() => openEditModal(data.find(d => d.id === row.equipmentId)!)}
+                              className="p-1.5 rounded-md text-blue-600 hover:bg-blue-600/10 dark:text-blue-400 dark:hover:bg-blue-400/10 transition-colors"
+                              title="Edit"
+                            >
+                              <Edit2 className="h-4 w-4" />
+                            </button>
+                            <button 
+                              onClick={() => handleDelete(row.equipmentId)}
+                              className="p-1.5 rounded-md text-red-600 hover:bg-red-600/10 dark:text-red-400 dark:hover:bg-red-400/10 transition-colors"
+                              title="Delete"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </button>
+                          </div>
+                        </td>
+                        <td className="px-6 py-3 font-medium text-foreground" rowSpan={row.rowSpan}>
+                          {row.equipmentName}
+                        </td>
+                      </>
+                    ) : null}
+                    <td className="px-6 py-3 text-muted-foreground">{row.freq}</td>
+                    <td className="px-6 py-3 text-muted-foreground">{row.standard}</td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={4} className="px-6 py-12 text-center text-muted-foreground">
+                    <div className="flex flex-col items-center justify-center gap-2">
+                      <FileText className="h-8 w-8 opacity-20" />
+                      <p>No equipment data found.</p>
+                    </div>
                   </td>
                 </tr>
-              ))}
+              )}
             </tbody>
           </table>
         </div>
-      </Panel>
+        
+        {/* Pagination placeholder (Matching Figma layout) */}
+        <div className="p-4 border-t border-border/50 flex items-center justify-between text-xs text-muted-foreground bg-secondary/5">
+          <div>Showing 1 to {rows.length} of {rows.length} entries</div>
+        </div>
+      </div>
+
+      {/* Create / Edit Modal */}
+      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+        <DialogContent className="sm:max-w-[700px] p-0 overflow-hidden">
+          <DialogHeader className="p-5 border-b border-border bg-secondary/10">
+            <DialogTitle className="text-lg font-semibold flex items-center gap-2">
+              {editId ? <Edit2 className="h-5 w-5 text-primary" /> : <PlusCircle className="h-5 w-5 text-primary" />}
+              {editId ? "Edit Equipment" : "Add Equipment"}
+            </DialogTitle>
+          </DialogHeader>
+          
+          <div className="p-6 space-y-6 max-h-[60vh] overflow-y-auto">
+            {/* Equipment Name */}
+            <div className="space-y-2">
+              <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Equipment Name</label>
+              <input 
+                value={formName}
+                onChange={(e) => setFormName(e.target.value)}
+                placeholder="e.g., Taki & Pipa"
+                className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary transition-colors"
+              />
+            </div>
+
+            {/* List Standard */}
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">List Standard</label>
+                <button 
+                  onClick={addFormStandard}
+                  className="inline-flex items-center gap-1.5 text-xs font-medium text-primary hover:text-primary/80 transition-colors"
+                >
+                  <Plus className="h-3.5 w-3.5" /> Add Standard
+                </button>
+              </div>
+              
+              <div className="border border-border rounded-md overflow-hidden">
+                <table className="w-full text-sm">
+                  <thead className="bg-secondary/40 text-[10px] uppercase tracking-wider text-muted-foreground">
+                    <tr>
+                      <th className="px-3 py-2 font-semibold w-12 text-center">Action</th>
+                      <th className="px-3 py-2 font-semibold w-1/3">Standard</th>
+                      <th className="px-3 py-2 font-semibold w-1/3">Freq</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-border/50 bg-background">
+                    {formStandards.map((s) => (
+                      <tr key={s.id}>
+                        <td className="px-3 py-2 text-center">
+                          <button 
+                            onClick={() => removeFormStandard(s.id)}
+                            disabled={formStandards.length === 1}
+                            className="p-1 rounded text-red-500 hover:bg-red-500/10 disabled:opacity-30 disabled:hover:bg-transparent transition-colors"
+                          >
+                            <X className="h-4 w-4" />
+                          </button>
+                        </td>
+                        <td className="px-3 py-2">
+                          <input 
+                            value={s.standard}
+                            onChange={(e) => updateFormStandard(s.id, "standard", e.target.value)}
+                            placeholder="e.g., 0.09 MPa - 0.16 MPa"
+                            className="w-full rounded border border-transparent hover:border-border focus:border-primary bg-transparent px-2 py-1.5 text-sm outline-none transition-colors"
+                          />
+                        </td>
+                        <td className="px-3 py-2">
+                          <input 
+                            value={s.freq}
+                            onChange={(e) => updateFormStandard(s.id, "freq", e.target.value)}
+                            placeholder="e.g., 1 x 1 Shift"
+                            className="w-full rounded border border-transparent hover:border-border focus:border-primary bg-transparent px-2 py-1.5 text-sm outline-none transition-colors"
+                          />
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <DialogFooter className="p-5 border-t border-border bg-secondary/10 sm:justify-end gap-2">
+            <button 
+              onClick={() => setIsModalOpen(false)}
+              className="px-4 py-2 rounded-md text-sm font-medium text-muted-foreground hover:bg-secondary border border-transparent hover:border-border transition-colors"
+            >
+              Cancel
+            </button>
+            <button 
+              onClick={saveModal}
+              disabled={!formName.trim() || formStandards.some(s => !s.freq.trim() || !s.standard.trim())}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-50 transition-colors"
+            >
+              <Save className="h-4 w-4" />
+              Save Changes
+            </button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
