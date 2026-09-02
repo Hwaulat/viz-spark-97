@@ -24,6 +24,7 @@ import { Route as BoilerDetailsIdRouteImport } from './routes/boiler-details.$id
 import { Route as MasterDataIndexRouteImport } from './routes/master-data.index'
 import { Route as MasterDataColorsRouteImport } from './routes/master-data.colors'
 import { Route as MasterDataEquipmentRouteImport } from './routes/master-data.equipment'
+import { Route as MasterDataStandardRouteImport } from './routes/master-data.standard'
 import { Route as MasterDataStationRouteImport } from './routes/master-data.station'
 import { Route as MasterDataTypeRouteImport } from './routes/master-data.type'
 import { Route as MasterDataUomRouteImport } from './routes/master-data.uom'
@@ -105,6 +106,11 @@ const MasterDataEquipmentRoute = MasterDataEquipmentRouteImport.update({
   path: '/equipment',
   getParentRoute: () => MasterDataRoute,
 } as any)
+const MasterDataStandardRoute = MasterDataStandardRouteImport.update({
+  id: '/standard',
+  path: '/standard',
+  getParentRoute: () => MasterDataRoute,
+} as any)
 const MasterDataStationRoute = MasterDataStationRouteImport.update({
   id: '/station',
   path: '/station',
@@ -146,6 +152,7 @@ export interface FileRoutesByFullPath {
   '/boiler-details/$id': typeof BoilerDetailsIdRoute
   '/master-data/colors': typeof MasterDataColorsRoute
   '/master-data/equipment': typeof MasterDataEquipmentRoute
+  '/master-data/standard': typeof MasterDataStandardRoute
   '/master-data/station': typeof MasterDataStationRoute
   '/master-data/type': typeof MasterDataTypeRoute
   '/master-data/uom': typeof MasterDataUomRoute
@@ -167,6 +174,7 @@ export interface FileRoutesByTo {
   '/boiler-details/$id': typeof BoilerDetailsIdRoute
   '/master-data/colors': typeof MasterDataColorsRoute
   '/master-data/equipment': typeof MasterDataEquipmentRoute
+  '/master-data/standard': typeof MasterDataStandardRoute
   '/master-data/station': typeof MasterDataStationRoute
   '/master-data/type': typeof MasterDataTypeRoute
   '/master-data/uom': typeof MasterDataUomRoute
@@ -190,6 +198,7 @@ export interface FileRoutesById {
   '/boiler-details/$id': typeof BoilerDetailsIdRoute
   '/master-data/colors': typeof MasterDataColorsRoute
   '/master-data/equipment': typeof MasterDataEquipmentRoute
+  '/master-data/standard': typeof MasterDataStandardRoute
   '/master-data/station': typeof MasterDataStationRoute
   '/master-data/type': typeof MasterDataTypeRoute
   '/master-data/uom': typeof MasterDataUomRoute
@@ -214,6 +223,7 @@ export interface FileRouteTypes {
     | '/boiler-details/$id'
     | '/master-data/colors'
     | '/master-data/equipment'
+    | '/master-data/standard'
     | '/master-data/station'
     | '/master-data/type'
     | '/master-data/uom'
@@ -235,6 +245,7 @@ export interface FileRouteTypes {
     | '/boiler-details/$id'
     | '/master-data/colors'
     | '/master-data/equipment'
+    | '/master-data/standard'
     | '/master-data/station'
     | '/master-data/type'
     | '/master-data/uom'
@@ -257,6 +268,7 @@ export interface FileRouteTypes {
     | '/boiler-details/$id'
     | '/master-data/colors'
     | '/master-data/equipment'
+    | '/master-data/standard'
     | '/master-data/station'
     | '/master-data/type'
     | '/master-data/uom'
@@ -389,6 +401,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MasterDataEquipmentRouteImport
       parentRoute: typeof MasterDataRoute
     }
+    '/master-data/standard': {
+      id: '/master-data/standard'
+      path: '/standard'
+      fullPath: '/master-data/standard'
+      preLoaderRoute: typeof MasterDataStandardRouteImport
+      parentRoute: typeof MasterDataRoute
+    }
     '/master-data/station': {
       id: '/master-data/station'
       path: '/station'
@@ -430,6 +449,7 @@ declare module '@tanstack/react-router' {
 interface MasterDataRouteChildren {
   MasterDataColorsRoute: typeof MasterDataColorsRoute
   MasterDataEquipmentRoute: typeof MasterDataEquipmentRoute
+  MasterDataStandardRoute: typeof MasterDataStandardRoute
   MasterDataStationRoute: typeof MasterDataStationRoute
   MasterDataTypeRoute: typeof MasterDataTypeRoute
   MasterDataUomRoute: typeof MasterDataUomRoute
@@ -439,6 +459,7 @@ interface MasterDataRouteChildren {
 const MasterDataRouteChildren: MasterDataRouteChildren = {
   MasterDataColorsRoute: MasterDataColorsRoute,
   MasterDataEquipmentRoute: MasterDataEquipmentRoute,
+  MasterDataStandardRoute: MasterDataStandardRoute,
   MasterDataStationRoute: MasterDataStationRoute,
   MasterDataTypeRoute: MasterDataTypeRoute,
   MasterDataUomRoute: MasterDataUomRoute,
