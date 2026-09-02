@@ -63,9 +63,12 @@ function OvenDetailContent({ id }: { id: string }) {
   const pressureMin = Math.min(...data.map((d: any) => d.pressure));
   const pressureMax = Math.max(...data.map((d: any) => d.pressure));
 
+  const tempMin = Math.min(temp1Min, temp2Min);
+  const tempMax = Math.max(temp1Max, temp2Max);
+
   const chartData = data.map((d: any) => ({
     ...d,
-    temp1Min, temp1Max, temp2Min, temp2Max, pressureMin, pressureMax
+    temp1Min, temp1Max, temp2Min, temp2Max, pressureMin, pressureMax, tempMin, tempMax
   }));
 
   return (
@@ -195,10 +198,8 @@ function OvenDetailContent({ id }: { id: string }) {
                 <Legend iconType="circle" wrapperStyle={{ fontSize: '11px' }} />
                 <Line type="monotone" dataKey="temp1" name="Temp 1 (°C)" stroke="#ef4444" strokeWidth={2} dot={false} />
                 <Line type="monotone" dataKey="temp2" name="Temp 2 (°C)" stroke="#3b82f6" strokeWidth={2} dot={false} />
-                <Line type="monotone" dataKey="temp1Min" name="Temp 1 Min" stroke="#ef4444" strokeDasharray="3 3" strokeWidth={1.5} opacity={0.6} dot={false} />
-                <Line type="monotone" dataKey="temp1Max" name="Temp 1 Max" stroke="#ef4444" strokeDasharray="3 3" strokeWidth={1.5} opacity={0.6} dot={false} />
-                <Line type="monotone" dataKey="temp2Min" name="Temp 2 Min" stroke="#3b82f6" strokeDasharray="3 3" strokeWidth={1.5} opacity={0.6} dot={false} />
-                <Line type="monotone" dataKey="temp2Max" name="Temp 2 Max" stroke="#3b82f6" strokeDasharray="3 3" strokeWidth={1.5} opacity={0.6} dot={false} />
+                <Line type="monotone" dataKey="tempMin" name="Standard Min" stroke="#ef4444" strokeDasharray="3 3" strokeWidth={1.5} opacity={0.6} dot={false} />
+                <Line type="monotone" dataKey="tempMax" name="Standard Max" stroke="#ef4444" strokeDasharray="3 3" strokeWidth={1.5} opacity={0.6} dot={false} />
               </LineChart>
             </ResponsiveContainer>
           </div>
