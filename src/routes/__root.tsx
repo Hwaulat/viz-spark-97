@@ -106,15 +106,6 @@ const DASHBOARD_CHILDREN: {
   { to: "/checksheet", label: "Dashboard Checksheet", icon: ClipboardCheck },
 ];
 
-const MASTER_DATA_CHILDREN = [
-  { to: "/master-data/equipment", label: "Equipment" },
-  { to: "/master-data/station", label: "Station" },
-  { to: "/master-data/uom", label: "Unit of Measurement" },
-  { to: "/master-data/colors", label: "Colors" },
-  { to: "/master-data/type", label: "Type" },
-  { to: "/master-data/standard", label: "Standard" },
-];
-
 const linkBase =
   "group flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-sidebar-foreground/75 hover:bg-white/5 hover:text-sidebar-foreground transition";
 const linkActive =
