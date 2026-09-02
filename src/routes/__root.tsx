@@ -67,7 +67,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "stylesheet", href: appCss },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
-      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" },
+      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Open+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" },
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
     ],
   }),
@@ -206,23 +206,27 @@ function useTheme() {
 
 function TopBar({ onToggleSidebar, collapsed }: { onToggleSidebar: () => void; collapsed: boolean }) {
   const { theme, toggle } = useTheme();
-  const [ts, setTs] = useState("");
+  const [time, setTime] = useState("");
+  const [date, setDate] = useState("");
   useEffect(() => {
-    const tick = () => setTs(new Date().toLocaleString("en-GB", { hour12: false }));
+    const tick = () => {
+      const now = new Date();
+      setTime(now.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false }));
+      setDate(now.toLocaleDateString("en-US", { weekday: "long", year: "numeric", month: "long", day: "numeric" }));
+    };
     tick();
     const id = setInterval(tick, 1000);
     return () => clearInterval(id);
   }, []);
   return (
-    <header className="flex h-16 items-center justify-between gap-2 border-b border-border bg-card px-3 sm:px-6">
+    <header className="flex h-14 items-center justify-between gap-2 border-b border-border bg-card px-3 sm:px-6 shadow-sm">
       <div className="flex min-w-0 items-center gap-3">
         <button
           onClick={onToggleSidebar}
-          className="grid h-9 w-9 shrink-0 place-items-center rounded-md text-muted-foreground hover:bg-secondary"
+          className="grid h-9 w-9 shrink-0 place-items-center rounded-md text-muted-foreground hover:bg-secondary transition"
           aria-label="Toggle sidebar"
         >
           {collapsed ? <PanelLeftOpen className="h-4 w-4" /> : <PanelLeftClose className="h-4 w-4" />}
-
         </button>
         <div className="hidden lg:flex items-center gap-2 text-xs text-muted-foreground">
           <span className="inline-flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-ok" />AC 220V</span>
@@ -231,9 +235,7 @@ function TopBar({ onToggleSidebar, collapsed }: { onToggleSidebar: () => void; c
           <span className="inline-flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-warn" />1 ALARM</span>
         </div>
       </div>
-      <div className="flex items-center gap-3">
-        <span className="hidden sm:inline rounded-md bg-secondary px-2.5 py-1 text-[11px] font-mono text-muted-foreground">MODE: AUTO</span>
-        <span className="font-mono text-xs text-foreground tabular-nums">{ts || "—"}</span>
+      <div className="flex items-center gap-4">
         <button
           onClick={toggle}
           className="grid h-9 w-9 place-items-center rounded-full text-muted-foreground hover:bg-secondary hover:text-foreground transition"
@@ -241,16 +243,16 @@ function TopBar({ onToggleSidebar, collapsed }: { onToggleSidebar: () => void; c
         >
           {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
         </button>
-        <button className="relative grid h-9 w-9 place-items-center rounded-full text-muted-foreground hover:bg-secondary hover:text-foreground" aria-label="notifications">
+        <div className="hidden sm:flex flex-col items-end text-right">
+          <span suppressHydrationWarning className="font-mono text-sm font-bold text-foreground tabular-nums">{time || "--:--:--"}</span>
+          <span suppressHydrationWarning className="text-[10px] text-muted-foreground">{date || "---"}</span>
+        </div>
+        <button className="relative grid h-9 w-9 place-items-center rounded-full text-muted-foreground hover:bg-secondary hover:text-foreground transition" aria-label="notifications">
           <Bell className="h-4 w-4" />
-          <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-destructive" />
+          <span className="absolute top-1 right-1 flex h-4 w-4 items-center justify-center rounded-full bg-destructive text-[9px] font-bold text-white">4</span>
         </button>
-        <div className="flex items-center gap-2 pl-2 border-l border-border">
-          <div className="grid h-9 w-9 place-items-center rounded-full bg-primary text-primary-foreground text-sm font-semibold">A</div>
-          <div className="hidden sm:block text-xs leading-tight">
-            <div className="font-semibold">Admin</div>
-            <div className="text-muted-foreground text-[10px]">Super Admin</div>
-          </div>
+        <div className="flex items-center gap-2 pl-3 border-l border-border">
+          <div className="grid h-9 w-9 place-items-center rounded-full bg-destructive text-white text-sm font-bold">A</div>
         </div>
       </div>
     </header>

@@ -849,7 +849,7 @@ function DashboardChecksheet() {
       {activeTab === TABS[0] && (
         <>
           {/* ── Card 1: Pressure by Cleaning Bag Filter ──────── */}
-          <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
+          <div className="rounded-lg border border-border bg-card p-6 shadow-sm">
             <div className="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
               <h2 className="text-lg font-semibold">Pressure by Cleaning Bag Filter</h2>
               <div className="flex flex-wrap items-center gap-3">
@@ -925,7 +925,7 @@ function DashboardChecksheet() {
       </div>
 
       {/* ── Card 2: Pressure by Control Pressure ─────────── */}
-      <div className="rounded-xl border border-border bg-card p-6 shadow-sm mt-6">
+      <div className="rounded-lg border border-border bg-card p-6 shadow-sm mt-6">
         <div className="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
           <h2 className="text-lg font-semibold">Control Preassure</h2>
           <div className="flex flex-wrap items-center gap-3">
@@ -1041,7 +1041,7 @@ function DashboardChecksheet() {
           </div>
 
           {/* ── Chart Section ───────────────────────────────── */}
-          <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
+          <div className="rounded-lg border border-border bg-card p-6 shadow-sm">
             <h2 className="text-lg font-semibold mb-6">Waste Disposal Trends</h2>
             <div className="w-full">
               <ResponsiveContainer width="100%" height={600}>
@@ -1117,7 +1117,7 @@ function DashboardChecksheet() {
               </div>
 
               {/* ── Chart 1: Free Alkali ───────────────────────────────── */}
-              <div className="rounded-xl border border-border bg-card p-6 shadow-sm mt-6">
+              <div className="rounded-lg border border-border bg-card p-6 shadow-sm mt-6">
                 <h2 className="text-lg font-semibold mb-6">Free Alkali (T.Alk)</h2>
                 <div className="w-full">
                   <ResponsiveContainer width="100%" height={300}>
@@ -1179,7 +1179,7 @@ function DashboardChecksheet() {
               </div>
 
               {/* ── Chart 2: Temperature ───────────────────────────────── */}
-              <div className="rounded-xl border border-border bg-card p-6 shadow-sm mt-6">
+              <div className="rounded-lg border border-border bg-card p-6 shadow-sm mt-6">
                 <h2 className="text-lg font-semibold mb-6">Temperature (°C)</h2>
                 <div className="w-full">
                   <ResponsiveContainer width="100%" height={300}>
@@ -1268,7 +1268,7 @@ function DashboardChecksheet() {
               </div>
 
               {/* ── Chart 1: Total Alkali ───────────────────────────────── */}
-              <div className="rounded-xl border border-border bg-card p-6 shadow-sm mt-6">
+              <div className="rounded-lg border border-border bg-card p-6 shadow-sm mt-6">
                 <h2 className="text-lg font-semibold mb-6">Total Alkali (T.Alk)</h2>
                 <div className="w-full">
                   <ResponsiveContainer width="100%" height={300}>
@@ -1331,7 +1331,7 @@ function DashboardChecksheet() {
               </div>
 
               {/* ── Chart 2: pH ───────────────────────────────── */}
-              <div className="rounded-xl border border-border bg-card p-6 shadow-sm mt-6">
+              <div className="rounded-lg border border-border bg-card p-6 shadow-sm mt-6">
                 <h2 className="text-lg font-semibold mb-6">pH</h2>
                 <div className="w-full">
                   <ResponsiveContainer width="100%" height={300}>
@@ -1441,7 +1441,7 @@ function DashboardChecksheet() {
               {/* ── Charts Grid (2x2) ───────────────────────────────── */}
               <div className="grid gap-6 lg:grid-cols-2 mt-6">
                 {/* Chart 1: Total Acid (T.A) */}
-                <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
+                <div className="rounded-lg border border-border bg-card p-6 shadow-sm">
                   <h2 className="text-lg font-semibold mb-6">Total Acid (T.A)</h2>
                   <div className="w-full">
                     <ResponsiveContainer width="100%" height={300}>
@@ -1504,7 +1504,7 @@ function DashboardChecksheet() {
                 </div>
 
                 {/* Chart 2: Free Acid (F.A) */}
-                <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
+                <div className="rounded-lg border border-border bg-card p-6 shadow-sm">
                   <h2 className="text-lg font-semibold mb-6">Free Acid (F.A)</h2>
                   <div className="w-full">
                     <ResponsiveContainer width="100%" height={300}>
@@ -1567,7 +1567,7 @@ function DashboardChecksheet() {
                 </div>
 
                 {/* Chart 3: Accelerator (AC) */}
-                <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
+                <div className="rounded-lg border border-border bg-card p-6 shadow-sm">
                   <h2 className="text-lg font-semibold mb-6">Accelerator (AC)</h2>
                   <div className="w-full">
                     <ResponsiveContainer width="100%" height={300}>
@@ -1630,7 +1630,7 @@ function DashboardChecksheet() {
                 </div>
 
                 {/* Chart 4: Temperature (°C) */}
-                <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
+                <div className="rounded-lg border border-border bg-card p-6 shadow-sm">
                   <h2 className="text-lg font-semibold mb-6">Temperature (°C)</h2>
                   <div className="w-full">
                     <ResponsiveContainer width="100%" height={300}>
@@ -1731,7 +1731,7 @@ function DashboardChecksheet() {
               {/* ── Charts Grid (WR 2 & 4 side-by-side, WR 5 full width) ───────────────────────────────── */}
               <div className="grid gap-6 lg:grid-cols-2 mt-6">
                 {/* Chart 1: Water Rinse 2 (Free Alkali) */}
-                <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
+                <div className="rounded-lg border border-border bg-card p-6 shadow-sm">
                   <h2 className="text-lg font-semibold mb-6">Water Rinse 2 (Free Alkali)</h2>
                   <div className="w-full">
                     <ResponsiveContainer width="100%" height={300}>
@@ -1793,7 +1793,7 @@ function DashboardChecksheet() {
                 </div>
 
                 {/* Chart 2: Water Rinse 4 (Total Acid) */}
-                <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
+                <div className="rounded-lg border border-border bg-card p-6 shadow-sm">
                   <h2 className="text-lg font-semibold mb-6">Water Rinse 4 (Total Acid)</h2>
                   <div className="w-full">
                     <ResponsiveContainer width="100%" height={300}>
@@ -1855,7 +1855,7 @@ function DashboardChecksheet() {
                 </div>
 
                 {/* Chart 3: Water Rinse 5 (Total Acid) */}
-                <div className="rounded-xl border border-border bg-card p-6 shadow-sm lg:col-span-2">
+                <div className="rounded-lg border border-border bg-card p-6 shadow-sm lg:col-span-2">
                   <h2 className="text-lg font-semibold mb-6">Water Rinse 5 (Total Acid)</h2>
                   <div className="w-full">
                     <ResponsiveContainer width="100%" height={300}>
@@ -1985,7 +1985,7 @@ function DashboardChecksheet() {
           </div>
 
           {/* ── Bar Chart: Measurement Trends ───────────────────────────────── */}
-          <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
+          <div className="rounded-lg border border-border bg-card p-6 shadow-sm">
             <h2 className="text-lg font-semibold mb-6">Measurement Trends</h2>
             <div className="w-full">
               <ResponsiveContainer width="100%" height={400}>
@@ -2027,7 +2027,7 @@ function DashboardChecksheet() {
           {/* ── Problem Detail Modal ───────────────────────────────── */}
           {showProblemModal && (
             <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-              <div className="bg-card rounded-xl border border-border shadow-xl w-full max-w-6xl max-h-[85vh] flex flex-col">
+              <div className="bg-card rounded-lg border border-border shadow-xl w-full max-w-6xl max-h-[85vh] flex flex-col">
                 {/* Modal Header */}
                 <div className="flex items-center justify-between p-6 border-b border-border">
                   <h3 className="text-lg font-semibold">
@@ -2169,7 +2169,7 @@ function DashboardChecksheet() {
           </div>
 
           {/* ── Bar Chart: Measurement Trends ───────────────────────────────── */}
-          <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
+          <div className="rounded-lg border border-border bg-card p-6 shadow-sm">
             <h2 className="text-lg font-semibold mb-6">Measurement Trends</h2>
             <div className="w-full">
               <ResponsiveContainer width="100%" height={400}>
@@ -2211,7 +2211,7 @@ function DashboardChecksheet() {
           {/* ── Problem Detail Modal ───────────────────────────────── */}
           {showCEDProblemModal && (
             <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-              <div className="bg-card rounded-xl border border-border shadow-xl w-full max-w-6xl max-h-[85vh] flex flex-col">
+              <div className="bg-card rounded-lg border border-border shadow-xl w-full max-w-6xl max-h-[85vh] flex flex-col">
                 {/* Modal Header */}
                 <div className="flex items-center justify-between p-6 border-b border-border">
                   <h3 className="text-lg font-semibold">
@@ -2277,7 +2277,7 @@ function DashboardChecksheet() {
 
       {activeTab === TABS[5] && (
         <div className="space-y-6">
-          <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
+          <div className="rounded-lg border border-border bg-card p-6 shadow-sm">
             <h2 className="text-lg font-semibold mb-6">ED Ampere Trends — {edAmpereToggle}</h2>
             <div className="w-full">
               <ResponsiveContainer width="100%" height={400}>

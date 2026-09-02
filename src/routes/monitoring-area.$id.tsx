@@ -263,7 +263,7 @@ function StationDetailContent({ tabKey }: { tabKey: string }) {
       </div>
 
       {/* Station Illustration */}
-      <div className="border border-border/50 rounded-xl overflow-hidden bg-background mb-6">
+      <div className="border border-border/50 rounded-lg overflow-hidden bg-background mb-6">
         <div className="flex justify-between items-center p-3 bg-secondary/30 border-b border-border/50">
           <div className="flex items-center gap-2">
             <Activity className="h-4 w-4 text-muted-foreground" />
@@ -383,7 +383,7 @@ function MonitoringAreaDetails() {
           </Panel>
 
           {/* Tabbed Section inside a Card */}
-          <div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden flex flex-col">
+          <div className="bg-card border border-border rounded-lg shadow-sm overflow-hidden flex flex-col">
             <div className="flex border-b border-border/50 bg-secondary/10 px-2 pt-2">
               {["Boiler Monitoring", "Cummulative Usage", "Historical Charts"].map((tab) => (
                 <button
@@ -436,7 +436,7 @@ function MonitoringAreaDetails() {
                         {b.name}
                       </div>
 
-                      <div className="mt-5 flex flex-col gap-2 w-full text-center text-sm font-mono bg-background/70 backdrop-blur-md rounded-xl p-3 shadow-md z-10 border-t border-white/40 dark:border-white/10">
+                      <div className="mt-5 flex flex-col gap-2 w-full text-center text-sm font-mono bg-background/70 backdrop-blur-md rounded-lg p-3 shadow-md z-10 border-t border-white/40 dark:border-white/10">
                         <div className="text-muted-foreground text-[10px] uppercase tracking-wider mb-0.5">Temperature</div>
                         <div className="flex justify-between items-center">
                           <span className="text-muted-foreground text-xs">T1</span>
@@ -468,7 +468,7 @@ function MonitoringAreaDetails() {
                   </div>
                   
                   {/* Details underneath the tank */}
-                  <div className="mt-5 w-full space-y-3 bg-secondary/20 p-4 rounded-xl border border-border/50 shadow-sm">
+                  <div className="mt-5 w-full space-y-3 bg-secondary/20 p-4 rounded-lg border border-border/50 shadow-sm">
                     <div className="flex flex-col text-sm border-b border-border/40 pb-3">
                       <div className="flex justify-between items-center mb-2">
                         <span className="font-semibold text-muted-foreground">Boiler Status</span>
@@ -674,7 +674,7 @@ function MonitoringAreaDetails() {
         </div>
       ) : id === "line-tracking" ? (
         <div className="space-y-6">
-          <div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden flex flex-col">
+          <div className="bg-card border border-border rounded-lg shadow-sm overflow-hidden flex flex-col">
             <div className="flex border-b border-border/50 bg-secondary/10 px-2 pt-2">
               {["Line Tracking", "Process Detail"].map((tab) => (
                 <button
@@ -693,7 +693,7 @@ function MonitoringAreaDetails() {
 
             <div className="p-6">
               {(activeTab === "Line Tracking" || activeTab === "Boiler Monitoring") && (
-                <div className="border border-border/50 rounded-xl overflow-hidden bg-background">
+                <div className="border border-border/50 rounded-lg overflow-hidden bg-background">
                   {/* Map Header */}
                   <div className="flex flex-col gap-2 p-4 border-b border-border/50 bg-secondary/20">
                     <div className="flex justify-between items-start">
@@ -746,7 +746,7 @@ function MonitoringAreaDetails() {
         </div>
       ) : ["flood-station", "degreasing", "pree-degreasing", "phosphate"].includes(id) ? (
         <div className="space-y-6">
-           <div className="bg-card border border-border rounded-xl shadow-sm p-6">
+           <div className="bg-card border border-border rounded-lg shadow-sm p-6">
              <StationDetailContent tabKey={
                id === "flood-station" ? "flood" :
                id === "pree-degreasing" ? "pre-degreasing" :
@@ -756,10 +756,10 @@ function MonitoringAreaDetails() {
          </div>
       ) : id === "pted-bag-filter" ? (
         <div className="space-y-6">
-           <div className="bg-card border border-border rounded-xl shadow-sm p-6">
+           <div className="bg-card border border-border rounded-lg shadow-sm p-6">
              <div className="animate-in fade-in duration-300">
                {/* Station Illustration */}
-               <div className="border border-border/50 rounded-xl overflow-hidden bg-background">
+               <div className="border border-border/50 rounded-lg overflow-hidden bg-background">
                  <div className="flex justify-between items-center p-3 bg-secondary/30 border-b border-border/50">
                    <div className="flex items-center gap-2">
                      <Activity className="h-4 w-4 text-muted-foreground" />
@@ -781,7 +781,7 @@ function MonitoringAreaDetails() {
         <OvenDetailContent id={id} />
       ) : (
         /* Placeholder Content */
-        <div className="rounded-xl border border-dashed border-border p-12 text-center text-muted-foreground bg-secondary/20">
+        <div className="rounded-lg border border-dashed border-border p-12 text-center text-muted-foreground bg-secondary/20">
           <Activity className="h-8 w-8 mx-auto mb-3 text-muted-foreground/50" />
           <p className="text-sm font-medium">Empty Section</p>
           <p className="text-xs mt-1">Data and charts are currently being prepared.</p>

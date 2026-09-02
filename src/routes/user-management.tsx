@@ -235,7 +235,7 @@ function UserManagementPage() {
           </div>
 
           {/* Table */}
-          <div className="rounded-xl border border-border bg-card shadow-sm overflow-hidden mt-4">
+          <div className="rounded-lg border border-border bg-card shadow-sm overflow-hidden mt-4">
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead className="bg-secondary/50 text-[10px] uppercase tracking-widest text-muted-foreground">
@@ -371,7 +371,7 @@ function UserManagementPage() {
               {ROLES.map((role, idx) => (
                 <div
                   key={role.name}
-                  className={`flex items-center justify-between p-3 rounded-xl border ${
+                  className={`flex items-center justify-between p-3 rounded-lg border ${
                     idx === 0
                       ? "bg-primary text-primary-foreground border-primary"
                       : "bg-card border-border"
@@ -407,7 +407,7 @@ function UserManagementPage() {
           </div>
 
           {/* Permissions Table */}
-          <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
+          <div className="rounded-lg border border-border bg-card p-6 shadow-sm">
             <h2 className="text-lg font-bold">Super Admin</h2>
             <p className="text-xs text-muted-foreground mb-6">
               Configure access by module
@@ -574,7 +574,7 @@ function UserManagementPage() {
                 <img
                   src={selectedUser.avatar}
                   alt={selectedUser.name}
-                  className="w-48 h-48 rounded-xl object-cover border border-border bg-secondary"
+                  className="w-48 h-48 rounded-lg object-cover border border-border bg-secondary"
                 />
                 <button className="w-full inline-flex justify-center items-center gap-2 rounded-lg border border-border bg-card px-4 py-2.5 text-sm font-semibold hover:bg-secondary">
                   <Pencil className="h-4 w-4 text-muted-foreground" />
@@ -647,8 +647,8 @@ function SummaryCard({
   valueColor?: string;
 }) {
   return (
-    <div className="rounded-xl border border-border bg-card p-5 shadow-sm flex items-center gap-4">
-      <div className={`grid h-12 w-12 place-items-center rounded-xl ${iconBg}`}>
+    <div className="rounded-lg border border-border bg-card p-5 shadow-sm flex items-center gap-4">
+      <div className={`grid h-12 w-12 place-items-center rounded-lg ${iconBg}`}>
         {icon}
       </div>
       <div>

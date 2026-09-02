@@ -78,7 +78,7 @@ function ChecksheetApproval() {
       </div>
 
       {/* Table */}
-      <div className="rounded-xl border border-border bg-card shadow-sm overflow-hidden">
+      <div className="rounded-lg border border-border bg-card shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead className="bg-secondary/50 text-[10px] uppercase tracking-widest text-muted-foreground">
@@ -221,7 +221,7 @@ function DetailApprovalView({
       </div>
 
       {/* Info Grid */}
-      <div className="rounded-xl border border-border bg-card p-5">
+      <div className="rounded-lg border border-border bg-card p-5">
         <div className="grid gap-4 md:grid-cols-4">
           <InfoField label="Inspection Date" value="23/06/2026" />
           <InfoField label="Customer Name" value="CST-001 - Ragdalion" />
@@ -259,7 +259,7 @@ function DetailApprovalView({
       {/* Checksheet Table */}
       <div>
         <h2 className="text-lg font-semibold mb-3">Checksheet</h2>
-        <div className="rounded-xl border border-border bg-card shadow-sm overflow-hidden">
+        <div className="rounded-lg border border-border bg-card shadow-sm overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead className="bg-secondary/50 text-[10px] uppercase tracking-widest text-muted-foreground">
