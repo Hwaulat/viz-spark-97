@@ -486,13 +486,13 @@ function AreaCard({ area }: { area: AreaDef }) {
                             <div className="flex flex-col">
                               <span className="text-[9px] text-muted-foreground mb-0.5">UF 1</span>
                               <div className="flex items-baseline gap-1 whitespace-nowrap">
-                                <span className={`font-mono text-3xl font-bold ${getLimitColor("120.5", 100, 150)}`}>120.5</span>
+                                <span className={`font-mono text-3xl font-bold ${getLimitColor("120.5", 100, 150, "text-emerald-500")}`}>120.5</span>
                               </div>
                             </div>
                             <div className="flex flex-col items-end">
                               <span className="text-[9px] text-muted-foreground mb-0.5">UF 2</span>
                               <div className="flex items-baseline gap-1 whitespace-nowrap">
-                                <span className={`font-mono text-3xl font-bold ${getLimitColor("118.2", 100, 150, "text-blue-500")}`}>118.2</span>
+                                <span className={`font-mono text-3xl font-bold ${getLimitColor("118.2", 100, 150, "text-emerald-500")}`}>118.2</span>
                               </div>
                             </div>
                           </div>
@@ -522,14 +522,14 @@ function AreaCard({ area }: { area: AreaDef }) {
                             <div className="flex flex-col">
                               <span className="text-[9px] text-muted-foreground mb-0.5">IN</span>
                               <div className="flex items-baseline gap-1 whitespace-nowrap">
-                                <span className={`font-mono text-3xl font-bold ${getLimitColor("4.5", 4.0, 5.0)}`}>4.5</span>
+                                <span className={`font-mono text-3xl font-bold ${getLimitColor("4.5", 4.0, 5.0, "text-emerald-500")}`}>4.5</span>
                                 <span className="text-xs font-normal text-muted-foreground">bar</span>
                               </div>
                             </div>
                             <div className="flex flex-col items-end">
                               <span className="text-[9px] text-muted-foreground mb-0.5">OUT</span>
                               <div className="flex items-baseline gap-1 whitespace-nowrap">
-                                <span className={`font-mono text-3xl font-bold ${getLimitColor("3.2", 2.0, 4.0, "text-blue-500")}`}>3.2</span>
+                                <span className={`font-mono text-3xl font-bold ${getLimitColor("3.2", 2.0, 4.0, "text-emerald-500")}`}>3.2</span>
                                 <span className="text-xs font-normal text-muted-foreground/70">bar</span>
                               </div>
                             </div>
