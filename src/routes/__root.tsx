@@ -268,15 +268,15 @@ function TopBar({ onToggleSidebar, collapsed }: { onToggleSidebar: () => void; c
                 <p className="font-semibold mb-1 text-muted-foreground">NG Areas:</p>
                 <div className="flex items-center gap-2">
                   <span className="h-1.5 w-1.5 rounded-full bg-destructive" />
-                  <span>Boiler Area</span>
+                  <span>Boiler Area - Boiler 3</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="h-1.5 w-1.5 rounded-full bg-destructive" />
-                  <span>PTED Equipment</span>
+                  <span>PTED Equipment - Bag Filter</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="h-1.5 w-1.5 rounded-full bg-destructive" />
-                  <span>Oven Sealing</span>
+                  <span>Oven Sealing - Temp 1</span>
                 </div>
               </div>
             </PopoverContent>
