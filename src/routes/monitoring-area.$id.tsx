@@ -3,6 +3,7 @@ import { useState, useMemo } from "react";
 import { ArrowLeft, Activity, Flame, Gauge, Power, BarChart3, Filter, Waves, Zap, Thermometer } from "lucide-react";
 import { BOILERS, BOILER_GAS, BOILER_USAGE_HISTORY, LINE_TRACKING_STATIONS, LINE_TRACKING_ZONES, PROCESS_DETAIL_STATIONS, ovenElecDailyTrend, ovenElecMonthlyTrend, ovenElecYearlyTrend } from "@/lib/mock-data";
 import { Panel, StatusDot, ValueDisplay } from "@/components/panel";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { LineChart, Line, AreaChart, Area, BarChart, Bar, ReferenceLine, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import LineTrackingSvg from "@/assets/Line-Tracking.svg";
 import StationPreDegreasingPng from "@/assets/Pre-degreasing.png";
@@ -384,25 +385,17 @@ function MonitoringAreaDetails() {
           </Panel>
 
           {/* Tabbed Section inside a Card */}
-          <div className="bg-card border border-border rounded-lg shadow-sm overflow-hidden flex flex-col">
-            <div className="flex border-b border-border/50 bg-secondary/10 px-2 pt-2">
-              {["Boiler Monitoring", "Cummulative Usage", "Historical Charts"].map((tab) => (
-                <button
-                  key={tab}
-                  onClick={() => setActiveTab(tab)}
-                  className={`px-4 py-2.5 text-sm font-medium border-b-2 transition-colors ${
-                    activeTab === tab
-                      ? "border-primary text-primary"
-                      : "border-transparent text-muted-foreground hover:text-foreground hover:border-border/50"
-                  }`}
-                >
-                  {tab}
-                </button>
-              ))}
+          <Tabs defaultValue="Boiler Monitoring" className="bg-card border border-border rounded-lg shadow-sm overflow-hidden flex flex-col">
+            <div className="flex border-b border-border/50 bg-secondary/10 px-4 py-2">
+              <TabsList>
+                {["Boiler Monitoring", "Cummulative Usage", "Historical Charts"].map((tab) => (
+                  <TabsTrigger key={tab} value={tab}>{tab}</TabsTrigger>
+                ))}
+              </TabsList>
             </div>
 
             <div className="p-6">
-              {activeTab === "Boiler Monitoring" && (
+              <TabsContent value="Boiler Monitoring">
             <div className="grid gap-6 lg:grid-cols-3">
               {BOILERS.map((b) => (
                 <div key={b.id} className="flex flex-col items-center">
@@ -518,9 +511,9 @@ function MonitoringAreaDetails() {
                 </div>
               ))}
             </div>
-          )}
+              </TabsContent>
 
-          {activeTab === "Cummulative Usage" && (
+              <TabsContent value="Cummulative Usage">
             <div className="space-y-6">
               <div className="flex items-center justify-between bg-secondary/30 p-2 rounded-lg border border-border/50">
                 <div className="flex items-center gap-2 text-sm font-medium px-2 text-muted-foreground">
@@ -590,25 +583,21 @@ function MonitoringAreaDetails() {
                 </div>
               </Panel>
             </div>
-          )}
+          </TabsContent>
 
-              {activeTab === "Historical Charts" && (
-                <div className="space-y-6">
+              <TabsContent value="Historical Charts">
+                <Tabs value={historicalBoilerTab} onValueChange={setHistoricalBoilerTab} className="space-y-6">
                   {/* Temperature & Pressure Trends */}
                   <div className="grid gap-4 lg:grid-cols-2">
                     {/* Temperature */}
                     <Panel title="Temperature Trends by Minute">
                       <div className="p-4 border-b border-border/50">
                         <div className="flex gap-2">
-                          {["Boiler 1", "Boiler 2", "Boiler 3"].map(tab => (
-                            <button
-                              key={tab}
-                              onClick={() => setHistoricalBoilerTab(tab)}
-                              className={`px-3 py-1.5 text-xs font-medium rounded-md transition ${historicalBoilerTab === tab ? 'bg-primary text-primary-foreground' : 'bg-secondary text-muted-foreground hover:bg-secondary/80'}`}
-                            >
-                              {tab}
-                            </button>
-                          ))}
+                          <TabsList>
+                            {["Boiler 1", "Boiler 2", "Boiler 3"].map(tab => (
+                              <TabsTrigger key={tab} value={tab}>{tab}</TabsTrigger>
+                            ))}
+                          </TabsList>
                         </div>
                       </div>
                       <div className="h-[300px] w-full p-4">
@@ -668,32 +657,24 @@ function MonitoringAreaDetails() {
                       </ResponsiveContainer>
                     </div>
                   </Panel>
-                </div>
-              )}
+                </Tabs>
+              </TabsContent>
             </div>
-          </div>
+          </Tabs>
         </div>
       ) : id === "line-tracking" ? (
         <div className="space-y-6">
-          <div className="bg-card border border-border rounded-lg shadow-sm overflow-hidden flex flex-col">
-            <div className="flex border-b border-border/50 bg-secondary/10 px-2 pt-2">
-              {["Line Tracking", "Process Detail"].map((tab) => (
-                <button
-                  key={tab}
-                  onClick={() => setActiveTab(tab)}
-                  className={`px-4 py-2.5 text-sm font-medium border-b-2 transition-colors ${
-                    activeTab === tab || (activeTab === "Boiler Monitoring" && tab === "Line Tracking") // default
-                      ? "border-primary text-primary"
-                      : "border-transparent text-muted-foreground hover:text-foreground hover:border-border/50"
-                  }`}
-                >
-                  {tab}
-                </button>
-              ))}
+          <Tabs defaultValue="Line Tracking" className="bg-card border border-border rounded-lg shadow-sm overflow-hidden flex flex-col w-full">
+            <div className="flex border-b border-border/50 bg-secondary/10 px-4 py-2">
+              <TabsList>
+                {["Line Tracking", "Process Detail"].map((tab) => (
+                  <TabsTrigger key={tab} value={tab}>{tab}</TabsTrigger>
+                ))}
+              </TabsList>
             </div>
 
             <div className="p-6">
-              {(activeTab === "Line Tracking" || activeTab === "Boiler Monitoring") && (
+              <TabsContent value="Line Tracking">
                 <div className="border border-border/50 rounded-lg overflow-hidden bg-background">
                   {/* Map Header */}
                   <div className="flex flex-col gap-2 p-4 border-b border-border/50 bg-secondary/20">
@@ -718,32 +699,28 @@ function MonitoringAreaDetails() {
                     <div className="flex items-center gap-1.5"><div className="w-3 h-3 rounded-full border-[1.5px] border-gray-400"></div> EMPTY STATION</div>
                   </div>
                 </div>
-              )}
+              </TabsContent>
 
-              {activeTab === "Process Detail" && (
-                <div className="space-y-4">
+              <TabsContent value="Process Detail">
+                <Tabs defaultValue="pre-degreasing" className="space-y-4">
                   {/* Sub-tabs for Process Detail */}
                   <div className="flex flex-wrap gap-2 mb-6">
-                    {["pre-degreasing", "degreasing", "phosphate", "flood"].map((tab) => (
-                      <button
-                        key={tab}
-                        onClick={() => setProcessDetailTab(tab)}
-                        className={`px-4 py-2 rounded-t-lg text-xs font-semibold uppercase tracking-wider transition-all border-b-2 ${
-                          processDetailTab === tab 
-                            ? "bg-primary/10 border-primary text-primary" 
-                            : "bg-secondary/40 border-transparent text-muted-foreground hover:bg-secondary"
-                        }`}
-                      >
-                        {tab.replace("-", " ")}
-                      </button>
-                    ))}
+                    <TabsList>
+                      {["pre-degreasing", "degreasing", "phosphate", "flood"].map((tab) => (
+                        <TabsTrigger key={tab} value={tab}>{tab.replace("-", " ")}</TabsTrigger>
+                      ))}
+                    </TabsList>
                   </div>
 
-                  <StationDetailContent tabKey={processDetailTab} />
-                </div>
-              )}
+                  {["pre-degreasing", "degreasing", "phosphate", "flood"].map((tab) => (
+                    <TabsContent key={tab} value={tab}>
+                      <StationDetailContent tabKey={tab} />
+                    </TabsContent>
+                  ))}
+                </Tabs>
+              </TabsContent>
             </div>
-          </div>
+          </Tabs>
         </div>
       ) : ["flood-station", "degreasing", "pree-degreasing", "phosphate"].includes(id) ? (
         <div className="space-y-6">
