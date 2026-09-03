@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { Panel, StatusDot, ValueDisplay } from "@/components/panel";
 import { BOILERS, BOILER_GAS, boilerDayTrend, boilerMonthTrend } from "@/lib/mock-data";
@@ -142,6 +142,15 @@ function BoilerArea() {
               </div>
             </div>
 
+            {/* Details button */}
+            <Link
+              to="/boiler-details/$id"
+              params={{ id: String(b.id) }}
+              className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-md bg-primary px-3 py-2 text-xs font-semibold text-primary-foreground hover:opacity-90 transition"
+            >
+              <Gauge className="h-3.5 w-3.5" /> Details
+              <ArrowRight className="h-3.5 w-3.5" />
+            </Link>
           </Panel>
         ))}
       </div>
