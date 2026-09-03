@@ -390,7 +390,7 @@ function MonitoringAreaDetails() {
           </Panel>
 
           {/* Tabbed Section inside a Card */}
-          <Tabs defaultValue="Boiler Monitoring" className="bg-card border border-border rounded-lg shadow-sm overflow-hidden flex flex-col">
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="bg-card border border-border rounded-lg shadow-sm overflow-hidden flex flex-col">
             <div className="flex items-center justify-between border-b border-border/50 bg-secondary/10 px-4 py-2">
               <TabsList>
                 {["Boiler Monitoring", "Cummulative Usage", "Historical Charts"].map((tab) => (
@@ -398,24 +398,26 @@ function MonitoringAreaDetails() {
                 ))}
               </TabsList>
 
-              <div className="flex gap-1 bg-background/50 p-1 rounded-md border border-border/50">
-                <div className="flex items-center gap-2 text-sm font-medium px-2 text-muted-foreground mr-1">
-                  <Filter className="h-3.5 w-3.5" /> Filter by:
+              {activeTab === "Cummulative Usage" && (
+                <div className="flex gap-1 bg-background/50 p-1 rounded-md border border-border/50">
+                  <div className="flex items-center gap-2 text-sm font-medium px-2 text-muted-foreground mr-1">
+                    <Filter className="h-3.5 w-3.5" /> Filter by:
+                  </div>
+                  {(["daily", "monthly", "yearly"] as const).map((t) => (
+                    <button
+                      key={t}
+                      onClick={() => setTimeFilter(t)}
+                      className={`px-3 py-1 text-xs font-medium rounded transition ${
+                        timeFilter === t
+                          ? "bg-primary text-primary-foreground shadow-sm"
+                          : "text-muted-foreground hover:bg-secondary hover:text-foreground"
+                      }`}
+                    >
+                      {t.charAt(0).toUpperCase() + t.slice(1)}
+                    </button>
+                  ))}
                 </div>
-                {(["daily", "monthly", "yearly"] as const).map((t) => (
-                  <button
-                    key={t}
-                    onClick={() => setTimeFilter(t)}
-                    className={`px-3 py-1 text-xs font-medium rounded transition ${
-                      timeFilter === t
-                        ? "bg-primary text-primary-foreground shadow-sm"
-                        : "text-muted-foreground hover:bg-secondary hover:text-foreground"
-                    }`}
-                  >
-                    {t.charAt(0).toUpperCase() + t.slice(1)}
-                  </button>
-                ))}
-              </div>
+              )}
             </div>
 
             <div className="p-6">
