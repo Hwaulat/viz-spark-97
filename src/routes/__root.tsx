@@ -26,6 +26,11 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 function NotFoundComponent() {
   return (
@@ -251,14 +256,14 @@ function TopBar({ onToggleSidebar, collapsed }: { onToggleSidebar: () => void; c
           {collapsed ? <PanelLeftOpen className="h-4 w-4" /> : <PanelLeftClose className="h-4 w-4" />}
         </button>
         <div className="hidden lg:flex items-center gap-2 text-xs text-muted-foreground">
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <span className="inline-flex items-center gap-1.5 cursor-help">
+          <Popover>
+            <PopoverTrigger asChild>
+              <button className="inline-flex items-center gap-1.5 cursor-pointer focus:outline-none hover:bg-secondary/50 p-1.5 rounded-md transition-colors">
                 <span className="h-2 w-2 rounded-full bg-destructive" />
                 <span className="font-semibold text-destructive">3 NG</span>
-              </span>
-            </TooltipTrigger>
-            <TooltipContent side="bottom" align="start" className="p-3">
+              </button>
+            </PopoverTrigger>
+            <PopoverContent side="bottom" align="start" className="p-3 w-auto">
               <div className="flex flex-col gap-1.5 text-xs">
                 <p className="font-semibold mb-1 text-muted-foreground">NG Areas:</p>
                 <div className="flex items-center gap-2">
@@ -274,8 +279,8 @@ function TopBar({ onToggleSidebar, collapsed }: { onToggleSidebar: () => void; c
                   <span>Oven Sealing</span>
                 </div>
               </div>
-            </TooltipContent>
-          </Tooltip>
+            </PopoverContent>
+          </Popover>
         </div>
       </div>
       <div className="flex items-center gap-4">
