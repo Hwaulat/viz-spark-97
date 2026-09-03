@@ -113,17 +113,6 @@ const DASHBOARD_CHILDREN: {
   { to: "/checksheet", label: "Dashboard Checksheet", icon: ClipboardCheck },
 ];
 
-const MASTER_DATA_CHILDREN: {
-  to: "/master-data" | "/master-data/standard" | "/master-data/equipment" | "/master-data/station" | "/master-data/type" | "/master-data/colors" | "/master-data/uom";
-  label: string;
-}[] = [
-  { to: "/master-data", label: "Parameter Standard" },
-  { to: "/master-data/equipment", label: "Equipment" },
-  { to: "/master-data/station", label: "Station" },
-  { to: "/master-data/type", label: "Parameter Type" },
-  { to: "/master-data/colors", label: "Status Color" },
-  { to: "/master-data/uom", label: "Unit of Measure" },
-];
 
 const linkBase =
   "group flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-sidebar-foreground/75 hover:bg-white/5 hover:text-sidebar-foreground transition";
