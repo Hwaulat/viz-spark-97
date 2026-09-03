@@ -386,12 +386,31 @@ function MonitoringAreaDetails() {
 
           {/* Tabbed Section inside a Card */}
           <Tabs defaultValue="Boiler Monitoring" className="bg-card border border-border rounded-lg shadow-sm overflow-hidden flex flex-col">
-            <div className="flex border-b border-border/50 bg-secondary/10 px-4 py-2">
+            <div className="flex items-center justify-between border-b border-border/50 bg-secondary/10 px-4 py-2">
               <TabsList>
                 {["Boiler Monitoring", "Cummulative Usage", "Historical Charts"].map((tab) => (
                   <TabsTrigger key={tab} value={tab}>{tab}</TabsTrigger>
                 ))}
               </TabsList>
+
+              <div className="flex gap-1 bg-background/50 p-1 rounded-md border border-border/50">
+                <div className="flex items-center gap-2 text-sm font-medium px-2 text-muted-foreground mr-1">
+                  <Filter className="h-3.5 w-3.5" /> Filter by:
+                </div>
+                {(["daily", "monthly", "yearly"] as const).map((t) => (
+                  <button
+                    key={t}
+                    onClick={() => setTimeFilter(t)}
+                    className={`px-3 py-1 text-xs font-medium rounded transition ${
+                      timeFilter === t
+                        ? "bg-primary text-primary-foreground shadow-sm"
+                        : "text-muted-foreground hover:bg-secondary hover:text-foreground"
+                    }`}
+                  >
+                    {t.charAt(0).toUpperCase() + t.slice(1)}
+                  </button>
+                ))}
+              </div>
             </div>
 
             <div className="p-6">
@@ -515,28 +534,7 @@ function MonitoringAreaDetails() {
 
               <TabsContent value="Cummulative Usage">
             <div className="space-y-6">
-              <div className="flex items-center justify-between bg-secondary/30 p-2 rounded-lg border border-border/50">
-                <div className="flex items-center gap-2 text-sm font-medium px-2 text-muted-foreground">
-                  <Filter className="h-4 w-4" /> Filter by:
-                </div>
-                <div className="flex gap-1">
-                  {(["daily", "monthly", "yearly"] as const).map((t) => (
-                    <button
-                      key={t}
-                      onClick={() => setTimeFilter(t)}
-                      className={`px-3 py-1.5 text-xs font-medium rounded-md transition ${
-                        timeFilter === t
-                          ? "bg-primary text-primary-foreground shadow-sm"
-                          : "text-muted-foreground hover:bg-secondary hover:text-foreground"
-                      }`}
-                    >
-                      {t.charAt(0).toUpperCase() + t.slice(1)}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 pt-2">
                 <div className="rounded-lg bg-card border border-border p-4 shadow-sm flex flex-col gap-2">
                   <div className="flex items-center gap-2">
                     <div className="h-8 w-8 rounded-full flex items-center justify-center bg-blue-500/10 text-blue-500">
@@ -598,11 +596,12 @@ function MonitoringAreaDetails() {
                 </div>
               </div>
 
-              <Panel
-                title={<span className="flex items-center gap-2"><BarChart3 className="h-4 w-4" /> Combine Usage Trend</span>}
-                subtitle={`Energy and Gas usage trend over the selected ${timeFilter} timeframe`}
-              >
-                <div className="h-[350px] mt-4 w-full">
+              <div className="rounded-xl border bg-card p-6 shadow-sm">
+                <div>
+                  <h2 className="text-xl font-bold tracking-tight text-foreground">Combine Usage Trend</h2>
+                  <p className="text-sm text-muted-foreground mt-1">Energy and Gas usage trend over the selected {timeFilter} timeframe.</p>
+                </div>
+                <div className="h-[350px] mt-6 w-full">
                   <ResponsiveContainer width="100%" height="100%">
                     <LineChart data={usageData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
                       <CartesianGrid strokeDasharray="3 3" vertical={false} opacity={0.3} />
@@ -614,13 +613,13 @@ function MonitoringAreaDetails() {
                         itemStyle={{ color: "#fff" }}
                         formatter={(value: number, name: string) => [value.toLocaleString(), name]}
                       />
-                      <Legend wrapperStyle={{ paddingTop: "20px" }} />
-                      <Line yAxisId="left" type="monotone" name="Energy (kWh)" dataKey="energy" stroke="#3b82f6" strokeWidth={3} dot={false} activeDot={{ r: 6 }} />
-                      <Line yAxisId="right" type="monotone" name="Gas (m³)" dataKey="gas" stroke="#10b981" strokeWidth={3} dot={false} activeDot={{ r: 6 }} />
+                      <Legend iconType="circle" wrapperStyle={{ paddingTop: "20px" }} />
+                      <Line yAxisId="left" type="monotone" name="Energy (kWh)" dataKey="energy" stroke="#3b82f6" strokeWidth={2} dot={{ r: 4, strokeWidth: 2, fill: "hsl(var(--card))" }} activeDot={{ r: 6 }} />
+                      <Line yAxisId="right" type="monotone" name="Gas (m³)" dataKey="gas" stroke="#10b981" strokeWidth={2} dot={{ r: 4, strokeWidth: 2, fill: "hsl(var(--card))" }} activeDot={{ r: 6 }} />
                     </LineChart>
                   </ResponsiveContainer>
                 </div>
-              </Panel>
+              </div>
             </div>
           </TabsContent>
 
