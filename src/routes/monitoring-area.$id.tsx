@@ -360,7 +360,7 @@ function MonitoringAreaDetails() {
         </Link>
         <div>
           <div className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">
-            Area Details
+            Monitoring Area
           </div>
           <h1 className="text-2xl font-semibold mt-1 inline-flex items-center gap-2">
             <Activity className="h-5 w-5 text-primary" /> {name}
@@ -631,17 +631,19 @@ function MonitoringAreaDetails() {
               <TabsContent value="Historical Charts">
                 <Tabs value={historicalBoilerTab} onValueChange={setHistoricalBoilerTab} className="space-y-6">
                   {/* Temperature & Pressure Trends */}
-                  <div className="grid gap-4 lg:grid-cols-2">
+                  <div className="flex flex-col gap-6">
                     {/* Temperature */}
-                    <Panel title="Temperature Trends by Minute">
-                      <div className="p-4 border-b border-border/50">
-                        <div className="flex gap-2">
-                          <TabsList>
-                            {["Boiler 1", "Boiler 2", "Boiler 3"].map(tab => (
-                              <TabsTrigger key={tab} value={tab}>{tab}</TabsTrigger>
-                            ))}
-                          </TabsList>
+                    <div className="rounded-xl border bg-card p-6 shadow-sm">
+                      <div className="flex flex-wrap items-center justify-between gap-4">
+                        <div>
+                          <h2 className="text-xl font-bold tracking-tight text-foreground">Temperature Trends by Minute</h2>
+                          <p className="text-sm text-muted-foreground mt-1">Real-time temperature monitoring against standard limits.</p>
                         </div>
+                        <TabsList>
+                          {["Boiler 1", "Boiler 2", "Boiler 3"].map(tab => (
+                            <TabsTrigger key={tab} value={tab}>{tab}</TabsTrigger>
+                          ))}
+                        </TabsList>
                       </div>
                       <div className="h-[300px] w-full p-4">
                         <ResponsiveContainer width="100%" height="100%">
@@ -651,20 +653,24 @@ function MonitoringAreaDetails() {
                             <YAxis tick={{ fontSize: 10 }} />
                             <Tooltip contentStyle={{ backgroundColor: "rgba(0,0,0,0.8)", borderRadius: "8px", border: "1px solid rgba(255,255,255,0.1)" }} itemStyle={{ fontSize: 12 }} />
                             <Legend wrapperStyle={{ fontSize: "12px", paddingTop: "10px" }} />
-                            <ReferenceLine y={190} stroke="#ef4444" strokeDasharray="3 3" label={{ position: 'insideBottomLeft', value: 'Min Std (190°C)', fill: '#ef4444', fontSize: 10 }} />
-                            <ReferenceLine y={230} stroke="#ef4444" strokeDasharray="3 3" label={{ position: 'insideTopLeft', value: 'Max Std (230°C)', fill: '#ef4444', fontSize: 10 }} />
+                            <ReferenceLine y={190} stroke="#ef4444" strokeDasharray="3 3" label={{ position: 'insideBottomLeft', value: 'MIN', fill: '#ef4444', fontSize: 10 }} />
+                            <ReferenceLine y={230} stroke="#ef4444" strokeDasharray="3 3" label={{ position: 'insideTopLeft', value: 'MAX', fill: '#ef4444', fontSize: 10 }} />
                             <Line type="monotone" dataKey={historicalBoilerTab === "Boiler 1" ? "temp1_b1" : historicalBoilerTab === "Boiler 2" ? "temp1_b2" : "temp1_b3"} name="Actual Temp 1" stroke="#f97316" strokeWidth={2} dot={false} activeDot={{ r: 4 }} />
                             <Line type="monotone" dataKey={historicalBoilerTab === "Boiler 1" ? "temp2_b1" : historicalBoilerTab === "Boiler 2" ? "temp2_b2" : "temp2_b3"} name="Actual Temp 2" stroke="#ef4444" strokeWidth={2} dot={false} activeDot={{ r: 4 }} />
-                            <Line type="monotone" dataKey="none_max" name="Max Std (230°C)" stroke="#ef4444" strokeDasharray="3 3" strokeWidth={2} dot={false} activeDot={false} />
-                            <Line type="monotone" dataKey="none_min" name="Min Std (190°C)" stroke="#ef4444" strokeDasharray="3 3" strokeWidth={2} dot={false} activeDot={false} />
+                            <Line type="monotone" dataKey="none_max" name="MAX" stroke="#ef4444" strokeDasharray="3 3" strokeWidth={2} dot={false} activeDot={false} />
+                            <Line type="monotone" dataKey="none_min" name="MIN" stroke="#ef4444" strokeDasharray="3 3" strokeWidth={2} dot={false} activeDot={false} />
                           </LineChart>
                         </ResponsiveContainer>
                       </div>
-                    </Panel>
+                    </div>
 
                     {/* Pressure */}
-                    <Panel title="Pressure Trends by Minute">
-                      <div className="h-[300px] w-full p-4 mt-12">
+                    <div className="rounded-xl border bg-card p-6 shadow-sm">
+                      <div>
+                        <h2 className="text-xl font-bold tracking-tight text-foreground">Pressure Trends by Minute</h2>
+                        <p className="text-sm text-muted-foreground mt-1">Real-time pressure monitoring against standard limits.</p>
+                      </div>
+                      <div className="h-[300px] w-full mt-6">
                         <ResponsiveContainer width="100%" height="100%">
                           <LineChart data={MINUTE_DATA} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                             <CartesianGrid strokeDasharray="3 3" vertical={false} opacity={0.3} />
@@ -672,20 +678,24 @@ function MonitoringAreaDetails() {
                             <YAxis tick={{ fontSize: 10 }} />
                             <Tooltip contentStyle={{ backgroundColor: "rgba(0,0,0,0.8)", borderRadius: "8px", border: "1px solid rgba(255,255,255,0.1)" }} itemStyle={{ fontSize: 12 }} />
                             <Legend wrapperStyle={{ fontSize: "12px", paddingTop: "10px" }} />
-                            <ReferenceLine y={4} stroke="#ef4444" strokeDasharray="3 3" label={{ position: 'insideBottomLeft', value: 'Min Std (4 bar)', fill: '#ef4444', fontSize: 10 }} />
-                            <ReferenceLine y={8} stroke="#ef4444" strokeDasharray="3 3" label={{ position: 'insideTopLeft', value: 'Max Std (8 bar)', fill: '#ef4444', fontSize: 10 }} />
+                            <ReferenceLine y={4} stroke="#ef4444" strokeDasharray="3 3" label={{ position: 'insideBottomLeft', value: 'MIN', fill: '#ef4444', fontSize: 10 }} />
+                            <ReferenceLine y={8} stroke="#ef4444" strokeDasharray="3 3" label={{ position: 'insideTopLeft', value: 'MAX', fill: '#ef4444', fontSize: 10 }} />
                             <Line type="monotone" dataKey="pressure" name="Pressure (bar)" stroke="#3b82f6" strokeWidth={2} dot={false} activeDot={{ r: 4 }} />
-                            <Line type="monotone" dataKey="none_max" name="Max Std (8 bar)" stroke="#ef4444" strokeDasharray="3 3" strokeWidth={2} dot={false} activeDot={false} />
-                            <Line type="monotone" dataKey="none_min" name="Min Std (4 bar)" stroke="#ef4444" strokeDasharray="3 3" strokeWidth={2} dot={false} activeDot={false} />
+                            <Line type="monotone" dataKey="none_max" name="MAX" stroke="#ef4444" strokeDasharray="3 3" strokeWidth={2} dot={false} activeDot={false} />
+                            <Line type="monotone" dataKey="none_min" name="MIN" stroke="#ef4444" strokeDasharray="3 3" strokeWidth={2} dot={false} activeDot={false} />
                           </LineChart>
                         </ResponsiveContainer>
                       </div>
-                    </Panel>
+                    </div>
                   </div>
 
                   {/* Energy vs Gas */}
-                  <Panel title="Energy Consumption vs Gas Usage by Minute">
-                    <div className="h-[350px] w-full p-4">
+                  <div className="rounded-xl border bg-card p-6 shadow-sm">
+                    <div>
+                      <h2 className="text-xl font-bold tracking-tight text-foreground">Energy Consumption vs Gas Usage by Minute</h2>
+                      <p className="text-sm text-muted-foreground mt-1">Comparison of energy and gas consumption trends.</p>
+                    </div>
+                    <div className="h-[350px] w-full mt-6">
                       <ResponsiveContainer width="100%" height="100%">
                         <LineChart data={MINUTE_DATA} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                           <CartesianGrid strokeDasharray="3 3" vertical={false} opacity={0.3} />
@@ -699,7 +709,7 @@ function MonitoringAreaDetails() {
                         </LineChart>
                       </ResponsiveContainer>
                     </div>
-                  </Panel>
+                  </div>
                 </Tabs>
               </TabsContent>
             </div>
