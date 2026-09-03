@@ -8,7 +8,7 @@ import {
   Scripts,
 } from "@tanstack/react-router";
 import { useEffect, useState, type ReactNode } from "react";
-import { Activity, Flame, Waves, Thermometer, Gauge, Sun, Moon, Bell, PanelLeftClose, PanelLeftOpen, LayoutDashboard, FileText, History, Users, ChevronDown, ClipboardCheck, Clock, ShieldCheck, User, LogOut, Database } from "lucide-react";
+import { Activity, Flame, Waves, Thermometer, Gauge, Sun, Moon, Bell, PanelLeftClose, PanelLeftOpen, LayoutDashboard, FileText, History, Users, ChevronDown, ClipboardCheck, Clock, ShieldCheck, User, LogOut } from "lucide-react";
 import { useRouterState } from "@tanstack/react-router";
 
 import appCss from "../styles.css?url";
