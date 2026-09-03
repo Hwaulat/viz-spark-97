@@ -52,26 +52,6 @@ const AREAS: AreaDef[] = [
   { id: "oven-ced", name: "Oven CED", type: "oven", oven: { temp1: "185.0", temp2: "182.5", pressure: "2.8" } },
 ];
 
-const REVENUE_DATA = [
-  { day: "Fri", value: 17500 },
-  { day: "Sat", value: 13500 },
-  { day: "Sun", value: 22430, active: true },
-  { day: "Mon", value: 13500 },
-  { day: "Thu", value: 16800 },
-  { day: "Wen", value: 22500 },
-  { day: "Thus", value: 16800 },
-];
-
-const INCOME_DATA = [
-  { month: "Jan", profit: 13500, loss: 23000 },
-  { month: "Feb", profit: 24000, loss: 17500 },
-  { month: "Mar", profit: 30000, loss: 14500 },
-  { month: "Apr", profit: 18500, loss: 19500 },
-  { month: "May", profit: 26000, loss: 17500 },
-  { month: "Jun", profit: 20000, loss: 28000 },
-  { month: "Jul", profit: 18500, loss: 19500 },
-  { month: "Aug", profit: 18500, loss: 14500 },
-];
 
 function BagFilterItemDialog({ item, children }: { item: { name: string, val: string, val2?: string, id: string, unit?: string, valName?: string, val2Name?: string, minStd?: number, maxStd?: number, minStd2?: number, maxStd2?: number, minStdName?: string, maxStdName?: string, minStd2Name?: string, maxStd2Name?: string }, children: React.ReactNode }) {
   const data = useMemo(() => {
