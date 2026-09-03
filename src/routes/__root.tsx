@@ -172,35 +172,6 @@ function Sidebar({ onNavigate, className = "" }: { onNavigate?: () => void; clas
           </div>
         )}
 
-        <div className="px-5 pt-4 pb-2 text-[10px] font-semibold uppercase tracking-widest text-sidebar-muted">
-          Operations
-        </div>
-        
-        <button
-          type="button"
-          onClick={() => setMasterDataOpen((v) => !v)}
-          className={`w-full ${masterDataActive ? "text-sidebar-foreground" : "text-sidebar-foreground/75"} flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm hover:bg-white/5 transition`}
-          aria-expanded={masterDataOpen}
-        >
-          <Database className="h-4 w-4" />
-          <span className="flex-1 text-left">Master Data</span>
-          <ChevronDown className={`h-4 w-4 transition-transform ${masterDataOpen ? "rotate-180" : ""}`} />
-        </button>
-        {masterDataOpen && (
-          <div className="ml-3 pl-3 border-l border-sidebar-border space-y-1">
-            {MASTER_DATA_CHILDREN.map((c) => (
-              <Link
-                key={c.label}
-                to={c.to as any}
-                onClick={onNavigate}
-                className={linkBase + " py-2 text-[13px]"}
-                activeProps={{ className: linkActive + " py-2 text-[13px]" }}
-              >
-                {c.label}
-              </Link>
-            ))}
-          </div>
-        )}
         <Link
           to="/user-management"
           className={linkBase}
