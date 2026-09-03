@@ -42,14 +42,22 @@ function ReportPage() {
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {[
-          { l: "Reports Today", v: "12" },
-          { l: "Pending", v: "1" },
-          { l: "Auto-Scheduled", v: "8" },
-          { l: "Total This Month", v: "246" },
+          { l: "Reports Today", v: "12", icon: FileText, iconBg: "bg-blue-500/10 text-blue-500" },
+          { l: "Pending", v: "1", icon: Calendar, iconBg: "bg-warn/10 text-warn" },
+          { l: "Auto-Scheduled", v: "8", icon: Calendar, iconBg: "bg-purple-500/10 text-purple-500" },
+          { l: "Total This Month", v: "246", icon: FileText, iconBg: "bg-emerald-500/10 text-emerald-500" },
         ].map((k) => (
-          <Panel key={k.l} title={k.l}>
-            <div className="text-3xl font-semibold font-mono tabular-nums">{k.v}</div>
-          </Panel>
+          <div key={k.l} className="rounded-lg bg-card border border-border p-4 shadow-sm flex flex-col gap-2">
+            <div className="flex items-center gap-2">
+              <div className={`h-8 w-8 rounded-full flex items-center justify-center ${k.iconBg}`}>
+                <k.icon className="h-4.5 w-4.5" />
+              </div>
+              <span className="text-sm font-medium text-foreground">{k.l}</span>
+            </div>
+            <div>
+              <div className="text-2xl font-bold">{k.v}</div>
+            </div>
+          </div>
         ))}
       </div>
 

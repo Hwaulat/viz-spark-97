@@ -2385,14 +2385,14 @@ function SummaryCard({
   icon: React.ReactNode;
 }) {
   return (
-    <div className="rounded-lg bg-card border border-border p-4 shadow-sm space-y-2">
-      <div className="flex items-center justify-between">
-        <span className="text-sm font-medium text-muted-foreground">{label}</span>
+    <div className="rounded-lg bg-card border border-border p-4 shadow-sm flex flex-col gap-2">
+      <div className="flex items-center gap-2">
         <div
           className={`h-8 w-8 rounded-full flex items-center justify-center ${iconBg}`}
         >
           {icon}
         </div>
+        <span className="text-sm font-medium text-foreground">{label}</span>
       </div>
       <div>
         <div className="text-2xl font-bold">{value}</div>
@@ -2420,23 +2420,23 @@ function DoubleSummaryCard({
   icon: React.ReactNode;
 }) {
   return (
-    <div className="rounded-lg bg-card border border-border p-4 shadow-sm space-y-4">
-      <div className="flex items-center justify-between">
-        <span className="text-sm font-medium text-muted-foreground">{label}</span>
+    <div className="rounded-lg bg-card border border-border p-4 shadow-sm flex flex-col gap-3">
+      <div className="flex items-center gap-2">
         <div
           className={`h-8 w-8 rounded-full flex items-center justify-center ${iconBg}`}
         >
           {icon}
         </div>
+        <span className="text-sm font-medium text-foreground">{label}</span>
       </div>
       <div className="flex gap-8">
         <div>
-          <div className="text-xs text-muted-foreground">{label1}</div>
           <div className="text-2xl font-bold">{value1}</div>
+          <div className="text-xs font-medium text-muted-foreground">{label1}</div>
         </div>
         <div>
-          <div className="text-xs text-muted-foreground">{label2}</div>
           <div className="text-2xl font-bold">{value2}</div>
+          <div className="text-xs font-medium text-muted-foreground">{label2}</div>
         </div>
       </div>
     </div>

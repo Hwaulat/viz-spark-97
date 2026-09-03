@@ -647,13 +647,15 @@ function SummaryCard({
   valueColor?: string;
 }) {
   return (
-    <div className="rounded-lg border border-border bg-card p-5 shadow-sm flex items-center gap-4">
-      <div className={`grid h-12 w-12 place-items-center rounded-lg ${iconBg}`}>
-        {icon}
+    <div className="rounded-lg bg-card border border-border p-4 shadow-sm flex flex-col gap-2">
+      <div className="flex items-center gap-2">
+        <div className={`h-8 w-8 rounded-full flex items-center justify-center ${iconBg}`}>
+          {icon}
+        </div>
+        <span className="text-sm font-medium text-foreground">{label}</span>
       </div>
       <div>
-        <div className="text-xs text-muted-foreground font-medium">{label}</div>
-        <div className={`text-2xl font-bold mt-0.5 ${valueColor}`}>{value}</div>
+        <div className={`text-2xl font-bold ${valueColor}`}>{value}</div>
       </div>
     </div>
   );

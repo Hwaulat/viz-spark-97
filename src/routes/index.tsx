@@ -66,15 +66,20 @@ function Overview() {
       {/* KPI strip */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {KPIS.map((k) => (
-          <Panel key={k.label} title={k.label}>
-            <div className="flex items-end justify-between">
-              <div className="flex items-baseline gap-2">
-                <span className={`text-3xl font-semibold font-mono tabular-nums ${k.tone === "warn" ? "text-warn" : k.tone === "ok" ? "text-ok" : ""}`}>{k.value}</span>
-                {k.unit && <span className="text-xs text-muted-foreground">{k.unit}</span>}
+          <div key={k.label} className="rounded-lg bg-card border border-border p-4 shadow-sm flex flex-col gap-2">
+            <div className="flex items-center gap-2">
+              <div className={`h-8 w-8 rounded-full flex items-center justify-center bg-secondary/80 text-muted-foreground ${k.tone === "warn" ? "bg-warn/10 text-warn" : k.tone === "ok" ? "bg-ok/10 text-ok" : ""}`}>
+                <k.icon className="h-4.5 w-4.5" />
               </div>
-              <k.icon className="h-5 w-5 text-muted-foreground" />
+              <span className="text-sm font-medium text-foreground">{k.label}</span>
             </div>
-          </Panel>
+            <div>
+              <div className="flex items-baseline gap-2">
+                <span className={`text-2xl font-bold ${k.tone === "warn" ? "text-warn" : k.tone === "ok" ? "text-ok" : ""}`}>{k.value}</span>
+                {k.unit && <span className="text-xs font-medium text-muted-foreground">{k.unit}</span>}
+              </div>
+            </div>
+          </div>
         ))}
       </div>
 
