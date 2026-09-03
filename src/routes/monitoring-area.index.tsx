@@ -1,10 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo } from "react";
 import { Panel } from "@/components/panel";
-import { Activity, Thermometer, Gauge, ArrowRight, Flame, Zap, Power, Filter, Waves } from "lucide-react";
+import { Activity, Thermometer, Gauge, ArrowRight, Flame, Zap, Power, Filter, Waves, ShoppingCart, User, Package, DollarSign, ArrowUpRight, ArrowDownRight, ChevronDown } from "lucide-react";
 import { BOILERS } from "@/lib/mock-data";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine, Legend } from "recharts";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine, Legend, BarChart, Bar, Cell } from "recharts";
 
 export const Route = createFileRoute("/monitoring-area/")({
   head: () => ({
@@ -50,6 +50,27 @@ const AREAS: AreaDef[] = [
   { id: "oven-sealing", name: "Oven Sealing", type: "oven", oven: { temp1: "160.0", temp2: "158.5", pressure: "2.1" } },
   { id: "oven-topcoat", name: "Oven Topcoat", type: "oven", oven: { temp1: "175.5", temp2: "174.0", pressure: "2.4" } },
   { id: "oven-ced", name: "Oven CED", type: "oven", oven: { temp1: "185.0", temp2: "182.5", pressure: "2.8" } },
+];
+
+const REVENUE_DATA = [
+  { day: "Fri", value: 17500 },
+  { day: "Sat", value: 13500 },
+  { day: "Sun", value: 22430, active: true },
+  { day: "Mon", value: 13500 },
+  { day: "Thu", value: 16800 },
+  { day: "Wen", value: 22500 },
+  { day: "Thus", value: 16800 },
+];
+
+const INCOME_DATA = [
+  { month: "Jan", profit: 13500, loss: 23000 },
+  { month: "Feb", profit: 24000, loss: 17500 },
+  { month: "Mar", profit: 30000, loss: 14500 },
+  { month: "Apr", profit: 18500, loss: 19500 },
+  { month: "May", profit: 26000, loss: 17500 },
+  { month: "Jun", profit: 20000, loss: 28000 },
+  { month: "Jul", profit: 18500, loss: 19500 },
+  { month: "Aug", profit: 18500, loss: 14500 },
 ];
 
 function BagFilterItemDialog({ item, children }: { item: { name: string, val: string, val2?: string, id: string, unit?: string, valName?: string, val2Name?: string, minStd?: number, maxStd?: number, minStd2?: number, maxStd2?: number, minStdName?: string, maxStdName?: string, minStd2Name?: string, maxStd2Name?: string }, children: React.ReactNode }) {
@@ -575,8 +596,166 @@ function MonitoringArea() {
           </p>
         </div>
       </div>
+      {/* NEW SECTION: Summary Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* Card 1: Total Sales */}
+        <div className="bg-card border border-border shadow-sm rounded-2xl p-5 flex flex-col justify-between h-[140px]">
+          <div className="flex justify-between items-start">
+            <span className="text-sm font-medium text-muted-foreground">Total Sales</span>
+            <div className="h-8 w-8 rounded-full bg-secondary/50 flex items-center justify-center">
+              <ShoppingCart className="h-4 w-4 text-foreground" />
+            </div>
+          </div>
+          <div>
+            <div className="flex items-baseline gap-3">
+              <span className="text-3xl font-bold text-foreground">2500</span>
+              <span className="inline-flex items-center gap-0.5 bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 text-[10px] font-bold px-1.5 py-0.5 rounded-md">
+                <ArrowUpRight className="h-3 w-3" /> 4.9%
+              </span>
+            </div>
+            <span className="text-xs text-muted-foreground mt-2 block">Last month: <span className="font-semibold text-foreground">2345</span></span>
+          </div>
+        </div>
 
-      {/* Layout Grid */}
+        {/* Card 2: New Customer */}
+        <div className="bg-card border border-border shadow-sm rounded-2xl p-5 flex flex-col justify-between h-[140px]">
+          <div className="flex justify-between items-start">
+            <span className="text-sm font-medium text-muted-foreground">New Customer</span>
+            <div className="h-8 w-8 rounded-full bg-secondary/50 flex items-center justify-center">
+              <User className="h-4 w-4 text-foreground" />
+            </div>
+          </div>
+          <div>
+            <div className="flex items-baseline gap-3">
+              <span className="text-3xl font-bold text-foreground">110</span>
+              <span className="inline-flex items-center gap-0.5 bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-400 text-[10px] font-bold px-1.5 py-0.5 rounded-md">
+                <ArrowUpRight className="h-3 w-3" /> 7.5%
+              </span>
+            </div>
+            <span className="text-xs text-muted-foreground mt-2 block">Last month: <span className="font-semibold text-foreground">89</span></span>
+          </div>
+        </div>
+
+        {/* Card 3: Return Products */}
+        <div className="bg-card border border-border shadow-sm rounded-2xl p-5 flex flex-col justify-between h-[140px]">
+          <div className="flex justify-between items-start">
+            <span className="text-sm font-medium text-muted-foreground">Return Products</span>
+            <div className="h-8 w-8 rounded-full bg-secondary/50 flex items-center justify-center">
+              <Package className="h-4 w-4 text-foreground" />
+            </div>
+          </div>
+          <div>
+            <div className="flex items-baseline gap-3">
+              <span className="text-3xl font-bold text-foreground">72</span>
+              <span className="inline-flex items-center gap-0.5 bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-400 text-[10px] font-bold px-1.5 py-0.5 rounded-md">
+                <ArrowDownRight className="h-3 w-3" /> 6.0%
+              </span>
+            </div>
+            <span className="text-xs text-muted-foreground mt-2 block">Last month: <span className="font-semibold text-foreground">60</span></span>
+          </div>
+        </div>
+
+        {/* Card 4: Total Revenue */}
+        <div className="bg-card border border-border shadow-sm rounded-2xl p-5 flex flex-col justify-between h-[140px]">
+          <div className="flex justify-between items-start">
+            <span className="text-sm font-medium text-muted-foreground">Total Revenue</span>
+            <div className="h-8 w-8 rounded-full bg-secondary/50 flex items-center justify-center">
+              <DollarSign className="h-4 w-4 text-foreground" />
+            </div>
+          </div>
+          <div>
+            <div className="flex items-baseline gap-3">
+              <span className="text-3xl font-bold text-foreground">$8,220.64</span>
+            </div>
+            <span className="text-xs text-muted-foreground mt-2 block">Last month: <span className="font-semibold text-foreground">$620.00</span></span>
+          </div>
+        </div>
+      </div>
+
+      {/* NEW SECTION: Bar Charts */}
+      <div className="grid lg:grid-cols-3 gap-6">
+        {/* Chart 1: Revenue Analytics */}
+        <div className="lg:col-span-2 bg-card border border-border shadow-sm rounded-2xl p-6 flex flex-col">
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-lg font-bold text-foreground">Revenue analytics</h2>
+            <button className="flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 border border-border rounded-full hover:bg-secondary/50 transition">
+              This Week <ChevronDown className="h-3 w-3" />
+            </button>
+          </div>
+          <div className="flex-1 h-[250px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={REVENUE_DATA} margin={{ top: 20, right: 0, left: -20, bottom: 0 }}>
+                <defs>
+                  <pattern id="diagonal-stripe" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(45)">
+                    <rect width="8" height="8" fill="#e85d21" />
+                    <line x1="0" y1="0" x2="0" y2="8" stroke="#d44c16" strokeWidth="2" />
+                  </pattern>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--border))" opacity={0.6} />
+                <XAxis dataKey="day" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: 'hsl(var(--muted-foreground))' }} dy={10} />
+                <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: 'hsl(var(--muted-foreground))' }} tickFormatter={(value) => `${value / 1000}k`} />
+                <Tooltip 
+                  cursor={{ fill: 'transparent' }}
+                  content={({ active, payload }) => {
+                    if (active && payload && payload.length) {
+                      return (
+                        <div className="bg-[#e85d21] text-white px-3 py-1.5 rounded-md shadow-md text-xs font-bold relative -top-8">
+                          ${payload[0].value?.toLocaleString()}
+                          <div className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-[#e85d21] rotate-45" />
+                        </div>
+                      );
+                    }
+                    return null;
+                  }}
+                />
+                <Bar dataKey="value" radius={[20, 20, 20, 20]} barSize={40}>
+                  {REVENUE_DATA.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={entry.active ? 'url(#diagonal-stripe)' : '#e85d21'} />
+                  ))}
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+
+        {/* Chart 2: Total Income */}
+        <div className="bg-card border border-border shadow-sm rounded-2xl p-6 flex flex-col">
+          <div className="mb-6">
+            <h2 className="text-lg font-bold text-foreground">Total Income</h2>
+            <p className="text-xs text-muted-foreground mt-1">View your income in a certain period of time</p>
+          </div>
+          
+          <div className="bg-secondary/20 border border-border/50 rounded-xl p-4 flex-1 h-[250px] flex flex-col">
+            <div className="flex justify-between items-center mb-4">
+              <span className="text-sm font-semibold">Profit and Loss</span>
+              <div className="flex items-center gap-3 text-[10px] font-medium text-foreground">
+                <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-[#e85d21]"></span> Profit</span>
+                <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-[#1e1e1e] dark:bg-[#333]"></span> Loss</span>
+              </div>
+            </div>
+            <div className="flex-1">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={INCOME_DATA} margin={{ top: 0, right: 0, left: -20, bottom: 0 }} barGap={0}>
+                  <defs>
+                    <pattern id="diagonal-stripe-profit" patternUnits="userSpaceOnUse" width="6" height="6" patternTransform="rotate(45)">
+                      <rect width="6" height="6" fill="#e85d21" />
+                      <line x1="0" y1="0" x2="0" y2="6" stroke="#d44c16" strokeWidth="1.5" />
+                    </pattern>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--border))" opacity={0.6} />
+                  <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: 'hsl(var(--muted-foreground))' }} dy={5} />
+                  <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: 'hsl(var(--muted-foreground))' }} tickFormatter={(value) => value === 0 ? "00" : `${value / 1000}k`} />
+                  <Tooltip cursor={{ fill: 'transparent' }} contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }} />
+                  <Bar dataKey="loss" stackId="a" fill="#1e1e1e" radius={[4, 4, 4, 4]} barSize={20} />
+                  <Bar dataKey="profit" stackId="a" fill="url(#diagonal-stripe-profit)" radius={[4, 4, 4, 4]} barSize={20} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Layout Grid (Existing) */}
       <div className="flex flex-col gap-6">
         {/* Top Section */}
         <div className="grid gap-4 lg:grid-cols-3">
