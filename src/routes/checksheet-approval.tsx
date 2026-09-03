@@ -195,15 +195,15 @@ function DetailApprovalView({
     <div className="p-6 space-y-5">
       {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-3">
-        <div className="flex items-center gap-3">
+        <div className="flex items-start gap-4">
           <button
             onClick={onBack}
-            className="inline-flex items-center gap-1 rounded-lg border border-border bg-card px-3 py-2 text-sm hover:bg-secondary"
+            className="mt-1 flex items-center justify-center gap-1.5 rounded-lg border border-border bg-card px-3 py-1.5 shadow-sm hover:bg-secondary transition-colors text-sm font-medium text-foreground"
           >
             <ChevronLeft className="h-4 w-4" />
             Back
           </button>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 mt-1.5">
             <Eye className="h-5 w-5 text-foreground" />
             <h1 className="text-xl font-bold tracking-tight">
               Details Approval

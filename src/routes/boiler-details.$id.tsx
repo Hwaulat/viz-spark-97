@@ -1,7 +1,7 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { Panel, ValueDisplay } from "@/components/panel";
 import { BOILERS, boilerEnergyDaily, boilerGasDaily } from "@/lib/mock-data";
-import { ArrowLeft, Flame, Fuel, Zap } from "lucide-react";
+import { ChevronLeft, Flame, Fuel, Zap } from "lucide-react";
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis, Legend } from "recharts";
 
 export const Route = createFileRoute("/boiler-details/$id")({
@@ -29,12 +29,16 @@ function BoilerDetails() {
 
   return (
     <div className="p-6 space-y-6">
-      <div className="flex items-center justify-between flex-wrap gap-3">
+      <div className="flex items-start gap-4">
+        <Link 
+          to="/boiler" 
+          className="mt-1 flex items-center justify-center gap-1.5 rounded-lg border border-border bg-card px-3 py-1.5 shadow-sm hover:bg-secondary transition-colors text-sm font-medium text-foreground"
+        >
+          <ChevronLeft className="h-4 w-4" />
+          Back
+        </Link>
         <div>
-          <Link to="/boiler" className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground">
-            <ArrowLeft className="h-3.5 w-3.5" /> Back to Boiler Area
-          </Link>
-          <div className="mt-2 text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">Boiler Details</div>
+          <div className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">Boiler Details</div>
           <h1 className="text-2xl font-semibold mt-1 inline-flex items-center gap-2">
             <Flame className="h-5 w-5 text-primary" /> {boiler.name} — Consumption History
           </h1>

@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, useMemo } from "react";
-import { ArrowLeft, Activity, Flame, Gauge, Power, BarChart3, Filter, Waves, Zap, Thermometer } from "lucide-react";
+import { ChevronLeft, Activity, Flame, Gauge, Power, BarChart3, Filter, Waves, Zap, Thermometer } from "lucide-react";
 import { BOILERS, BOILER_GAS, BOILER_USAGE_HISTORY, LINE_TRACKING_STATIONS, LINE_TRACKING_ZONES, PROCESS_DETAIL_STATIONS, ovenElecDailyTrend, ovenElecMonthlyTrend, ovenElecYearlyTrend } from "@/lib/mock-data";
 import { Panel, StatusDot, ValueDisplay } from "@/components/panel";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
@@ -346,15 +346,16 @@ function MonitoringAreaDetails() {
   return (
     <div className="p-6 space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between flex-wrap gap-3">
+      <div className="flex items-start gap-4">
+        <Link
+          to="/monitoring-area"
+          className="mt-1 flex items-center justify-center gap-1.5 rounded-lg border border-border bg-card px-3 py-1.5 shadow-sm hover:bg-secondary transition-colors text-sm font-medium text-foreground"
+        >
+          <ChevronLeft className="h-4 w-4" />
+          Back
+        </Link>
         <div>
-          <Link
-            to="/monitoring-area"
-            className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground"
-          >
-            <ArrowLeft className="h-3.5 w-3.5" /> Back to Monitoring Area
-          </Link>
-          <div className="mt-2 text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">
+          <div className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">
             Area Details
           </div>
           <h1 className="text-2xl font-semibold mt-1 inline-flex items-center gap-2">
