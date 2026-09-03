@@ -326,21 +326,21 @@ function AreaCard({ area }: { area: AreaDef }) {
                   <div className="rounded bg-secondary/50 p-2 border border-border/50 flex flex-col justify-center items-center text-center">
                     <span className="text-[10px] text-muted-foreground uppercase tracking-widest mb-1 flex items-center gap-1"><Thermometer className="h-3 w-3" /> Temp 1</span>
                     <div className="flex items-baseline gap-1">
-                      <span className={`text-xl font-bold font-mono ${getLimitColor(area.oven.temp1, parseFloat(area.oven.temp1) - 5, parseFloat(area.oven.temp1) + 5)}`}>{area.oven.temp1}</span>
+                      <span className={`text-xl font-bold font-mono ${getLimitColor(area.oven.temp1, 180, 190, "text-emerald-500", "text-emerald-500")}`}>{area.oven.temp1}</span>
                       <span className="text-[10px] text-muted-foreground">°C</span>
                     </div>
                   </div>
                   <div className="rounded bg-secondary/50 p-2 border border-border/50 flex flex-col justify-center items-center text-center">
                     <span className="text-[10px] text-muted-foreground uppercase tracking-widest mb-1 flex items-center gap-1"><Thermometer className="h-3 w-3" /> Temp 2</span>
                     <div className="flex items-baseline gap-1">
-                      <span className={`text-xl font-bold font-mono ${getLimitColor(area.oven.temp2, parseFloat(area.oven.temp2) - 5, parseFloat(area.oven.temp2) + 5)}`}>{area.oven.temp2}</span>
+                      <span className={`text-xl font-bold font-mono ${getLimitColor(area.oven.temp2, 180, 190, "text-emerald-500", "text-emerald-500")}`}>{area.oven.temp2}</span>
                       <span className="text-[10px] text-muted-foreground">°C</span>
                     </div>
                   </div>
                   <div className="rounded bg-secondary/50 p-2 border border-border/50 flex flex-col justify-center items-center text-center">
                     <span className="text-[10px] text-muted-foreground uppercase tracking-widest mb-1 flex items-center gap-1"><Gauge className="h-3 w-3" /> Pressure</span>
                     <div className="flex items-baseline gap-1">
-                      <span className={`text-xl font-bold font-mono ${getLimitColor(area.oven.pressure, 1.8, 3.0)}`}>{area.oven.pressure}</span>
+                      <span className={`text-xl font-bold font-mono ${getLimitColor(area.oven.pressure, 2.0, 2.5, "text-emerald-500", "text-emerald-500")}`}>{area.oven.pressure}</span>
                       <span className="text-[10px] text-muted-foreground">bar</span>
                     </div>
                   </div>
