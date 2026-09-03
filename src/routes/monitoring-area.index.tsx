@@ -143,9 +143,9 @@ function AreaCard({ area }: { area: AreaDef }) {
                       <div className="flex justify-between items-center">
                         <span className="text-sm font-bold flex items-center gap-1.5">
                           <Flame className={`h-4 w-4 ${b.running ? 'text-emerald-500' : 'text-gray-400'}`} /> {b.name}
-                          {b.id === 1 && <span className="ml-1 text-[9px] px-1.5 py-0.5 rounded font-bold bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400">OK</span>}
-                          {b.id === 2 && <span className="ml-1 text-[9px] px-1.5 py-0.5 rounded font-bold bg-orange-100 text-orange-600 dark:bg-orange-900/30 dark:text-orange-400">OK</span>}
-                          {b.id === 3 && <span className="ml-1 text-[9px] px-1.5 py-0.5 rounded font-bold bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400">NG</span>}
+                          {b.id === 1 && <span className="ml-2 text-[11px] px-2 py-0.5 rounded font-bold bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400">OK</span>}
+                          {b.id === 2 && <span className="ml-2 text-[11px] px-2 py-0.5 rounded font-bold bg-orange-100 text-orange-600 dark:bg-orange-900/30 dark:text-orange-400">OK</span>}
+                          {b.id === 3 && <span className="ml-2 text-[11px] px-2 py-0.5 rounded font-bold bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400">NG</span>}
                         </span>
                         <div className="flex gap-4 text-xs font-mono items-center">
     <span className="text-muted-foreground flex items-baseline gap-2">T1 <span className={`font-bold text-2xl ${getLimitColor(b.temp1, 175, 188, "text-foreground", "text-emerald-500")}`}>{b.temp1.toFixed(1)}°C</span></span>
