@@ -537,26 +537,65 @@ function MonitoringAreaDetails() {
               </div>
 
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                <Panel className="p-4" title={<span className="text-muted-foreground">Total Energy</span>}>
-                  <div className="mt-2 text-2xl font-bold font-mono text-blue-500">
-                    {summary.totalEnergy.toLocaleString()} <span className="text-xs font-normal text-muted-foreground">kWh</span>
+                <div className="rounded-lg bg-card border border-border p-4 shadow-sm flex flex-col gap-2">
+                  <div className="flex items-center gap-2">
+                    <div className="h-8 w-8 rounded-full flex items-center justify-center bg-blue-500/10 text-blue-500">
+                      <Zap className="h-4.5 w-4.5" />
+                    </div>
+                    <span className="text-sm font-medium text-foreground">Total Energy</span>
                   </div>
-                </Panel>
-                <Panel className="p-4" title={<span className="text-muted-foreground">Avg Energy / {timeFilter.replace('ly', '')}</span>}>
-                  <div className="mt-2 text-2xl font-bold font-mono text-blue-400">
-                    {summary.avgEnergy.toLocaleString()} <span className="text-xs font-normal text-muted-foreground">kWh</span>
+                  <div>
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-2xl font-bold font-mono text-blue-500">{summary.totalEnergy.toLocaleString()}</span>
+                      <span className="text-xs font-medium text-muted-foreground">kWh</span>
+                    </div>
                   </div>
-                </Panel>
-                <Panel className="p-4" title={<span className="text-muted-foreground">Total Gas</span>}>
-                  <div className="mt-2 text-2xl font-bold font-mono text-emerald-500">
-                    {summary.totalGas.toLocaleString()} <span className="text-xs font-normal text-muted-foreground">m³</span>
+                </div>
+
+                <div className="rounded-lg bg-card border border-border p-4 shadow-sm flex flex-col gap-2">
+                  <div className="flex items-center gap-2">
+                    <div className="h-8 w-8 rounded-full flex items-center justify-center bg-blue-400/10 text-blue-400">
+                      <Zap className="h-4.5 w-4.5" />
+                    </div>
+                    <span className="text-sm font-medium text-foreground uppercase">Avg Energy / {timeFilter.replace('ly', '')}</span>
                   </div>
-                </Panel>
-                <Panel className="p-4" title={<span className="text-muted-foreground">Avg Gas / {timeFilter.replace('ly', '')}</span>}>
-                  <div className="mt-2 text-2xl font-bold font-mono text-emerald-400">
-                    {summary.avgGas.toLocaleString()} <span className="text-xs font-normal text-muted-foreground">m³</span>
+                  <div>
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-2xl font-bold font-mono text-blue-400">{summary.avgEnergy.toLocaleString()}</span>
+                      <span className="text-xs font-medium text-muted-foreground">kWh</span>
+                    </div>
                   </div>
-                </Panel>
+                </div>
+
+                <div className="rounded-lg bg-card border border-border p-4 shadow-sm flex flex-col gap-2">
+                  <div className="flex items-center gap-2">
+                    <div className="h-8 w-8 rounded-full flex items-center justify-center bg-emerald-500/10 text-emerald-500">
+                      <Flame className="h-4.5 w-4.5" />
+                    </div>
+                    <span className="text-sm font-medium text-foreground">Total Gas</span>
+                  </div>
+                  <div>
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-2xl font-bold font-mono text-emerald-500">{summary.totalGas.toLocaleString()}</span>
+                      <span className="text-xs font-medium text-muted-foreground">m³</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="rounded-lg bg-card border border-border p-4 shadow-sm flex flex-col gap-2">
+                  <div className="flex items-center gap-2">
+                    <div className="h-8 w-8 rounded-full flex items-center justify-center bg-emerald-400/10 text-emerald-400">
+                      <Flame className="h-4.5 w-4.5" />
+                    </div>
+                    <span className="text-sm font-medium text-foreground uppercase">Avg Gas / {timeFilter.replace('ly', '')}</span>
+                  </div>
+                  <div>
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-2xl font-bold font-mono text-emerald-400">{summary.avgGas.toLocaleString()}</span>
+                      <span className="text-xs font-medium text-muted-foreground">m³</span>
+                    </div>
+                  </div>
+                </div>
               </div>
 
               <Panel
