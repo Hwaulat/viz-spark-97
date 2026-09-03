@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo } from "react";
 import { Panel } from "@/components/panel";
-import { Activity, Thermometer, Gauge, ArrowRight, Flame, Zap, Power, Filter, Waves, ShoppingCart, User, Package, DollarSign, ArrowUpRight, ArrowDownRight, ChevronDown } from "lucide-react";
+import { Activity, Thermometer, Gauge, ArrowRight, Flame, Zap, Power, Filter, Waves } from "lucide-react";
 import { BOILERS } from "@/lib/mock-data";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine, Legend, BarChart, Bar, Cell } from "recharts";
