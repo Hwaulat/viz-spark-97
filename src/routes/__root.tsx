@@ -186,8 +186,7 @@ function Sidebar({ onNavigate, className = "" }: { onNavigate?: () => void; clas
           </div>
         )}
 
-        {/* Master Data hidden temporarily */}
-        {/* <div className="px-5 pt-4 pb-2 text-[10px] font-semibold uppercase tracking-widest text-sidebar-muted">
+        <div className="px-5 pt-4 pb-2 text-[10px] font-semibold uppercase tracking-widest text-sidebar-muted">
           Operations
         </div>
         
@@ -215,7 +214,7 @@ function Sidebar({ onNavigate, className = "" }: { onNavigate?: () => void; clas
               </Link>
             ))}
           </div>
-        )} */}
+        )}
         <Link
           to="/user-management"
           className={linkBase}
