@@ -8,7 +8,7 @@ import {
   Scripts,
 } from "@tanstack/react-router";
 import { useEffect, useState, type ReactNode } from "react";
-import { Activity, Flame, Waves, Thermometer, Gauge, Sun, Moon, Bell, PanelLeftClose, PanelLeftOpen, LayoutDashboard, FileText, History, Users, ChevronDown, ClipboardCheck, Clock, ShieldCheck, User, LogOut } from "lucide-react";
+import { Activity, Flame, Waves, Thermometer, Gauge, Sun, Moon, Bell, PanelLeftClose, PanelLeftOpen, LayoutDashboard, FileText, History, Users, ChevronDown, ClipboardCheck, Clock, ShieldCheck, User, LogOut, Database } from "lucide-react";
 import { useRouterState } from "@tanstack/react-router";
 
 import appCss from "../styles.css?url";
@@ -113,6 +113,18 @@ const DASHBOARD_CHILDREN: {
   { to: "/checksheet", label: "Dashboard Checksheet", icon: ClipboardCheck },
 ];
 
+const MASTER_DATA_CHILDREN: {
+  to: "/master-data" | "/master-data/standard" | "/master-data/equipment" | "/master-data/station" | "/master-data/type" | "/master-data/colors" | "/master-data/uom";
+  label: string;
+}[] = [
+  { to: "/master-data", label: "Parameter Standard" },
+  { to: "/master-data/equipment", label: "Equipment" },
+  { to: "/master-data/station", label: "Station" },
+  { to: "/master-data/type", label: "Parameter Type" },
+  { to: "/master-data/colors", label: "Status Color" },
+  { to: "/master-data/uom", label: "Unit of Measure" },
+];
+
 const linkBase =
   "group flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-sidebar-foreground/75 hover:bg-white/5 hover:text-sidebar-foreground transition";
 const linkActive =
@@ -121,8 +133,11 @@ const linkActive =
 function Sidebar({ onNavigate, className = "" }: { onNavigate?: () => void; className?: string }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const dashboardActive = pathname === "/" || pathname.startsWith("/monitoring-area") || pathname.startsWith("/checksheet") || pathname.startsWith("/boiler");
+  const masterDataActive = pathname.startsWith("/master-data");
   const [dashOpen, setDashOpen] = useState(dashboardActive);
+  const [masterDataOpen, setMasterDataOpen] = useState(masterDataActive);
   useEffect(() => { if (dashboardActive) setDashOpen(true); }, [dashboardActive]);
+  useEffect(() => { if (masterDataActive) setMasterDataOpen(true); }, [masterDataActive]);
 
   return (
     <aside className={`flex w-64 shrink-0 flex-col bg-sidebar text-sidebar-foreground ${className}`}>
@@ -171,8 +186,7 @@ function Sidebar({ onNavigate, className = "" }: { onNavigate?: () => void; clas
           </div>
         )}
 
-        {/* Master Data hidden temporarily */}
-        {/* <div className="px-5 pt-4 pb-2 text-[10px] font-semibold uppercase tracking-widest text-sidebar-muted">
+        <div className="px-5 pt-4 pb-2 text-[10px] font-semibold uppercase tracking-widest text-sidebar-muted">
           Operations
         </div>
         
@@ -200,7 +214,7 @@ function Sidebar({ onNavigate, className = "" }: { onNavigate?: () => void; clas
               </Link>
             ))}
           </div>
-        )} */}
+        )}
         <Link
           to="/user-management"
           className={linkBase}
