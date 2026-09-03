@@ -122,11 +122,8 @@ const linkActive =
 function Sidebar({ onNavigate, className = "" }: { onNavigate?: () => void; className?: string }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const dashboardActive = pathname === "/" || pathname.startsWith("/monitoring-area") || pathname.startsWith("/checksheet") || pathname.startsWith("/boiler");
-  const masterDataActive = pathname.startsWith("/master-data");
   const [dashOpen, setDashOpen] = useState(dashboardActive);
-  const [masterDataOpen, setMasterDataOpen] = useState(masterDataActive);
   useEffect(() => { if (dashboardActive) setDashOpen(true); }, [dashboardActive]);
-  useEffect(() => { if (masterDataActive) setMasterDataOpen(true); }, [masterDataActive]);
 
   return (
     <aside className={`flex w-64 shrink-0 flex-col bg-sidebar text-sidebar-foreground ${className}`}>
