@@ -8,11 +8,18 @@ import {
   Scripts,
 } from "@tanstack/react-router";
 import { useEffect, useState, type ReactNode } from "react";
-import { Activity, Flame, Waves, Thermometer, Gauge, Sun, Moon, Bell, PanelLeftClose, PanelLeftOpen, LayoutDashboard, FileText, History, Users, ChevronDown, ClipboardCheck, Clock, ShieldCheck } from "lucide-react";
+import { Activity, Flame, Waves, Thermometer, Gauge, Sun, Moon, Bell, PanelLeftClose, PanelLeftOpen, LayoutDashboard, FileText, History, Users, ChevronDown, ClipboardCheck, Clock, ShieldCheck, User, LogOut } from "lucide-react";
 import { useRouterState } from "@tanstack/react-router";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 function NotFoundComponent() {
   return (
@@ -287,10 +294,37 @@ function TopBar({ onToggleSidebar, collapsed }: { onToggleSidebar: () => void; c
         </div>
         <button className="relative grid h-9 w-9 place-items-center rounded-full text-muted-foreground hover:bg-secondary hover:text-foreground transition" aria-label="notifications">
           <Bell className="h-4 w-4" />
-          <span className="absolute top-1 right-1 flex h-4 w-4 items-center justify-center rounded-full bg-destructive text-[9px] font-bold text-white">4</span>
+          <span className="absolute top-1 right-1 flex h-4 w-4 items-center justify-center rounded-full bg-destructive text-[9px] font-bold text-white">2</span>
         </button>
         <div className="flex items-center gap-2 pl-3 border-l border-border">
-          <div className="grid h-9 w-9 place-items-center rounded-full bg-destructive text-white text-sm font-bold">A</div>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button className="flex items-center gap-2 hover:bg-secondary/50 rounded-md p-1 pr-2 transition outline-none">
+                <img src="/lovable-uploads/c7c77c5c-7d92-4913-aeb0-d6682b13b4c1.png" alt="admin asep" className="h-9 w-9 rounded-full object-cover" />
+                <div className="hidden md:flex flex-col text-left">
+                  <span className="text-sm font-semibold leading-none text-foreground">admin asep</span>
+                  <span className="text-xs text-muted-foreground mt-1">Super Admin</span>
+                </div>
+                <ChevronDown className="h-4 w-4 text-muted-foreground ml-1" />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-56 mt-2">
+              <div className="flex flex-col space-y-1 p-2">
+                <p className="text-sm font-medium leading-none">admin asep</p>
+                <p className="text-xs leading-none text-muted-foreground">12345678901011</p>
+              </div>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem className="cursor-pointer gap-2 py-2">
+                <User className="h-4 w-4" />
+                <span>Profile</span>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem className="cursor-pointer gap-2 py-2 text-destructive focus:text-destructive focus:bg-destructive/10">
+                <LogOut className="h-4 w-4" />
+                <span>Logout</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
     </header>
