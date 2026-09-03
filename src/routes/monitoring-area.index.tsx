@@ -47,9 +47,9 @@ interface AreaDef {
 const AREAS: AreaDef[] = [
   { id: "boiler-area", name: "Boiler Area", type: "boiler" },
   { id: "pted-area", name: "PTED Area", type: "pted-wrapper" },
-  { id: "oven-sealing", name: "Oven Sealing", type: "oven", oven: { temp1: "160.0", temp2: "158.5", pressure: "2.1" } },
-  { id: "oven-topcoat", name: "Oven Topcoat", type: "oven", oven: { temp1: "175.5", temp2: "174.0", pressure: "2.4" } },
-  { id: "oven-ced", name: "Oven CED", type: "oven", oven: { temp1: "185.0", temp2: "182.5", pressure: "2.8" } },
+  { id: "oven-sealing", name: "Oven Sealing", type: "oven", oven: { temp1: "186.5", temp2: "184.0", pressure: "2.1" } },
+  { id: "oven-topcoat", name: "Oven Topcoat", type: "oven", oven: { temp1: "191.0", temp2: "189.5", pressure: "2.4" } },
+  { id: "oven-ced", name: "Oven CED", type: "oven", oven: { temp1: "182.0", temp2: "179.0", pressure: "2.8" } },
 ];
 
 
