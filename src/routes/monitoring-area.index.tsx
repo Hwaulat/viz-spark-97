@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useMemo } from "react";
 import { Panel } from "@/components/panel";
 import { Activity, Thermometer, Gauge, ArrowRight, Flame, Zap, Power, Filter, Waves } from "lucide-react";
@@ -429,8 +429,8 @@ function AreaCard({ area }: { area: AreaDef }) {
                         { name: "Degreasing", id: "degreasing", pv: "35.0", sp: "35.0" },
                         { name: "Phosphate", id: "phosphate", pv: "42.5", sp: "42.0" }
                       ].map(eq => (
-                        <Link to="/monitoring-area/$id" params={{ id: eq.id }} key={eq.name} className="flex items-center justify-between p-3 rounded-lg bg-secondary/30 border border-border/50 flex-1 hover:bg-secondary/80 hover:border-primary/50 transition-all group">
-                          <span className="text-sm font-semibold group-hover:text-primary transition-colors flex items-center gap-2">{eq.name} <ArrowRight className="h-3 w-3 opacity-0 -ml-2 group-hover:opacity-100 group-hover:ml-0 transition-all" /></span>
+                        <div key={eq.name} className="flex items-center justify-between p-3 rounded-lg bg-secondary/30 border border-border/50 flex-1 transition-all">
+                          <span className="text-sm font-semibold flex items-center gap-2">{eq.name}</span>
                           <div className="flex gap-5">
                             <div className="flex flex-col items-end">
                               <span className="text-[9px] text-muted-foreground uppercase flex items-center gap-1"><Thermometer className="h-3 w-3" /> Temp PV</span>
@@ -441,7 +441,7 @@ function AreaCard({ area }: { area: AreaDef }) {
                               <div className="flex items-baseline gap-1 mt-0.5"><span className="font-mono font-bold text-3xl text-foreground">{eq.sp}</span><span className="text-sm text-muted-foreground">°C</span></div>
                             </div>
                           </div>
-                        </Link>
+                        </div>
                       ))}
                     </div>
                   </div>
@@ -549,9 +549,9 @@ function AreaCard({ area }: { area: AreaDef }) {
   }
 
   return (
-    <Link to="/monitoring-area/$id" params={{ id: area.id }} className="block group h-full">
+    <div className="block h-full">
       {content}
-    </Link>
+    </div>
   );
 }
 

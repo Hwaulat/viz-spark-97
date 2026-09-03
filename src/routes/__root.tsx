@@ -108,14 +108,13 @@ function RootShell({ children }: { children: ReactNode }) {
 }
 
 const DASHBOARD_CHILDREN: {
-  to: "/" | "/boiler" | "/checksheet" | "/monitoring-area" | "/monitoring-area/$id";
+  to: "/" | "/boiler" | "/checksheet" | "/monitoring-area";
   params?: { id: string };
   label: string;
   icon: typeof Gauge;
   exact?: boolean;
 }[] = [
   { to: "/monitoring-area", label: "Monitoring Area", icon: Activity, exact: true },
-  { to: "/monitoring-area/$id", params: { id: "line-tracking" }, label: "Line Tracking", icon: Waves },
   { to: "/checksheet", label: "Dashboard Checksheet", icon: ClipboardCheck },
 ];
 
