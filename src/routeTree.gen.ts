@@ -9,71 +9,31 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as UserManagementRouteImport } from './routes/user-management'
-import { Route as ReportRouteImport } from './routes/report'
-import { Route as OvenRouteImport } from './routes/oven'
-import { Route as MasterDataRouteImport } from './routes/master-data'
-import { Route as LogHistoryRouteImport } from './routes/log-history'
-import { Route as ChecksheetDailyRouteImport } from './routes/checksheet-daily'
-import { Route as ChecksheetApprovalRouteImport } from './routes/checksheet-approval'
-import { Route as ChecksheetRouteImport } from './routes/checksheet'
-import { Route as CedRouteImport } from './routes/ced'
-import { Route as BoilerRouteImport } from './routes/boiler'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as MonitoringAreaIndexRouteImport } from './routes/monitoring-area.index'
-import { Route as MasterDataIndexRouteImport } from './routes/master-data.index'
-import { Route as MonitoringAreaIdRouteImport } from './routes/monitoring-area.$id'
-import { Route as MasterDataUomRouteImport } from './routes/master-data.uom'
-import { Route as MasterDataTypeRouteImport } from './routes/master-data.type'
-import { Route as MasterDataStationRouteImport } from './routes/master-data.station'
-import { Route as MasterDataStandardRouteImport } from './routes/master-data.standard'
-import { Route as MasterDataEquipmentRouteImport } from './routes/master-data.equipment'
-import { Route as MasterDataColorsRouteImport } from './routes/master-data.colors'
+import { Route as BoilerRouteImport } from './routes/boiler'
+import { Route as CedRouteImport } from './routes/ced'
+import { Route as ChecksheetRouteImport } from './routes/checksheet'
+import { Route as ChecksheetApprovalRouteImport } from './routes/checksheet-approval'
+import { Route as ChecksheetDailyRouteImport } from './routes/checksheet-daily'
+import { Route as LogHistoryRouteImport } from './routes/log-history'
+import { Route as MasterDataRouteImport } from './routes/master-data'
+import { Route as OvenRouteImport } from './routes/oven'
+import { Route as ReportRouteImport } from './routes/report'
+import { Route as UserManagementRouteImport } from './routes/user-management'
 import { Route as BoilerDetailsIdRouteImport } from './routes/boiler-details.$id'
+import { Route as MasterDataIndexRouteImport } from './routes/master-data.index'
+import { Route as MasterDataColorsRouteImport } from './routes/master-data.colors'
+import { Route as MasterDataEquipmentRouteImport } from './routes/master-data.equipment'
+import { Route as MasterDataStandardRouteImport } from './routes/master-data.standard'
+import { Route as MasterDataStationRouteImport } from './routes/master-data.station'
+import { Route as MasterDataTypeRouteImport } from './routes/master-data.type'
+import { Route as MasterDataUomRouteImport } from './routes/master-data.uom'
+import { Route as MonitoringAreaIndexRouteImport } from './routes/monitoring-area.index'
+import { Route as MonitoringAreaIdRouteImport } from './routes/monitoring-area.$id'
 
-const UserManagementRoute = UserManagementRouteImport.update({
-  id: '/user-management',
-  path: '/user-management',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ReportRoute = ReportRouteImport.update({
-  id: '/report',
-  path: '/report',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const OvenRoute = OvenRouteImport.update({
-  id: '/oven',
-  path: '/oven',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const MasterDataRoute = MasterDataRouteImport.update({
-  id: '/master-data',
-  path: '/master-data',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LogHistoryRoute = LogHistoryRouteImport.update({
-  id: '/log-history',
-  path: '/log-history',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ChecksheetDailyRoute = ChecksheetDailyRouteImport.update({
-  id: '/checksheet-daily',
-  path: '/checksheet-daily',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ChecksheetApprovalRoute = ChecksheetApprovalRouteImport.update({
-  id: '/checksheet-approval',
-  path: '/checksheet-approval',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ChecksheetRoute = ChecksheetRouteImport.update({
-  id: '/checksheet',
-  path: '/checksheet',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CedRoute = CedRouteImport.update({
-  id: '/ced',
-  path: '/ced',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BoilerRoute = BoilerRouteImport.update({
@@ -81,14 +41,54 @@ const BoilerRoute = BoilerRouteImport.update({
   path: '/boiler',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const CedRoute = CedRouteImport.update({
+  id: '/ced',
+  path: '/ced',
   getParentRoute: () => rootRouteImport,
 } as any)
-const MonitoringAreaIndexRoute = MonitoringAreaIndexRouteImport.update({
-  id: '/monitoring-area/',
-  path: '/monitoring-area/',
+const ChecksheetRoute = ChecksheetRouteImport.update({
+  id: '/checksheet',
+  path: '/checksheet',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ChecksheetApprovalRoute = ChecksheetApprovalRouteImport.update({
+  id: '/checksheet-approval',
+  path: '/checksheet-approval',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ChecksheetDailyRoute = ChecksheetDailyRouteImport.update({
+  id: '/checksheet-daily',
+  path: '/checksheet-daily',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LogHistoryRoute = LogHistoryRouteImport.update({
+  id: '/log-history',
+  path: '/log-history',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MasterDataRoute = MasterDataRouteImport.update({
+  id: '/master-data',
+  path: '/master-data',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OvenRoute = OvenRouteImport.update({
+  id: '/oven',
+  path: '/oven',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReportRoute = ReportRouteImport.update({
+  id: '/report',
+  path: '/report',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const UserManagementRoute = UserManagementRouteImport.update({
+  id: '/user-management',
+  path: '/user-management',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BoilerDetailsIdRoute = BoilerDetailsIdRouteImport.update({
+  id: '/boiler-details/$id',
+  path: '/boiler-details/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MasterDataIndexRoute = MasterDataIndexRouteImport.update({
@@ -96,29 +96,9 @@ const MasterDataIndexRoute = MasterDataIndexRouteImport.update({
   path: '/',
   getParentRoute: () => MasterDataRoute,
 } as any)
-const MonitoringAreaIdRoute = MonitoringAreaIdRouteImport.update({
-  id: '/monitoring-area/$id',
-  path: '/monitoring-area/$id',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const MasterDataUomRoute = MasterDataUomRouteImport.update({
-  id: '/uom',
-  path: '/uom',
-  getParentRoute: () => MasterDataRoute,
-} as any)
-const MasterDataTypeRoute = MasterDataTypeRouteImport.update({
-  id: '/type',
-  path: '/type',
-  getParentRoute: () => MasterDataRoute,
-} as any)
-const MasterDataStationRoute = MasterDataStationRouteImport.update({
-  id: '/station',
-  path: '/station',
-  getParentRoute: () => MasterDataRoute,
-} as any)
-const MasterDataStandardRoute = MasterDataStandardRouteImport.update({
-  id: '/standard',
-  path: '/standard',
+const MasterDataColorsRoute = MasterDataColorsRouteImport.update({
+  id: '/colors',
+  path: '/colors',
   getParentRoute: () => MasterDataRoute,
 } as any)
 const MasterDataEquipmentRoute = MasterDataEquipmentRouteImport.update({
@@ -126,14 +106,34 @@ const MasterDataEquipmentRoute = MasterDataEquipmentRouteImport.update({
   path: '/equipment',
   getParentRoute: () => MasterDataRoute,
 } as any)
-const MasterDataColorsRoute = MasterDataColorsRouteImport.update({
-  id: '/colors',
-  path: '/colors',
+const MasterDataStandardRoute = MasterDataStandardRouteImport.update({
+  id: '/standard',
+  path: '/standard',
   getParentRoute: () => MasterDataRoute,
 } as any)
-const BoilerDetailsIdRoute = BoilerDetailsIdRouteImport.update({
-  id: '/boiler-details/$id',
-  path: '/boiler-details/$id',
+const MasterDataStationRoute = MasterDataStationRouteImport.update({
+  id: '/station',
+  path: '/station',
+  getParentRoute: () => MasterDataRoute,
+} as any)
+const MasterDataTypeRoute = MasterDataTypeRouteImport.update({
+  id: '/type',
+  path: '/type',
+  getParentRoute: () => MasterDataRoute,
+} as any)
+const MasterDataUomRoute = MasterDataUomRouteImport.update({
+  id: '/uom',
+  path: '/uom',
+  getParentRoute: () => MasterDataRoute,
+} as any)
+const MonitoringAreaIndexRoute = MonitoringAreaIndexRouteImport.update({
+  id: '/monitoring-area/',
+  path: '/monitoring-area/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MonitoringAreaIdRoute = MonitoringAreaIdRouteImport.update({
+  id: '/monitoring-area/$id',
+  path: '/monitoring-area/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
 
@@ -296,67 +296,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/user-management': {
-      id: '/user-management'
-      path: '/user-management'
-      fullPath: '/user-management'
-      preLoaderRoute: typeof UserManagementRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/report': {
-      id: '/report'
-      path: '/report'
-      fullPath: '/report'
-      preLoaderRoute: typeof ReportRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/oven': {
-      id: '/oven'
-      path: '/oven'
-      fullPath: '/oven'
-      preLoaderRoute: typeof OvenRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/master-data': {
-      id: '/master-data'
-      path: '/master-data'
-      fullPath: '/master-data'
-      preLoaderRoute: typeof MasterDataRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/log-history': {
-      id: '/log-history'
-      path: '/log-history'
-      fullPath: '/log-history'
-      preLoaderRoute: typeof LogHistoryRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/checksheet-daily': {
-      id: '/checksheet-daily'
-      path: '/checksheet-daily'
-      fullPath: '/checksheet-daily'
-      preLoaderRoute: typeof ChecksheetDailyRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/checksheet-approval': {
-      id: '/checksheet-approval'
-      path: '/checksheet-approval'
-      fullPath: '/checksheet-approval'
-      preLoaderRoute: typeof ChecksheetApprovalRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/checksheet': {
-      id: '/checksheet'
-      path: '/checksheet'
-      fullPath: '/checksheet'
-      preLoaderRoute: typeof ChecksheetRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/ced': {
-      id: '/ced'
-      path: '/ced'
-      fullPath: '/ced'
-      preLoaderRoute: typeof CedRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/boiler': {
@@ -366,18 +310,74 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BoilerRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/ced': {
+      id: '/ced'
+      path: '/ced'
+      fullPath: '/ced'
+      preLoaderRoute: typeof CedRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/monitoring-area/': {
-      id: '/monitoring-area/'
-      path: '/monitoring-area'
-      fullPath: '/monitoring-area/'
-      preLoaderRoute: typeof MonitoringAreaIndexRouteImport
+    '/checksheet': {
+      id: '/checksheet'
+      path: '/checksheet'
+      fullPath: '/checksheet'
+      preLoaderRoute: typeof ChecksheetRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/checksheet-approval': {
+      id: '/checksheet-approval'
+      path: '/checksheet-approval'
+      fullPath: '/checksheet-approval'
+      preLoaderRoute: typeof ChecksheetApprovalRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/checksheet-daily': {
+      id: '/checksheet-daily'
+      path: '/checksheet-daily'
+      fullPath: '/checksheet-daily'
+      preLoaderRoute: typeof ChecksheetDailyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/log-history': {
+      id: '/log-history'
+      path: '/log-history'
+      fullPath: '/log-history'
+      preLoaderRoute: typeof LogHistoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/master-data': {
+      id: '/master-data'
+      path: '/master-data'
+      fullPath: '/master-data'
+      preLoaderRoute: typeof MasterDataRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/oven': {
+      id: '/oven'
+      path: '/oven'
+      fullPath: '/oven'
+      preLoaderRoute: typeof OvenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/report': {
+      id: '/report'
+      path: '/report'
+      fullPath: '/report'
+      preLoaderRoute: typeof ReportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/user-management': {
+      id: '/user-management'
+      path: '/user-management'
+      fullPath: '/user-management'
+      preLoaderRoute: typeof UserManagementRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/boiler-details/$id': {
+      id: '/boiler-details/$id'
+      path: '/boiler-details/$id'
+      fullPath: '/boiler-details/$id'
+      preLoaderRoute: typeof BoilerDetailsIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/master-data/': {
@@ -387,39 +387,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MasterDataIndexRouteImport
       parentRoute: typeof MasterDataRoute
     }
-    '/monitoring-area/$id': {
-      id: '/monitoring-area/$id'
-      path: '/monitoring-area/$id'
-      fullPath: '/monitoring-area/$id'
-      preLoaderRoute: typeof MonitoringAreaIdRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/master-data/uom': {
-      id: '/master-data/uom'
-      path: '/uom'
-      fullPath: '/master-data/uom'
-      preLoaderRoute: typeof MasterDataUomRouteImport
-      parentRoute: typeof MasterDataRoute
-    }
-    '/master-data/type': {
-      id: '/master-data/type'
-      path: '/type'
-      fullPath: '/master-data/type'
-      preLoaderRoute: typeof MasterDataTypeRouteImport
-      parentRoute: typeof MasterDataRoute
-    }
-    '/master-data/station': {
-      id: '/master-data/station'
-      path: '/station'
-      fullPath: '/master-data/station'
-      preLoaderRoute: typeof MasterDataStationRouteImport
-      parentRoute: typeof MasterDataRoute
-    }
-    '/master-data/standard': {
-      id: '/master-data/standard'
-      path: '/standard'
-      fullPath: '/master-data/standard'
-      preLoaderRoute: typeof MasterDataStandardRouteImport
+    '/master-data/colors': {
+      id: '/master-data/colors'
+      path: '/colors'
+      fullPath: '/master-data/colors'
+      preLoaderRoute: typeof MasterDataColorsRouteImport
       parentRoute: typeof MasterDataRoute
     }
     '/master-data/equipment': {
@@ -429,18 +401,46 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MasterDataEquipmentRouteImport
       parentRoute: typeof MasterDataRoute
     }
-    '/master-data/colors': {
-      id: '/master-data/colors'
-      path: '/colors'
-      fullPath: '/master-data/colors'
-      preLoaderRoute: typeof MasterDataColorsRouteImport
+    '/master-data/standard': {
+      id: '/master-data/standard'
+      path: '/standard'
+      fullPath: '/master-data/standard'
+      preLoaderRoute: typeof MasterDataStandardRouteImport
       parentRoute: typeof MasterDataRoute
     }
-    '/boiler-details/$id': {
-      id: '/boiler-details/$id'
-      path: '/boiler-details/$id'
-      fullPath: '/boiler-details/$id'
-      preLoaderRoute: typeof BoilerDetailsIdRouteImport
+    '/master-data/station': {
+      id: '/master-data/station'
+      path: '/station'
+      fullPath: '/master-data/station'
+      preLoaderRoute: typeof MasterDataStationRouteImport
+      parentRoute: typeof MasterDataRoute
+    }
+    '/master-data/type': {
+      id: '/master-data/type'
+      path: '/type'
+      fullPath: '/master-data/type'
+      preLoaderRoute: typeof MasterDataTypeRouteImport
+      parentRoute: typeof MasterDataRoute
+    }
+    '/master-data/uom': {
+      id: '/master-data/uom'
+      path: '/uom'
+      fullPath: '/master-data/uom'
+      preLoaderRoute: typeof MasterDataUomRouteImport
+      parentRoute: typeof MasterDataRoute
+    }
+    '/monitoring-area/': {
+      id: '/monitoring-area/'
+      path: '/monitoring-area'
+      fullPath: '/monitoring-area/'
+      preLoaderRoute: typeof MonitoringAreaIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/monitoring-area/$id': {
+      id: '/monitoring-area/$id'
+      path: '/monitoring-area/$id'
+      fullPath: '/monitoring-area/$id'
+      preLoaderRoute: typeof MonitoringAreaIdRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
