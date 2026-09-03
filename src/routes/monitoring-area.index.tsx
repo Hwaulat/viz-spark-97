@@ -130,16 +130,16 @@ function AreaCard({ area }: { area: AreaDef }) {
   const content = (
             <Panel
               className={`h-full flex flex-col ${!isPtedWrapper ? 'hover:border-primary/50 transition-colors' : ''}`}
-              bodyClassName={isPtedWrapper ? 'flex-1 flex flex-col' : ''}
+              bodyClassName={isPtedWrapper || area.type === "boiler" ? 'flex-1 flex flex-col' : ''}
               title={area.name}
               right={
                 !isPtedWrapper && <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
               }
             >
               {area.type === "boiler" && (
-                <div className="grid gap-2 mt-2">
+                <div className="flex flex-col flex-1 gap-2 mt-2">
                   {BOILERS.map((b) => (
-                    <div key={b.id} className="rounded-md bg-background p-3 border border-border/50 shadow-sm flex flex-col">
+                    <div key={b.id} className="flex-1 rounded-md bg-background p-3 border border-border/50 shadow-sm flex flex-col justify-between">
                       <div className="flex justify-between items-center">
                         <span className="text-sm font-bold flex items-center gap-1.5">
                           <Flame className={`h-4 w-4 ${b.running ? 'text-emerald-500' : 'text-gray-400'}`} /> {b.name}
