@@ -20,6 +20,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 function NotFoundComponent() {
   return (
@@ -245,10 +251,31 @@ function TopBar({ onToggleSidebar, collapsed }: { onToggleSidebar: () => void; c
           {collapsed ? <PanelLeftOpen className="h-4 w-4" /> : <PanelLeftClose className="h-4 w-4" />}
         </button>
         <div className="hidden lg:flex items-center gap-2 text-xs text-muted-foreground">
-          <span className="inline-flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-ok" />AC 220V</span>
-          <span className="inline-flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-ok" />DC 24V</span>
-          <span className="inline-flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-ok" />RUN</span>
-          <span className="inline-flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-warn" />1 ALARM</span>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <span className="inline-flex items-center gap-1.5 cursor-help">
+                <span className="h-2 w-2 rounded-full bg-destructive" />
+                <span className="font-semibold text-destructive">3 NG</span>
+              </span>
+            </TooltipTrigger>
+            <TooltipContent side="bottom" align="start" className="p-3">
+              <div className="flex flex-col gap-1.5 text-xs">
+                <p className="font-semibold mb-1 text-muted-foreground">NG Areas:</p>
+                <div className="flex items-center gap-2">
+                  <span className="h-1.5 w-1.5 rounded-full bg-destructive" />
+                  <span>Boiler Area</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="h-1.5 w-1.5 rounded-full bg-destructive" />
+                  <span>PTED Equipment</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="h-1.5 w-1.5 rounded-full bg-destructive" />
+                  <span>Oven Sealing</span>
+                </div>
+              </div>
+            </TooltipContent>
+          </Tooltip>
         </div>
       </div>
       <div className="flex items-center gap-4">
@@ -308,7 +335,8 @@ function RootComponent() {
   const [mobileOpen, setMobileOpen] = useState(false);
   return (
     <QueryClientProvider client={queryClient}>
-      <div className="flex min-h-screen">
+      <TooltipProvider>
+        <div className="flex min-h-screen">
         {/* Desktop sidebar */}
         <Sidebar className={`hidden ${collapsed ? "md:hidden" : "md:flex"}`} />
 
@@ -331,7 +359,7 @@ function RootComponent() {
           <main className="flex-1 overflow-x-hidden overflow-y-auto"><Outlet /></main>
         </div>
       </div>
-
+      </TooltipProvider>
     </QueryClientProvider>
   );
 }
