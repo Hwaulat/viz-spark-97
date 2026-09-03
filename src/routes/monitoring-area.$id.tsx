@@ -31,18 +31,22 @@ function OvenDetailContent({ id }: { id: string }) {
     let baseKw = 50;
     let baseVolt = 380;
     let name = "Oven";
+    let standard = 185;
     let elec = { amp: { min: "110", act: "125", max: "150" }, volt: { min: "370", act: "380", max: "390" }, kw: "45", kwh: "120", kvar: "12", kvarh: "30", pf: "0.95", h2: "0.5" };
 
     if (id === "oven-sealing") {
       name = "Oven Sealing";
       baseKw = 45;
+      standard = 185;
     } else if (id === "oven-topcoat") {
       name = "Oven Topcoat";
       baseKw = 52;
+      standard = 190;
       elec = { amp: { min: "130", act: "145", max: "160" }, volt: { min: "375", act: "382", max: "395" }, kw: "52", kwh: "140", kvar: "15", kvarh: "35", pf: "0.96", h2: "0.4" };
     } else if (id === "oven-ced") {
       name = "Oven CED";
       baseKw = 60;
+      standard = 180;
       elec = { amp: { min: "140", act: "155", max: "170" }, volt: { min: "378", act: "385", max: "398" }, kw: "60", kwh: "165", kvar: "18", kvarh: "42", pf: "0.94", h2: "0.6" };
     }
 
@@ -52,10 +56,10 @@ function OvenDetailContent({ id }: { id: string }) {
         ? ovenElecMonthlyTrend(baseKw, baseVolt)
         : ovenElecYearlyTrend(baseKw, baseVolt);
 
-    return { name, data, elec };
+    return { name, data, elec, standard };
   }, [id, timeFilter]);
 
-  const { name, data, elec } = ovenData;
+  const { name, data, elec, standard } = ovenData;
 
   const temp1Min = Math.min(...data.map((d: any) => d.temp1));
   const temp1Max = Math.max(...data.map((d: any) => d.temp1));
@@ -81,7 +85,7 @@ function OvenDetailContent({ id }: { id: string }) {
             <Thermometer className="h-3.5 w-3.5" /> Temperature 1
           </div>
           <div className="flex items-baseline gap-1">
-            <span className="text-3xl font-mono font-bold text-foreground">{data[data.length - 1]?.temp1?.toFixed(1) || "0.0"}</span>
+            <span className={`text-3xl font-mono font-bold ${data[data.length - 1]?.temp1 > standard ? 'text-destructive' : 'text-emerald-500'}`}>{data[data.length - 1]?.temp1?.toFixed(1) || "0.0"}</span>
             <span className="text-sm text-muted-foreground">°C</span>
           </div>
           <div className="flex gap-3 mt-2 text-[10px] font-mono font-semibold">
@@ -94,7 +98,7 @@ function OvenDetailContent({ id }: { id: string }) {
             <Thermometer className="h-3.5 w-3.5" /> Temperature 2
           </div>
           <div className="flex items-baseline gap-1">
-            <span className="text-3xl font-mono font-bold text-foreground">{data[data.length - 1]?.temp2?.toFixed(1) || "0.0"}</span>
+            <span className={`text-3xl font-mono font-bold ${data[data.length - 1]?.temp2 > standard ? 'text-destructive' : 'text-emerald-500'}`}>{data[data.length - 1]?.temp2?.toFixed(1) || "0.0"}</span>
             <span className="text-sm text-muted-foreground">°C</span>
           </div>
           <div className="flex gap-3 mt-2 text-[10px] font-mono font-semibold">

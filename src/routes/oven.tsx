@@ -65,7 +65,7 @@ function OvenArea() {
               }
             >
               <div className="grid grid-cols-2 gap-3">
-                <ValueDisplay label="Temperature" value={o.temp.toFixed(1)} unit="°C" tone={tone === "warn" ? "warn" : "default"} />
+                <ValueDisplay label="Temperature" value={o.temp.toFixed(1)} unit="°C" tone={o.temp > o.setpoint ? "danger" : "ok"} />
                 <ValueDisplay label="Setpoint" value={o.setpoint} unit="°C" />
                 <ValueDisplay label="Gas Flow" value={o.gasFlow} unit="m³/h" tone="warn" />
                 <ValueDisplay label="Gas Today" value={o.gasTotal.toLocaleString()} unit="m³" />
@@ -130,7 +130,7 @@ function OvenArea() {
                     <StatusDot state={tone === "warn" ? "warn" : "on"} size={8} />
                   </div>
                   <div className="mt-2 flex items-baseline gap-1.5">
-                    <span className={`text-2xl font-mono font-semibold tabular-nums ${tone==="warn"?"text-warn":"text-foreground"}`}>{z.pv}</span>
+                    <span className={`text-2xl font-mono font-semibold tabular-nums ${z.pv > z.sp ? "text-destructive" : "text-ok"}`}>{z.pv}</span>
                     <span className="text-[10px] text-muted-foreground">°C PV</span>
                   </div>
                   <div className="mt-0.5 text-[10px] font-mono text-muted-foreground">
