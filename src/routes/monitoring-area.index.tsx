@@ -119,12 +119,12 @@ function BagFilterItemDialog({ item, children }: { item: { name: string, val: st
 function AreaCard({ area }: { area: AreaDef }) {
   const isPtedWrapper = area.type === "pted-wrapper";
   
-  const getLimitColor = (val: string | number | undefined, min: number, max: number, defaultClass: string = "text-foreground") => {
+  const getLimitColor = (val: string | number | undefined, min: number, max: number, defaultClass: string = "text-foreground", okClass?: string) => {
     if (val === undefined) return defaultClass;
     const v = typeof val === "string" ? parseFloat(val) : val;
     if (isNaN(v)) return defaultClass;
     if (v < min || v > max) return "text-destructive font-bold";
-    return defaultClass;
+    return okClass || defaultClass;
   };
 
   const content = (
@@ -148,8 +148,8 @@ function AreaCard({ area }: { area: AreaDef }) {
                           {b.id === 3 && <span className="ml-1 text-[9px] px-1.5 py-0.5 rounded font-bold bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400">NG</span>}
                         </span>
                         <div className="flex gap-4 text-xs font-mono items-center">
-    <span className="text-muted-foreground flex items-baseline gap-2">T1 <span className={`font-bold text-2xl ${getLimitColor(b.temp1, 175, 188)}`}>{b.temp1.toFixed(1)}°C</span></span>
-    <span className="text-muted-foreground flex items-baseline gap-2">T2 <span className={`font-bold text-2xl ${getLimitColor(b.temp2, 175, 188)}`}>{b.temp2.toFixed(1)}°C</span></span>
+    <span className="text-muted-foreground flex items-baseline gap-2">T1 <span className={`font-bold text-2xl ${getLimitColor(b.temp1, 175, 188, "text-foreground", "text-emerald-500")}`}>{b.temp1.toFixed(1)}°C</span></span>
+    <span className="text-muted-foreground flex items-baseline gap-2">T2 <span className={`font-bold text-2xl ${getLimitColor(b.temp2, 175, 188, "text-foreground", "text-emerald-500")}`}>{b.temp2.toFixed(1)}°C</span></span>
   </div>
                       </div>
 
@@ -434,7 +434,7 @@ function AreaCard({ area }: { area: AreaDef }) {
                           <div className="flex gap-5">
                             <div className="flex flex-col items-end">
                               <span className="text-[9px] text-muted-foreground uppercase flex items-center gap-1"><Thermometer className="h-3 w-3" /> Temp PV</span>
-                              <div className="flex items-baseline gap-1 mt-0.5"><span className={`font-mono font-bold text-3xl ${getLimitColor(eq.pv, parseFloat(eq.sp) - 2, parseFloat(eq.sp) + 2)}`}>{eq.pv}</span><span className="text-sm text-muted-foreground">°C</span></div>
+                              <div className="flex items-baseline gap-1 mt-0.5"><span className={`font-mono font-bold text-3xl ${getLimitColor(eq.pv, parseFloat(eq.sp) - 2, parseFloat(eq.sp) + 2, "text-foreground", "text-emerald-500")}`}>{eq.pv}</span><span className="text-sm text-muted-foreground">°C</span></div>
                             </div>
                             <div className="flex flex-col items-end">
                               <span className="text-[9px] text-muted-foreground uppercase flex items-center gap-1"><Thermometer className="h-3 w-3" /> Temp SP</span>
