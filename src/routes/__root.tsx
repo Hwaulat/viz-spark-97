@@ -197,17 +197,7 @@ function Sidebar({ onNavigate, className = "" }: { onNavigate?: () => void; clas
 
 
       <div className="p-4 mt-2">
-        <div className="rounded-lg bg-white/5 border border-sidebar-border p-3 text-[11px]">
-          <div className="flex items-center justify-between text-sidebar-muted">
-            <span>PLC LINK</span>
-            <span className="inline-flex items-center gap-1.5 text-ok"><span className="h-1.5 w-1.5 rounded-full bg-ok animate-pulse" />ONLINE</span>
-          </div>
-          <div className="mt-1 flex items-center justify-between text-sidebar-muted">
-            <span>MC PROTOCOL</span>
-            <span className="text-sidebar-foreground">42 ms</span>
-          </div>
-        </div>
-        <div className="mt-3 flex items-center gap-2 text-[10px] text-sidebar-muted">
+        <div className="flex items-center gap-2 text-[10px] text-sidebar-muted">
           <span className="h-1.5 w-1.5 rounded-full bg-ok" />
           System Online
           <span className="ml-auto font-mono">v2.4.1</span>

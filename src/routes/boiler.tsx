@@ -1,6 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { Panel, StatusDot, ValueDisplay } from "@/components/panel";
+import { Tabs } from "@/components/tabs";
+import { StatCardGrid } from "@/components/stat-card";
 import { BOILERS, BOILER_GAS, boilerDayTrend, boilerMonthTrend } from "@/lib/mock-data";
 import { Flame, Cog, TrendingUp, Fuel, Gauge, ArrowRight, Power } from "lucide-react";
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis, Legend } from "recharts";
@@ -24,10 +26,22 @@ function BoilerArea() {
     <div className="p-6 space-y-6">
       {/* Header */}
       <div className="flex items-end justify-between flex-wrap gap-4">
-        <div>
-          <div className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">Boiler Area</div>
-          <h1 className="text-2xl font-semibold mt-1">Steam Generation Units</h1>
-          <p className="text-sm text-muted-foreground mt-0.5">Monitoring per unit (Temp, Pressure, Operating Hours) & Combined Gas Meter.</p>
+        <div className="flex items-center gap-8">
+          <div>
+            <div className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">Boiler Area</div>
+            <h1 className="text-2xl font-semibold mt-1">Steam Generation Units</h1>
+            <p className="text-sm text-muted-foreground mt-0.5">Monitoring per unit (Temp, Pressure, Operating Hours) & Combined Gas Meter.</p>
+          </div>
+          <div className="rounded-md bg-secondary/50 px-4 py-2.5 border border-border/50 flex items-center gap-4">
+            <div>
+              <div className="text-[10px] uppercase tracking-widest text-muted-foreground">Panel Burner Status</div>
+              <div className="flex items-center gap-2 mt-1">
+                <StatusDot state={BOILER_GAS.panelBoilerStatus === "ON" ? "on" : "off"} />
+                <span className={`text-lg font-mono font-semibold ${BOILER_GAS.panelBoilerStatus === "ON" ? "text-ok" : "text-destructive"}`}>{BOILER_GAS.panelBoilerStatus}</span>
+              </div>
+            </div>
+            <Power className={`h-8 w-8 ${BOILER_GAS.panelBoilerStatus === "ON" ? "text-ok/60" : "text-destructive/60"}`} />
+          </div>
         </div>
         <div className="flex gap-3 text-xs">
           <span className="rounded-md border border-ok/40 bg-ok/10 px-3 py-1.5 font-mono text-ok">{runningCount}/3 RUNNING</span>
@@ -46,18 +60,35 @@ function BoilerArea() {
         subtitle="1 combined gas meter represents total consumption of all three boilers"
         right={<span className="rounded bg-amber-500/15 text-amber-600 dark:text-amber-400 px-2.5 py-1 text-[10px] font-mono font-semibold">COMBINED (1 METER)</span>}
       >
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          <ValueDisplay label="Current Gas Consumption" value={BOILER_GAS.instantFlow} unit={BOILER_GAS.unit} tone="warn" />
-          <ValueDisplay label="Total Consumption Today" value={BOILER_GAS.todayTotal.toLocaleString()} unit={BOILER_GAS.todayUnit} />
-          <div className="rounded-md bg-secondary/50 px-3 py-2.5 border border-border/50 flex items-center justify-between">
-            <div>
-              <div className="text-[10px] uppercase tracking-widest text-muted-foreground">Gas Line Pressure</div>
-              <div className="text-lg font-mono font-semibold mt-1 text-foreground">4.2 <span className="text-xs text-muted-foreground font-normal">bar</span></div>
-              <div className="text-[11px] text-ok font-medium mt-0.5">● Supply Line Normal</div>
-            </div>
-            <Fuel className="h-7 w-7 text-amber-500/60" />
-          </div>
-        </div>
+        <StatCardGrid
+          columns={3}
+          items={[
+            {
+              title: "Current Gas Consumption",
+              value: `${BOILER_GAS.instantFlow} ${BOILER_GAS.unit}`,
+              variant: "stat",
+              icon: <Fuel />,
+              iconBg: "bg-amber-500/10 text-amber-500",
+              valueColor: "text-amber-500",
+            },
+            {
+              title: "Total Consumption Today",
+              value: `${BOILER_GAS.todayTotal.toLocaleString()} ${BOILER_GAS.todayUnit}`,
+              variant: "stat",
+              icon: <Fuel />,
+              iconBg: "bg-blue-500/10 text-blue-500",
+            },
+            {
+              title: "Gas Line Pressure",
+              value: "4.2 bar",
+              subtitle: "● Supply Line Normal",
+              subtitleColor: "text-ok",
+              variant: "stat",
+              icon: <Fuel />,
+              iconBg: "bg-amber-500/10 text-amber-500",
+            }
+          ]}
+        />
       </Panel>
 
       {/* 3 Boiler Cards */}
@@ -119,7 +150,7 @@ function BoilerArea() {
               </div>
             </div>
 
-            <div className="mt-3 space-y-2">
+            <div className="mt-3">
               <div className="flex flex-col gap-1 rounded-md bg-secondary/60 px-3 py-2 border border-border/50">
                 <div className="flex items-center justify-between">
                   <span className="inline-flex items-center gap-2 text-xs"><Flame className="h-3.5 w-3.5 text-warn" />Status Burner</span>
@@ -132,13 +163,6 @@ function BoilerArea() {
                   <span>Durasi ON</span>
                   <span className="font-mono text-foreground">{b.burnerDuration}</span>
                 </div>
-              </div>
-              <div className="flex items-center justify-between rounded-md bg-secondary/60 px-3 py-2 border border-border/50">
-                <span className="inline-flex items-center gap-2 text-xs"><Cog className="h-3.5 w-3.5 text-primary" />Motor Pump</span>
-                <span className="inline-flex items-center gap-2 text-xs font-mono">
-                  <StatusDot state={b.motorPump ? "on" : "off"} />
-                  {b.motorPump ? "RUNNING" : "STOPPED"}
-                </span>
               </div>
             </div>
 
@@ -188,46 +212,41 @@ function BoilerTrendChart() {
       }
     >
       {/* Tab List for Boiler 1 / 2 / 3 */}
-      <div className="flex items-center gap-1 mb-4 bg-secondary/60 p-1 rounded-lg w-fit" role="tablist">
-        {BOILERS.map((b) => (
-          <button
-            key={b.id}
-            role="tab"
-            aria-selected={activeBoilerId === b.id}
-            onClick={() => setActiveBoilerId(b.id)}
-            className={`px-4 py-1.5 rounded-md text-xs font-medium transition flex items-center gap-2 ${
-              activeBoilerId === b.id
-                ? "bg-card text-foreground shadow-sm font-semibold"
-                : "text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            <Flame className={`h-3.5 w-3.5 ${activeBoilerId === b.id ? "text-primary" : ""}`} />
-            {b.name}
-            {b.alarm && <span className="h-1.5 w-1.5 rounded-full bg-warn animate-pulse" />}
-          </button>
-        ))}
-      </div>
+      <Tabs
+        variant="default"
+        value={String(activeBoilerId)}
+        onValueChange={(val) => setActiveBoilerId(Number(val))}
+        items={BOILERS.map((b) => ({
+          value: String(b.id),
+          label: b.name,
+          icon: <Flame />,
+          badge: b.alarm ? "⚠" : undefined,
+          content: (
+            <>
+              <div className="flex flex-wrap items-center gap-4 mb-4 text-xs text-muted-foreground font-mono">
+                <span>Temp 1: <strong className="text-foreground">{b.temp1.toFixed(1)}°C</strong></span>
+                <span>Temp 2: <strong className="text-foreground">{b.temp2.toFixed(1)}°C</strong></span>
+                <span>Status: <strong className={b.alarm ? "text-warn" : "text-ok"}>{b.alarm ? "ALARM" : "NORMAL"}</strong></span>
+                <span className="ml-auto">X-axis: {xLabel}</span>
+              </div>
 
-      <div className="flex flex-wrap items-center gap-4 mb-4 text-xs text-muted-foreground font-mono">
-        <span>Temp 1: <strong className="text-foreground">{activeBoiler.temp1.toFixed(1)}°C</strong></span>
-        <span>Temp 2: <strong className="text-foreground">{activeBoiler.temp2.toFixed(1)}°C</strong></span>
-        <span>Status: <strong className={activeBoiler.alarm ? "text-warn" : "text-ok"}>{activeBoiler.alarm ? "ALARM" : "NORMAL"}</strong></span>
-        <span className="ml-auto">X-axis: {xLabel}</span>
-      </div>
-
-      <div className="h-64">
-        <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={data} margin={{ top: 5, right: 10, left: -20, bottom: 0 }}>
-            <CartesianGrid stroke="var(--grid-line)" strokeDasharray="3 3" />
-            <XAxis dataKey="t" stroke="var(--muted-foreground)" fontSize={10} interval={range === "1D" ? 2 : 2} />
-            <YAxis stroke="var(--muted-foreground)" fontSize={10} domain={["dataMin - 5", "dataMax + 5"]} />
-            <Tooltip contentStyle={{ background: "var(--popover)", border: "1px solid var(--border)", fontSize: 11, borderRadius: 8 }} />
-            <Legend wrapperStyle={{ fontSize: 11 }} />
-            <Line type="monotone" dataKey="temp1" name="Temp 1" stroke="var(--chart-1)" strokeWidth={2} dot={false} />
-            <Line type="monotone" dataKey="temp2" name="Temp 2" stroke="var(--chart-2)" strokeWidth={2} dot={false} />
-          </LineChart>
-        </ResponsiveContainer>
-      </div>
+              <div className="h-64">
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart data={data} margin={{ top: 5, right: 10, left: -20, bottom: 0 }}>
+                    <CartesianGrid stroke="var(--grid-line)" strokeDasharray="3 3" />
+                    <XAxis dataKey="t" stroke="var(--muted-foreground)" fontSize={10} interval={range === "1D" ? 2 : 2} />
+                    <YAxis stroke="var(--muted-foreground)" fontSize={10} domain={["dataMin - 5", "dataMax + 5"]} />
+                    <Tooltip contentStyle={{ background: "var(--popover)", border: "1px solid var(--border)", fontSize: 11, borderRadius: 8 }} />
+                    <Legend wrapperStyle={{ fontSize: 11 }} />
+                    <Line type="monotone" dataKey="temp1" name="Temp 1" stroke="var(--chart-1)" strokeWidth={2} dot={false} />
+                    <Line type="monotone" dataKey="temp2" name="Temp 2" stroke="var(--chart-2)" strokeWidth={2} dot={false} />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+            </>
+          ),
+        }))}
+      />
     </Panel>
   );
 }

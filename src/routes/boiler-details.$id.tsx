@@ -30,8 +30,8 @@ function BoilerDetails() {
   return (
     <div className="p-6 space-y-6">
       <div className="flex items-start gap-4">
-        <Link 
-          to="/boiler" 
+        <Link
+          to="/boiler"
           className="mt-1 flex items-center justify-center gap-1.5 rounded-lg border border-border bg-card px-3 py-1.5 shadow-sm hover:bg-secondary transition-colors text-sm font-medium text-foreground"
         >
           <ChevronLeft className="h-4 w-4" />

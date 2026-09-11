@@ -34,8 +34,36 @@ export const BOILER_GAS = {
   unit: "m³/h",
   gasPressure: 4.2,
   powerPanel: 125,
+  panelBoilerStatus: "ON" as "ON" | "OFF",
   todayTotal: 4850,
   todayUnit: "m³",
+};
+
+export const ENERGY_PRICE_PER_KWH = 1500; // Rp per kWh
+export const GAS_PRICE_PER_MMBTU = 85000; // Rp per MMBTU
+
+export const BOILER_LOG_HISTORY: Record<string, { on: string; off: string; totalDuration: string }[]> = {
+  "Boiler 1": [
+    { on: "11 August 2026, 06:12", off: "11 August 2026, 16:42", totalDuration: "10h 30m" },
+    { on: "10 August 2026, 05:45", off: "10 August 2026, 17:15", totalDuration: "11h 30m" },
+    { on: "9 August 2026, 06:00", off: "9 August 2026, 16:00", totalDuration: "10h 00m" },
+    { on: "8 August 2026, 06:30", off: "8 August 2026, 17:00", totalDuration: "10h 30m" },
+    { on: "7 August 2026, 05:50", off: "7 August 2026, 16:20", totalDuration: "10h 30m" },
+  ],
+  "Boiler 2": [
+    { on: "11 August 2026, 07:45", off: "11 August 2026, 13:24", totalDuration: "5h 39m" },
+    { on: "10 August 2026, 08:00", off: "10 August 2026, 14:30", totalDuration: "6h 30m" },
+    { on: "9 August 2026, 07:30", off: "9 August 2026, 13:00", totalDuration: "5h 30m" },
+    { on: "8 August 2026, 08:15", off: "8 August 2026, 14:45", totalDuration: "6h 30m" },
+    { on: "7 August 2026, 07:00", off: "7 August 2026, 12:30", totalDuration: "5h 30m" },
+  ],
+  "Boiler 3": [
+    { on: "11 August 2026, 05:58", off: "11 August 2026, 17:10", totalDuration: "11h 12m" },
+    { on: "10 August 2026, 06:10", off: "10 August 2026, 17:30", totalDuration: "11h 20m" },
+    { on: "9 August 2026, 05:45", off: "9 August 2026, 16:55", totalDuration: "11h 10m" },
+    { on: "8 August 2026, 06:00", off: "8 August 2026, 17:00", totalDuration: "11h 00m" },
+    { on: "7 August 2026, 05:30", off: "7 August 2026, 16:40", totalDuration: "11h 10m" },
+  ],
 };
 
 export const OVEN_GAS = {

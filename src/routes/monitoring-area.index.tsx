@@ -69,12 +69,12 @@ function BagFilterItemDialog({ item, children }: { item: { name: string, val: st
       return res;
     });
   }, [item.val, item.val2]);
-  
+
   const minLimit1 = item.minStd !== undefined ? item.minStd : +(parseFloat(item.val) * 0.95).toFixed(1);
   const maxLimit1 = item.maxStd;
   const minLimit2 = item.minStd2 !== undefined ? item.minStd2 : (item.val2 ? +(parseFloat(item.val2) * 0.95).toFixed(1) : undefined);
   const maxLimit2 = item.maxStd2;
-  
+
   const unit = item.unit || "°C";
 
   return (
@@ -92,7 +92,7 @@ function BagFilterItemDialog({ item, children }: { item: { name: string, val: st
               <CartesianGrid strokeDasharray="3 3" vertical={true} horizontal={false} stroke="hsl(var(--border))" opacity={0.5} />
               <XAxis dataKey="time" tick={{ fontSize: 10 }} tickMargin={10} stroke="hsl(var(--muted-foreground))" axisLine={{ stroke: 'hsl(var(--border))' }} tickLine={false} />
               <YAxis tick={{ fontSize: 10 }} stroke="hsl(var(--muted-foreground))" domain={['dataMin - 1', 'dataMax + 1']} axisLine={{ stroke: 'hsl(var(--border))' }} tickLine={false} />
-              <Tooltip 
+              <Tooltip
                 contentStyle={{ backgroundColor: 'rgba(0,0,0,0.8)', borderColor: 'rgba(255,255,255,0.1)', borderRadius: '8px' }}
                 itemStyle={{ color: '#fff', fontSize: '12px' }}
                 labelStyle={{ color: '#aaa', fontSize: '12px', marginBottom: '4px' }}
@@ -118,7 +118,7 @@ function BagFilterItemDialog({ item, children }: { item: { name: string, val: st
 
 function AreaCard({ area }: { area: AreaDef }) {
   const isPtedWrapper = area.type === "pted-wrapper";
-  
+
   const getLimitColor = (val: string | number | undefined, min: number, max: number, defaultClass: string = "text-foreground", okClass?: string) => {
     if (val === undefined) return defaultClass;
     const v = typeof val === "string" ? parseFloat(val) : val;
@@ -128,420 +128,396 @@ function AreaCard({ area }: { area: AreaDef }) {
   };
 
   const content = (
-            <Panel
-              className={`h-full flex flex-col ${!isPtedWrapper ? 'hover:border-primary/50 transition-colors' : ''}`}
-              bodyClassName={isPtedWrapper || area.type === "boiler" ? 'flex-1 flex flex-col' : ''}
-              title={area.name}
-              right={
-                !isPtedWrapper && <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
-              }
-            >
-              {area.type === "boiler" && (
-                <div className="flex flex-col flex-1 gap-2 mt-2">
-                  {BOILERS.map((b) => (
-                    <div key={b.id} className="flex-1 rounded-md bg-background p-3 border border-border/50 shadow-sm flex flex-col justify-between">
-                      <div className="flex justify-between items-center">
-                        <span className="text-sm font-bold flex items-center gap-1.5">
-                          <Flame className={`h-4 w-4 ${b.running ? 'text-emerald-500' : 'text-gray-400'}`} /> {b.name}
-                          {b.id === 1 && <span className="ml-2 text-[11px] px-2 py-0.5 rounded font-bold bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400">OK</span>}
-                          {b.id === 2 && <span className="ml-2 text-[11px] px-2 py-0.5 rounded font-bold bg-orange-100 text-orange-600 dark:bg-orange-900/30 dark:text-orange-400">OK</span>}
-                          {b.id === 3 && <span className="ml-2 text-[11px] px-2 py-0.5 rounded font-bold bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400">NG</span>}
-                        </span>
-                        <div className="flex gap-4 text-xs font-mono items-center">
-    <span className="text-muted-foreground flex items-baseline gap-2">T1 <span className={`font-bold text-2xl ${getLimitColor(b.temp1, 175, 188, "text-foreground", "text-emerald-500")}`}>{b.temp1.toFixed(1)}°C</span></span>
-    <span className="text-muted-foreground flex items-baseline gap-2">T2 <span className={`font-bold text-2xl ${getLimitColor(b.temp2, 175, 188, "text-foreground", "text-emerald-500")}`}>{b.temp2.toFixed(1)}°C</span></span>
-  </div>
-                      </div>
-
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4 pt-4 border-t border-border/40">
-                        {/* Boiler Status */}
-                        <div className="flex flex-col gap-2.5">
-                          <div className="flex justify-between items-center">
-                            <span className="text-xs font-semibold text-muted-foreground">Boiler Status</span>
-                            <span className={`text-[9px] px-2 py-0.5 rounded font-bold ${b.running ? 'bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400' : 'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400'}`}>
-                              {b.running ? "ON" : "OFF"}
-                            </span>
-                          </div>
-                          
-                          <div className="bg-secondary/30 border border-border/50 rounded-lg flex">
-                            <div className="flex-1 p-2 flex flex-col gap-1 border-r border-border/50">
-                              <div className="flex items-center gap-1.5 text-[9px] text-muted-foreground font-medium uppercase tracking-wider">
-                                <Power className={`w-3 h-3 ${b.running ? 'text-emerald-500' : 'text-muted-foreground/50'}`} /> ON
-                              </div>
-                              <div className="text-sm font-mono font-bold text-foreground pl-4.5">{b.running ? b.onTime : '—'}</div>
-                            </div>
-                            <div className="flex-1 p-2 flex flex-col gap-1">
-                              <div className="flex items-center gap-1.5 text-[9px] text-muted-foreground font-medium uppercase tracking-wider">
-                                <Power className={`w-3 h-3 ${!b.running ? 'text-red-500' : 'text-muted-foreground/50'}`} /> OFF
-                              </div>
-                              <div className="text-sm font-mono font-bold text-foreground pl-4.5">{!b.running ? b.offTime : '—'}</div>
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* Pump Status */}
-                        <div className="flex flex-col gap-2.5">
-                          <div className="flex justify-between items-center">
-                            <span className="text-xs font-semibold text-muted-foreground">Pump Status</span>
-                            <span className={`text-[9px] px-2 py-0.5 rounded font-bold ${b.motorPump ? 'bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400' : 'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400'}`}>
-                              {b.motorPump ? "ON" : "OFF"}
-                            </span>
-                          </div>
-                          
-                          <div className="bg-secondary/30 border border-border/50 rounded-lg flex">
-                            <div className="flex-1 p-2 flex flex-col gap-1 border-r border-border/50">
-                              <div className="flex items-center gap-1.5 text-[9px] text-muted-foreground font-medium uppercase tracking-wider">
-                                <Activity className={`w-3 h-3 ${b.motorPump ? 'text-emerald-500' : 'text-muted-foreground/50'}`} /> ON
-                              </div>
-                              <div className="text-sm font-mono font-bold text-foreground pl-4.5">{b.motorPump ? b.pumpOnTime : '—'}</div>
-                            </div>
-                            <div className="flex-1 p-2 flex flex-col gap-1">
-                              <div className="flex items-center gap-1.5 text-[9px] text-muted-foreground font-medium uppercase tracking-wider">
-                                <Activity className={`w-3 h-3 ${!b.motorPump ? 'text-red-500' : 'text-muted-foreground/50'}`} /> OFF
-                              </div>
-                              <div className="text-sm font-mono font-bold text-foreground pl-4.5">{!b.motorPump ? b.pumpOffTime : '—'}</div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
-                    </div>
-                  ))}
+    <Panel
+      className={`h-full flex flex-col ${!isPtedWrapper ? 'hover:border-primary/50 transition-colors' : ''}`}
+      bodyClassName={isPtedWrapper || area.type === "boiler" ? 'flex-1 flex flex-col' : ''}
+      title={area.name}
+      right={
+        !isPtedWrapper && <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
+      }
+    >
+      {area.type === "boiler" && (
+        <div className="flex flex-col flex-1 gap-2 mt-2">
+          {BOILERS.map((b) => (
+            <div key={b.id} className="flex-1 rounded-md bg-background p-3 border border-border/50 shadow-sm flex flex-col justify-between">
+              <div className="flex justify-between items-center">
+                <span className="text-sm font-bold flex items-center gap-1.5">
+                  <Flame className={`h-4 w-4 ${b.running ? 'text-emerald-500' : 'text-gray-400'}`} /> {b.name}
+                  {b.id === 1 && <span className="ml-2 text-[11px] px-2 py-0.5 rounded font-bold bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400">OK</span>}
+                  {b.id === 2 && <span className="ml-2 text-[11px] px-2 py-0.5 rounded font-bold bg-orange-100 text-orange-600 dark:bg-orange-900/30 dark:text-orange-400">OK</span>}
+                  {b.id === 3 && <span className="ml-2 text-[11px] px-2 py-0.5 rounded font-bold bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400">NG</span>}
+                </span>
+                <div className="flex gap-4 text-xs font-mono items-center">
+                  <span className="text-muted-foreground flex items-baseline gap-2">T1 <span className={`font-bold text-2xl ${getLimitColor(b.temp1, 175, 188, "text-foreground", "text-emerald-500")}`}>{b.temp1.toFixed(1)}°C</span></span>
+                  <span className="text-muted-foreground flex items-baseline gap-2">T2 <span className={`font-bold text-2xl ${getLimitColor(b.temp2, 175, 188, "text-foreground", "text-emerald-500")}`}>{b.temp2.toFixed(1)}°C</span></span>
                 </div>
-              )}
+              </div>
 
-              {area.type === "line-tracking" && (
-                <div className="grid gap-2 mt-2">
-                  <div className="rounded-md bg-secondary/50 p-2 border border-border/50">
-                    <div className="flex justify-between items-center text-xs">
-                      <span className="font-medium text-muted-foreground">Pre-Degreasing</span>
-                      <div className="flex gap-2">
-                        <span className="text-foreground">PV: 46.2°C</span>
-                        <span className="text-muted-foreground">SP: 45.0°C</span>
-                      </div>
-                    </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4 pt-4 border-t border-border/40">
+                {/* Boiler Status */}
+                <div className="flex flex-col gap-2.5 w">
+                  <div className="flex justify-between items-center">
+                    <span className="text-xs font-semibold text-muted-foreground">Boiler Status</span>
+                    <span className={`text-[9px] px-2 py-0.5 rounded font-bold ${b.running ? 'bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400' : 'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400'}`}>
+                      {b.running ? "ON" : "OFF"}
+                    </span>
                   </div>
-                  <div className="rounded-md bg-secondary/50 p-2 border border-border/50">
-                    <div className="flex justify-between items-center text-xs">
-                      <span className="font-medium text-muted-foreground">Degreasing</span>
-                      <div className="flex gap-2">
-                        <span className="text-foreground">PV: 52.8°C</span>
-                        <span className="text-muted-foreground">SP: 52.0°C</span>
+
+                  <div className="bg-secondary/30 border border-border/50 rounded-lg flex">
+                    <div className="flex-1 p-2 flex flex-col gap-1 border-r border-border/50">
+                      <div className="flex items-center gap-1.5 text-[9px] text-muted-foreground font-medium uppercase tracking-wider">
+                        <Power className={`w-3 h-3 ${b.running ? 'text-emerald-500' : 'text-muted-foreground/50'}`} /> ON
                       </div>
+                      <div className="text-sm font-mono font-bold text-foreground pl-4.5">{b.running ? b.onTime : '—'}</div>
                     </div>
-                  </div>
-                  <div className="rounded-md bg-secondary/50 p-2 border border-border/50">
-                    <div className="flex justify-between items-center text-xs">
-                      <span className="font-medium text-muted-foreground">Flood</span>
-                      <div className="flex gap-2">
-                        <span className="text-destructive font-semibold">PV: 28.5°C</span>
-                        <span className="text-muted-foreground">SP: 30.0°C</span>
+                    <div className="flex-1 p-2 flex flex-col gap-1">
+                      <div className="flex items-center gap-1.5 text-[9px] text-muted-foreground font-medium uppercase tracking-wider">
+                        <Power className={`w-3 h-3 ${!b.running ? 'text-red-500' : 'text-muted-foreground/50'}`} /> OFF
                       </div>
-                    </div>
-                  </div>
-                  <div className="rounded-md bg-secondary/50 p-2 border border-border/50">
-                    <div className="flex justify-between items-center text-xs">
-                      <span className="font-medium text-muted-foreground">Phosphate</span>
-                      <div className="flex gap-2">
-                        <span className="text-foreground">PV: 42.1°C</span>
-                        <span className="text-muted-foreground">SP: 42.0°C</span>
-                      </div>
+                      <div className="text-sm font-mono font-bold text-foreground pl-4.5">{!b.running ? b.offTime : '—'}</div>
                     </div>
                   </div>
                 </div>
-              )}
 
-              {area.type === "temp-single" && (
-                <div className="grid grid-cols-2 gap-4 mt-2">
-                  <div className="rounded-lg bg-secondary/50 p-3 border border-border/50">
-                    <div className="flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-muted-foreground mb-1">
-                      <Thermometer className="h-3.5 w-3.5" /> Temp PV
+              </div>
+
+            </div>
+          ))}
+        </div>
+      )}
+
+      {area.type === "line-tracking" && (
+        <div className="grid gap-2 mt-2">
+          <div className="rounded-md bg-secondary/50 p-2 border border-border/50">
+            <div className="flex justify-between items-center text-xs">
+              <span className="font-medium text-muted-foreground">Pre-Degreasing</span>
+              <div className="flex gap-2">
+                <span className="text-foreground">PV: 46.2°C</span>
+                <span className="text-muted-foreground">SP: 45.0°C</span>
+              </div>
+            </div>
+          </div>
+          <div className="rounded-md bg-secondary/50 p-2 border border-border/50">
+            <div className="flex justify-between items-center text-xs">
+              <span className="font-medium text-muted-foreground">Degreasing</span>
+              <div className="flex gap-2">
+                <span className="text-foreground">PV: 52.8°C</span>
+                <span className="text-muted-foreground">SP: 52.0°C</span>
+              </div>
+            </div>
+          </div>
+          <div className="rounded-md bg-secondary/50 p-2 border border-border/50">
+            <div className="flex justify-between items-center text-xs">
+              <span className="font-medium text-muted-foreground">Flood</span>
+              <div className="flex gap-2">
+                <span className="text-destructive font-semibold">PV: 28.5°C</span>
+                <span className="text-muted-foreground">SP: 30.0°C</span>
+              </div>
+            </div>
+          </div>
+          <div className="rounded-md bg-secondary/50 p-2 border border-border/50">
+            <div className="flex justify-between items-center text-xs">
+              <span className="font-medium text-muted-foreground">Phosphate</span>
+              <div className="flex gap-2">
+                <span className="text-foreground">PV: 42.1°C</span>
+                <span className="text-muted-foreground">SP: 42.0°C</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {area.type === "temp-single" && (
+        <div className="grid grid-cols-2 gap-4 mt-2">
+          <div className="rounded-lg bg-secondary/50 p-3 border border-border/50">
+            <div className="flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-muted-foreground mb-1">
+              <Thermometer className="h-3.5 w-3.5" /> Temp PV
+            </div>
+            <div className="flex items-baseline gap-1">
+              <span className="text-2xl font-semibold tabular-nums">{area.tempPV}</span>
+              <span className="text-xs text-muted-foreground">°C</span>
+            </div>
+          </div>
+          <div className="rounded-lg bg-secondary/50 p-3 border border-border/50">
+            <div className="flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-muted-foreground mb-1">
+              <Thermometer className="h-3.5 w-3.5" /> Temp SP
+            </div>
+            <div className="flex items-baseline gap-1">
+              <span className="text-2xl font-semibold tabular-nums">{area.tempSP}</span>
+              <span className="text-xs text-muted-foreground">°C</span>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {area.type === "temp-dual" && (
+        <div className="flex flex-col gap-3 mt-2">
+          <div className="rounded-lg bg-secondary/50 p-2.5 border border-border/50 flex flex-col gap-1.5">
+            <div className="text-[10px] font-semibold text-muted-foreground text-center border-b border-border/50 pb-1.5">
+              Large Tank
+            </div>
+            <div className="flex justify-between px-1 mt-0.5">
+              <div className="flex flex-col items-start">
+                <span className="text-muted-foreground/80 text-[9px] uppercase">PV</span>
+                <div className="flex items-baseline gap-0.5">
+                  <span className={`text-2xl font-semibold tabular-nums ${getLimitColor(area.largeTank?.pv, parseFloat(area.largeTank?.sp || "0") - 2, parseFloat(area.largeTank?.sp || "0") + 2)}`}>{area.largeTank?.pv}</span>
+                  <span className="text-[10px] text-muted-foreground">°C</span>
+                </div>
+              </div>
+              <div className="flex flex-col items-end">
+                <span className="text-muted-foreground/80 text-[9px] uppercase">SP</span>
+                <div className="flex items-baseline gap-0.5">
+                  <span className="text-2xl font-semibold tabular-nums">{area.largeTank?.sp}</span>
+                  <span className="text-[10px] text-muted-foreground">°C</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="rounded-lg bg-secondary/50 p-2.5 border border-border/50 flex flex-col gap-1.5">
+            <div className="text-[10px] font-semibold text-muted-foreground text-center border-b border-border/50 pb-1.5">
+              Small Tank
+            </div>
+            <div className="flex justify-between px-1 mt-0.5">
+              <div className="flex flex-col items-start">
+                <span className="text-muted-foreground/80 text-[9px] uppercase">PV</span>
+                <div className="flex items-baseline gap-0.5">
+                  <span className={`text-2xl font-semibold tabular-nums ${getLimitColor(area.smallTank?.pv, parseFloat(area.smallTank?.sp || "0") - 2, parseFloat(area.smallTank?.sp || "0") + 2)}`}>{area.smallTank?.pv}</span>
+                  <span className="text-[10px] text-muted-foreground">°C</span>
+                </div>
+              </div>
+              <div className="flex flex-col items-end">
+                <span className="text-muted-foreground/80 text-[9px] uppercase">SP</span>
+                <div className="flex items-baseline gap-0.5">
+                  <span className="text-2xl font-semibold tabular-nums">{area.smallTank?.sp}</span>
+                  <span className="text-[10px] text-muted-foreground">°C</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {area.type === "oven" && area.oven && (
+        <div className="grid grid-cols-3 gap-2 mt-2">
+          <div className="rounded bg-secondary/50 p-2 border border-border/50 flex flex-col justify-center items-center text-center">
+            <span className="text-[10px] text-muted-foreground uppercase tracking-widest mb-1 flex items-center gap-1"><Thermometer className="h-3 w-3" /> Temp 1</span>
+            <div className="flex items-baseline gap-1">
+              <span className={`text-xl font-bold font-mono ${getLimitColor(area.oven.temp1, 180, 190, "text-emerald-500", "text-emerald-500")}`}>{area.oven.temp1}</span>
+              <span className="text-[10px] text-muted-foreground">°C</span>
+            </div>
+          </div>
+          <div className="rounded bg-secondary/50 p-2 border border-border/50 flex flex-col justify-center items-center text-center">
+            <span className="text-[10px] text-muted-foreground uppercase tracking-widest mb-1 flex items-center gap-1"><Thermometer className="h-3 w-3" /> Temp 2</span>
+            <div className="flex items-baseline gap-1">
+              <span className={`text-xl font-bold font-mono ${getLimitColor(area.oven.temp2, 180, 190, "text-emerald-500", "text-emerald-500")}`}>{area.oven.temp2}</span>
+              <span className="text-[10px] text-muted-foreground">°C</span>
+            </div>
+          </div>
+          <div className="rounded bg-secondary/50 p-2 border border-border/50 flex flex-col justify-center items-center text-center">
+            <span className="text-[10px] text-muted-foreground uppercase tracking-widest mb-1 flex items-center gap-1"><Gauge className="h-3 w-3" /> Pressure</span>
+            <div className="flex items-baseline gap-1">
+              <span className={`text-xl font-bold font-mono ${getLimitColor(area.oven.pressure, 2.0, 2.5, "text-emerald-500", "text-emerald-500")}`}>{area.oven.pressure}</span>
+              <span className="text-[10px] text-muted-foreground">bar</span>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {area.type === "temp-pressure" && area.id !== "pted-bag-filter" && (
+        <div className="grid grid-cols-2 gap-4 mt-2">
+          <div className="rounded-lg bg-secondary/50 p-3 border border-border/50">
+            <div className="flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-muted-foreground mb-1">
+              <Thermometer className="h-3.5 w-3.5" /> Temp
+            </div>
+            <div className="flex items-baseline gap-1">
+              <span className="text-2xl font-semibold tabular-nums">{area.temp}</span>
+              <span className="text-xs text-muted-foreground">°C</span>
+            </div>
+          </div>
+          <div className="rounded-lg bg-secondary/50 p-3 border border-border/50">
+            <div className="flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-muted-foreground mb-1">
+              <Gauge className="h-3.5 w-3.5" /> Pressure
+            </div>
+            <div className="flex items-baseline gap-1">
+              <span className="text-2xl font-semibold tabular-nums">{area.pressure}</span>
+              <span className="text-xs text-muted-foreground">bar</span>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {area.id === "pted-bag-filter" && area.pted && (
+        <div className="grid grid-cols-2 gap-2 mt-3">
+          <div className="rounded-lg bg-secondary/50 p-2.5 border border-border/50 flex flex-col gap-1.5">
+            <div className="flex items-center gap-1 text-[10px] uppercase tracking-widest text-muted-foreground border-b border-border/50 pb-1.5 justify-center">
+              <Thermometer className="h-3.5 w-3.5" /> Temperature
+            </div>
+            <div className="flex justify-between px-1 mt-0.5">
+              <div className="flex flex-col items-start">
+                <span className="text-muted-foreground/80 text-[9px] uppercase">IN</span>
+                <div className="flex items-baseline gap-0.5">
+                  <span className="text-xl font-semibold tabular-nums text-foreground">{area.pted.tempIn}</span>
+                  <span className="text-[9px] text-muted-foreground">°C</span>
+                </div>
+              </div>
+              <div className="flex flex-col items-end">
+                <span className="text-muted-foreground/80 text-[9px] uppercase">OUT</span>
+                <div className="flex items-baseline gap-0.5">
+                  <span className="text-xl font-semibold tabular-nums text-emerald-500">{area.pted.tempOut}</span>
+                  <span className="text-[9px] text-muted-foreground">°C</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="rounded-lg bg-secondary/50 p-2.5 border border-border/50 flex flex-col gap-1.5">
+            <div className="flex items-center gap-1 text-[10px] uppercase tracking-widest text-muted-foreground border-b border-border/50 pb-1.5 justify-center">
+              <Gauge className="h-3.5 w-3.5" /> Pressure
+            </div>
+            <div className="flex justify-between px-1 mt-0.5">
+              <div className="flex flex-col items-start">
+                <span className="text-muted-foreground/80 text-[9px] uppercase">IN</span>
+                <div className="flex items-baseline gap-0.5">
+                  <span className="text-xl font-semibold tabular-nums text-foreground">{area.pted.pressureIn}</span>
+                  <span className="text-[9px] text-muted-foreground">bar</span>
+                </div>
+              </div>
+              <div className="flex flex-col items-end">
+                <span className="text-muted-foreground/80 text-[9px] uppercase">OUT</span>
+                <div className="flex items-baseline gap-0.5">
+                  <span className="text-xl font-semibold tabular-nums text-blue-500">{area.pted.pressureOut}</span>
+                  <span className="text-[9px] text-muted-foreground">bar</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {area.type === "pted-wrapper" && (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2 h-full">
+          {/* PTED Equipment Card */}
+          <div className="border border-border/50 rounded-lg p-4 bg-background flex flex-col h-full">
+            <h3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-3 flex items-center gap-1.5"><Activity className="h-4 w-4" /> PTED Equipment</h3>
+            <div className="flex flex-col gap-3 flex-1">
+              {[
+                { name: "Flood Station", id: "flood-station", pv: "30.1", sp: "30.0" },
+                { name: "Pree Degreasing", id: "pree-degreasing", pv: "46.2", sp: "45.0" },
+                { name: "Degreasing", id: "degreasing", pv: "35.0", sp: "35.0" },
+                { name: "Phosphate", id: "phosphate", pv: "42.5", sp: "42.0" }
+              ].map(eq => (
+                <Link to="/monitoring-area/$id" params={{ id: eq.id }} key={eq.name} className="flex items-center justify-between p-3 rounded-lg bg-secondary/30 border border-border/50 flex-1 hover:bg-secondary/80 hover:border-primary/50 transition-all group">
+                  <span className="text-sm font-semibold group-hover:text-primary transition-colors flex items-center gap-2">{eq.name} <ArrowRight className="h-3 w-3 opacity-0 -ml-2 group-hover:opacity-100 group-hover:ml-0 transition-all" /></span>
+                  <div className="flex gap-5">
+                    <div className="flex flex-col items-end">
+                      <span className="text-[9px] text-muted-foreground uppercase flex items-center gap-1"><Thermometer className="h-3 w-3" /> Temp PV</span>
+                      <div className="flex items-baseline gap-1 mt-0.5"><span className={`font-mono font-bold text-3xl ${getLimitColor(eq.pv, parseFloat(eq.sp) - 2, parseFloat(eq.sp) + 2, "text-foreground", "text-emerald-500")}`}>{eq.pv}</span><span className="text-sm text-muted-foreground">°C</span></div>
                     </div>
+                    <div className="flex flex-col items-end">
+                      <span className="text-[9px] text-muted-foreground uppercase flex items-center gap-1"><Thermometer className="h-3 w-3" /> Temp SP</span>
+                      <div className="flex items-baseline gap-1 mt-0.5"><span className="font-mono font-bold text-3xl text-foreground">{eq.sp}</span><span className="text-sm text-muted-foreground">°C</span></div>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          {/* Bag Filter Card */}
+          <div className="border border-border/50 rounded-lg p-4 bg-background flex flex-col h-full">
+            <h3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-3 flex items-center gap-1.5">
+              <Filter className="h-4 w-4" /> Bag Filter
+            </h3>
+
+            <div className="grid grid-cols-3 gap-2 mb-4 flex-1">
+              {[
+                { name: "Pre Degreasing", val: "45.5", id: "bag-filter-pre-deg", minStd: 20, maxStd: 35 },
+                { name: "Degreasing", val: "34.8", id: "bag-filter-deg", minStd: 20, maxStd: 35 },
+                { name: "DI 1", val: "25.0", id: "bag-filter-di1", minStd: 20, maxStd: 35 },
+                { name: "DI 2", val: "25.1", id: "bag-filter-di2", minStd: 20, maxStd: 35 },
+                { name: "WR 5", val: "24.9", id: "bag-filter-wr5", minStd: 20, maxStd: 35 },
+                { name: "CED 1", val: "28.5", id: "bag-filter-ced1", minStd: 20, maxStd: 35 },
+                { name: "CED 2", val: "28.3", id: "bag-filter-ced2", minStd: 20, maxStd: 35 },
+                { name: "UF 1", val: "26.2", id: "bag-filter-uf1", minStd: 20, maxStd: 35 },
+                { name: "UF 2", val: "26.0", id: "bag-filter-uf2", minStd: 20, maxStd: 35 }
+
+              ].map(t => (
+                <BagFilterItemDialog key={t.name} item={t}>
+                  <button className="flex flex-col text-left p-3 rounded bg-secondary/30 border border-border/50 justify-center gap-1 hover:border-primary/50 hover:bg-secondary/80 transition-colors group w-full">
+                    <span className="text-[10px] text-muted-foreground uppercase tracking-wider font-medium group-hover:text-primary transition-colors">{t.name}</span>
                     <div className="flex items-baseline gap-1">
-                      <span className="text-2xl font-semibold tabular-nums">{area.tempPV}</span>
-                      <span className="text-xs text-muted-foreground">°C</span>
+                      <span className={`font-mono text-3xl font-bold ${getLimitColor(t.val, 20, 35, "text-emerald-500")}`}>{t.val}</span>
+                      <span className="text-sm text-muted-foreground">°C</span>
                     </div>
-                  </div>
-                  <div className="rounded-lg bg-secondary/50 p-3 border border-border/50">
-                    <div className="flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-muted-foreground mb-1">
-                      <Thermometer className="h-3.5 w-3.5" /> Temp SP
-                    </div>
-                    <div className="flex items-baseline gap-1">
-                      <span className="text-2xl font-semibold tabular-nums">{area.tempSP}</span>
-                      <span className="text-xs text-muted-foreground">°C</span>
-                    </div>
-                  </div>
-                </div>
-              )}
+                  </button>
+                </BagFilterItemDialog>
+              ))}
+            </div>
 
-              {area.type === "temp-dual" && (
-                <div className="flex flex-col gap-3 mt-2">
-                  <div className="rounded-lg bg-secondary/50 p-2.5 border border-border/50 flex flex-col gap-1.5">
-                    <div className="text-[10px] font-semibold text-muted-foreground text-center border-b border-border/50 pb-1.5">
-                      Large Tank
-                    </div>
-                    <div className="flex justify-between px-1 mt-0.5">
-                      <div className="flex flex-col items-start">
-                        <span className="text-muted-foreground/80 text-[9px] uppercase">PV</span>
-                        <div className="flex items-baseline gap-0.5">
-                          <span className={`text-2xl font-semibold tabular-nums ${getLimitColor(area.largeTank?.pv, parseFloat(area.largeTank?.sp || "0") - 2, parseFloat(area.largeTank?.sp || "0") + 2)}`}>{area.largeTank?.pv}</span>
-                          <span className="text-[10px] text-muted-foreground">°C</span>
+            <div className="grid grid-cols-3 gap-3 mb-3">
+              <div className="col-span-2">
+                <BagFilterItemDialog item={{ name: "UF 1 & UF 2 Tank", val: "120.5", val2: "118.2", id: "bag-filter-uf-tank", unit: "µS/cm", valName: "UF 1 Cond", val2Name: "UF 2 Cond", minStd: 100, maxStd: 150, minStd2: 100, maxStd2: 150, minStdName: "Standard Conductivity 1 MIN", maxStdName: "Standard Conductivity 1 MAX", minStd2Name: "Standard Conductivity 2 MIN", maxStd2Name: "Standard Conductivity 2 MAX" }}>
+                  <button className="p-3 rounded-lg bg-secondary/30 border border-border/50 flex flex-col gap-2 hover:border-primary/50 hover:bg-secondary/80 transition-colors group text-left w-full h-full">
+                    <span className="text-[10px] font-semibold text-muted-foreground uppercase flex items-center gap-1.5 border-b border-border/50 pb-2 group-hover:text-primary transition-colors"><Waves className="h-3.5 w-3.5" /> UF 1 & 2 Tank</span>
+                    <div className="flex justify-between mt-1 items-end h-full">
+                      <div className="flex flex-col">
+                        <span className="text-[9px] text-muted-foreground mb-0.5">UF 1</span>
+                        <div className="flex items-baseline gap-1 whitespace-nowrap">
+                          <span className={`font-mono text-3xl font-bold ${getLimitColor("120.5", 100, 150, "text-emerald-500")}`}>120.5</span>
                         </div>
                       </div>
                       <div className="flex flex-col items-end">
-                        <span className="text-muted-foreground/80 text-[9px] uppercase">SP</span>
-                        <div className="flex items-baseline gap-0.5">
-                          <span className="text-2xl font-semibold tabular-nums">{area.largeTank?.sp}</span>
-                          <span className="text-[10px] text-muted-foreground">°C</span>
+                        <span className="text-[9px] text-muted-foreground mb-0.5">UF 2</span>
+                        <div className="flex items-baseline gap-1 whitespace-nowrap">
+                          <span className={`font-mono text-3xl font-bold ${getLimitColor("118.2", 100, 150, "text-emerald-500")}`}>118.2</span>
                         </div>
                       </div>
                     </div>
-                  </div>
-                  <div className="rounded-lg bg-secondary/50 p-2.5 border border-border/50 flex flex-col gap-1.5">
-                    <div className="text-[10px] font-semibold text-muted-foreground text-center border-b border-border/50 pb-1.5">
-                      Small Tank
-                    </div>
-                    <div className="flex justify-between px-1 mt-0.5">
-                      <div className="flex flex-col items-start">
-                        <span className="text-muted-foreground/80 text-[9px] uppercase">PV</span>
-                        <div className="flex items-baseline gap-0.5">
-                          <span className={`text-2xl font-semibold tabular-nums ${getLimitColor(area.smallTank?.pv, parseFloat(area.smallTank?.sp || "0") - 2, parseFloat(area.smallTank?.sp || "0") + 2)}`}>{area.smallTank?.pv}</span>
-                          <span className="text-[10px] text-muted-foreground">°C</span>
-                        </div>
-                      </div>
-                      <div className="flex flex-col items-end">
-                        <span className="text-muted-foreground/80 text-[9px] uppercase">SP</span>
-                        <div className="flex items-baseline gap-0.5">
-                          <span className="text-2xl font-semibold tabular-nums">{area.smallTank?.sp}</span>
-                          <span className="text-[10px] text-muted-foreground">°C</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
+                  </button>
+                </BagFilterItemDialog>
+              </div>
 
-              {area.type === "oven" && area.oven && (
-                <div className="grid grid-cols-3 gap-2 mt-2">
-                  <div className="rounded bg-secondary/50 p-2 border border-border/50 flex flex-col justify-center items-center text-center">
-                    <span className="text-[10px] text-muted-foreground uppercase tracking-widest mb-1 flex items-center gap-1"><Thermometer className="h-3 w-3" /> Temp 1</span>
-                    <div className="flex items-baseline gap-1">
-                      <span className={`text-xl font-bold font-mono ${getLimitColor(area.oven.temp1, 180, 190, "text-emerald-500", "text-emerald-500")}`}>{area.oven.temp1}</span>
-                      <span className="text-[10px] text-muted-foreground">°C</span>
+              <BagFilterItemDialog item={{ name: "UF Module", val: "15.0", id: "bag-filter-uf-module", unit: "L/Min", minStd: 10, maxStd: 20 }}>
+                <button className="p-3 rounded-lg bg-secondary/30 border border-border/50 flex flex-col gap-2 hover:border-primary/50 hover:bg-secondary/80 transition-colors group text-left w-full h-full">
+                  <span className="text-[10px] font-semibold text-muted-foreground uppercase flex items-center gap-1.5 border-b border-border/50 pb-2 group-hover:text-primary transition-colors"><Waves className="h-3.5 w-3.5" /> UF Module</span>
+                  <div className="flex flex-col mt-1">
+                    <span className="text-[9px] text-muted-foreground mb-0.5">Flowmeter</span>
+                    <div className="flex items-baseline gap-1 whitespace-nowrap">
+                      <span className={`font-mono text-3xl font-bold ${getLimitColor("15.0", 10.0, 20.0, "text-emerald-500")}`}>15.0</span>
+                      <span className="text-xs font-normal text-muted-foreground">L/Min</span>
                     </div>
                   </div>
-                  <div className="rounded bg-secondary/50 p-2 border border-border/50 flex flex-col justify-center items-center text-center">
-                    <span className="text-[10px] text-muted-foreground uppercase tracking-widest mb-1 flex items-center gap-1"><Thermometer className="h-3 w-3" /> Temp 2</span>
-                    <div className="flex items-baseline gap-1">
-                      <span className={`text-xl font-bold font-mono ${getLimitColor(area.oven.temp2, 180, 190, "text-emerald-500", "text-emerald-500")}`}>{area.oven.temp2}</span>
-                      <span className="text-[10px] text-muted-foreground">°C</span>
-                    </div>
-                  </div>
-                  <div className="rounded bg-secondary/50 p-2 border border-border/50 flex flex-col justify-center items-center text-center">
-                    <span className="text-[10px] text-muted-foreground uppercase tracking-widest mb-1 flex items-center gap-1"><Gauge className="h-3 w-3" /> Pressure</span>
-                    <div className="flex items-baseline gap-1">
-                      <span className={`text-xl font-bold font-mono ${getLimitColor(area.oven.pressure, 2.0, 2.5, "text-emerald-500", "text-emerald-500")}`}>{area.oven.pressure}</span>
-                      <span className="text-[10px] text-muted-foreground">bar</span>
-                    </div>
-                  </div>
-                </div>
-              )}
+                </button>
+              </BagFilterItemDialog>
+            </div>
 
-              {area.type === "temp-pressure" && area.id !== "pted-bag-filter" && (
-                <div className="grid grid-cols-2 gap-4 mt-2">
-                  <div className="rounded-lg bg-secondary/50 p-3 border border-border/50">
-                    <div className="flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-muted-foreground mb-1">
-                      <Thermometer className="h-3.5 w-3.5" /> Temp
-                    </div>
-                    <div className="flex items-baseline gap-1">
-                      <span className="text-2xl font-semibold tabular-nums">{area.temp}</span>
-                      <span className="text-xs text-muted-foreground">°C</span>
-                    </div>
-                  </div>
-                  <div className="rounded-lg bg-secondary/50 p-3 border border-border/50">
-                    <div className="flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-muted-foreground mb-1">
-                      <Gauge className="h-3.5 w-3.5" /> Pressure
-                    </div>
-                    <div className="flex items-baseline gap-1">
-                      <span className="text-2xl font-semibold tabular-nums">{area.pressure}</span>
-                      <span className="text-xs text-muted-foreground">bar</span>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {area.id === "pted-bag-filter" && area.pted && (
-                <div className="grid grid-cols-2 gap-2 mt-3">
-                  <div className="rounded-lg bg-secondary/50 p-2.5 border border-border/50 flex flex-col gap-1.5">
-                    <div className="flex items-center gap-1 text-[10px] uppercase tracking-widest text-muted-foreground border-b border-border/50 pb-1.5 justify-center">
-                      <Thermometer className="h-3.5 w-3.5" /> Temperature
-                    </div>
-                    <div className="flex justify-between px-1 mt-0.5">
-                      <div className="flex flex-col items-start">
-                        <span className="text-muted-foreground/80 text-[9px] uppercase">IN</span>
-                        <div className="flex items-baseline gap-0.5">
-                          <span className="text-xl font-semibold tabular-nums text-foreground">{area.pted.tempIn}</span>
-                          <span className="text-[9px] text-muted-foreground">°C</span>
-                        </div>
+            <div className="mt-auto">
+              <BagFilterItemDialog item={{ name: "HE Pressure", val: "4.5", val2: "3.2", id: "bag-filter-he-pressure", unit: "bar", valName: "IN (bar)", val2Name: "OUT (bar)", minStd: 4.0, maxStd: 5.0, minStd2: 2.0, maxStd2: 4.0 }}>
+                <button className="p-3 rounded-lg bg-secondary/30 border border-border/50 flex flex-col gap-2 hover:border-primary/50 hover:bg-secondary/80 transition-colors group text-left w-full h-full">
+                  <span className="text-[10px] font-semibold text-muted-foreground uppercase flex items-center gap-1.5 border-b border-border/50 pb-2 group-hover:text-primary transition-colors"><Gauge className="h-3.5 w-3.5" /> HE Pressure</span>
+                  <div className="flex justify-between mt-1 items-end h-full">
+                    <div className="flex flex-col">
+                      <span className="text-[9px] text-muted-foreground mb-0.5">IN</span>
+                      <div className="flex items-baseline gap-1 whitespace-nowrap">
+                        <span className={`font-mono text-3xl font-bold ${getLimitColor("4.5", 4.0, 5.0, "text-emerald-500")}`}>4.5</span>
+                        <span className="text-xs font-normal text-muted-foreground">bar</span>
                       </div>
-                      <div className="flex flex-col items-end">
-                        <span className="text-muted-foreground/80 text-[9px] uppercase">OUT</span>
-                        <div className="flex items-baseline gap-0.5">
-                          <span className="text-xl font-semibold tabular-nums text-emerald-500">{area.pted.tempOut}</span>
-                          <span className="text-[9px] text-muted-foreground">°C</span>
-                        </div>
+                    </div>
+                    <div className="flex flex-col items-end">
+                      <span className="text-[9px] text-muted-foreground mb-0.5">OUT</span>
+                      <div className="flex items-baseline gap-1 whitespace-nowrap">
+                        <span className={`font-mono text-3xl font-bold ${getLimitColor("3.2", 2.0, 4.0, "text-emerald-500")}`}>3.2</span>
+                        <span className="text-xs font-normal text-muted-foreground/70">bar</span>
                       </div>
                     </div>
                   </div>
-                  <div className="rounded-lg bg-secondary/50 p-2.5 border border-border/50 flex flex-col gap-1.5">
-                    <div className="flex items-center gap-1 text-[10px] uppercase tracking-widest text-muted-foreground border-b border-border/50 pb-1.5 justify-center">
-                      <Gauge className="h-3.5 w-3.5" /> Pressure
-                    </div>
-                    <div className="flex justify-between px-1 mt-0.5">
-                      <div className="flex flex-col items-start">
-                        <span className="text-muted-foreground/80 text-[9px] uppercase">IN</span>
-                        <div className="flex items-baseline gap-0.5">
-                          <span className="text-xl font-semibold tabular-nums text-foreground">{area.pted.pressureIn}</span>
-                          <span className="text-[9px] text-muted-foreground">bar</span>
-                        </div>
-                      </div>
-                      <div className="flex flex-col items-end">
-                        <span className="text-muted-foreground/80 text-[9px] uppercase">OUT</span>
-                        <div className="flex items-baseline gap-0.5">
-                          <span className="text-xl font-semibold tabular-nums text-blue-500">{area.pted.pressureOut}</span>
-                          <span className="text-[9px] text-muted-foreground">bar</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
+                </button>
+              </BagFilterItemDialog>
+            </div>
+          </div>
+        </div>
+      )}
 
-              {area.type === "pted-wrapper" && (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2 h-full">
-                  {/* PTED Equipment Card */}
-                  <div className="border border-border/50 rounded-lg p-4 bg-background flex flex-col h-full">
-                    <h3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-3 flex items-center gap-1.5"><Activity className="h-4 w-4" /> PTED Equipment</h3>
-                    <div className="flex flex-col gap-3 flex-1">
-                      {[
-                        { name: "Flood Station", id: "flood-station", pv: "30.1", sp: "30.0" },
-                        { name: "Pree Degreasing", id: "pree-degreasing", pv: "46.2", sp: "45.0" },
-                        { name: "Degreasing", id: "degreasing", pv: "35.0", sp: "35.0" },
-                        { name: "Phosphate", id: "phosphate", pv: "42.5", sp: "42.0" }
-                      ].map(eq => (
-                        <Link to="/monitoring-area/$id" params={{ id: eq.id }} key={eq.name} className="flex items-center justify-between p-3 rounded-lg bg-secondary/30 border border-border/50 flex-1 hover:bg-secondary/80 hover:border-primary/50 transition-all group">
-                          <span className="text-sm font-semibold group-hover:text-primary transition-colors flex items-center gap-2">{eq.name} <ArrowRight className="h-3 w-3 opacity-0 -ml-2 group-hover:opacity-100 group-hover:ml-0 transition-all" /></span>
-                          <div className="flex gap-5">
-                            <div className="flex flex-col items-end">
-                              <span className="text-[9px] text-muted-foreground uppercase flex items-center gap-1"><Thermometer className="h-3 w-3" /> Temp PV</span>
-                              <div className="flex items-baseline gap-1 mt-0.5"><span className={`font-mono font-bold text-3xl ${getLimitColor(eq.pv, parseFloat(eq.sp) - 2, parseFloat(eq.sp) + 2, "text-foreground", "text-emerald-500")}`}>{eq.pv}</span><span className="text-sm text-muted-foreground">°C</span></div>
-                            </div>
-                            <div className="flex flex-col items-end">
-                              <span className="text-[9px] text-muted-foreground uppercase flex items-center gap-1"><Thermometer className="h-3 w-3" /> Temp SP</span>
-                              <div className="flex items-baseline gap-1 mt-0.5"><span className="font-mono font-bold text-3xl text-foreground">{eq.sp}</span><span className="text-sm text-muted-foreground">°C</span></div>
-                            </div>
-                          </div>
-                        </Link>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Bag Filter Card */}
-                  <div className="border border-border/50 rounded-lg p-4 bg-background flex flex-col h-full">
-                    <h3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-3 flex items-center gap-1.5">
-                      <Filter className="h-4 w-4" /> Bag Filter
-                    </h3>
-                    
-                    <div className="grid grid-cols-3 gap-2 mb-4 flex-1">
-                      {[
-                        { name: "Pre Degreasing", val: "45.5", id: "bag-filter-pre-deg", minStd: 20, maxStd: 35 },
-                        { name: "Degreasing", val: "34.8", id: "bag-filter-deg", minStd: 20, maxStd: 35 },
-                        { name: "DI 1", val: "25.0", id: "bag-filter-di1", minStd: 20, maxStd: 35 },
-                        { name: "DI 2", val: "25.1", id: "bag-filter-di2", minStd: 20, maxStd: 35 },
-                        { name: "WR 5", val: "24.9", id: "bag-filter-wr5", minStd: 20, maxStd: 35 },
-                        { name: "CED 1", val: "28.5", id: "bag-filter-ced1", minStd: 20, maxStd: 35 },
-                        { name: "CED 2", val: "28.3", id: "bag-filter-ced2", minStd: 20, maxStd: 35 },
-                        { name: "UF 1", val: "26.2", id: "bag-filter-uf1", minStd: 20, maxStd: 35 },
-                        { name: "UF 2", val: "26.0", id: "bag-filter-uf2", minStd: 20, maxStd: 35 }
-
-                      ].map(t => (
-                        <BagFilterItemDialog key={t.name} item={t}>
-                          <button className="flex flex-col text-left p-3 rounded bg-secondary/30 border border-border/50 justify-center gap-1 hover:border-primary/50 hover:bg-secondary/80 transition-colors group w-full">
-                            <span className="text-[10px] text-muted-foreground uppercase tracking-wider font-medium group-hover:text-primary transition-colors">{t.name}</span>
-                            <div className="flex items-baseline gap-1">
-                              <span className={`font-mono text-3xl font-bold ${getLimitColor(t.val, 20, 35, "text-emerald-500")}`}>{t.val}</span>
-                              <span className="text-sm text-muted-foreground">°C</span>
-                            </div>
-                          </button>
-                        </BagFilterItemDialog>
-                      ))}
-                    </div>
-
-                    <div className="grid grid-cols-3 gap-3 mb-3">
-                      <div className="col-span-2">
-                        <BagFilterItemDialog item={{ name: "UF 1 & UF 2 Tank", val: "120.5", val2: "118.2", id: "bag-filter-uf-tank", unit: "µS/cm", valName: "UF 1 Cond", val2Name: "UF 2 Cond", minStd: 100, maxStd: 150, minStd2: 100, maxStd2: 150, minStdName: "Standard Conductivity 1 MIN", maxStdName: "Standard Conductivity 1 MAX", minStd2Name: "Standard Conductivity 2 MIN", maxStd2Name: "Standard Conductivity 2 MAX" }}>
-                        <button className="p-3 rounded-lg bg-secondary/30 border border-border/50 flex flex-col gap-2 hover:border-primary/50 hover:bg-secondary/80 transition-colors group text-left w-full h-full">
-                          <span className="text-[10px] font-semibold text-muted-foreground uppercase flex items-center gap-1.5 border-b border-border/50 pb-2 group-hover:text-primary transition-colors"><Waves className="h-3.5 w-3.5" /> UF 1 & 2 Tank</span>
-                          <div className="flex justify-between mt-1 items-end h-full">
-                            <div className="flex flex-col">
-                              <span className="text-[9px] text-muted-foreground mb-0.5">UF 1</span>
-                              <div className="flex items-baseline gap-1 whitespace-nowrap">
-                                <span className={`font-mono text-3xl font-bold ${getLimitColor("120.5", 100, 150, "text-emerald-500")}`}>120.5</span>
-                              </div>
-                            </div>
-                            <div className="flex flex-col items-end">
-                              <span className="text-[9px] text-muted-foreground mb-0.5">UF 2</span>
-                              <div className="flex items-baseline gap-1 whitespace-nowrap">
-                                <span className={`font-mono text-3xl font-bold ${getLimitColor("118.2", 100, 150, "text-emerald-500")}`}>118.2</span>
-                              </div>
-                            </div>
-                          </div>
-                        </button>
-                      </BagFilterItemDialog>
-                      </div>
-                      
-                      <BagFilterItemDialog item={{ name: "UF Module", val: "15.0", id: "bag-filter-uf-module", unit: "L/Min", minStd: 10, maxStd: 20 }}>
-                        <button className="p-3 rounded-lg bg-secondary/30 border border-border/50 flex flex-col gap-2 hover:border-primary/50 hover:bg-secondary/80 transition-colors group text-left w-full h-full">
-                          <span className="text-[10px] font-semibold text-muted-foreground uppercase flex items-center gap-1.5 border-b border-border/50 pb-2 group-hover:text-primary transition-colors"><Waves className="h-3.5 w-3.5" /> UF Module</span>
-                          <div className="flex flex-col mt-1">
-                            <span className="text-[9px] text-muted-foreground mb-0.5">Flowmeter</span>
-                            <div className="flex items-baseline gap-1 whitespace-nowrap">
-                              <span className={`font-mono text-3xl font-bold ${getLimitColor("15.0", 10.0, 20.0, "text-emerald-500")}`}>15.0</span>
-                              <span className="text-xs font-normal text-muted-foreground">L/Min</span>
-                            </div>
-                          </div>
-                        </button>
-                      </BagFilterItemDialog>
-                    </div>
-
-                    <div className="mt-auto">
-                      <BagFilterItemDialog item={{ name: "HE Pressure", val: "4.5", val2: "3.2", id: "bag-filter-he-pressure", unit: "bar", valName: "IN (bar)", val2Name: "OUT (bar)", minStd: 4.0, maxStd: 5.0, minStd2: 2.0, maxStd2: 4.0 }}>
-                        <button className="p-3 rounded-lg bg-secondary/30 border border-border/50 flex flex-col gap-2 hover:border-primary/50 hover:bg-secondary/80 transition-colors group text-left w-full h-full">
-                          <span className="text-[10px] font-semibold text-muted-foreground uppercase flex items-center gap-1.5 border-b border-border/50 pb-2 group-hover:text-primary transition-colors"><Gauge className="h-3.5 w-3.5" /> HE Pressure</span>
-                          <div className="flex justify-between mt-1 items-end h-full">
-                            <div className="flex flex-col">
-                              <span className="text-[9px] text-muted-foreground mb-0.5">IN</span>
-                              <div className="flex items-baseline gap-1 whitespace-nowrap">
-                                <span className={`font-mono text-3xl font-bold ${getLimitColor("4.5", 4.0, 5.0, "text-emerald-500")}`}>4.5</span>
-                                <span className="text-xs font-normal text-muted-foreground">bar</span>
-                              </div>
-                            </div>
-                            <div className="flex flex-col items-end">
-                              <span className="text-[9px] text-muted-foreground mb-0.5">OUT</span>
-                              <div className="flex items-baseline gap-1 whitespace-nowrap">
-                                <span className={`font-mono text-3xl font-bold ${getLimitColor("3.2", 2.0, 4.0, "text-emerald-500")}`}>3.2</span>
-                                <span className="text-xs font-normal text-muted-foreground/70">bar</span>
-                              </div>
-                            </div>
-                          </div>
-                        </button>
-                      </BagFilterItemDialog>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-            </Panel>
+    </Panel>
   );
 
   if (isPtedWrapper) {
@@ -584,7 +560,7 @@ function MonitoringArea() {
           <div className="flex flex-col gap-4">
             {col1Areas.map(area => <AreaCard key={area.id} area={area} />)}
           </div>
-          
+
           {/* Column 2 & 3: PTED Area */}
           <div className="flex flex-col gap-4 lg:col-span-2 h-full">
             {ptedArea && <AreaCard area={ptedArea} />}
