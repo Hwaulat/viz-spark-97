@@ -17,7 +17,7 @@ export interface StatCardItem {
   icon?: ReactNode;
   iconBg?: string;
 
-  value?: string | number;
+  value?: string | number | ReactNode;
   valueColor?: string;
 
   title: string;

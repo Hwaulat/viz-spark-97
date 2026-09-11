@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import { Search, Plus, Edit2, Trash2, FileText, Save, PlusCircle, X } from "lucide-react";
+import { Plus, Edit2, Trash2, FileText, Save, PlusCircle, X } from "lucide-react";
+import { Search } from "@/components/ui/search";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 
 export const Route = createFileRoute("/master-data/uom")({
@@ -73,12 +74,11 @@ function UoMPage() {
         {/* Header Actions */}
         <div className="p-4 border-b border-border/50 flex items-center justify-between gap-4 bg-secondary/10">
           <div className="relative max-w-md w-full">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <input 
+            <Search 
               value={q} 
               onChange={(e) => setQ(e.target.value)} 
               placeholder="Search UoM..." 
-              className="h-10 w-full rounded-md border border-border bg-background pl-9 pr-4 text-sm outline-none focus:ring-2 focus:ring-primary/40 transition-shadow" 
+              containerClassName="w-full"
             />
           </div>
           <button 

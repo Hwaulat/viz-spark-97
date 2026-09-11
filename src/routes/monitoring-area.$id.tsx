@@ -1,6 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, useMemo } from "react";
-import { ChevronLeft, Activity, Flame, Gauge, Power, BarChart3, Filter, Waves, Zap, Thermometer, DollarSign, Fuel } from "lucide-react";
+import { ChevronLeft, Activity, Flame, Gauge, Power, BarChart3, Filter, Waves, Zap, Thermometer, DollarSign, Fuel, ChevronRight, ChevronsLeft, ChevronsRight, ArrowUpDown, ChevronDown, Calendar, Eye, Download, Pencil, Trash2 } from "lucide-react";
+import { Search } from "@/components/ui/search";
+import { SelectInput } from "@/components/ui/select-input";
 import { BOILERS, BOILER_GAS, BOILER_USAGE_HISTORY, BOILER_LOG_HISTORY, ENERGY_PRICE_PER_KWH, GAS_PRICE_PER_MMBTU, LINE_TRACKING_STATIONS, LINE_TRACKING_ZONES, PROCESS_DETAIL_STATIONS, ovenElecDailyTrend, ovenElecMonthlyTrend, ovenElecYearlyTrend } from "@/lib/mock-data";
 import { Panel, StatusDot, ValueDisplay } from "@/components/panel";
 import { Tabs } from "@/components/tabs";
@@ -24,6 +26,26 @@ export const Route = createFileRoute("/monitoring-area/$id")({
   }),
   component: MonitoringAreaDetails,
 });
+
+
+const NEW_LOG_HISTORY = [
+  {
+    status: "Open",
+    downtime: "No",
+    abnormalStatus: "Trouble",
+    title: "Wire rope fatique breaks at Crane CC1",
+    startingDate: "18/07/2026 13:00:00",
+    equipmentN: "OA010311",
+  },
+  {
+    status: "Close Confirm",
+    downtime: "Yes",
+    abnormalStatus: "Trouble",
+    title: "Air Disk Brake for POR RCL Leakage at Diafragh Membran",
+    startingDate: "18/07/2026 10:55:00",
+    equipmentN: "RR040154",
+  }
+];
 
 
 
@@ -434,14 +456,14 @@ function MonitoringAreaDetails() {
                 },
                 {
                   title: "Panel Boiler Status",
-                  value: BOILER_GAS.panelBoilerStatus,
-                  valueColor: BOILER_GAS.panelBoilerStatus === "ON" ? "text-ok" : "text-destructive",
+                  value: (
+                    <span className={`inline-block text-sm px-3 py-1 mt-1 rounded-md font-bold ${BOILER_GAS.panelBoilerStatus === "ON" ? 'bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400' : 'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400'}`}>
+                      {BOILER_GAS.panelBoilerStatus}
+                    </span>
+                  ),
                   variant: "stat",
                   icon: <Power />,
                   iconBg: BOILER_GAS.panelBoilerStatus === "ON" ? "bg-emerald-500/10 text-emerald-500" : "bg-destructive/10 text-destructive",
-                  badge: BOILER_GAS.panelBoilerStatus,
-                  badgeBg: BOILER_GAS.panelBoilerStatus === "ON" ? "bg-emerald-500/20" : "bg-destructive/20",
-                  badgeColor: BOILER_GAS.panelBoilerStatus === "ON" ? "text-emerald-500" : "text-destructive",
                 }
               ]}
             />
@@ -453,6 +475,7 @@ function MonitoringAreaDetails() {
             value={activeTab}
             onValueChange={setActiveTab}
             className="bg-card border border-border rounded-lg shadow-sm overflow-hidden"
+            listClassName="m-4"
             items={[
               {
                 value: "Boiler Monitoring",
@@ -555,72 +578,90 @@ function MonitoringAreaDetails() {
                       <div className="flex items-center justify-between mb-4">
                         <h3 className="text-lg font-semibold text-foreground">Log History</h3>
                       </div>
-                      <Tabs
-                        variant="default"
-                        value={logHistoryTab}
-                        onValueChange={setLogHistoryTab}
-                        items={[
-                          ...(["Boiler 1", "Boiler 2", "Boiler 3"] as const).map((tab) => ({
-                            value: tab,
-                            label: tab,
-                            icon: <Flame />,
-                            content: (
-                              <div className="rounded-lg border border-border/60 bg-background overflow-hidden flex flex-col">
-                                <Table>
-                                  <THead>
-                                    <Tr noHover>
-                                      <Th sortable column="on" className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground px-5 py-3.5">ON</Th>
-                                      <Th sortable column="off" className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground px-5 py-3.5">OFF</Th>
-                                      <Th sortable column="totalDuration" className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground px-5 py-3.5">TOTAL DURATION</Th>
-                                    </Tr>
-                                  </THead>
-                                  <TBody>
-                                    {(BOILER_LOG_HISTORY[tab] || []).map((log, idx) => (
-                                      <Tr key={idx} className="bg-background">
-                                        <Td className="px-5 py-3.5">
-                                          <span className="text-foreground text-[13px]">{log.on}</span>
-                                        </Td>
-                                        <Td className="px-5 py-3.5">
-                                          <span className="text-foreground text-[13px]">{log.off}</span>
-                                        </Td>
-                                        <Td className="px-5 py-3.5">
-                                          <span className="text-[13px] text-muted-foreground">{log.totalDuration}</span>
-                                        </Td>
-                                      </Tr>
-                                    ))}
-                                  </TBody>
-                                </Table>
-                                {/* Pagination Footer */}
-                                <div className="flex items-center justify-between px-5 py-3 border-t border-border/60 bg-background">
-                                  <div className="flex items-center gap-4 text-xs text-muted-foreground font-medium">
-                                    <div className="flex items-center gap-2">
-                                      <span>Rows per page</span>
-                                      <div className="flex items-center justify-between w-[52px] px-2 py-1.5 border border-border/60 rounded bg-secondary/20 cursor-pointer hover:bg-secondary/40 transition-colors">
-                                        <span>10</span>
-                                        <ChevronDown className="h-3 w-3 opacity-50" />
-                                      </div>
-                                    </div>
-                                    <span>1-{BOILER_LOG_HISTORY[tab]?.length || 0} of 21902</span>
-                                  </div>
-                                  <div className="flex items-center gap-1.5">
-                                    <button className="p-1 rounded text-muted-foreground hover:bg-secondary/40 hover:text-foreground transition-colors disabled:opacity-30"><ChevronsLeft className="h-4 w-4" /></button>
-                                    <button className="p-1 rounded text-muted-foreground hover:bg-secondary/40 hover:text-foreground transition-colors disabled:opacity-30"><ChevronLeft className="h-4 w-4" /></button>
-                                    <div className="flex items-center gap-1 px-2">
-                                      <button className="w-7 h-7 flex items-center justify-center rounded-md bg-primary text-primary-foreground text-xs font-semibold shadow-sm">1</button>
-                                      <button className="w-7 h-7 flex items-center justify-center rounded-md text-muted-foreground hover:bg-secondary/40 hover:text-foreground text-xs font-medium transition-colors">2</button>
-                                      <button className="w-7 h-7 flex items-center justify-center rounded-md text-muted-foreground hover:bg-secondary/40 hover:text-foreground text-xs font-medium transition-colors">3</button>
-                                      <button className="w-7 h-7 flex items-center justify-center rounded-md text-muted-foreground hover:bg-secondary/40 hover:text-foreground text-xs font-medium transition-colors">4</button>
-                                      <button className="w-7 h-7 flex items-center justify-center rounded-md text-muted-foreground hover:bg-secondary/40 hover:text-foreground text-xs font-medium transition-colors">5</button>
-                                    </div>
-                                    <button className="p-1 rounded text-muted-foreground hover:bg-secondary/40 hover:text-foreground transition-colors disabled:opacity-30"><ChevronRight className="h-4 w-4" /></button>
-                                    <button className="p-1 rounded text-muted-foreground hover:bg-secondary/40 hover:text-foreground transition-colors disabled:opacity-30"><ChevronsRight className="h-4 w-4" /></button>
+                      {/* Search and Filters */}
+                      <RawTabs defaultValue="Boiler 1" className="w-full">
+                        <div className="flex flex-col lg:flex-row items-center gap-4 mb-4">
+                          <Search placeholder="Search" containerClassName="flex-1 w-full lg:max-w-md" />
+                          <TabsList>
+                            <TabsTrigger value="Boiler 1">Boiler 1</TabsTrigger>
+                            <TabsTrigger value="Boiler 2">Boiler 2</TabsTrigger>
+                            <TabsTrigger value="Boiler 3">Boiler 3</TabsTrigger>
+                          </TabsList>
+                          <div className="hidden flex-wrap items-center gap-2 overflow-x-auto w-full lg:w-auto">
+                            <SelectInput 
+                              placeholder="All Status"
+                              datalist={[{ label: 'All Status', value: 'all' }, { label: 'Online', value: 'online' }, { label: 'Offline', value: 'offline' }]}
+                              containerClassName="min-w-[140px] w-auto"
+                              hideClear
+                            />
+                            <SelectInput 
+                              placeholder="All Abnormal Status"
+                              datalist={[{ label: 'All Abnormal Status', value: 'all' }, { label: 'Warning', value: 'warning' }, { label: 'Critical', value: 'critical' }]}
+                              containerClassName="min-w-[180px] w-auto"
+                              hideClear
+                            />
+                            <SelectInput 
+                              placeholder="All Downtime"
+                              datalist={[{ label: 'All Downtime', value: 'all' }, { label: '< 1 Hour', value: '1h' }, { label: '> 1 Hour', value: '1h_plus' }]}
+                              containerClassName="min-w-[140px] w-auto"
+                              hideClear
+                            />
+                            <div className="flex items-center gap-2 min-w-[240px] px-3 py-2.5 rounded-md border border-border bg-background text-sm text-muted-foreground cursor-pointer shadow-sm hover:bg-secondary/20 transition-colors">
+                              <Calendar className="h-4 w-4" />
+                              <span>dd/mm/yyyy - dd/mm/yyyy</span>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Table */}
+                        {["Boiler 1", "Boiler 2", "Boiler 3"].map((boilerName) => (
+                          <TabsContent key={boilerName} value={boilerName} className="mt-0">
+                            <Table freezeHeader={false}>
+                              <THead>
+                                <Tr noHover>
+                                  <Th sortable column="on">ON</Th>
+                                  <Th sortable column="off">OFF</Th>
+                                  <Th sortable column="totalDuration">TOTAL DURATION</Th>
+                                </Tr>
+                              </THead>
+                              <TBody>
+                                {(BOILER_LOG_HISTORY[boilerName as keyof typeof BOILER_LOG_HISTORY] || []).map((log, idx) => (
+                                  <Tr key={idx}>
+                                    <Td>{log.on}</Td>
+                                    <Td>{log.off}</Td>
+                                    <Td className="text-muted-foreground">{log.totalDuration}</Td>
+                                  </Tr>
+                                ))}
+                              </TBody>
+                            </Table>
+
+                            {/* Pagination Footer */}
+                            <div className="flex items-center justify-between px-2 py-4 border-t border-border/60 bg-background">
+                              <div className="flex items-center gap-4 text-sm text-muted-foreground font-medium">
+                                <div className="flex items-center gap-2">
+                                  <span>Rows per page</span>
+                                  <div className="flex items-center justify-between w-[60px] px-2 py-1.5 border border-border rounded-md bg-background cursor-pointer hover:bg-secondary/40 transition-colors">
+                                    <span>10</span>
+                                    <ChevronDown className="h-3 w-3 opacity-50" />
                                   </div>
                                 </div>
+                                <span>1–10 of 2479</span>
                               </div>
-                            ),
-                          })),
-                        ]}
-                      />
+                              <div className="flex items-center gap-1">
+                                <button className="w-8 h-8 flex items-center justify-center rounded-md border border-border text-muted-foreground hover:bg-secondary/40 hover:text-foreground transition-colors text-sm font-medium">«</button>
+                                <button className="w-8 h-8 flex items-center justify-center rounded-md border border-border text-muted-foreground hover:bg-secondary/40 hover:text-foreground transition-colors text-sm font-medium">‹</button>
+                                <button className="w-8 h-8 flex items-center justify-center rounded-md bg-[#1F5AA6] text-white text-sm font-semibold border border-[#1F5AA6]">1</button>
+                                <button className="w-8 h-8 flex items-center justify-center rounded-md border border-border text-muted-foreground hover:bg-secondary/40 hover:text-foreground transition-colors text-sm font-medium">2</button>
+                                <button className="w-8 h-8 flex items-center justify-center rounded-md border border-border text-muted-foreground hover:bg-secondary/40 hover:text-foreground transition-colors text-sm font-medium">3</button>
+                                <button className="w-8 h-8 flex items-center justify-center rounded-md border border-border text-muted-foreground hover:bg-secondary/40 hover:text-foreground transition-colors text-sm font-medium">4</button>
+                                <button className="w-8 h-8 flex items-center justify-center rounded-md border border-border text-muted-foreground hover:bg-secondary/40 hover:text-foreground transition-colors text-sm font-medium">5</button>
+                                <button className="w-8 h-8 flex items-center justify-center rounded-md border border-border text-muted-foreground hover:bg-secondary/40 hover:text-foreground transition-colors text-sm font-medium">›</button>
+                                <button className="w-8 h-8 flex items-center justify-center rounded-md border border-border text-muted-foreground hover:bg-secondary/40 hover:text-foreground transition-colors text-sm font-medium">»</button>
+                              </div>
+                            </div>
+                          </TabsContent>
+                        ))}
+                      </RawTabs>
                     </div>
                   </>
                 ),

@@ -2,7 +2,6 @@ import { createFileRoute } from "@tanstack/react-router";
 import {
   Eye,
   Pencil,
-  Search,
   ChevronDown,
   ChevronLeft,
   ChevronRight,
@@ -12,6 +11,8 @@ import {
   Plus,
   ListChecks,
 } from "lucide-react";
+import { Search } from "@/components/ui/search";
+import { SelectInput } from "@/components/ui/select-input";
 import { useState } from "react";
 import { INSPECTIONS, CHECKSHEET_SECTIONS, type InspectionRow, type ChecksheetRow, type ChecksheetSection } from "@/lib/checksheet-data";
 
@@ -66,18 +67,30 @@ function DailyProgressCheck() {
 
       {/* Search & Filters */}
       <div className="flex items-center gap-3 flex-wrap">
-        <div className="flex items-center gap-2 flex-1 min-w-[300px] rounded-lg border border-border bg-card px-3 py-2.5">
-          <Search className="h-4 w-4 text-muted-foreground shrink-0" />
-          <input
-            className="flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
-            placeholder="Search by doc. no, part number, name, type & inspection by"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-        </div>
-        <FilterButton label="All Customer" />
-        <FilterButton label="All Part Number - Name" />
-        <FilterButton label="All Gedung" />
+        <Search
+          placeholder="Search by doc. no, part number, name, type & inspection by"
+          containerClassName="flex-1 min-w-[300px]"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
+        <SelectInput 
+          placeholder="All Customer"
+          datalist={[{ label: 'All Customer', value: 'all' }, { label: 'Customer A', value: 'a' }, { label: 'Customer B', value: 'b' }]}
+          containerClassName="w-auto min-w-[160px]"
+          hideClear
+        />
+        <SelectInput 
+          placeholder="All Part Number - Name"
+          datalist={[{ label: 'All Part Number - Name', value: 'all' }, { label: 'Part 1', value: '1' }]}
+          containerClassName="w-auto min-w-[220px]"
+          hideClear
+        />
+        <SelectInput 
+          placeholder="All Gedung"
+          datalist={[{ label: 'All Gedung', value: 'all' }, { label: 'Gedung A', value: 'a' }]}
+          containerClassName="w-auto min-w-[140px]"
+          hideClear
+        />
         <button
           onClick={() => setView("create")}
           className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground shadow-sm hover:opacity-90"
@@ -549,14 +562,7 @@ function DetailInspectionView({
 }
 
 /* ── Sub-components ───────────────────────────────────────── */
-function FilterButton({ label }: { label: string }) {
-  return (
-    <button className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-card px-3 py-2.5 text-sm whitespace-nowrap">
-      {label}
-      <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" />
-    </button>
-  );
-}
+
 
 function CheckedIcon({ status }: { status: "ok" | "ng" | "waiting" }) {
   if (status === "ok") return <CheckCircle2 className="h-5 w-5 text-ok mx-auto" />;

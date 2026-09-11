@@ -14,6 +14,7 @@ import {
   YAxis,
   Legend,
 } from "recharts";
+import { SelectInput } from "@/components/ui/select-input";
 
 export const Route = createFileRoute("/checksheet")({
   head: () => ({
@@ -750,56 +751,35 @@ function DashboardChecksheet() {
         <div className="flex flex-wrap items-center gap-3">
           {/* Sub Tab Dropdown (Only for Control Point) */}
            {activeTab === TABS[2] && (
-            <div className="relative shrink-0">
-              <select
-                className="appearance-none bg-background border border-border rounded-lg pl-3 pr-8 py-2 text-sm font-medium outline-none focus:ring-2 focus:ring-primary/20"
-                value={activeControlPointTab}
-                onChange={(e) => setActiveControlPointTab(e.target.value)}
-              >
-                {CONTROL_POINT_TABS.map((opt) => (
-                  <option key={opt} value={opt}>
-                    {opt}
-                  </option>
-                ))}
-              </select>
-              <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
-            </div>
+            <SelectInput 
+              datalist={CONTROL_POINT_TABS.map(opt => ({ label: opt, value: opt }))}
+              defValue={activeControlPointTab}
+              onChange={(val) => setActiveControlPointTab(val as string)}
+              containerClassName="w-auto min-w-[160px] shrink-0"
+              hideClear
+            />
           )}
 
           {/* Station Dropdown (Only for Equipment Pre-Treatment) */}
           {activeTab === TABS[3] && (
-            <div className="relative shrink-0">
-              <select
-                className="appearance-none bg-background border border-border rounded-lg pl-3 pr-8 py-2 text-sm font-medium outline-none focus:ring-2 focus:ring-primary/20"
-                value={equipmentPTStation}
-                onChange={(e) => setEquipmentPTStation(e.target.value)}
-              >
-                {EQUIPMENT_PT_STATION_OPTIONS.map((opt) => (
-                  <option key={opt} value={opt}>
-                    {opt}
-                  </option>
-                ))}
-              </select>
-              <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
-            </div>
+            <SelectInput 
+              datalist={EQUIPMENT_PT_STATION_OPTIONS.map(opt => ({ label: opt, value: opt }))}
+              defValue={equipmentPTStation}
+              onChange={(val) => setEquipmentPTStation(val as string)}
+              containerClassName="w-auto min-w-[160px] shrink-0"
+              hideClear
+            />
           )}
 
           {/* Station Dropdown (Only for Chemical CED) */}
           {activeTab === TABS[4] && (
-            <div className="relative shrink-0">
-              <select
-                className="appearance-none bg-background border border-border rounded-lg pl-3 pr-8 py-2 text-sm font-medium outline-none focus:ring-2 focus:ring-primary/20"
-                value={chemicalCEDStation}
-                onChange={(e) => setChemicalCEDStation(e.target.value)}
-              >
-                {CHEMICAL_CED_STATION_OPTIONS.map((opt) => (
-                  <option key={opt} value={opt}>
-                    {opt}
-                  </option>
-                ))}
-              </select>
-              <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
-            </div>
+            <SelectInput 
+              datalist={CHEMICAL_CED_STATION_OPTIONS.map(opt => ({ label: opt, value: opt }))}
+              defValue={chemicalCEDStation}
+              onChange={(val) => setChemicalCEDStation(val as string)}
+              containerClassName="w-auto min-w-[160px] shrink-0"
+              hideClear
+            />
           )}
 
           {/* ED Ampere Toggle */}
@@ -829,20 +809,13 @@ function DashboardChecksheet() {
           )}
 
           {/* Global Month Filter */}
-          <div className="relative shrink-0">
-            <select
-              className="appearance-none bg-background border border-border rounded-lg pl-4 pr-10 py-2 text-sm font-medium outline-none focus:ring-2 focus:ring-primary/20"
-              value={globalMonth}
-              onChange={(e) => setGlobalMonth(e.target.value)}
-            >
-              {MONTH_OPTIONS.map((opt) => (
-                <option key={opt} value={opt}>
-                  {opt}
-                </option>
-              ))}
-            </select>
-            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
-          </div>
+          <SelectInput 
+            datalist={MONTH_OPTIONS.map(opt => ({ label: opt, value: opt }))}
+            defValue={globalMonth}
+            onChange={(val) => setGlobalMonth(val as string)}
+            containerClassName="w-auto min-w-[160px] shrink-0"
+            hideClear
+          />
         </div>
       </div>
 

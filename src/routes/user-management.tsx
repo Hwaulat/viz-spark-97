@@ -1,7 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import {
   Eye,
-  Search,
   ChevronDown,
   ChevronLeft,
   ChevronRight,
@@ -16,6 +15,8 @@ import {
   Upload,
   CheckCircle2,
 } from "lucide-react";
+import { SelectInput } from "@/components/ui/select-input";
+import { Search } from "@/components/ui/search";
 import { useState } from "react";
 
 export const Route = createFileRoute("/user-management")({
@@ -214,17 +215,16 @@ function UserManagementPage() {
 
           {/* Search & Actions */}
           <div className="flex items-center gap-3 flex-wrap pt-2">
-            <div className="flex items-center gap-2 flex-1 min-w-[300px] rounded-lg border border-border bg-card px-3 py-2.5">
-              <Search className="h-4 w-4 text-muted-foreground shrink-0" />
-              <input
-                className="flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
-                placeholder="Search by username or email"
-              />
-            </div>
-            <button className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-card px-3 py-2.5 text-sm whitespace-nowrap">
-              All Role
-              <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" />
-            </button>
+            <Search
+              placeholder="Search by username or email"
+              containerClassName="flex-1 min-w-[300px]"
+            />
+            <SelectInput 
+              placeholder="All Role"
+              datalist={[{ label: 'All Role', value: 'all' }, { label: 'Admin', value: 'admin' }, { label: 'Operator', value: 'operator' }]}
+              containerClassName="w-auto min-w-[140px]"
+              hideClear
+            />
             <button
               onClick={() => setIsCreateModalOpen(true)}
               className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground shadow-sm hover:opacity-90"

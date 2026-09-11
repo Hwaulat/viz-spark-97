@@ -133,7 +133,17 @@ function AreaCard({ area }: { area: AreaDef }) {
       bodyClassName={isPtedWrapper || area.type === "boiler" ? 'flex-1 flex flex-col' : ''}
       title={area.name}
       right={
-        !isPtedWrapper && <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
+        !isPtedWrapper && (
+          <div className="flex items-center gap-3">
+            {area.type === "boiler" && (
+              <div className="flex items-center gap-2 hidden sm:flex">
+                <span className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">Panel Burner Status</span>
+                <span className="text-[11px] px-2.5 py-0.5 rounded font-bold bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400">ON</span>
+              </div>
+            )}
+            <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
+          </div>
+        )
       }
     >
       {area.type === "boiler" && (
@@ -153,9 +163,9 @@ function AreaCard({ area }: { area: AreaDef }) {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4 pt-4 border-t border-border/40">
+              <div className="mt-4 pt-4 border-t border-border/40 w-full">
                 {/* Boiler Status */}
-                <div className="flex flex-col gap-2.5 w">
+                <div className="flex flex-col gap-2.5 w-full">
                   <div className="flex justify-between items-center">
                     <span className="text-xs font-semibold text-muted-foreground">Boiler Status</span>
                     <span className={`text-[9px] px-2 py-0.5 rounded font-bold ${b.running ? 'bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400' : 'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400'}`}>

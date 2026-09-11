@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Panel, StatusDot } from "@/components/panel";
-import { Search, Filter, Download } from "lucide-react";
+import { Filter, Download } from "lucide-react";
+import { Search } from "@/components/ui/search";
 import { ALARMS } from "@/lib/mock-data";
 
 export const Route = createFileRoute("/log-history")({
@@ -37,8 +38,7 @@ function LogHistoryPage() {
         </div>
         <div className="flex items-center gap-2">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
-            <input placeholder="Search event, equipment, user…" className="h-9 w-72 rounded-md border border-border bg-card pl-9 pr-3 text-xs outline-none focus:ring-2 focus:ring-primary/40" />
+            <Search placeholder="Search event, equipment, user…" containerClassName="w-72" />
           </div>
           <button className="inline-flex items-center gap-2 rounded-md border border-border bg-card px-3 py-2 text-xs hover:bg-secondary"><Filter className="h-3.5 w-3.5" />Filter</button>
           <button className="inline-flex items-center gap-2 rounded-md bg-primary px-3 py-2 text-xs font-medium text-primary-foreground hover:opacity-90"><Download className="h-3.5 w-3.5" />Export CSV</button>
