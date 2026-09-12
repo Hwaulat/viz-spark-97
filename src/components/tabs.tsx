@@ -38,6 +38,7 @@ export interface TabsProps {
   onValueChange?: (value: string) => void;
   listClassName?: string;
   rightElement?: ReactNode;
+  contentClassName?: string;
 }
 
 interface VariantConfig {
@@ -113,6 +114,7 @@ export function Tabs({
   className,
   listClassName,
   rightElement,
+  contentClassName,
 }: TabsProps) {
   const { listWrapper, list, triggerBase, triggerActive, triggerSize } =
     variants[variant];
@@ -125,7 +127,7 @@ export function Tabs({
       : undefined;
 
   const tabsListWithRight = rightElement ? (
-    <div className={cn("flex items-center justify-between flex-wrap gap-4 w-full pr-4", listClassName?.includes('mt') && 'mt-4', listClassName?.includes('ml') && 'ml-4')}>
+    <div className={cn("flex items-center justify-between flex-wrap gap-4 w-full pr-4", listClassName?.match(/m[lrtbxy]?-\d+/g))}>
       <TabsList
         className={cn(
           list,
@@ -211,7 +213,7 @@ export function Tabs({
       {listWrapper ? <div className={listWrapper}>{tabsListWithRight}</div> : tabsListWithRight}
 
       {items.map((item) => (
-        <TabsContent key={item.value} value={item.value} className="mt-4">
+        <TabsContent key={item.value} value={item.value} className={contentClassName ?? 'mt-4'}>
           {item.content}
         </TabsContent>
       ))}

@@ -3,6 +3,7 @@ import { useState, useMemo } from "react";
 import { ChevronLeft, Activity, Flame, Gauge, Power, BarChart3, Filter, Waves, Zap, Thermometer, DollarSign, Fuel, ChevronRight, ChevronsLeft, ChevronsRight, ArrowUpDown, ChevronDown, Calendar, Eye, Download, Pencil, Trash2 } from "lucide-react";
 import { Search } from "@/components/ui/search";
 import { SelectInput } from "@/components/ui/select-input";
+import { Input } from "@/components/ui/input";
 import { BOILERS, BOILER_GAS, BOILER_USAGE_HISTORY, BOILER_LOG_HISTORY, ENERGY_PRICE_PER_KWH, GAS_PRICE_PER_MMBTU, LINE_TRACKING_STATIONS, LINE_TRACKING_ZONES, PROCESS_DETAIL_STATIONS, ovenElecDailyTrend, ovenElecMonthlyTrend, ovenElecYearlyTrend } from "@/lib/mock-data";
 import { Panel, StatusDot, ValueDisplay } from "@/components/panel";
 import { Tabs } from "@/components/tabs";
@@ -17,6 +18,7 @@ import StationPhosphatePng from "@/assets/Phosphate-1.png";
 import StationDegreasingPng from "@/assets/Degreasing.png";
 import StationDegreasingNewPng from "@/assets/Degreasing-New.png";
 import MapsPtedAreaPng from "@/assets/Maps-Pted-Area.png";
+import Boiler1Image from "@/assets/boiler-1.jpg";
 export const Route = createFileRoute("/monitoring-area/$id")({
   head: ({ params }) => ({
     meta: [
@@ -282,39 +284,30 @@ function StationDetailContent({ tabKey }: { tabKey: string }) {
   return (
     <div className="animate-in fade-in duration-300">
       {/* Summary Cards */}
-      <div className="grid grid-cols-2 gap-4 mb-6">
-        <div className="rounded-lg bg-card border border-border p-4 shadow-sm flex flex-col gap-2">
-          <div className="flex items-center gap-2">
-            <div className="h-8 w-8 rounded-full flex items-center justify-center bg-blue-500/10 text-blue-500">
-              <Thermometer className="h-4.5 w-4.5" />
-            </div>
-            <span className="text-sm font-medium text-foreground">PV Temperature</span>
-          </div>
-          <div>
-            <div className="flex items-baseline gap-2">
-              <span className={`text-2xl font-bold font-mono ${data.alarm ? 'text-destructive' : 'text-blue-500'}`}>{data.pv}</span>
-              <span className="text-xs font-medium text-muted-foreground">°C</span>
-            </div>
-          </div>
-        </div>
-        <div className="rounded-lg bg-card border border-border p-4 shadow-sm flex flex-col gap-2">
-          <div className="flex items-center gap-2">
-            <div className="h-8 w-8 rounded-full flex items-center justify-center bg-blue-500/10 text-blue-500">
-              <Thermometer className="h-4.5 w-4.5" />
-            </div>
-            <span className="text-sm font-medium text-foreground">SP Temperature</span>
-          </div>
-          <div>
-            <div className="flex items-baseline gap-2">
-              <span className="text-2xl font-bold font-mono text-blue-500">{data.sp}</span>
-              <span className="text-xs font-medium text-muted-foreground">°C</span>
-            </div>
-          </div>
-        </div>
+      <div className="mb-6 mx-4">
+        <StatCardGrid
+          columns={2}
+          items={[
+            {
+              title: "PV Temperature",
+              value: <div className="flex items-baseline gap-1"><span className={data.alarm ? "text-destructive" : "text-blue-500"}>{data.pv}</span><span className="text-sm text-muted-foreground font-normal">°C</span></div>,
+              variant: "stat",
+              icon: <Thermometer />,
+              iconBg: "bg-blue-500/10 text-blue-500",
+            },
+            {
+              title: "SP Temperature",
+              value: <div className="flex items-baseline gap-1"><span className="text-blue-500">{data.sp}</span><span className="text-sm text-muted-foreground font-normal">°C</span></div>,
+              variant: "stat",
+              icon: <Thermometer />,
+              iconBg: "bg-blue-500/10 text-blue-500",
+            }
+          ]}
+        />
       </div>
 
       {/* Station Illustration */}
-      <div className="border border-border/50 rounded-lg overflow-hidden bg-background mb-6">
+      <div className="border border-border/50 rounded-lg overflow-hidden bg-background mb-6 mx-4">
         <div className="flex justify-between items-center p-3 bg-secondary/30 border-b border-border/50">
           <div className="flex items-center gap-2">
             <Activity className="h-4 w-4 text-muted-foreground" />
@@ -339,7 +332,7 @@ function StationDetailContent({ tabKey }: { tabKey: string }) {
       </div>
 
       {/* Temperature Trend Chart */}
-      <Panel title="Temperature Trends">
+      <Panel title="Temperature Trends" className="ml-4 mr-4 mb-4">
         <div className="h-[300px] w-full p-4">
           <ResponsiveContainer width="100%" height="100%">
             <LineChart
@@ -348,16 +341,17 @@ function StationDetailContent({ tabKey }: { tabKey: string }) {
                 return {
                   time: time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
                   pv: +(parseFloat(data.pv) + (Math.random() * 2 - 1)).toFixed(1),
+                  sp: parseFloat(data.sp),
                 };
               })}
-              margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
+              margin={{ top: 10, right: 10, left: 10, bottom: 0 }}
             >
               <CartesianGrid strokeDasharray="3 3" vertical={false} opacity={0.3} />
               <XAxis dataKey="time" tick={{ fontSize: 10 }} tickMargin={10} />
-              <YAxis tick={{ fontSize: 10 }} domain={['dataMin - 2', 'dataMax + 2']} />
+              <YAxis tick={{ fontSize: 10 }} domain={['dataMin - 2', 'dataMax + 2']} label={{ value: 'Temperature', angle: -90, position: 'insideLeft', style: { textAnchor: 'middle', fill: '#3b82f6', fontSize: 12, fontWeight: 600 } }} />
               <Tooltip contentStyle={{ backgroundColor: "rgba(0,0,0,0.8)", borderRadius: "8px", border: "1px solid rgba(255,255,255,0.1)" }} itemStyle={{ fontSize: 12 }} />
               <Legend wrapperStyle={{ fontSize: "12px", paddingTop: "10px" }} />
-              <ReferenceLine y={parseFloat(data.sp)} stroke="#ef4444" strokeDasharray="3 3" label={{ position: 'insideBottomLeft', value: `Set Point (${data.sp}°C)`, fill: '#ef4444', fontSize: 10 }} />
+              <Line type="monotone" dataKey="sp" name="Set Point" stroke="#ef4444" strokeWidth={1.5} strokeDasharray="3 3" dot={false} activeDot={false} />
               <Line type="monotone" dataKey="pv" name="Actual Temp" stroke="#3b82f6" strokeWidth={2} dot={false} activeDot={{ r: 4 }} />
             </LineChart>
           </ResponsiveContainer>
@@ -371,9 +365,12 @@ function MonitoringAreaDetails() {
   const [historicalBoilerTab, setHistoricalBoilerTab] = useState("Boiler 1");
   const { id } = Route.useParams();
   const [activeTab, setActiveTab] = useState("Boiler Monitoring");
+  const [lineTrackingTab, setLineTrackingTab] = useState("Line Tracking");
   const [timeFilter, setTimeFilter] = useState<"daily" | "monthly" | "yearly">("daily");
   const [processDetailTab, setProcessDetailTab] = useState("pre-degreasing");
   const [logHistoryTab, setLogHistoryTab] = useState("Boiler 1");
+  const [histEnergyPrice, setHistEnergyPrice] = useState(ENERGY_PRICE_PER_KWH.toString());
+  const [histGasPrice, setHistGasPrice] = useState(GAS_PRICE_PER_MMBTU.toString());
 
   const usageData = useMemo(() => BOILER_USAGE_HISTORY[timeFilter], [timeFilter]);
   const summary = useMemo(() => {
@@ -475,7 +472,28 @@ function MonitoringAreaDetails() {
             value={activeTab}
             onValueChange={setActiveTab}
             className="bg-card border border-border rounded-lg shadow-sm overflow-hidden"
-            listClassName="m-4"
+            listClassName="m-4 ml-4 mt-4"
+            rightElement={
+              activeTab === "Cummulative Usage" ? (
+                <div className="flex gap-1 bg-background p-1 rounded-md border border-border mr-4">
+                  <div className="flex items-center gap-2 text-sm font-medium px-2 text-muted-foreground mr-1">
+                    <Filter className="h-3.5 w-3.5" /> Filter by:
+                  </div>
+                  {(["daily", "monthly", "yearly"] as const).map((t) => (
+                    <button
+                      key={t}
+                      onClick={() => setTimeFilter(t)}
+                      className={`px-3 py-1 text-xs font-medium rounded transition ${timeFilter === t
+                        ? "bg-primary text-primary-foreground shadow-sm"
+                        : "text-muted-foreground hover:bg-secondary hover:text-foreground"
+                        }`}
+                    >
+                      {t.charAt(0).toUpperCase() + t.slice(1)}
+                    </button>
+                  ))}
+                </div>
+              ) : null
+            }
             items={[
               {
                 value: "Boiler Monitoring",
@@ -487,61 +505,63 @@ function MonitoringAreaDetails() {
                         <div key={b.id} className="flex flex-col items-center">
                           {/* Tank illustration (Cylinder with rims) */}
                           <div className="relative w-48 flex flex-col items-center">
-                            {/* Top Rim */}
-                            <div className={`w-[108%] h-10 border-2 rounded-[50%] z-20 -mb-5 shadow-sm relative ${b.running
-                              ? "bg-gradient-to-b from-emerald-300 to-emerald-500 dark:from-emerald-700 dark:to-emerald-900 border-emerald-500 dark:border-emerald-800"
-                              : "bg-gradient-to-b from-gray-300 to-gray-400 dark:from-slate-600 dark:to-slate-700 border-gray-400 dark:border-slate-800"
-                              }`}>
-                              <div className="absolute inset-1 rounded-[50%] border-t border-white/50"></div>
-                            </div>
-
-                            {/* Body */}
-                            <div className={`relative w-full h-[280px] border-x-2 flex flex-col items-center pt-8 pb-8 px-4 z-10 overflow-hidden ${b.running
-                              ? "border-emerald-500 dark:border-emerald-800 bg-gradient-to-r from-emerald-200 via-emerald-50 to-emerald-300 dark:from-emerald-800 dark:via-emerald-700 dark:to-emerald-900"
-                              : "border-gray-400 dark:border-slate-800 bg-gradient-to-r from-gray-300 via-gray-100 to-gray-400 dark:from-slate-700 dark:via-slate-500 dark:to-slate-800"
-                              }`}>
-                              {/* Sub-body gradient to give cylinder feel */}
-                              <div className="absolute inset-y-0 left-0 w-8 bg-gradient-to-r from-black/10 to-transparent pointer-events-none" />
-                              <div className="absolute inset-y-0 right-0 w-12 bg-gradient-to-l from-black/20 to-transparent pointer-events-none" />
-
-                              {/* Fire glow at bottom if running */}
-                              {b.running && (
-                                <div className="absolute bottom-0 inset-x-0 h-32 bg-gradient-to-t from-emerald-400/60 via-emerald-400/10 to-transparent pointer-events-none" />
-                              )}
-
-                              <div className="text-lg font-bold flex flex-col items-center gap-1.5 z-10 text-slate-800 dark:text-slate-100 mt-2">
-                                <Flame className={`h-7 w-7 ${b.running ? 'text-emerald-600 drop-shadow-[0_0_8px_rgba(16,185,129,0.5)]' : 'text-gray-500'}`} />
-                                {b.name}
-                              </div>
-
-                              <div className="mt-5 flex flex-col gap-2 w-full text-center text-sm font-mono bg-background/70 backdrop-blur-md rounded-lg p-3 shadow-md z-10 border-t border-white/40 dark:border-white/10">
-                                <div className="text-muted-foreground text-[10px] uppercase tracking-wider mb-0.5">Temperature</div>
-                                <div className="flex justify-between items-center">
-                                  <span className="text-muted-foreground text-xs">T1</span>
-                                  <span className="font-bold text-base">{b.temp1.toFixed(1)}°C</span>
+                              <>
+                                {/* Top Rim */}
+                                <div className={`w-[108%] h-10 border-2 rounded-[50%] z-20 -mb-5 shadow-sm relative ${b.running
+                                  ? "bg-gradient-to-b from-emerald-300 to-emerald-500 dark:from-emerald-700 dark:to-emerald-900 border-emerald-500 dark:border-emerald-800"
+                                  : "bg-gradient-to-b from-gray-300 to-gray-400 dark:from-slate-600 dark:to-slate-700 border-gray-400 dark:border-slate-800"
+                                  }`}>
+                                  <div className="absolute inset-1 rounded-[50%] border-t border-white/50"></div>
                                 </div>
-                                <div className="flex justify-between items-center pt-1 border-t border-border/40">
-                                  <span className="text-muted-foreground text-xs">T2</span>
-                                  <span className="font-bold text-base">{b.temp2.toFixed(1)}°C</span>
+
+                                {/* Body */}
+                                <div className={`relative w-full h-[280px] border-x-2 flex flex-col items-center pt-8 pb-8 px-4 z-10 overflow-hidden ${b.running
+                                  ? "border-emerald-500 dark:border-emerald-800 bg-gradient-to-r from-emerald-200 via-emerald-50 to-emerald-300 dark:from-emerald-800 dark:via-emerald-700 dark:to-emerald-900"
+                                  : "border-gray-400 dark:border-slate-800 bg-gradient-to-r from-gray-300 via-gray-100 to-gray-400 dark:from-slate-700 dark:via-slate-500 dark:to-slate-800"
+                                  }`}>
+                                  {/* Sub-body gradient to give cylinder feel */}
+                                  <div className="absolute inset-y-0 left-0 w-8 bg-gradient-to-r from-black/10 to-transparent pointer-events-none" />
+                                  <div className="absolute inset-y-0 right-0 w-12 bg-gradient-to-l from-black/20 to-transparent pointer-events-none" />
+
+                                  {/* Fire glow at bottom if running */}
+                                  {b.running && (
+                                    <div className="absolute bottom-0 inset-x-0 h-32 bg-gradient-to-t from-emerald-400/60 via-emerald-400/10 to-transparent pointer-events-none" />
+                                  )}
+
+                                  <div className="text-lg font-bold flex flex-col items-center gap-1.5 z-10 text-slate-800 dark:text-slate-100 mt-2">
+                                    <Flame className={`h-7 w-7 ${b.running ? 'text-emerald-600 drop-shadow-[0_0_8px_rgba(16,185,129,0.5)]' : 'text-gray-500'}`} />
+                                    {b.name}
+                                  </div>
+
+                                  <div className="mt-5 flex flex-col gap-2 w-full text-center text-sm font-mono bg-background/70 backdrop-blur-md rounded-lg p-3 shadow-md z-10 border-t border-white/40 dark:border-white/10">
+                                    <div className="text-muted-foreground text-[10px] uppercase tracking-wider mb-0.5">Temperature</div>
+                                    <div className="flex justify-between items-center">
+                                      <span className="text-muted-foreground text-xs">T1</span>
+                                      <span className="font-bold text-base">{b.temp1.toFixed(1)}°C</span>
+                                    </div>
+                                    <div className="flex justify-between items-center pt-1 border-t border-border/40">
+                                      <span className="text-muted-foreground text-xs">T2</span>
+                                      <span className="font-bold text-base">{b.temp2.toFixed(1)}°C</span>
+                                    </div>
+                                  </div>
                                 </div>
-                              </div>
-                            </div>
 
-                            {/* Bottom Rim */}
-                            <div className={`w-[108%] h-10 border-2 rounded-[50%] z-20 -mt-5 relative ${b.running
-                              ? "bg-gradient-to-b from-emerald-400 to-emerald-600 dark:from-emerald-800 dark:to-emerald-950 border-emerald-500 dark:border-emerald-800"
-                              : "bg-gradient-to-b from-gray-400 to-gray-500 dark:from-slate-700 dark:to-slate-800 border-gray-400 dark:border-slate-800"
-                              }`}>
-                              <div className="absolute inset-1 rounded-[50%] border-t border-white/30"></div>
-                            </div>
+                                {/* Bottom Rim */}
+                                <div className={`w-[108%] h-10 border-2 rounded-[50%] z-20 -mt-5 relative ${b.running
+                                  ? "bg-gradient-to-b from-emerald-400 to-emerald-600 dark:from-emerald-800 dark:to-emerald-950 border-emerald-500 dark:border-emerald-800"
+                                  : "bg-gradient-to-b from-gray-400 to-gray-500 dark:from-slate-700 dark:to-slate-800 border-gray-400 dark:border-slate-800"
+                                  }`}>
+                                  <div className="absolute inset-1 rounded-[50%] border-t border-white/30"></div>
+                                </div>
 
-                            {/* Base shadow/curve and Status Badge */}
-                            <div className="w-[50%] h-12 bg-slate-500 dark:bg-slate-900 rounded-b-[50%] z-30 -mt-7 border-b-[3px] border-slate-600 dark:border-black flex flex-col justify-end items-center pb-0.5 shadow-lg relative">
-                              <div className="absolute -top-3 bg-background/90 px-3 py-1 rounded-full shadow-md backdrop-blur-sm border border-border/50 flex items-center gap-2">
-                                <StatusDot state={b.running ? "on" : "off"} />
-                                <span className="text-xs font-bold font-mono tracking-widest">{b.running ? "ON" : "OFF"}</span>
-                              </div>
-                            </div>
+                                {/* Base shadow/curve and Status Badge */}
+                                <div className="w-[50%] h-12 bg-slate-500 dark:bg-slate-900 rounded-b-[50%] z-30 -mt-7 border-b-[3px] border-slate-600 dark:border-black flex flex-col justify-end items-center pb-0.5 shadow-lg relative">
+                                  <div className="absolute -top-3 bg-background/90 px-3 py-1 rounded-full shadow-md backdrop-blur-sm border border-border/50 flex items-center gap-2">
+                                    <StatusDot state={b.running ? "on" : "off"} />
+                                    <span className="text-xs font-bold font-mono tracking-widest">{b.running ? "ON" : "OFF"}</span>
+                                  </div>
+                                </div>
+                              </>
                           </div>
 
                           {/* Details underneath the tank */}
@@ -579,41 +599,22 @@ function MonitoringAreaDetails() {
                         <h3 className="text-lg font-semibold text-foreground">Log History</h3>
                       </div>
                       {/* Search and Filters */}
-                      <RawTabs defaultValue="Boiler 1" className="w-full">
-                        <div className="flex flex-col lg:flex-row items-center gap-4 mb-4">
-                          <Search placeholder="Search" containerClassName="flex-1 w-full lg:max-w-md" />
-                          <TabsList>
-                            <TabsTrigger value="Boiler 1">Boiler 1</TabsTrigger>
-                            <TabsTrigger value="Boiler 2">Boiler 2</TabsTrigger>
-                            <TabsTrigger value="Boiler 3">Boiler 3</TabsTrigger>
+                      <RawTabs value={logHistoryTab} onValueChange={setLogHistoryTab} className="w-full rounded-lg border border-border bg-card shadow-sm overflow-hidden">
+                        {/* Filter Bar: Search + Tabs + Date Range in one row */}
+                        <div className="flex flex-col lg:flex-row items-center gap-4 px-4 py-3 bg-secondary/10 border-b border-border/50 w-full">
+                          <Search placeholder="Search" containerClassName="flex-1 w-full" />
+                          <TabsList className="bg-gray-100 dark:bg-gray-700/60 rounded-xl p-1 h-auto">
+                            <TabsTrigger value="Boiler 1" className="text-gray-500 dark:text-gray-400 rounded-lg text-xs data-[state=inactive]:hover:text-gray-700 dark:data-[state=inactive]:hover:text-gray-300 data-[state=active]:bg-white dark:data-[state=active]:bg-gray-800 data-[state=active]:text-gray-900 dark:data-[state=active]:text-white h-8 font-medium transition-colors">Boiler 1</TabsTrigger>
+                            <TabsTrigger value="Boiler 2" className="text-gray-500 dark:text-gray-400 rounded-lg text-xs data-[state=inactive]:hover:text-gray-700 dark:data-[state=inactive]:hover:text-gray-300 data-[state=active]:bg-white dark:data-[state=active]:bg-gray-800 data-[state=active]:text-gray-900 dark:data-[state=active]:text-white h-8 font-medium transition-colors">Boiler 2</TabsTrigger>
+                            <TabsTrigger value="Boiler 3" className="text-gray-500 dark:text-gray-400 rounded-lg text-xs data-[state=inactive]:hover:text-gray-700 dark:data-[state=inactive]:hover:text-gray-300 data-[state=active]:bg-white dark:data-[state=active]:bg-gray-800 data-[state=active]:text-gray-900 dark:data-[state=active]:text-white h-8 font-medium transition-colors">Boiler 3</TabsTrigger>
                           </TabsList>
-                          <div className="hidden flex-wrap items-center gap-2 overflow-x-auto w-full lg:w-auto">
-                            <SelectInput 
-                              placeholder="All Status"
-                              datalist={[{ label: 'All Status', value: 'all' }, { label: 'Online', value: 'online' }, { label: 'Offline', value: 'offline' }]}
-                              containerClassName="min-w-[140px] w-auto"
-                              hideClear
-                            />
-                            <SelectInput 
-                              placeholder="All Abnormal Status"
-                              datalist={[{ label: 'All Abnormal Status', value: 'all' }, { label: 'Warning', value: 'warning' }, { label: 'Critical', value: 'critical' }]}
-                              containerClassName="min-w-[180px] w-auto"
-                              hideClear
-                            />
-                            <SelectInput 
-                              placeholder="All Downtime"
-                              datalist={[{ label: 'All Downtime', value: 'all' }, { label: '< 1 Hour', value: '1h' }, { label: '> 1 Hour', value: '1h_plus' }]}
-                              containerClassName="min-w-[140px] w-auto"
-                              hideClear
-                            />
-                            <div className="flex items-center gap-2 min-w-[240px] px-3 py-2.5 rounded-md border border-border bg-background text-sm text-muted-foreground cursor-pointer shadow-sm hover:bg-secondary/20 transition-colors">
-                              <Calendar className="h-4 w-4" />
-                              <span>dd/mm/yyyy - dd/mm/yyyy</span>
-                            </div>
+                          <div className="flex items-center gap-2 px-3 py-2 rounded-lg border border-border bg-background text-sm text-muted-foreground cursor-pointer hover:bg-secondary/20 transition-colors">
+                            <Calendar className="h-4 w-4" />
+                            <span>dd/mm/yyyy - dd/mm/yyyy</span>
                           </div>
                         </div>
 
-                        {/* Table */}
+                        {/* Table Content per Boiler */}
                         {["Boiler 1", "Boiler 2", "Boiler 3"].map((boilerName) => (
                           <TabsContent key={boilerName} value={boilerName} className="mt-0">
                             <Table freezeHeader={false}>
@@ -636,7 +637,7 @@ function MonitoringAreaDetails() {
                             </Table>
 
                             {/* Pagination Footer */}
-                            <div className="flex items-center justify-between px-2 py-4 border-t border-border/60 bg-background">
+                            <div className="flex items-center justify-between px-4 py-4 border-t border-border/60">
                               <div className="flex items-center gap-4 text-sm text-muted-foreground font-medium">
                                 <div className="flex items-center gap-2">
                                   <span>Rows per page</span>
@@ -671,7 +672,7 @@ function MonitoringAreaDetails() {
                 label: "Cummulative Usage",
                 content: (
                   <div className="space-y-6">
-                    <div className="pt-2">
+                    <div className="m-4">
                       <StatCardGrid
                         columns={3}
                         items={[
@@ -725,7 +726,7 @@ function MonitoringAreaDetails() {
                       />
                     </div>
 
-                    <div className="rounded-xl border bg-card p-6 shadow-sm">
+                    <div className="rounded-xl border bg-card p-6 shadow-sm m-4">
                       <div>
                         <h2 className="text-xl font-bold tracking-tight text-foreground">Combine Usage Trend</h2>
                         <p className="text-sm text-muted-foreground mt-1">Energy and Gas usage trend over the selected {timeFilter} timeframe.</p>
@@ -766,54 +767,66 @@ function MonitoringAreaDetails() {
                 value: "Historical Charts",
                 label: "Historical Charts",
                 content: (
-                  <RawTabs value={historicalBoilerTab} onValueChange={setHistoricalBoilerTab} className="space-y-6">
+                  <div className="space-y-6">
                     {/* Temperature & Pressure Trends */}
                     <div className="flex flex-col gap-6">
                       {/* Temperature */}
-                      <div className="rounded-xl border bg-card p-6 shadow-sm">
-                        <div className="flex flex-wrap items-center justify-between gap-4">
-                          <div>
-                            <h2 className="text-xl font-bold tracking-tight text-foreground">Temperature Trends by Minute</h2>
-                            <p className="text-sm text-muted-foreground mt-1">Real-time temperature monitoring against standard limits.</p>
+                      <div className="rounded-xl border bg-card p-6 shadow-sm ml-4 mr-4">
+                        <RawTabs value={historicalBoilerTab} onValueChange={setHistoricalBoilerTab} className="w-full">
+                          <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
+                            <div>
+                              <h2 className="text-xl font-bold tracking-tight text-foreground">Temperature Trends by Minute</h2>
+                              <p className="text-sm text-muted-foreground mt-1">Real-time temperature monitoring against standard limits.</p>
+                            </div>
+                            <TabsList className="bg-gray-100 dark:bg-gray-700/60 rounded-xl p-1 h-auto">
+                              {["Boiler 1", "Boiler 2", "Boiler 3"].map(tab => (
+                                <TabsTrigger
+                                  key={tab}
+                                  value={tab}
+                                  className="text-gray-500 dark:text-gray-400 rounded-lg text-xs font-medium h-8 px-4 transition-colors data-[state=inactive]:hover:text-gray-700 dark:data-[state=inactive]:hover:text-gray-300 data-[state=active]:bg-white dark:data-[state=active]:bg-gray-800 data-[state=active]:text-gray-900 dark:data-[state=active]:text-white"
+                                >
+                                  {tab}
+                                </TabsTrigger>
+                              ))}
+                            </TabsList>
                           </div>
-                          <TabsList>
-                            {["Boiler 1", "Boiler 2", "Boiler 3"].map(tab => (
-                              <TabsTrigger key={tab} value={tab}>{tab}</TabsTrigger>
-                            ))}
-                          </TabsList>
-                        </div>
-                        <div className="h-[300px] w-full p-4">
-                          <ResponsiveContainer width="100%" height="100%">
-                            <LineChart data={MINUTE_DATA} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                              <CartesianGrid strokeDasharray="3 3" vertical={false} opacity={0.3} />
-                              <XAxis dataKey="time" tick={{ fontSize: 10 }} tickMargin={10} />
-                              <YAxis tick={{ fontSize: 10 }} />
-                              <Tooltip contentStyle={{ backgroundColor: "rgba(0,0,0,0.8)", borderRadius: "8px", border: "1px solid rgba(255,255,255,0.1)" }} itemStyle={{ fontSize: 12 }} />
-                              <Legend wrapperStyle={{ fontSize: "12px", paddingTop: "10px" }} />
-                              <ReferenceLine y={190} stroke="#ef4444" strokeDasharray="3 3" label={{ position: 'insideBottomLeft', value: 'MIN', fill: '#ef4444', fontSize: 10 }} />
-                              <ReferenceLine y={230} stroke="#ef4444" strokeDasharray="3 3" label={{ position: 'insideTopLeft', value: 'MAX', fill: '#ef4444', fontSize: 10 }} />
-                              <Line type="monotone" dataKey={historicalBoilerTab === "Boiler 1" ? "temp1_b1" : historicalBoilerTab === "Boiler 2" ? "temp1_b2" : "temp1_b3"} name="Actual Temp 1" stroke="#f97316" strokeWidth={2} dot={false} activeDot={{ r: 4 }} />
-                              <Line type="monotone" dataKey={historicalBoilerTab === "Boiler 1" ? "temp2_b1" : historicalBoilerTab === "Boiler 2" ? "temp2_b2" : "temp2_b3"} name="Actual Temp 2" stroke="#ef4444" strokeWidth={2} dot={false} activeDot={{ r: 4 }} />
-                              <Line type="monotone" dataKey="none_max" name="MAX" stroke="#ef4444" strokeDasharray="3 3" strokeWidth={2} dot={false} activeDot={false} />
-                              <Line type="monotone" dataKey="none_min" name="MIN" stroke="#ef4444" strokeDasharray="3 3" strokeWidth={2} dot={false} activeDot={false} />
-                            </LineChart>
-                          </ResponsiveContainer>
-                        </div>
+                          {["Boiler 1", "Boiler 2", "Boiler 3"].map(tab => (
+                            <TabsContent key={tab} value={tab} className="mt-0 outline-none">
+                              <div className="h-[300px] w-full pt-4">
+                                <ResponsiveContainer width="100%" height="100%">
+                                  <LineChart data={MINUTE_DATA} margin={{ top: 10, right: 10, left: 10, bottom: 0 }}>
+                                    <CartesianGrid strokeDasharray="3 3" vertical={false} opacity={0.3} />
+                                    <XAxis dataKey="time" tick={{ fontSize: 10 }} tickMargin={10} />
+                                    <YAxis tick={{ fontSize: 10 }} label={{ value: 'Temperature', angle: -90, position: 'insideLeft', style: { textAnchor: 'middle', fill: '#64748b', fontSize: 12, fontWeight: 600 } }} />
+                                    <Tooltip contentStyle={{ backgroundColor: "rgba(0,0,0,0.8)", borderRadius: "8px", border: "1px solid rgba(255,255,255,0.1)" }} itemStyle={{ fontSize: 12, color: "#fff" }} />
+                                    <Legend wrapperStyle={{ fontSize: "12px", paddingTop: "10px" }} />
+                                    <ReferenceLine y={190} stroke="#ef4444" strokeDasharray="3 3" label={{ position: 'insideBottomLeft', value: 'MIN', fill: '#ef4444', fontSize: 10 }} />
+                                    <ReferenceLine y={230} stroke="#ef4444" strokeDasharray="3 3" label={{ position: 'insideTopLeft', value: 'MAX', fill: '#ef4444', fontSize: 10 }} />
+                                    <Line type="monotone" dataKey={tab === "Boiler 1" ? "temp1_b1" : tab === "Boiler 2" ? "temp1_b2" : "temp1_b3"} name="Actual Temp 1" stroke="#f97316" strokeWidth={2} dot={false} activeDot={{ r: 4 }} />
+                                    <Line type="monotone" dataKey={tab === "Boiler 1" ? "temp2_b1" : tab === "Boiler 2" ? "temp2_b2" : "temp2_b3"} name="Actual Temp 2" stroke="#ef4444" strokeWidth={2} dot={false} activeDot={{ r: 4 }} />
+                                    <Line type="monotone" dataKey="none_max" name="MAX" stroke="#ef4444" strokeDasharray="3 3" strokeWidth={2} dot={false} activeDot={false} />
+                                    <Line type="monotone" dataKey="none_min" name="MIN" stroke="#ef4444" strokeDasharray="3 3" strokeWidth={2} dot={false} activeDot={false} />
+                                  </LineChart>
+                                </ResponsiveContainer>
+                              </div>
+                            </TabsContent>
+                          ))}
+                        </RawTabs>
                       </div>
 
                       {/* Pressure */}
-                      <div className="rounded-xl border bg-card p-6 shadow-sm">
+                      <div className="rounded-xl border bg-card p-6 shadow-sm ml-4 mr-4">
                         <div>
                           <h2 className="text-xl font-bold tracking-tight text-foreground">Pressure Trends by Minute</h2>
                           <p className="text-sm text-muted-foreground mt-1">Real-time pressure monitoring against standard limits.</p>
                         </div>
                         <div className="h-[300px] w-full mt-6">
                           <ResponsiveContainer width="100%" height="100%">
-                            <LineChart data={MINUTE_DATA} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                            <LineChart data={MINUTE_DATA} margin={{ top: 10, right: 10, left: 10, bottom: 0 }}>
                               <CartesianGrid strokeDasharray="3 3" vertical={false} opacity={0.3} />
                               <XAxis dataKey="time" tick={{ fontSize: 10 }} tickMargin={10} />
-                              <YAxis tick={{ fontSize: 10 }} />
-                              <Tooltip contentStyle={{ backgroundColor: "rgba(0,0,0,0.8)", borderRadius: "8px", border: "1px solid rgba(255,255,255,0.1)" }} itemStyle={{ fontSize: 12 }} />
+                              <YAxis tick={{ fontSize: 10 }} label={{ value: 'Pressure', angle: -90, position: 'insideLeft', style: { textAnchor: 'middle', fill: '#64748b', fontSize: 12, fontWeight: 600 } }} />
+                              <Tooltip contentStyle={{ backgroundColor: "rgba(0,0,0,0.8)", borderRadius: "8px", border: "1px solid rgba(255,255,255,0.1)" }} itemStyle={{ fontSize: 12, color: "#fff" }} />
                               <Legend wrapperStyle={{ fontSize: "12px", paddingTop: "10px" }} />
                               <ReferenceLine y={4} stroke="#ef4444" strokeDasharray="3 3" label={{ position: 'insideBottomLeft', value: 'MIN', fill: '#ef4444', fontSize: 10 }} />
                               <ReferenceLine y={8} stroke="#ef4444" strokeDasharray="3 3" label={{ position: 'insideTopLeft', value: 'MAX', fill: '#ef4444', fontSize: 10 }} />
@@ -827,19 +840,63 @@ function MonitoringAreaDetails() {
                     </div>
 
                     {/* Energy vs Gas */}
-                    <div className="rounded-xl border bg-card p-6 shadow-sm">
-                      <div>
-                        <h2 className="text-xl font-bold tracking-tight text-foreground">Energy Consumption vs Gas Usage by Minute</h2>
-                        <p className="text-sm text-muted-foreground mt-1">Comparison of energy and gas consumption trends.</p>
+                    <div className="rounded-xl border bg-card p-6 shadow-sm ml-4 mr-4">
+                      <div className="flex flex-wrap items-center justify-between gap-4">
+                        <div>
+                          <h2 className="text-xl font-bold tracking-tight text-foreground">Energy Consumption vs Gas Usage by Minute</h2>
+                          <p className="text-sm text-muted-foreground mt-1">Comparison of energy and gas consumption trends.</p>
+                        </div>
+                        <div className="flex items-center gap-4">
+                          <div className="flex items-center gap-2">
+                            <span className="text-sm font-medium text-muted-foreground whitespace-nowrap">Energy Price:</span>
+                            <Input
+                              type="number"
+                              prefix="Rp"
+                              containerClassName="w-fit min-w-0"
+                              fieldClassName="h-8 bg-background border border-border"
+                              className="px-2 min-w-0"
+                              style={{ width: `${Math.max(histEnergyPrice.toString().length + 3, 5)}ch` }}
+                              value={histEnergyPrice}
+                              onChange={e => setHistEnergyPrice(e.target.value)}
+                            />
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <span className="text-sm font-medium text-muted-foreground whitespace-nowrap">Gas Price:</span>
+                            <Input
+                              type="number"
+                              prefix="Rp"
+                              containerClassName="w-fit min-w-0"
+                              fieldClassName="h-8 bg-background border border-border"
+                              className="px-2 min-w-0"
+                              style={{ width: `${Math.max(histGasPrice.toString().length + 3, 5)}ch` }}
+                              value={histGasPrice}
+                              onChange={e => setHistGasPrice(e.target.value)}
+                            />
+                          </div>
+                        </div>
                       </div>
                       <div className="h-[350px] w-full mt-6">
                         <ResponsiveContainer width="100%" height="100%">
-                          <LineChart data={MINUTE_DATA} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                          <LineChart data={MINUTE_DATA} margin={{ top: 10, right: 10, left: 10, bottom: 0 }}>
                             <CartesianGrid strokeDasharray="3 3" vertical={false} opacity={0.3} />
                             <XAxis dataKey="time" tick={{ fontSize: 10 }} tickMargin={10} />
-                            <YAxis yAxisId="left" tick={{ fontSize: 10 }} />
-                            <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 10 }} />
-                            <Tooltip contentStyle={{ backgroundColor: "rgba(0,0,0,0.8)", borderRadius: "8px", border: "1px solid rgba(255,255,255,0.1)" }} itemStyle={{ fontSize: 12 }} />
+                            <YAxis yAxisId="left" tick={{ fontSize: 10 }} label={{ value: 'Energy', angle: -90, position: 'insideLeft', style: { textAnchor: 'middle', fill: '#3b82f6', fontSize: 12, fontWeight: 600 } }} />
+                            <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 10 }} label={{ value: 'Gas', angle: 90, position: 'insideRight', style: { textAnchor: 'middle', fill: '#10b981', fontSize: 12, fontWeight: 600 } }} />
+                            <Tooltip
+                              contentStyle={{ backgroundColor: "rgba(0,0,0,0.8)", borderRadius: "8px", border: "1px solid rgba(255,255,255,0.1)" }}
+                              itemStyle={{ fontSize: 12, color: "#fff" }}
+                              formatter={(value: number, name: string) => {
+                                if (name === "Energy (kWh)") {
+                                  const price = value * parseFloat(histEnergyPrice || "0");
+                                  return [`${value.toLocaleString()} kWh (Rp ${price.toLocaleString()})`, name];
+                                }
+                                if (name === "Gas Usage (m³)") {
+                                  const price = value * parseFloat(histGasPrice || "0");
+                                  return [`${value.toLocaleString()} m³ (Rp ${price.toLocaleString()})`, name];
+                                }
+                                return [value.toLocaleString(), name];
+                              }}
+                            />
                             <Legend wrapperStyle={{ fontSize: "12px", paddingTop: "10px" }} />
                             <Line yAxisId="left" type="monotone" dataKey="energy" name="Energy (kWh)" stroke="#3b82f6" strokeWidth={2} dot={false} activeDot={{ r: 4 }} />
                             <Line yAxisId="right" type="monotone" dataKey="gas" name="Gas Usage (m³)" stroke="#10b981" strokeWidth={2} dot={false} activeDot={{ r: 4 }} />
@@ -847,44 +904,50 @@ function MonitoringAreaDetails() {
                         </ResponsiveContainer>
                       </div>
                     </div>
-                  </RawTabs>
+                  </div>
                 ),
               },
             ]}
           />
 
-          {activeTab === "Cummulative Usage" && (
-            <div className="flex gap-1 bg-background/50 p-1 rounded-md border border-border/50 w-fit">
-              <div className="flex items-center gap-2 text-sm font-medium px-2 text-muted-foreground mr-1">
-                <Filter className="h-3.5 w-3.5" /> Filter by:
-              </div>
-              {(["daily", "monthly", "yearly"] as const).map((t) => (
-                <button
-                  key={t}
-                  onClick={() => setTimeFilter(t)}
-                  className={`px-3 py-1 text-xs font-medium rounded transition ${timeFilter === t
-                    ? "bg-primary text-primary-foreground shadow-sm"
-                    : "text-muted-foreground hover:bg-secondary hover:text-foreground"
-                    }`}
-                >
-                  {t.charAt(0).toUpperCase() + t.slice(1)}
-                </button>
-              ))}
-            </div>
-          )}
         </div>
       ) : id === "line-tracking" ? (
         <div className="space-y-6">
           <Tabs
             variant="default"
-            defaultValue="Line Tracking"
+            value={lineTrackingTab}
+            onValueChange={setLineTrackingTab}
             className="bg-card border border-border rounded-lg shadow-sm overflow-hidden flex flex-col w-full"
+            listClassName="m-4 w-fit"
+            rightElement={
+              lineTrackingTab === "Process Detail" ? (
+                <div className="flex bg-gray-100 dark:bg-gray-700/60 rounded-xl p-1 h-auto mr-4">
+                  {[
+                    { id: "pre-degreasing", label: "Pre Degreasing" },
+                    { id: "degreasing", label: "Degreasing" },
+                    { id: "phosphate", label: "Phosphate" },
+                    { id: "flood", label: "Flood" },
+                  ].map((tab) => (
+                    <button
+                      key={tab.id}
+                      onClick={() => setProcessDetailTab(tab.id)}
+                      className={`text-gray-500 dark:text-gray-400 rounded-lg text-xs font-medium h-8 px-4 transition-colors ${processDetailTab === tab.id
+                        ? "bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+                        : "hover:text-gray-700 dark:hover:text-gray-300"
+                        }`}
+                    >
+                      {tab.label}
+                    </button>
+                  ))}
+                </div>
+              ) : null
+            }
             items={[
               {
                 value: "Line Tracking",
                 label: "Line Tracking",
                 content: (
-                  <div className="border border-border/50 rounded-lg overflow-hidden bg-background">
+                  <div className="border border-border/50 rounded-lg overflow-hidden bg-background ml-4 mr-4 mb-4">
                     {/* Map Header */}
                     <div className="flex flex-col gap-2 p-4 border-b border-border/50 bg-secondary/20">
                       <div className="flex justify-between items-start">
@@ -914,17 +977,9 @@ function MonitoringAreaDetails() {
                 value: "Process Detail",
                 label: "Process Detail",
                 content: (
-                  <Tabs
-                    variant="default"
-                    defaultValue="pre-degreasing"
-                    className="space-y-4"
-                    items={[
-                      { value: "pre-degreasing", label: "pre degreasing", content: <StationDetailContent tabKey="pre-degreasing" /> },
-                      { value: "degreasing", label: "degreasing", content: <StationDetailContent tabKey="degreasing" /> },
-                      { value: "phosphate", label: "phosphate", content: <StationDetailContent tabKey="phosphate" /> },
-                      { value: "flood", label: "flood", content: <StationDetailContent tabKey="flood" /> },
-                    ]}
-                  />
+                  <div className="space-y-4 mb-4">
+                    <StationDetailContent tabKey={processDetailTab} />
+                  </div>
                 ),
               },
             ]}

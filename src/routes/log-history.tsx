@@ -37,8 +37,8 @@ function LogHistoryPage() {
           <p className="text-sm text-muted-foreground mt-1">Chronological history of alarms, acknowledgements, and operator actions.</p>
         </div>
         <div className="flex items-center gap-2">
-          <div className="relative">
-            <Search placeholder="Search event, equipment, user…" containerClassName="w-72" />
+          <div className="relative flex-1 w-full">
+            <Search placeholder="Search event, equipment, user…" containerClassName="flex-1 w-full" />
           </div>
           <button className="inline-flex items-center gap-2 rounded-md border border-border bg-card px-3 py-2 text-xs hover:bg-secondary"><Filter className="h-3.5 w-3.5" />Filter</button>
           <button className="inline-flex items-center gap-2 rounded-md bg-primary px-3 py-2 text-xs font-medium text-primary-foreground hover:opacity-90"><Download className="h-3.5 w-3.5" />Export CSV</button>

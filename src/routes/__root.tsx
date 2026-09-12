@@ -183,14 +183,14 @@ function Sidebar({ onNavigate, className = "" }: { onNavigate?: () => void; clas
           </div>
         )}
 
-        <Link
+        {/* <Link
           to="/user-management"
           className={linkBase}
           activeProps={{ className: linkActive }}
         >
           <Users className="h-4 w-4" />
           User Management
-        </Link>
+        </Link> */}
       </nav>
 
 

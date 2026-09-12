@@ -69,7 +69,7 @@ function TypePage() {
     <div className="space-y-6">
       <div className="bg-card border border-border rounded-lg shadow-sm flex flex-col overflow-hidden">
         <div className="p-4 border-b border-border/50 flex items-center justify-between gap-4 bg-secondary/10">
-          <div className="relative max-w-md w-full">
+          <div className="relative flex-1 w-full">
             <Search 
               value={q} 
               onChange={(e) => setQ(e.target.value)} 
