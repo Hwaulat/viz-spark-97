@@ -177,7 +177,7 @@ function OvenDetailContent({ id }: { id: string }) {
           </div>
           <div className="h-[250px] mt-6 w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+              <AreaChart data={data} margin={{ top: 10, right: 10, left: 10, bottom: 0 }}>
                 <defs>
                   <linearGradient id="colorKw" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="5%" stopColor="#f59e0b" stopOpacity={0.3} />
@@ -186,7 +186,7 @@ function OvenDetailContent({ id }: { id: string }) {
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" vertical={false} />
                 <XAxis dataKey="time" stroke="hsl(var(--muted-foreground))" fontSize={11} tickMargin={8} />
-                <YAxis stroke="hsl(var(--muted-foreground))" fontSize={11} />
+                <YAxis stroke="hsl(var(--muted-foreground))" fontSize={11} tickFormatter={(val) => val.toFixed(0)} label={{ value: 'kW', angle: -90, position: 'insideLeft', style: { textAnchor: 'middle', fill: '#f59e0b', fontSize: 12, fontWeight: 600 } }} />
                 <Tooltip
                   contentStyle={{ backgroundColor: 'hsl(var(--card))', borderColor: 'hsl(var(--border))', borderRadius: '8px' }}
                   itemStyle={{ color: 'hsl(var(--foreground))' }}
@@ -205,10 +205,10 @@ function OvenDetailContent({ id }: { id: string }) {
           </div>
           <div className="h-[250px] mt-6 w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+              <BarChart data={data} margin={{ top: 10, right: 10, left: 10, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" vertical={false} />
                 <XAxis dataKey="time" stroke="hsl(var(--muted-foreground))" fontSize={11} tickMargin={8} />
-                <YAxis stroke="hsl(var(--muted-foreground))" fontSize={11} />
+                <YAxis stroke="hsl(var(--muted-foreground))" fontSize={11} tickFormatter={(val) => val.toLocaleString()} label={{ value: 'kWh', angle: -90, position: 'insideLeft', style: { textAnchor: 'middle', fill: '#f59e0b', fontSize: 12, fontWeight: 600 } }} />
                 <Tooltip
                   contentStyle={{ backgroundColor: 'hsl(var(--card))', borderColor: 'hsl(var(--border))', borderRadius: '8px' }}
                   itemStyle={{ color: 'hsl(var(--foreground))' }}
@@ -228,17 +228,17 @@ function OvenDetailContent({ id }: { id: string }) {
           </div>
           <div className="h-[250px] mt-6 w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+              <BarChart data={data} margin={{ top: 10, right: 10, left: 10, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" vertical={false} />
                 <XAxis dataKey="time" stroke="hsl(var(--muted-foreground))" fontSize={11} tickMargin={8} />
-                <YAxis stroke="hsl(var(--muted-foreground))" fontSize={11} />
+                <YAxis stroke="hsl(var(--muted-foreground))" fontSize={11} tickFormatter={(val) => val.toLocaleString()} label={{ value: 'MMBTU', angle: -90, position: 'insideLeft', style: { textAnchor: 'middle', fill: '#10b981', fontSize: 12, fontWeight: 600 } }} />
                 <Tooltip
                   contentStyle={{ backgroundColor: 'hsl(var(--card))', borderColor: 'hsl(var(--border))', borderRadius: '8px' }}
                   itemStyle={{ color: 'hsl(var(--foreground))' }}
                   cursor={{ fill: 'hsl(var(--muted))', opacity: 0.2 }}
                 />
                 <Legend iconType="circle" wrapperStyle={{ fontSize: '11px' }} />
-                <Bar dataKey="gas" name="Gas (m³)" fill="#10b981" radius={[2, 2, 0, 0]} />
+                <Bar dataKey="gas" name="Gas (MMBTU)" fill="#10b981" radius={[2, 2, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -251,10 +251,10 @@ function OvenDetailContent({ id }: { id: string }) {
           </div>
           <div className="h-[250px] mt-6 w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+              <LineChart data={chartData} margin={{ top: 10, right: 10, left: 10, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" vertical={false} />
                 <XAxis dataKey="time" stroke="hsl(var(--muted-foreground))" fontSize={11} tickMargin={8} />
-                <YAxis stroke="hsl(var(--muted-foreground))" fontSize={11} domain={['dataMin - 5', 'dataMax + 5']} />
+                <YAxis stroke="hsl(var(--muted-foreground))" fontSize={11} domain={['dataMin - 5', 'dataMax + 5']} tickFormatter={(val) => val.toFixed(0)} label={{ value: '°C', angle: -90, position: 'insideLeft', style: { textAnchor: 'middle', fill: '#ef4444', fontSize: 12, fontWeight: 600 } }} />
                 <Tooltip
                   contentStyle={{ backgroundColor: 'hsl(var(--card))', borderColor: 'hsl(var(--border))', borderRadius: '8px' }}
                   itemStyle={{ color: 'hsl(var(--foreground))' }}
@@ -262,8 +262,8 @@ function OvenDetailContent({ id }: { id: string }) {
                 <Legend iconType="circle" wrapperStyle={{ fontSize: '11px' }} />
                 <Line type="monotone" dataKey="temp1" name="Temp 1 (°C)" stroke="#ef4444" strokeWidth={2} dot={false} />
                 <Line type="monotone" dataKey="temp2" name="Temp 2 (°C)" stroke="#3b82f6" strokeWidth={2} dot={false} />
-                <Line type="monotone" dataKey="tempMin" name="Standard Min" stroke="#ef4444" strokeDasharray="3 3" strokeWidth={1.5} opacity={0.6} dot={false} />
-                <Line type="monotone" dataKey="tempMax" name="Standard Max" stroke="#ef4444" strokeDasharray="3 3" strokeWidth={1.5} opacity={0.6} dot={false} />
+                <Line type="monotone" dataKey="tempMin" name="Min" stroke="#ef4444" strokeDasharray="3 3" strokeWidth={1.5} opacity={0.6} dot={false} />
+                <Line type="monotone" dataKey="tempMax" name="Max" stroke="#ef4444" strokeDasharray="3 3" strokeWidth={1.5} opacity={0.6} dot={false} />
               </LineChart>
             </ResponsiveContainer>
           </div>
@@ -276,18 +276,18 @@ function OvenDetailContent({ id }: { id: string }) {
           </div>
           <div className="h-[250px] mt-6 w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+              <LineChart data={chartData} margin={{ top: 10, right: 10, left: 10, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" vertical={false} />
                 <XAxis dataKey="time" stroke="hsl(var(--muted-foreground))" fontSize={11} tickMargin={8} />
-                <YAxis stroke="hsl(var(--muted-foreground))" fontSize={11} domain={['dataMin - 0.5', 'dataMax + 0.5']} />
+                <YAxis stroke="hsl(var(--muted-foreground))" fontSize={11} domain={['dataMin - 0.5', 'dataMax + 0.5']} tickFormatter={(val) => val.toFixed(2)} label={{ value: 'bar', angle: -90, position: 'insideLeft', style: { textAnchor: 'middle', fill: '#8b5cf6', fontSize: 12, fontWeight: 600 } }} />
                 <Tooltip
                   contentStyle={{ backgroundColor: 'hsl(var(--card))', borderColor: 'hsl(var(--border))', borderRadius: '8px' }}
                   itemStyle={{ color: 'hsl(var(--foreground))' }}
                 />
                 <Legend iconType="circle" wrapperStyle={{ fontSize: '11px' }} />
                 <Line type="monotone" dataKey="pressure" name="Pressure (bar)" stroke="#8b5cf6" strokeWidth={2} dot={false} />
-                <Line type="monotone" dataKey="pressureMin" name="Pressure Min" stroke="#8b5cf6" strokeDasharray="3 3" strokeWidth={1.5} opacity={0.6} dot={false} />
-                <Line type="monotone" dataKey="pressureMax" name="Pressure Max" stroke="#8b5cf6" strokeDasharray="3 3" strokeWidth={1.5} opacity={0.6} dot={false} />
+                <Line type="monotone" dataKey="pressureMin" name="Min" stroke="#8b5cf6" strokeDasharray="3 3" strokeWidth={1.5} opacity={0.6} dot={false} />
+                <Line type="monotone" dataKey="pressureMax" name="Max" stroke="#8b5cf6" strokeDasharray="3 3" strokeWidth={1.5} opacity={0.6} dot={false} />
               </LineChart>
             </ResponsiveContainer>
           </div>
@@ -540,63 +540,63 @@ function MonitoringAreaDetails() {
                         <div key={b.id} className="flex flex-col items-center">
                           {/* Tank illustration (Cylinder with rims) */}
                           <div className="relative w-48 flex flex-col items-center">
-                              <>
-                                {/* Top Rim */}
-                                <div className={`w-[108%] h-10 border-2 rounded-[50%] z-20 -mb-5 shadow-sm relative ${b.running
-                                  ? "bg-gradient-to-b from-emerald-300 to-emerald-500 dark:from-emerald-700 dark:to-emerald-900 border-emerald-500 dark:border-emerald-800"
-                                  : "bg-gradient-to-b from-gray-300 to-gray-400 dark:from-slate-600 dark:to-slate-700 border-gray-400 dark:border-slate-800"
-                                  }`}>
-                                  <div className="absolute inset-1 rounded-[50%] border-t border-white/50"></div>
+                            <>
+                              {/* Top Rim */}
+                              <div className={`w-[108%] h-10 border-2 rounded-[50%] z-20 -mb-5 shadow-sm relative ${b.running
+                                ? "bg-gradient-to-b from-emerald-300 to-emerald-500 dark:from-emerald-700 dark:to-emerald-900 border-emerald-500 dark:border-emerald-800"
+                                : "bg-gradient-to-b from-gray-300 to-gray-400 dark:from-slate-600 dark:to-slate-700 border-gray-400 dark:border-slate-800"
+                                }`}>
+                                <div className="absolute inset-1 rounded-[50%] border-t border-white/50"></div>
+                              </div>
+
+                              {/* Body */}
+                              <div className={`relative w-full h-[280px] border-x-2 flex flex-col items-center pt-8 pb-8 px-4 z-10 overflow-hidden ${b.running
+                                ? "border-emerald-500 dark:border-emerald-800 bg-gradient-to-r from-emerald-200 via-emerald-50 to-emerald-300 dark:from-emerald-800 dark:via-emerald-700 dark:to-emerald-900"
+                                : "border-gray-400 dark:border-slate-800 bg-gradient-to-r from-gray-300 via-gray-100 to-gray-400 dark:from-slate-700 dark:via-slate-500 dark:to-slate-800"
+                                }`}>
+                                {/* Sub-body gradient to give cylinder feel */}
+                                <div className="absolute inset-y-0 left-0 w-8 bg-gradient-to-r from-black/10 to-transparent pointer-events-none" />
+                                <div className="absolute inset-y-0 right-0 w-12 bg-gradient-to-l from-black/20 to-transparent pointer-events-none" />
+
+                                {/* Fire glow at bottom if running */}
+                                {b.running && (
+                                  <div className="absolute bottom-0 inset-x-0 h-32 bg-gradient-to-t from-emerald-400/60 via-emerald-400/10 to-transparent pointer-events-none" />
+                                )}
+
+                                <div className="text-lg font-bold flex flex-col items-center gap-1.5 z-10 text-slate-800 dark:text-slate-100 mt-2">
+                                  <Flame className={`h-7 w-7 ${b.running ? 'text-emerald-600 drop-shadow-[0_0_8px_rgba(16,185,129,0.5)]' : 'text-gray-500'}`} />
+                                  {b.name}
                                 </div>
 
-                                {/* Body */}
-                                <div className={`relative w-full h-[280px] border-x-2 flex flex-col items-center pt-8 pb-8 px-4 z-10 overflow-hidden ${b.running
-                                  ? "border-emerald-500 dark:border-emerald-800 bg-gradient-to-r from-emerald-200 via-emerald-50 to-emerald-300 dark:from-emerald-800 dark:via-emerald-700 dark:to-emerald-900"
-                                  : "border-gray-400 dark:border-slate-800 bg-gradient-to-r from-gray-300 via-gray-100 to-gray-400 dark:from-slate-700 dark:via-slate-500 dark:to-slate-800"
-                                  }`}>
-                                  {/* Sub-body gradient to give cylinder feel */}
-                                  <div className="absolute inset-y-0 left-0 w-8 bg-gradient-to-r from-black/10 to-transparent pointer-events-none" />
-                                  <div className="absolute inset-y-0 right-0 w-12 bg-gradient-to-l from-black/20 to-transparent pointer-events-none" />
-
-                                  {/* Fire glow at bottom if running */}
-                                  {b.running && (
-                                    <div className="absolute bottom-0 inset-x-0 h-32 bg-gradient-to-t from-emerald-400/60 via-emerald-400/10 to-transparent pointer-events-none" />
-                                  )}
-
-                                  <div className="text-lg font-bold flex flex-col items-center gap-1.5 z-10 text-slate-800 dark:text-slate-100 mt-2">
-                                    <Flame className={`h-7 w-7 ${b.running ? 'text-emerald-600 drop-shadow-[0_0_8px_rgba(16,185,129,0.5)]' : 'text-gray-500'}`} />
-                                    {b.name}
+                                <div className="mt-5 flex flex-col gap-2 w-full text-center text-sm font-mono bg-background/70 backdrop-blur-md rounded-lg p-3 shadow-md z-10 border-t border-white/40 dark:border-white/10">
+                                  <div className="text-muted-foreground text-[10px] uppercase tracking-wider mb-0.5">Temperature</div>
+                                  <div className="flex justify-between items-center">
+                                    <span className="text-muted-foreground text-xs">T1</span>
+                                    <span className="font-bold text-base">{b.temp1.toFixed(1)}°C</span>
                                   </div>
-
-                                  <div className="mt-5 flex flex-col gap-2 w-full text-center text-sm font-mono bg-background/70 backdrop-blur-md rounded-lg p-3 shadow-md z-10 border-t border-white/40 dark:border-white/10">
-                                    <div className="text-muted-foreground text-[10px] uppercase tracking-wider mb-0.5">Temperature</div>
-                                    <div className="flex justify-between items-center">
-                                      <span className="text-muted-foreground text-xs">T1</span>
-                                      <span className="font-bold text-base">{b.temp1.toFixed(1)}°C</span>
-                                    </div>
-                                    <div className="flex justify-between items-center pt-1 border-t border-border/40">
-                                      <span className="text-muted-foreground text-xs">T2</span>
-                                      <span className="font-bold text-base">{b.temp2.toFixed(1)}°C</span>
-                                    </div>
-                                  </div>
-                                </div>
-
-                                {/* Bottom Rim */}
-                                <div className={`w-[108%] h-10 border-2 rounded-[50%] z-20 -mt-5 relative ${b.running
-                                  ? "bg-gradient-to-b from-emerald-400 to-emerald-600 dark:from-emerald-800 dark:to-emerald-950 border-emerald-500 dark:border-emerald-800"
-                                  : "bg-gradient-to-b from-gray-400 to-gray-500 dark:from-slate-700 dark:to-slate-800 border-gray-400 dark:border-slate-800"
-                                  }`}>
-                                  <div className="absolute inset-1 rounded-[50%] border-t border-white/30"></div>
-                                </div>
-
-                                {/* Base shadow/curve and Status Badge */}
-                                <div className="w-[50%] h-12 bg-slate-500 dark:bg-slate-900 rounded-b-[50%] z-30 -mt-7 border-b-[3px] border-slate-600 dark:border-black flex flex-col justify-end items-center pb-0.5 shadow-lg relative">
-                                  <div className="absolute -top-3 bg-background/90 px-3 py-1 rounded-full shadow-md backdrop-blur-sm border border-border/50 flex items-center gap-2">
-                                    <StatusDot state={b.running ? "on" : "off"} />
-                                    <span className="text-xs font-bold font-mono tracking-widest">{b.running ? "ON" : "OFF"}</span>
+                                  <div className="flex justify-between items-center pt-1 border-t border-border/40">
+                                    <span className="text-muted-foreground text-xs">T2</span>
+                                    <span className="font-bold text-base">{b.temp2.toFixed(1)}°C</span>
                                   </div>
                                 </div>
-                              </>
+                              </div>
+
+                              {/* Bottom Rim */}
+                              <div className={`w-[108%] h-10 border-2 rounded-[50%] z-20 -mt-5 relative ${b.running
+                                ? "bg-gradient-to-b from-emerald-400 to-emerald-600 dark:from-emerald-800 dark:to-emerald-950 border-emerald-500 dark:border-emerald-800"
+                                : "bg-gradient-to-b from-gray-400 to-gray-500 dark:from-slate-700 dark:to-slate-800 border-gray-400 dark:border-slate-800"
+                                }`}>
+                                <div className="absolute inset-1 rounded-[50%] border-t border-white/30"></div>
+                              </div>
+
+                              {/* Base shadow/curve and Status Badge */}
+                              <div className="w-[50%] h-12 bg-slate-500 dark:bg-slate-900 rounded-b-[50%] z-30 -mt-7 border-b-[3px] border-slate-600 dark:border-black flex flex-col justify-end items-center pb-0.5 shadow-lg relative">
+                                <div className="absolute -top-3 bg-background/90 px-3 py-1 rounded-full shadow-md backdrop-blur-sm border border-border/50 flex items-center gap-2">
+                                  <StatusDot state={b.running ? "on" : "off"} />
+                                  <span className="text-xs font-bold font-mono tracking-widest">{b.running ? "ON" : "OFF"}</span>
+                                </div>
+                              </div>
+                            </>
                           </div>
 
                           {/* Details underneath the tank */}
