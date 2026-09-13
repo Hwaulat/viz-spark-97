@@ -104,55 +104,78 @@ function OvenDetailContent({ id }: { id: string }) {
   }));
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-300">
+    <div className="animate-in fade-in duration-300 bg-card border border-border rounded-lg shadow-sm p-4 m-4">
       {/* Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Panel className="p-4 bg-card/60 flex flex-col justify-center items-center text-center">
-          <div className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-2 flex items-center gap-1.5">
-            <Thermometer className="h-3.5 w-3.5" /> Temperature 1
-          </div>
-          <div className="flex items-baseline gap-1">
-            <span className={`text-3xl font-mono font-bold ${data[data.length - 1]?.temp1 > standard ? 'text-destructive' : 'text-emerald-500'}`}>{data[data.length - 1]?.temp1?.toFixed(1) || "0.0"}</span>
-            <span className="text-sm text-muted-foreground">°C</span>
-          </div>
-          <div className="flex gap-3 mt-2 text-[10px] font-mono font-semibold">
-            <span className="text-emerald-500/90">MIN: {temp1Min.toFixed(1)}</span>
-            <span className="text-rose-500/90">MAX: {temp1Max.toFixed(1)}</span>
-          </div>
-        </Panel>
-        <Panel className="p-4 bg-card/60 flex flex-col justify-center items-center text-center">
-          <div className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-2 flex items-center gap-1.5">
-            <Thermometer className="h-3.5 w-3.5" /> Temperature 2
-          </div>
-          <div className="flex items-baseline gap-1">
-            <span className={`text-3xl font-mono font-bold ${data[data.length - 1]?.temp2 > standard ? 'text-destructive' : 'text-emerald-500'}`}>{data[data.length - 1]?.temp2?.toFixed(1) || "0.0"}</span>
-            <span className="text-sm text-muted-foreground">°C</span>
-          </div>
-          <div className="flex gap-3 mt-2 text-[10px] font-mono font-semibold">
-            <span className="text-emerald-500/90">MIN: {temp2Min.toFixed(1)}</span>
-            <span className="text-rose-500/90">MAX: {temp2Max.toFixed(1)}</span>
-          </div>
-        </Panel>
-        <Panel className="p-4 bg-card/60 flex flex-col justify-center items-center text-center">
-          <div className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-2 flex items-center gap-1.5">
-            <Gauge className="h-3.5 w-3.5" /> Pressure
-          </div>
-          <div className="flex items-baseline gap-1">
-            <span className="text-3xl font-mono font-bold text-foreground">{data[data.length - 1]?.pressure?.toFixed(2) || "0.00"}</span>
-            <span className="text-sm text-muted-foreground">bar</span>
-          </div>
-          <div className="flex gap-3 mt-2 text-[10px] font-mono font-semibold">
-            <span className="text-emerald-500/90">MIN: {pressureMin.toFixed(2)}</span>
-            <span className="text-rose-500/90">MAX: {pressureMax.toFixed(2)}</span>
-          </div>
-        </Panel>
+      <div className="mb-6">
+        <StatCardGrid
+          columns={3}
+          items={[
+            {
+              title: "Temperature 1",
+              value: (
+                <div className="flex flex-col gap-1">
+                  <div className="flex items-baseline gap-1">
+                    <span className={data[data.length - 1]?.temp1 > standard ? 'text-destructive font-mono font-bold text-3xl' : 'text-emerald-500 font-mono font-bold text-3xl'}>{data[data.length - 1]?.temp1?.toFixed(1) || "0.0"}</span>
+                    <span className="text-sm text-muted-foreground font-normal">°C</span>
+                  </div>
+                  <div className="flex gap-3 text-[10px] font-mono font-semibold">
+                    <span className="text-emerald-500/90">MIN: {temp1Min.toFixed(1)}</span>
+                    <span className="text-rose-500/90">MAX: {temp1Max.toFixed(1)}</span>
+                  </div>
+                </div>
+              ),
+              variant: "stat",
+              icon: <Thermometer />,
+              iconBg: "bg-blue-500/10 text-blue-500",
+            },
+            {
+              title: "Temperature 2",
+              value: (
+                <div className="flex flex-col gap-1">
+                  <div className="flex items-baseline gap-1">
+                    <span className={data[data.length - 1]?.temp2 > standard ? 'text-destructive font-mono font-bold text-3xl' : 'text-emerald-500 font-mono font-bold text-3xl'}>{data[data.length - 1]?.temp2?.toFixed(1) || "0.0"}</span>
+                    <span className="text-sm text-muted-foreground font-normal">°C</span>
+                  </div>
+                  <div className="flex gap-3 text-[10px] font-mono font-semibold">
+                    <span className="text-emerald-500/90">MIN: {temp2Min.toFixed(1)}</span>
+                    <span className="text-rose-500/90">MAX: {temp2Max.toFixed(1)}</span>
+                  </div>
+                </div>
+              ),
+              variant: "stat",
+              icon: <Thermometer />,
+              iconBg: "bg-blue-500/10 text-blue-500",
+            },
+            {
+              title: "Pressure",
+              value: (
+                <div className="flex flex-col gap-1">
+                  <div className="flex items-baseline gap-1">
+                    <span className="text-foreground font-mono font-bold text-3xl">{data[data.length - 1]?.pressure?.toFixed(2) || "0.00"}</span>
+                    <span className="text-sm text-muted-foreground font-normal">bar</span>
+                  </div>
+                  <div className="flex gap-3 text-[10px] font-mono font-semibold">
+                    <span className="text-emerald-500/90">MIN: {pressureMin.toFixed(2)}</span>
+                    <span className="text-rose-500/90">MAX: {pressureMax.toFixed(2)}</span>
+                  </div>
+                </div>
+              ),
+              variant: "stat",
+              icon: <Gauge />,
+              iconBg: "bg-amber-500/10 text-amber-500",
+            }
+          ]}
+        />
       </div>
 
       {/* Charts Grid */}
       <div className="grid lg:grid-cols-2 gap-6">
         {/* Power Consumption (kW) */}
-        <Panel title="Power Consumption Trend" className="p-4 bg-card/60">
-          <div className="h-[250px] mt-4">
+        <div className="rounded-xl border bg-card p-6 shadow-sm">
+          <div>
+            <h2 className="text-xl font-bold tracking-tight text-foreground">Power Consumption Trend</h2>
+          </div>
+          <div className="h-[250px] mt-6 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                 <defs>
@@ -173,11 +196,14 @@ function OvenDetailContent({ id }: { id: string }) {
               </AreaChart>
             </ResponsiveContainer>
           </div>
-        </Panel>
+        </div>
 
         {/* Cumulative Energy */}
-        <Panel title="Cumulative Energy Usage" className="p-4 bg-card/60">
-          <div className="h-[250px] mt-4">
+        <div className="rounded-xl border bg-card p-6 shadow-sm">
+          <div>
+            <h2 className="text-xl font-bold tracking-tight text-foreground">Cumulative Energy Usage</h2>
+          </div>
+          <div className="h-[250px] mt-6 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" vertical={false} />
@@ -193,11 +219,14 @@ function OvenDetailContent({ id }: { id: string }) {
               </BarChart>
             </ResponsiveContainer>
           </div>
-        </Panel>
+        </div>
 
         {/* Cumulative Gas */}
-        <Panel title="Cumulative Gas Usage" className="p-4 bg-card/60">
-          <div className="h-[250px] mt-4">
+        <div className="rounded-xl border bg-card p-6 shadow-sm">
+          <div>
+            <h2 className="text-xl font-bold tracking-tight text-foreground">Cumulative Gas Usage</h2>
+          </div>
+          <div className="h-[250px] mt-6 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" vertical={false} />
@@ -213,11 +242,14 @@ function OvenDetailContent({ id }: { id: string }) {
               </BarChart>
             </ResponsiveContainer>
           </div>
-        </Panel>
+        </div>
 
         {/* Temperature Trend */}
-        <Panel title="Temperature Trend" className="p-4 bg-card/60">
-          <div className="h-[250px] mt-4">
+        <div className="rounded-xl border bg-card p-6 shadow-sm">
+          <div>
+            <h2 className="text-xl font-bold tracking-tight text-foreground">Temperature Trend</h2>
+          </div>
+          <div className="h-[250px] mt-6 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" vertical={false} />
@@ -235,11 +267,14 @@ function OvenDetailContent({ id }: { id: string }) {
               </LineChart>
             </ResponsiveContainer>
           </div>
-        </Panel>
+        </div>
 
         {/* Pressure Trend */}
-        <Panel title="Pressure Trend" className="p-4 bg-card/60">
-          <div className="h-[250px] mt-4">
+        <div className="rounded-xl border bg-card p-6 shadow-sm">
+          <div>
+            <h2 className="text-xl font-bold tracking-tight text-foreground">Pressure Trend</h2>
+          </div>
+          <div className="h-[250px] mt-6 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" vertical={false} />
@@ -256,7 +291,7 @@ function OvenDetailContent({ id }: { id: string }) {
               </LineChart>
             </ResponsiveContainer>
           </div>
-        </Panel>
+        </div>
       </div>
     </div>
   );
@@ -282,9 +317,9 @@ function StationDetailContent({ tabKey }: { tabKey: string }) {
   const data = PROCESS_DETAIL_STATIONS[tabKey as keyof typeof PROCESS_DETAIL_STATIONS] as Record<string, any> | undefined;
   if (!data) return null;
   return (
-    <div className="animate-in fade-in duration-300">
+    <div className="animate-in fade-in duration-300 bg-card border border-border rounded-lg shadow-sm p-4 m-4">
       {/* Summary Cards */}
-      <div className="mb-6 mx-4">
+      <div className="mb-6">
         <StatCardGrid
           columns={2}
           items={[
@@ -307,7 +342,7 @@ function StationDetailContent({ tabKey }: { tabKey: string }) {
       </div>
 
       {/* Station Illustration */}
-      <div className="border border-border/50 rounded-lg overflow-hidden bg-background mb-6 mx-4">
+      <div className="border border-border/50 rounded-lg overflow-hidden bg-background mb-6">
         <div className="flex justify-between items-center p-3 bg-secondary/30 border-b border-border/50">
           <div className="flex items-center gap-2">
             <Activity className="h-4 w-4 text-muted-foreground" />
@@ -332,7 +367,7 @@ function StationDetailContent({ tabKey }: { tabKey: string }) {
       </div>
 
       {/* Temperature Trend Chart */}
-      <Panel title="Temperature Trends" className="ml-4 mr-4 mb-4">
+      <Panel title="Temperature Trends" className="mb-2">
         <div className="h-[300px] w-full p-4">
           <ResponsiveContainer width="100%" height="100%">
             <LineChart
@@ -986,14 +1021,12 @@ function MonitoringAreaDetails() {
           />
         </div>
       ) : ["flood-station", "degreasing", "pree-degreasing", "phosphate"].includes(id) ? (
-        <div className="space-y-6">
-          <div className="bg-card border border-border rounded-lg shadow-sm p-6">
-            <StationDetailContent tabKey={
-              id === "flood-station" ? "flood" :
-                id === "pree-degreasing" ? "pre-degreasing" :
-                  id
-            } />
-          </div>
+        <div className="mt-2">
+          <StationDetailContent tabKey={
+            id === "flood-station" ? "flood" :
+              id === "pree-degreasing" ? "pre-degreasing" :
+                id
+          } />
         </div>
       ) : id === "pted-bag-filter" ? (
         <div className="space-y-6">
