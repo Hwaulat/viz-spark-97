@@ -15,7 +15,7 @@ import {
   Legend,
 } from "recharts";
 import { SelectInput } from "@/components/ui/select-input";
-
+import { StatCardGrid } from "@/components/stat-card";
 export const Route = createFileRoute("/checksheet")({
   head: () => ({
     meta: [
@@ -725,20 +725,20 @@ function DashboardChecksheet() {
       {/* ── Title row ───────────────────────────────────── */}
       <div className="flex items-center gap-2 mb-6">
         <LayoutDashboard className="h-5 w-5 text-foreground" />
-        <h1 className="text-xl font-bold tracking-tight">Dashboard Checksheet</h1>
+        <h1 className="text-xl font-bold tracking-tight">Checksheet</h1>
       </div>
 
       {/* ── Tabs & Global Filter ────────────────────────── */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         {/* Tab List */}
-        <div className="flex items-center gap-1 rounded-lg bg-muted/50 p-1 overflow-x-auto border border-border">
+        <div className="flex items-center gap-1 rounded-xl bg-gray-100 dark:bg-gray-700/60 p-1 overflow-x-auto w-fit">
           {TABS.map((tab) => (
             <button
               key={tab}
-              className={`px-4 py-2 text-sm font-medium rounded-md whitespace-nowrap transition-colors ${
+              className={`px-4 py-2 text-sm font-medium rounded-lg whitespace-nowrap transition-colors ${
                 activeTab === tab
-                  ? "bg-background text-primary shadow-sm border border-border"
-                  : "text-muted-foreground hover:text-foreground"
+                  ? "bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-sm"
+                  : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
               }`}
               onClick={() => setActiveTab(tab)}
             >
@@ -784,22 +784,22 @@ function DashboardChecksheet() {
 
           {/* ED Ampere Toggle */}
           {activeTab === TABS[5] && (
-            <div className="flex bg-muted rounded-lg p-1">
+            <div className="flex items-center gap-1 rounded-xl bg-gray-100 dark:bg-gray-700/60 p-1 w-fit">
               <button
-                className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${
+                className={`px-4 py-2 text-sm font-medium rounded-lg whitespace-nowrap transition-colors ${
                   edAmpereToggle === "RM & LM"
-                    ? "bg-background text-foreground shadow-sm"
-                    : "text-muted-foreground hover:text-foreground"
+                    ? "bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-sm"
+                    : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
                 }`}
                 onClick={() => setEdAmpereToggle("RM & LM")}
               >
                 RM & LM
               </button>
               <button
-                className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${
+                className={`px-4 py-2 text-sm font-medium rounded-lg whitespace-nowrap transition-colors ${
                   edAmpereToggle === "RB & LB"
-                    ? "bg-background text-foreground shadow-sm"
-                    : "text-muted-foreground hover:text-foreground"
+                    ? "bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-sm"
+                    : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
                 }`}
                 onClick={() => setEdAmpereToggle("RB & LB")}
               >
@@ -1897,65 +1897,53 @@ function DashboardChecksheet() {
       {activeTab === TABS[3] && (
         <div className="space-y-6">
           {/* ── Summary Cards ───────────────────────────────── */}
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            {/* Total OK */}
-            <div className="rounded-lg bg-card border border-border p-4 shadow-sm space-y-2">
-              <div className="flex items-center justify-between">
-                <span className="text-sm font-medium text-muted-foreground">Total OK</span>
-                <div className="h-8 w-8 rounded-full flex items-center justify-center bg-green-500/10">
-                  <CheckCircle className="h-4.5 w-4.5 text-green-500" />
-                </div>
-              </div>
-              <div>
-                <div className="text-2xl font-bold text-green-600">{eqTotalOK}</div>
-              </div>
-            </div>
-
-            {/* Total NG */}
-            <div className="rounded-lg bg-card border border-border p-4 shadow-sm space-y-2">
-              <div className="flex items-center justify-between">
-                <span className="text-sm font-medium text-muted-foreground">Total NG</span>
-                <div className="h-8 w-8 rounded-full flex items-center justify-center bg-red-500/10">
-                  <AlertTriangle className="h-4.5 w-4.5 text-red-500" />
-                </div>
-              </div>
-              <div>
-                <div className="text-2xl font-bold text-red-600">{eqTotalNG}</div>
-              </div>
-            </div>
-
-            {/* Total Repair */}
-            <div className="rounded-lg bg-card border border-border p-4 shadow-sm space-y-2">
-              <div className="flex items-center justify-between">
-                <span className="text-sm font-medium text-muted-foreground">Total Repair</span>
-                <div className="h-8 w-8 rounded-full flex items-center justify-center bg-orange-500/10">
-                  <Wrench className="h-4.5 w-4.5 text-orange-500" />
-                </div>
-              </div>
-              <div>
-                <div className="text-2xl font-bold text-orange-600">{eqTotalRepair}</div>
-              </div>
-            </div>
-
-            {/* Total Problem */}
-            <div className="rounded-lg bg-card border border-border p-4 shadow-sm space-y-2">
-              <div className="flex items-center justify-between">
-                <span className="text-sm font-medium text-muted-foreground">Total Problem</span>
-                <div className="h-8 w-8 rounded-full flex items-center justify-center bg-purple-500/10">
-                  <AlertOctagon className="h-4.5 w-4.5 text-purple-500" />
-                </div>
-              </div>
-              <div className="flex items-baseline gap-2">
-                <div className="text-2xl font-bold text-purple-600">{eqTotalProblem}</div>
-                <button
-                  className="text-xs text-primary hover:underline cursor-pointer font-medium"
-                  onClick={() => setShowProblemModal("PROBLEM")}
-                >
-                  details
-                </button>
-              </div>
-            </div>
-          </div>
+          <StatCardGrid
+            columns={4}
+            items={[
+              {
+                title: "Total OK",
+                value: eqTotalOK.toString(),
+                variant: "stat",
+                icon: <CheckCircle className="h-4.5 w-4.5" />,
+                iconBg: "bg-green-500/10 text-green-500",
+                valueColor: "text-green-600",
+              },
+              {
+                title: "Total NG",
+                value: eqTotalNG.toString(),
+                variant: "stat",
+                icon: <AlertTriangle className="h-4.5 w-4.5" />,
+                iconBg: "bg-red-500/10 text-red-500",
+                valueColor: "text-red-600",
+              },
+              {
+                title: "Total Repair",
+                value: eqTotalRepair.toString(),
+                variant: "stat",
+                icon: <Wrench className="h-4.5 w-4.5" />,
+                iconBg: "bg-orange-500/10 text-orange-500",
+                valueColor: "text-orange-600",
+              },
+              {
+                title: "Total Problem",
+                value: (
+                  <div className="flex items-baseline gap-2">
+                    <span>{eqTotalProblem}</span>
+                    <button
+                      className="text-xs text-primary hover:underline cursor-pointer font-medium relative -top-0.5"
+                      onClick={() => setShowProblemModal("PROBLEM")}
+                    >
+                      details
+                    </button>
+                  </div>
+                ),
+                variant: "stat",
+                icon: <AlertOctagon className="h-4.5 w-4.5" />,
+                iconBg: "bg-purple-500/10 text-purple-500",
+                valueColor: "text-purple-600",
+              }
+            ]}
+          />
 
           {/* ── Bar Chart: Measurement Trends ───────────────────────────────── */}
           <div className="rounded-lg border border-border bg-card p-6 shadow-sm">
@@ -2081,65 +2069,53 @@ function DashboardChecksheet() {
       {activeTab === TABS[4] && (
         <div className="space-y-6">
           {/* ── Summary Cards ───────────────────────────────── */}
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            {/* Total OK */}
-            <div className="rounded-lg bg-card border border-border p-4 shadow-sm space-y-2">
-              <div className="flex items-center justify-between">
-                <span className="text-sm font-medium text-muted-foreground">Total OK</span>
-                <div className="h-8 w-8 rounded-full flex items-center justify-center bg-green-500/10">
-                  <CheckCircle className="h-4.5 w-4.5 text-green-500" />
-                </div>
-              </div>
-              <div>
-                <div className="text-2xl font-bold text-green-600">{cedTotalOK}</div>
-              </div>
-            </div>
-
-            {/* Total NG */}
-            <div className="rounded-lg bg-card border border-border p-4 shadow-sm space-y-2">
-              <div className="flex items-center justify-between">
-                <span className="text-sm font-medium text-muted-foreground">Total NG</span>
-                <div className="h-8 w-8 rounded-full flex items-center justify-center bg-red-500/10">
-                  <AlertTriangle className="h-4.5 w-4.5 text-red-500" />
-                </div>
-              </div>
-              <div>
-                <div className="text-2xl font-bold text-red-600">{cedTotalNG}</div>
-              </div>
-            </div>
-
-            {/* Total Repair */}
-            <div className="rounded-lg bg-card border border-border p-4 shadow-sm space-y-2">
-              <div className="flex items-center justify-between">
-                <span className="text-sm font-medium text-muted-foreground">Total Repair</span>
-                <div className="h-8 w-8 rounded-full flex items-center justify-center bg-orange-500/10">
-                  <Wrench className="h-4.5 w-4.5 text-orange-500" />
-                </div>
-              </div>
-              <div>
-                <div className="text-2xl font-bold text-orange-600">{cedTotalRepair}</div>
-              </div>
-            </div>
-
-            {/* Total Problem */}
-            <div className="rounded-lg bg-card border border-border p-4 shadow-sm space-y-2">
-              <div className="flex items-center justify-between">
-                <span className="text-sm font-medium text-muted-foreground">Total Problem</span>
-                <div className="h-8 w-8 rounded-full flex items-center justify-center bg-purple-500/10">
-                  <AlertOctagon className="h-4.5 w-4.5 text-purple-500" />
-                </div>
-              </div>
-              <div className="flex items-baseline gap-2">
-                <div className="text-2xl font-bold text-purple-600">{cedTotalProblem}</div>
-                <button
-                  className="text-xs text-primary hover:underline cursor-pointer font-medium"
-                  onClick={() => setShowCEDProblemModal("PROBLEM")}
-                >
-                  details
-                </button>
-              </div>
-            </div>
-          </div>
+          <StatCardGrid
+            columns={4}
+            items={[
+              {
+                title: "Total OK",
+                value: cedTotalOK.toString(),
+                variant: "stat",
+                icon: <CheckCircle className="h-4.5 w-4.5" />,
+                iconBg: "bg-green-500/10 text-green-500",
+                valueColor: "text-green-600",
+              },
+              {
+                title: "Total NG",
+                value: cedTotalNG.toString(),
+                variant: "stat",
+                icon: <AlertTriangle className="h-4.5 w-4.5" />,
+                iconBg: "bg-red-500/10 text-red-500",
+                valueColor: "text-red-600",
+              },
+              {
+                title: "Total Repair",
+                value: cedTotalRepair.toString(),
+                variant: "stat",
+                icon: <Wrench className="h-4.5 w-4.5" />,
+                iconBg: "bg-orange-500/10 text-orange-500",
+                valueColor: "text-orange-600",
+              },
+              {
+                title: "Total Problem",
+                value: (
+                  <div className="flex items-baseline gap-2">
+                    <span>{cedTotalProblem}</span>
+                    <button
+                      className="text-xs text-primary hover:underline cursor-pointer font-medium relative -top-0.5"
+                      onClick={() => setShowCEDProblemModal("PROBLEM")}
+                    >
+                      details
+                    </button>
+                  </div>
+                ),
+                variant: "stat",
+                icon: <AlertOctagon className="h-4.5 w-4.5" />,
+                iconBg: "bg-purple-500/10 text-purple-500",
+                valueColor: "text-purple-600",
+              }
+            ]}
+          />
 
           {/* ── Bar Chart: Measurement Trends ───────────────────────────────── */}
           <div className="rounded-lg border border-border bg-card p-6 shadow-sm">

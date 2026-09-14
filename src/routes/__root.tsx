@@ -121,7 +121,7 @@ const DASHBOARD_CHILDREN: {
 }[] = [
   { to: "/monitoring-area", label: "Monitoring Area", icon: Activity, exact: true },
   { to: "/monitoring-area/$id", params: { id: "line-tracking" }, label: "Line Tracking", icon: Waves },
-  { to: "/checksheet", label: "Dashboard Checksheet", icon: ClipboardCheck },
+  { to: "/checksheet", label: "Checksheet", icon: ClipboardCheck },
 ];
 
 
