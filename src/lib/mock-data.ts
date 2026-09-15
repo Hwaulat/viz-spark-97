@@ -349,9 +349,9 @@ export const APPROVAL_REQUESTS: ApprovalRequest[] = [
 ];
 
 export const BOILER_USAGE_HISTORY = {
-  daily: Array.from({length: 30}, (_, i) => ({ label: 'Day ' + (i+1), energy: 4000 + Math.floor(Math.random()*2000), gas: 800 + Math.floor(Math.random()*400) })),
-  monthly: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'].map(m => ({ label: m, energy: 120000 + Math.floor(Math.random()*30000), gas: 24000 + Math.floor(Math.random()*6000) })),
-  yearly: Array.from({length: 10}, (_, i) => ({ label: (2015+i).toString(), energy: 1500000 + Math.floor(Math.random()*400000), gas: 300000 + Math.floor(Math.random()*80000) }))
+  daily: Array.from({length: 24}, (_, i) => ({ label: String(i).padStart(2, '0') + ':00', energy: 400 + Math.floor(Math.random()*200), gas: 80 + Math.floor(Math.random()*40) })),
+  monthly: Array.from({length: 30}, (_, i) => ({ label: 'Day ' + (i+1), energy: 4000 + Math.floor(Math.random()*2000), gas: 800 + Math.floor(Math.random()*400) })),
+  yearly: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'].map(m => ({ label: m, energy: 120000 + Math.floor(Math.random()*30000), gas: 24000 + Math.floor(Math.random()*6000) }))
 };
 
 export const LINE_TRACKING_ZONES = [
@@ -427,10 +427,10 @@ export const LINE_TRACKING_STATIONS = (() => {
 })();
 
 export const PROCESS_DETAIL_STATIONS = {
-  'pre-degreasing': { name: 'Pre-Degreasing', pv: 46.2, sp: 45.0, valve: 42, pump1: true, pump2: false, alarm: false },
-  'degreasing': { name: 'Degreasing', pv: 52.8, sp: 52.0, valve: 65, pump1: true, pump2: true, alarm: false },
-  'flood': { name: 'Flood', pv: 28.5, sp: 30.0, valve: 45, pump1: true, pump2: true, alarm: true },
-  'phosphate': { name: 'Phosphate', pv: 42.5, sp: 42.0, valve: 18, pump1: true, pump2: true, alarm: false }
+  'pre-degreasing': { name: 'Pre-Degreasing', pv: 46.2, sp: 45.0, fluidTemp: 44.5, valve: 42, pump1: true, pump2: false, alarm: false },
+  'degreasing': { name: 'Degreasing', pv: 52.8, sp: 52.0, fluidTemp: 51.2, valve: 65, pump1: true, pump2: true, alarm: false },
+  'flood': { name: 'Flood', pv: 28.5, sp: 30.0, fluidTemp: 29.1, valve: 45, pump1: true, pump2: true, alarm: true },
+  'phosphate': { name: 'Phosphate', pv: 42.5, sp: 42.0, fluidTemp: 41.8, valve: 18, pump1: true, pump2: true, alarm: false }
 };
 
 export function ovenElecDailyTrend(baseKw: number, baseVolt: number = 380) {

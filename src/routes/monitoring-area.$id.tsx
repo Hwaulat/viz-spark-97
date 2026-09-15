@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, useMemo } from "react";
-import { ChevronLeft, Activity, Flame, Gauge, Power, BarChart3, Filter, Waves, Zap, Thermometer, DollarSign, Fuel, ChevronRight, ChevronsLeft, ChevronsRight, ArrowUpDown, ChevronDown, Calendar, Eye, Download, Pencil, Trash2 } from "lucide-react";
+import { ChevronLeft, Activity, Flame, Gauge, Power, BarChart3, Filter, Waves, Zap, Thermometer, DollarSign, Fuel, ChevronRight, ChevronsLeft, ChevronsRight, ArrowUpDown, ChevronDown, Calendar, Eye, Download, Pencil, Trash2, X } from "lucide-react";
 import { Search } from "@/components/ui/search";
 import { SelectInput } from "@/components/ui/select-input";
 import { Input } from "@/components/ui/input";
@@ -317,6 +317,53 @@ const MINUTE_DATA = Array.from({ length: 30 }, (_, i) => {
 
 function StationDetailContent({ tabKey }: { tabKey: string }) {
   const data = PROCESS_DETAIL_STATIONS[tabKey as keyof typeof PROCESS_DETAIL_STATIONS] as Record<string, any> | undefined;
+  const [timeFilter, setTimeFilter] = useState<"daily" | "monthly" | "yearly">("daily");
+  const [isImageModalOpen, setIsImageModalOpen] = useState(false);
+
+  const trendData = useMemo(() => {
+    if (!data) return [];
+    
+    let length = 24;
+    let getLabel = (i: number) => {
+      if (timeFilter === "daily") {
+        return `${i.toString().padStart(2, '0')}:00`;
+      } else if (timeFilter === "monthly") {
+        return `Day ${i + 1}`;
+      } else {
+        const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        return months[i];
+      }
+    };
+    
+    if (timeFilter === "daily") length = 24;
+    else if (timeFilter === "monthly") length = 30;
+    else length = 12;
+
+    return Array.from({ length }, (_, i) => ({
+      time: getLabel(i),
+      pv: +(parseFloat(data.pv) + (Math.random() * 2 - 1)).toFixed(1),
+      sp: parseFloat(data.sp),
+    }));
+  }, [data, timeFilter]);
+
+  const tableData = useMemo(() => {
+    if (!data) return [];
+    return Array.from({ length: 10 }, (_, i) => {
+      // 16 September 2026, 10:00 (decrementing hour for each row)
+      const date = new Date(2026, 8, 16, 10 - i, 0); 
+      const day = date.getDate();
+      const month = date.toLocaleString('default', { month: 'long' });
+      const year = date.getFullYear();
+      const timeStr = date.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+
+      return {
+        time: `${day} ${month} ${year}, ${timeStr}`,
+        pv: +(parseFloat(data.pv) + (Math.random() * 2 - 1)).toFixed(1),
+        sp: parseFloat(data.sp),
+      };
+    });
+  }, [data]);
+
   if (!data) return null;
   return (
     <div className="animate-in fade-in duration-300 bg-card border border-border rounded-lg shadow-sm p-4 m-4">
@@ -343,57 +390,181 @@ function StationDetailContent({ tabKey }: { tabKey: string }) {
         />
       </div>
 
-      {/* Station Illustration */}
-      <div className="border border-border/50 rounded-lg overflow-hidden bg-background mb-6">
-        <div className="flex justify-between items-center p-3 bg-secondary/30 border-b border-border/50">
-          <div className="flex items-center gap-2">
-            <Activity className="h-4 w-4 text-muted-foreground" />
-            <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Station Diagram — {data.name}</span>
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-6">
+        {/* Station Illustration */}
+        <div className="lg:col-span-5 border border-border/50 rounded-lg overflow-hidden bg-background flex flex-col h-full">
+          <div className="flex justify-between items-center p-3 bg-secondary/30 border-b border-border/50 shrink-0">
+            <div className="flex items-center gap-2">
+              <Activity className="h-4 w-4 text-muted-foreground" />
+              <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Station Diagram — {data.name}</span>
+            </div>
+            <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-orange-500/10 text-orange-600 border border-orange-500/20">READ-ONLY</span>
           </div>
-          <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-orange-500/10 text-orange-600 border border-orange-500/20">READ-ONLY</span>
+
+          <div 
+            className="relative w-full flex-1 flex items-center justify-center p-4 min-h-[250px] cursor-pointer hover:opacity-80 transition-opacity"
+            onClick={() => setIsImageModalOpen(true)}
+            title="Click to enlarge"
+          >
+            {tabKey === "pre-degreasing" ? (
+              <img src={StationPreDegreasingPng} alt={`Station ${data.name}`} className="absolute inset-4 w-[calc(100%-2rem)] h-[calc(100%-2rem)] object-contain mix-blend-multiply dark:mix-blend-screen dark:invert" />
+            ) : tabKey === "degreasing" ? (
+              <img src={StationDegreasingNewPng} alt={`Station ${data.name}`} className="absolute inset-4 w-[calc(100%-2rem)] h-[calc(100%-2rem)] object-contain mix-blend-multiply dark:mix-blend-screen dark:invert" />
+            ) : tabKey === "flood" ? (
+              <img src={StationFloodPng} alt={`Station ${data.name}`} className="absolute inset-4 w-[calc(100%-2rem)] h-[calc(100%-2rem)] object-contain mix-blend-multiply dark:mix-blend-screen dark:invert" />
+            ) : tabKey === "phosphate" ? (
+              <img src={StationPhosphatePng} alt={`Station ${data.name}`} className="absolute inset-4 w-[calc(100%-2rem)] h-[calc(100%-2rem)] object-contain mix-blend-multiply dark:mix-blend-screen dark:invert" />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center text-muted-foreground text-sm">Station diagram coming soon</div>
+            )}
+          </div>
         </div>
 
-        <div className="relative w-full overflow-auto flex items-center justify-center p-4">
-          {tabKey === "pre-degreasing" ? (
-            <img src={StationPreDegreasingPng} alt={`Station ${data.name}`} className="w-full h-auto object-contain mix-blend-multiply dark:mix-blend-screen dark:invert" />
-          ) : tabKey === "degreasing" ? (
-            <img src={StationDegreasingNewPng} alt={`Station ${data.name}`} className="w-full h-auto object-contain mix-blend-multiply dark:mix-blend-screen dark:invert" />
-          ) : tabKey === "flood" ? (
-            <img src={StationFloodPng} alt={`Station ${data.name}`} className="w-full h-auto object-contain mix-blend-multiply dark:mix-blend-screen dark:invert" />
-          ) : tabKey === "phosphate" ? (
-            <img src={StationPhosphatePng} alt={`Station ${data.name}`} className="w-full h-auto object-contain mix-blend-multiply dark:mix-blend-screen dark:invert" />
-          ) : (
-            <div className="w-full h-[400px] flex items-center justify-center text-muted-foreground text-sm">Station diagram coming soon</div>
-          )}
+        {/* Temperature Trend Chart */}
+        <div className="lg:col-span-7 rounded-xl border bg-card p-6 shadow-sm flex flex-col h-full">
+          <div className="flex justify-between items-start mb-6 shrink-0">
+            <div>
+              <h2 className="text-xl font-bold tracking-tight text-foreground">Temperature Trends</h2>
+              <p className="text-sm text-muted-foreground mt-1">Temperature PV and SP trend over the selected {timeFilter} timeframe.</p>
+            </div>
+            <div className="flex bg-secondary/50 rounded-lg p-1 border border-border/50 shrink-0">
+              {(["daily", "monthly", "yearly"] as const).map((t) => (
+                <button
+                  key={t}
+                  onClick={() => setTimeFilter(t)}
+                  className={`px-4 py-1.5 rounded-md text-xs font-medium transition-colors ${timeFilter === t
+                    ? "bg-background text-foreground shadow-sm border border-border/50"
+                    : "text-muted-foreground hover:text-foreground hover:bg-secondary/80"
+                    }`}
+                >
+                  {t === "daily" ? "Daily (24H)" : t === "monthly" ? "Monthly (30D)" : "Yearly (Jan-Dec)"}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div className="flex-1 w-full min-h-[300px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={trendData} margin={{ top: 20, right: 30, left: 10, bottom: 5 }}>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} opacity={0.3} />
+                <XAxis dataKey="time" tick={{ fontSize: 12 }} tickLine={false} axisLine={false} />
+                <YAxis tick={{ fontSize: 12 }} domain={['dataMin - 2', 'dataMax + 2']} tickLine={false} axisLine={false} label={{ value: 'Temperature (°C)', angle: -90, position: 'insideLeft', offset: -5, style: { fontSize: 12, fill: '#3b82f6', fontWeight: 600 } }} />
+                <Tooltip contentStyle={{ backgroundColor: "rgba(0,0,0,0.8)", borderRadius: "8px", border: "1px solid rgba(255,255,255,0.1)" }} itemStyle={{ fontSize: 12 }} />
+                <Legend wrapperStyle={{ paddingTop: "20px" }} iconType="circle" />
+                <Line type="monotone" dataKey="sp" name="Set Point" stroke="#ef4444" strokeWidth={2} strokeDasharray="5 5" dot={false} activeDot={false} />
+                <Line type="monotone" dataKey="pv" name="Actual Temp" stroke="#3b82f6" strokeWidth={2} dot={{ r: 4, strokeWidth: 2, fill: "hsl(var(--card))" }} activeDot={{ r: 6 }} />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
         </div>
       </div>
 
-      {/* Temperature Trend Chart */}
-      <Panel title="Temperature Trends" className="mb-2">
-        <div className="h-[300px] w-full p-4">
-          <ResponsiveContainer width="100%" height="100%">
-            <LineChart
-              data={Array.from({ length: 30 }, (_, i) => {
-                const time = new Date(Date.now() - (29 - i) * 60000);
-                return {
-                  time: time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-                  pv: +(parseFloat(data.pv) + (Math.random() * 2 - 1)).toFixed(1),
-                  sp: parseFloat(data.sp),
-                };
-              })}
-              margin={{ top: 10, right: 10, left: 10, bottom: 0 }}
-            >
-              <CartesianGrid strokeDasharray="3 3" vertical={false} opacity={0.3} />
-              <XAxis dataKey="time" tick={{ fontSize: 10 }} tickMargin={10} />
-              <YAxis tick={{ fontSize: 10 }} domain={['dataMin - 2', 'dataMax + 2']} label={{ value: 'Temperature', angle: -90, position: 'insideLeft', style: { textAnchor: 'middle', fill: '#3b82f6', fontSize: 12, fontWeight: 600 } }} />
-              <Tooltip contentStyle={{ backgroundColor: "rgba(0,0,0,0.8)", borderRadius: "8px", border: "1px solid rgba(255,255,255,0.1)" }} itemStyle={{ fontSize: 12 }} />
-              <Legend wrapperStyle={{ fontSize: "12px", paddingTop: "10px" }} />
-              <Line type="monotone" dataKey="sp" name="Set Point" stroke="#ef4444" strokeWidth={1.5} strokeDasharray="3 3" dot={false} activeDot={false} />
-              <Line type="monotone" dataKey="pv" name="Actual Temp" stroke="#3b82f6" strokeWidth={2} dot={false} activeDot={{ r: 4 }} />
-            </LineChart>
-          </ResponsiveContainer>
+      {/* Table History */}
+      <div className="w-full rounded-lg border border-border bg-card shadow-sm overflow-hidden mt-6 mb-2">
+        <div className="flex items-center justify-between p-4 border-b border-border/50 bg-card">
+          <h3 className="text-lg font-semibold text-foreground">Temperature History</h3>
         </div>
-      </Panel>
+        {/* Search and Filters */}
+        <div className="flex flex-col lg:flex-row items-center gap-4 px-4 py-3 bg-secondary/10 border-b border-border/50 w-full">
+          <Search placeholder="Search" containerClassName="flex-1 w-full" />
+          <div className="flex items-center gap-2 px-3 py-2 rounded-lg border border-border bg-background text-sm text-muted-foreground cursor-pointer hover:bg-secondary/20 transition-colors">
+            <Calendar className="h-4 w-4" />
+            <span>dd/mm/yyyy - dd/mm/yyyy</span>
+          </div>
+        </div>
+
+        <Table freezeHeader={false}>
+          <THead>
+            <Tr noHover>
+              <Th sortable column="time">TIME / PERIOD</Th>
+              <Th sortable column="pv" className="text-right">ACTUAL TEMP (PV)</Th>
+              <Th sortable column="sp" className="text-right">SET POINT (SP)</Th>
+              <Th sortable column="status" className="text-center">STATUS</Th>
+            </Tr>
+          </THead>
+          <TBody>
+            {tableData.map((row, idx) => {
+              const diff = Math.abs(row.pv - row.sp);
+              const isWarning = diff > 2; // Threshold for warning
+              return (
+                <Tr key={idx}>
+                  <Td className="font-medium text-foreground">{row.time}</Td>
+                  <Td className="text-right font-mono font-medium text-blue-500">{row.pv.toFixed(1)} °C</Td>
+                  <Td className="text-right font-mono font-medium text-foreground">{row.sp.toFixed(1)} °C</Td>
+                  <Td className="text-center">
+                    {isWarning ? (
+                      <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold bg-red-500/10 text-red-600 border border-red-500/20">WARNING</span>
+                    ) : (
+                      <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-500/10 text-emerald-600 border border-emerald-500/20">NORMAL</span>
+                    )}
+                  </Td>
+                </Tr>
+              );
+            })}
+          </TBody>
+        </Table>
+
+        {/* Pagination Footer */}
+        <div className="flex items-center justify-between px-4 py-4 border-t border-border/60">
+          <div className="flex items-center gap-4 text-sm text-muted-foreground font-medium">
+            <div className="flex items-center gap-2">
+              <span>Rows per page</span>
+              <div className="flex items-center justify-between w-[60px] px-2 py-1.5 border border-border rounded-md bg-background cursor-pointer hover:bg-secondary/40 transition-colors">
+                <span>10</span>
+                <ChevronDown className="h-3 w-3 opacity-50" />
+              </div>
+            </div>
+            <span>1–10 of {tableData.length}</span>
+          </div>
+          <div className="flex items-center gap-1">
+            <button className="w-8 h-8 flex items-center justify-center rounded-md border border-border text-muted-foreground hover:bg-secondary/40 hover:text-foreground transition-colors text-sm font-medium">«</button>
+            <button className="w-8 h-8 flex items-center justify-center rounded-md border border-border text-muted-foreground hover:bg-secondary/40 hover:text-foreground transition-colors text-sm font-medium">‹</button>
+            <button className="w-8 h-8 flex items-center justify-center rounded-md bg-[#1F5AA6] text-white text-sm font-semibold border border-[#1F5AA6]">1</button>
+            <button className="w-8 h-8 flex items-center justify-center rounded-md border border-border text-muted-foreground hover:bg-secondary/40 hover:text-foreground transition-colors text-sm font-medium">2</button>
+            <button className="w-8 h-8 flex items-center justify-center rounded-md border border-border text-muted-foreground hover:bg-secondary/40 hover:text-foreground transition-colors text-sm font-medium">3</button>
+            <button className="w-8 h-8 flex items-center justify-center rounded-md border border-border text-muted-foreground hover:bg-secondary/40 hover:text-foreground transition-colors text-sm font-medium">›</button>
+            <button className="w-8 h-8 flex items-center justify-center rounded-md border border-border text-muted-foreground hover:bg-secondary/40 hover:text-foreground transition-colors text-sm font-medium">»</button>
+          </div>
+        </div>
+      </div>
+
+      {/* Image Modal Popup */}
+      {isImageModalOpen && (
+        <div 
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in duration-200"
+          onClick={() => setIsImageModalOpen(false)}
+        >
+          <div 
+            className="relative bg-background rounded-xl shadow-2xl border border-border/50 max-w-5xl w-full max-h-[90vh] flex flex-col overflow-hidden animate-in zoom-in-95 duration-200"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex justify-between items-center p-4 border-b border-border/50 bg-muted/30">
+              <h3 className="font-semibold flex items-center gap-2">
+                <Activity className="w-4 h-4 text-primary" />
+                Station Diagram — {data.name}
+              </h3>
+              <button 
+                onClick={() => setIsImageModalOpen(false)}
+                className="p-1 rounded-md hover:bg-muted text-muted-foreground transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <div className="p-6 overflow-auto flex-1 flex items-center justify-center min-h-[50vh]">
+              {tabKey === "pre-degreasing" ? (
+                <img src={StationPreDegreasingPng} alt={`Station ${data.name}`} className="max-w-full max-h-[70vh] object-contain mix-blend-multiply dark:mix-blend-screen dark:invert" />
+              ) : tabKey === "degreasing" ? (
+                <img src={StationDegreasingNewPng} alt={`Station ${data.name}`} className="max-w-full max-h-[70vh] object-contain mix-blend-multiply dark:mix-blend-screen dark:invert" />
+              ) : tabKey === "flood" ? (
+                <img src={StationFloodPng} alt={`Station ${data.name}`} className="max-w-full max-h-[70vh] object-contain mix-blend-multiply dark:mix-blend-screen dark:invert" />
+              ) : tabKey === "phosphate" ? (
+                <img src={StationPhosphatePng} alt={`Station ${data.name}`} className="max-w-full max-h-[70vh] object-contain mix-blend-multiply dark:mix-blend-screen dark:invert" />
+              ) : (
+                <div className="text-muted-foreground">No diagram available</div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -673,7 +844,7 @@ function MonitoringAreaDetails() {
                             iconBg: "bg-blue-500/10 text-blue-500",
                           },
                           {
-                            title: `Avg Energy / ${timeFilter.replace('ly', '')}`,
+                            title: `Avg Energy / ${timeFilter === 'daily' ? 'day' : timeFilter.replace('ly', '')}`,
                             value: `${summary.avgEnergy.toLocaleString()} kWh`,
                             variant: "stat-side",
                             icon: <Zap />,
@@ -696,7 +867,7 @@ function MonitoringAreaDetails() {
                             iconBg: "bg-amber-500/10 text-amber-500",
                           },
                           {
-                            title: `Avg Gas / ${timeFilter.replace('ly', '')}`,
+                            title: `Avg Gas / ${timeFilter === 'daily' ? 'day' : timeFilter.replace('ly', '')}`,
                             value: `${summary.avgGas.toLocaleString()} MMBTU`,
                             variant: "stat-side",
                             icon: <Flame />,
@@ -974,11 +1145,10 @@ function MonitoringAreaDetails() {
             ]}
           />
         </div>
-      ) : ["flood-station", "degreasing", "pree-degreasing", "phosphate"].includes(id) ? (
+      ) : ["flood-station", "degreasing", "pre-degreasing", "phosphate"].includes(id) ? (
         <div className="mt-2">
           <StationDetailContent tabKey={
             id === "flood-station" ? "flood" :
-              id === "pree-degreasing" ? "pre-degreasing" :
                 id
           } />
         </div>

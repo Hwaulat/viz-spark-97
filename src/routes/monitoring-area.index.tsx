@@ -407,11 +407,16 @@ function AreaCard({ area }: { area: AreaDef }) {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2 h-full">
           {/* PTED Equipment Card */}
           <div className="border border-border/50 rounded-lg p-4 bg-background flex flex-col h-full">
-            <h3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-3 flex items-center gap-1.5"><Activity className="h-4 w-4" /> PTED Equipment</h3>
+            <div className="flex justify-between items-center mb-3">
+              <h3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground flex items-center gap-1.5"><Activity className="h-4 w-4" /> PTED Equipment</h3>
+              <div className="flex items-center gap-1.5 bg-orange-500/10 text-orange-600 border border-orange-500/20 px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider">
+                Fluid Temperature
+              </div>
+            </div>
             <div className="flex flex-col gap-3 flex-1">
               {[
                 { name: "Flood Station", id: "flood-station", pv: "30.1", sp: "30.0" },
-                { name: "Pree Degreasing", id: "pree-degreasing", pv: "46.2", sp: "45.0" },
+                { name: "Pre-Degreasing", id: "pre-degreasing", pv: "46.2", sp: "45.0" },
                 { name: "Degreasing", id: "degreasing", pv: "35.0", sp: "35.0" },
                 { name: "Phosphate", id: "phosphate", pv: "42.5", sp: "42.0" }
               ].map(eq => (
