@@ -39,7 +39,7 @@ function OvenArea() {
           <div className="rounded-md bg-secondary/50 px-3 py-2.5 border border-border/50 flex items-center justify-between">
             <div>
               <div className="text-[10px] uppercase tracking-widest text-muted-foreground">Gas Line Pressure</div>
-              <div className="text-lg font-mono font-semibold mt-1 text-foreground">3.8 <span className="text-xs text-muted-foreground font-normal">bar</span></div>
+              <div className="text-lg font-mono font-semibold mt-1 text-foreground">3.8 <span className="text-xs text-muted-foreground font-normal">MPa</span></div>
               <div className="text-[11px] text-ok font-medium mt-0.5">● Supply Line Normal</div>
             </div>
             <Fuel className="h-7 w-7 text-amber-500/60" />

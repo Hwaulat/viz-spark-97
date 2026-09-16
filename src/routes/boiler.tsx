@@ -80,7 +80,7 @@ function BoilerArea() {
             },
             {
               title: "Gas Line Pressure",
-              value: "4.2 bar",
+              value: "4.2 MPa",
               subtitle: "● Supply Line Normal",
               subtitleColor: "text-ok",
               variant: "stat",

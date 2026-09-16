@@ -156,7 +156,7 @@ function OvenDetailContent({ id }: { id: string }) {
                 <div className="flex flex-col gap-1">
                   <div className="flex items-baseline gap-1">
                     <span className="text-foreground font-mono font-bold text-3xl">{data[data.length - 1]?.pressure?.toFixed(2) || "0.00"}</span>
-                    <span className="text-sm text-muted-foreground font-normal">bar</span>
+                    <span className="text-sm text-muted-foreground font-normal">MPa</span>
                   </div>
                   <div className="flex gap-3 text-[10px] font-mono font-semibold">
                     <span className="text-emerald-500/90">MIN: {pressureMin.toFixed(2)}</span>
@@ -172,12 +172,34 @@ function OvenDetailContent({ id }: { id: string }) {
         />
       </div>
 
+      <div className="flex flex-wrap items-center justify-between gap-4 mt-8 mb-4">
+        <div>
+          <h2 className="text-xl font-bold tracking-tight text-foreground">Overview Trends</h2>
+          <p className="text-sm text-muted-foreground mt-1">Energy, gas, and power trends for {name}.</p>
+        </div>
+        <div className="flex bg-secondary/50 rounded-lg p-1 border border-border/50">
+          {(["daily", "monthly", "yearly"] as const).map((t) => (
+            <button
+              key={t}
+              onClick={() => setTimeFilter(t)}
+              className={`px-4 py-1.5 text-xs font-medium rounded-md capitalize transition-colors ${timeFilter === t
+                  ? "bg-background text-foreground shadow-sm border border-border/50"
+                  : "text-muted-foreground hover:text-foreground"
+                }`}
+            >
+              {t}
+            </button>
+          ))}
+        </div>
+      </div>
+
       {/* Charts Grid */}
       <div className="grid lg:grid-cols-2 gap-6">
         {/* Power Consumption (kW) */}
         <div className="rounded-xl border bg-card p-6 shadow-sm">
-          <div>
+          <div className="flex justify-between items-center">
             <h2 className="text-xl font-bold tracking-tight text-foreground">Power Consumption Trend</h2>
+            <span className="text-xs font-semibold uppercase tracking-widest text-muted-foreground bg-secondary/50 px-2 py-0.5 rounded border border-border/50">History</span>
           </div>
           <div className="h-[250px] mt-6 w-full">
             <ResponsiveContainer width="100%" height="100%">
@@ -204,8 +226,9 @@ function OvenDetailContent({ id }: { id: string }) {
 
         {/* Cumulative Energy */}
         <div className="rounded-xl border bg-card p-6 shadow-sm">
-          <div>
+          <div className="flex justify-between items-center">
             <h2 className="text-xl font-bold tracking-tight text-foreground">Cumulative Energy Usage</h2>
+            <span className="text-xs font-semibold uppercase tracking-widest text-muted-foreground bg-secondary/50 px-2 py-0.5 rounded border border-border/50">History</span>
           </div>
           <div className="h-[250px] mt-6 w-full">
             <ResponsiveContainer width="100%" height="100%">
@@ -227,8 +250,9 @@ function OvenDetailContent({ id }: { id: string }) {
 
         {/* Cumulative Gas */}
         <div className="rounded-xl border bg-card p-6 shadow-sm">
-          <div>
+          <div className="flex justify-between items-center">
             <h2 className="text-xl font-bold tracking-tight text-foreground">Cumulative Gas Usage</h2>
+            <span className="text-xs font-semibold uppercase tracking-widest text-muted-foreground bg-secondary/50 px-2 py-0.5 rounded border border-border/50">History</span>
           </div>
           <div className="h-[250px] mt-6 w-full">
             <ResponsiveContainer width="100%" height="100%">
@@ -250,8 +274,9 @@ function OvenDetailContent({ id }: { id: string }) {
 
         {/* Temperature Trend */}
         <div className="rounded-xl border bg-card p-6 shadow-sm">
-          <div>
+          <div className="flex justify-between items-center">
             <h2 className="text-xl font-bold tracking-tight text-foreground">Temperature Trend</h2>
+            <span className="text-xs font-semibold uppercase tracking-widest text-muted-foreground bg-secondary/50 px-2 py-0.5 rounded border border-border/50">History</span>
           </div>
           <div className="h-[250px] mt-6 w-full">
             <ResponsiveContainer width="100%" height="100%">
@@ -275,21 +300,22 @@ function OvenDetailContent({ id }: { id: string }) {
 
         {/* Pressure Trend */}
         <div className="rounded-xl border bg-card p-6 shadow-sm">
-          <div>
+          <div className="flex justify-between items-center">
             <h2 className="text-xl font-bold tracking-tight text-foreground">Pressure Trend</h2>
+            <span className="text-xs font-semibold uppercase tracking-widest text-muted-foreground bg-secondary/50 px-2 py-0.5 rounded border border-border/50">History</span>
           </div>
           <div className="h-[250px] mt-6 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={chartData} margin={{ top: 10, right: 10, left: 10, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" vertical={false} />
                 <XAxis dataKey="time" stroke="hsl(var(--muted-foreground))" fontSize={11} tickMargin={8} />
-                <YAxis stroke="hsl(var(--muted-foreground))" fontSize={11} domain={['dataMin - 0.5', 'dataMax + 0.5']} tickFormatter={(val) => val.toFixed(2)} label={{ value: 'bar', angle: -90, position: 'insideLeft', style: { textAnchor: 'middle', fill: '#8b5cf6', fontSize: 12, fontWeight: 600 } }} />
+                <YAxis stroke="hsl(var(--muted-foreground))" fontSize={11} domain={['dataMin - 0.5', 'dataMax + 0.5']} tickFormatter={(val) => val.toFixed(2)} label={{ value: 'MPa', angle: -90, position: 'insideLeft', style: { textAnchor: 'middle', fill: '#8b5cf6', fontSize: 12, fontWeight: 600 } }} />
                 <Tooltip
                   contentStyle={{ backgroundColor: 'hsl(var(--card))', borderColor: 'hsl(var(--border))', borderRadius: '8px' }}
                   itemStyle={{ color: 'hsl(var(--foreground))' }}
                 />
                 <Legend iconType="circle" wrapperStyle={{ fontSize: '11px' }} />
-                <Line type="monotone" dataKey="pressure" name="Pressure (bar)" stroke="#8b5cf6" strokeWidth={2} dot={false} />
+                <Line type="monotone" dataKey="pressure" name="Pressure (MPa)" stroke="#8b5cf6" strokeWidth={2} dot={false} />
                 <Line type="monotone" dataKey="pressureMin" name="Min" stroke="#8b5cf6" strokeDasharray="3 3" strokeWidth={1.5} opacity={0.6} dot={false} />
                 <Line type="monotone" dataKey="pressureMax" name="Max" stroke="#8b5cf6" strokeDasharray="3 3" strokeWidth={1.5} opacity={0.6} dot={false} />
               </LineChart>
@@ -649,7 +675,7 @@ function MonitoringAreaDetails() {
                 },
                 {
                   title: "Gas Pressure",
-                  value: `${BOILER_GAS.gasPressure} bar`,
+                  value: `${BOILER_GAS.gasPressure} MPa`,
                   variant: "stat",
                   icon: <Gauge />,
                   iconBg: "bg-blue-500/10 text-blue-500",
@@ -1023,7 +1049,7 @@ function MonitoringAreaDetails() {
                               <Legend wrapperStyle={{ fontSize: "12px", paddingTop: "10px" }} />
                               <ReferenceLine y={4} stroke="#ef4444" strokeDasharray="3 3" label={{ position: 'insideBottomLeft', value: 'MIN', fill: '#ef4444', fontSize: 10 }} />
                               <ReferenceLine y={8} stroke="#ef4444" strokeDasharray="3 3" label={{ position: 'insideTopLeft', value: 'MAX', fill: '#ef4444', fontSize: 10 }} />
-                              <Line type="monotone" dataKey="pressure" name="Pressure (bar)" stroke="#3b82f6" strokeWidth={2} dot={false} activeDot={{ r: 4 }} />
+                              <Line type="monotone" dataKey="pressure" name="Pressure (MPa)" stroke="#3b82f6" strokeWidth={2} dot={false} activeDot={{ r: 4 }} />
                               <Line type="monotone" dataKey="none_max" name="MAX" stroke="#ef4444" strokeDasharray="3 3" strokeWidth={2} dot={false} activeDot={false} />
                               <Line type="monotone" dataKey="none_min" name="MIN" stroke="#ef4444" strokeDasharray="3 3" strokeWidth={2} dot={false} activeDot={false} />
                             </LineChart>
