@@ -439,9 +439,11 @@ function AreaCard({ area }: { area: AreaDef }) {
 
           {/* Bag Filter Card */}
           <div className="border border-border/50 rounded-lg p-4 bg-background flex flex-col h-full">
-            <h3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-3 flex items-center gap-1.5">
-              <Filter className="h-4 w-4" /> Bag Filter
-            </h3>
+            <Link to="/monitoring-area/$id" params={{ id: "bag-filter" }} className="w-fit mb-3 group outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm">
+              <h3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground group-hover:text-primary transition-colors flex items-center gap-1.5">
+                <Filter className="h-4 w-4" /> Bag Filter <ArrowRight className="h-3 w-3 opacity-0 -ml-2 group-hover:opacity-100 group-hover:ml-0 transition-all" />
+              </h3>
+            </Link>
 
             <div className="grid grid-cols-3 gap-2 mb-4 flex-1">
               {[
