@@ -580,7 +580,7 @@ function generateEDAmpereData(month: string) {
 
 function DashboardChecksheet() {
   const [activeTab, setActiveTab] = useState(TABS[0]);
-  
+
   // Month filter for all sections
   const [globalMonth, setGlobalMonth] = useState(MONTH_OPTIONS[0]);
 
@@ -735,11 +735,10 @@ function DashboardChecksheet() {
           {TABS.map((tab) => (
             <button
               key={tab}
-              className={`px-4 py-2 text-sm font-medium rounded-lg whitespace-nowrap transition-colors ${
-                activeTab === tab
-                  ? "bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-sm"
-                  : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
-              }`}
+              className={`px-4 py-2 text-sm font-medium rounded-lg whitespace-nowrap transition-colors ${activeTab === tab
+                ? "bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-sm"
+                : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
+                }`}
               onClick={() => setActiveTab(tab)}
             >
               {tab}
@@ -750,8 +749,8 @@ function DashboardChecksheet() {
         {/* Right side Filters */}
         <div className="flex flex-wrap items-center gap-3">
           {/* Sub Tab Dropdown (Only for Control Point) */}
-           {activeTab === TABS[2] && (
-            <SelectInput 
+          {activeTab === TABS[2] && (
+            <SelectInput
               datalist={CONTROL_POINT_TABS.map(opt => ({ label: opt, value: opt }))}
               defValue={activeControlPointTab}
               onChange={(val) => setActiveControlPointTab(val as string)}
@@ -762,7 +761,7 @@ function DashboardChecksheet() {
 
           {/* Station Dropdown (Only for Equipment Pre-Treatment) */}
           {activeTab === TABS[3] && (
-            <SelectInput 
+            <SelectInput
               datalist={EQUIPMENT_PT_STATION_OPTIONS.map(opt => ({ label: opt, value: opt }))}
               defValue={equipmentPTStation}
               onChange={(val) => setEquipmentPTStation(val as string)}
@@ -773,7 +772,7 @@ function DashboardChecksheet() {
 
           {/* Station Dropdown (Only for Chemical CED) */}
           {activeTab === TABS[4] && (
-            <SelectInput 
+            <SelectInput
               datalist={CHEMICAL_CED_STATION_OPTIONS.map(opt => ({ label: opt, value: opt }))}
               defValue={chemicalCEDStation}
               onChange={(val) => setChemicalCEDStation(val as string)}
@@ -786,21 +785,19 @@ function DashboardChecksheet() {
           {activeTab === TABS[5] && (
             <div className="flex items-center gap-1 rounded-xl bg-gray-100 dark:bg-gray-700/60 p-1 w-fit">
               <button
-                className={`px-4 py-2 text-sm font-medium rounded-lg whitespace-nowrap transition-colors ${
-                  edAmpereToggle === "RM & LM"
-                    ? "bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-sm"
-                    : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
-                }`}
+                className={`px-4 py-2 text-sm font-medium rounded-lg whitespace-nowrap transition-colors ${edAmpereToggle === "RM & LM"
+                  ? "bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-sm"
+                  : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
+                  }`}
                 onClick={() => setEdAmpereToggle("RM & LM")}
               >
                 RM & LM
               </button>
               <button
-                className={`px-4 py-2 text-sm font-medium rounded-lg whitespace-nowrap transition-colors ${
-                  edAmpereToggle === "RB & LB"
-                    ? "bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-sm"
-                    : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
-                }`}
+                className={`px-4 py-2 text-sm font-medium rounded-lg whitespace-nowrap transition-colors ${edAmpereToggle === "RB & LB"
+                  ? "bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-sm"
+                  : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
+                  }`}
                 onClick={() => setEdAmpereToggle("RB & LB")}
               >
                 RB & LB
@@ -809,7 +806,7 @@ function DashboardChecksheet() {
           )}
 
           {/* Global Month Filter */}
-          <SelectInput 
+          <SelectInput
             datalist={MONTH_OPTIONS.map(opt => ({ label: opt, value: opt }))}
             defValue={globalMonth}
             onChange={(val) => setGlobalMonth(val as string)}
@@ -845,134 +842,134 @@ function DashboardChecksheet() {
             </div>
 
             <div className="w-full">
-          <ResponsiveContainer width="100%" height={300}>
-            <LineChart data={dataBagFilter} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
-              <XAxis
-                dataKey="date"
-                tick={{ fontSize: 12, fill: "var(--muted-foreground)" }}
-                tickLine={false}
-                axisLine={false}
-                dy={10}
-              />
-              <YAxis
-                domain={[0.01, 0.025]}
-                ticks={yTicks}
-                tickFormatter={(val) => val.toFixed(3)}
-                tick={{ fontSize: 12, fill: "var(--muted-foreground)" }}
-                tickLine={false}
-                axisLine={false}
-                dx={-10}
-              />
-              <Tooltip
-                contentStyle={{
-                  background: "var(--card)",
-                  border: "1px solid var(--border)",
-                  borderRadius: 8,
-                  fontSize: 12,
-                }}
-              />
-              <Legend wrapperStyle={{ fontSize: 12, paddingTop: 20 }} />
-              <Line
-                type="monotone"
-                dataKey="IN"
-                name="IN"
-                stroke="#22c55e"
-                strokeWidth={2}
-                dot={{ r: 4, fill: "#22c55e", strokeWidth: 2 }}
-                activeDot={{ r: 6 }}
-              />
-              <Line
-                type="monotone"
-                dataKey="OUT"
-                name="OUT"
-                stroke="#f97316"
-                strokeWidth={2}
-                dot={{ r: 4, fill: "#f97316", strokeWidth: 2 }}
-                activeDot={{ r: 6 }}
-              />
-              <Line type="monotone" dataKey="standard" name="Standard" stroke="#ef4444" strokeWidth={2} dot={false} strokeDasharray="5 5" />
-            </LineChart>
-          </ResponsiveContainer>
-        </div>
-      </div>
-
-      {/* ── Card 2: Pressure by Control Pressure ─────────── */}
-      <div className="rounded-lg border border-border bg-card p-6 shadow-sm mt-6">
-        <div className="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
-          <h2 className="text-lg font-semibold">Control Preassure</h2>
-          <div className="flex flex-wrap items-center gap-3">
-            {/* Station Filter */}
-            <div className="relative">
-              <select
-                className="appearance-none bg-background border border-border rounded-lg pl-3 pr-8 py-2 text-sm font-medium outline-none focus:ring-2 focus:ring-primary/20"
-                value={station2}
-                onChange={(e) => setStation2(e.target.value)}
-              >
-                {STATION_OPTIONS_2.map((opt) => (
-                  <option key={opt} value={opt}>
-                    {opt}
-                  </option>
-                ))}
-              </select>
-              <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+              <ResponsiveContainer width="100%" height={300}>
+                <LineChart data={dataBagFilter} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
+                  <XAxis
+                    dataKey="date"
+                    tick={{ fontSize: 12, fill: "var(--muted-foreground)" }}
+                    tickLine={false}
+                    axisLine={false}
+                    dy={10}
+                  />
+                  <YAxis
+                    domain={[0.01, 0.025]}
+                    ticks={yTicks}
+                    tickFormatter={(val) => val.toFixed(3)}
+                    tick={{ fontSize: 12, fill: "var(--muted-foreground)" }}
+                    tickLine={false}
+                    axisLine={false}
+                    dx={-10}
+                  />
+                  <Tooltip
+                    contentStyle={{
+                      background: "var(--card)",
+                      border: "1px solid var(--border)",
+                      borderRadius: 8,
+                      fontSize: 12,
+                    }}
+                  />
+                  <Legend wrapperStyle={{ fontSize: 12, paddingTop: 20 }} />
+                  <Line
+                    type="monotone"
+                    dataKey="IN"
+                    name="IN"
+                    stroke="#22c55e"
+                    strokeWidth={2}
+                    dot={{ r: 4, fill: "#22c55e", strokeWidth: 2 }}
+                    activeDot={{ r: 6 }}
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="OUT"
+                    name="OUT"
+                    stroke="#f97316"
+                    strokeWidth={2}
+                    dot={{ r: 4, fill: "#f97316", strokeWidth: 2 }}
+                    activeDot={{ r: 6 }}
+                  />
+                  <Line type="monotone" dataKey="standard" name="Standard" stroke="#ef4444" strokeWidth={2} dot={false} strokeDasharray="5 5" />
+                </LineChart>
+              </ResponsiveContainer>
             </div>
           </div>
-        </div>
 
-        <div className="w-full">
-          <ResponsiveContainer width="100%" height={300}>
-            <LineChart data={dataControlPressure} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
-              <XAxis
-                dataKey="date"
-                tick={{ fontSize: 12, fill: "var(--muted-foreground)" }}
-                tickLine={false}
-                axisLine={false}
-                dy={10}
-              />
-              <YAxis
-                domain={[0.01, 0.025]}
-                ticks={yTicks}
-                tickFormatter={(val) => val.toFixed(3)}
-                tick={{ fontSize: 12, fill: "var(--muted-foreground)" }}
-                tickLine={false}
-                axisLine={false}
-                dx={-10}
-              />
-              <Tooltip
-                contentStyle={{
-                  background: "var(--card)",
-                  border: "1px solid var(--border)",
-                  borderRadius: 8,
-                  fontSize: 12,
-                }}
-              />
-              <Legend wrapperStyle={{ fontSize: 12, paddingTop: 20 }} />
-              <Line
-                type="monotone"
-                dataKey="IN"
-                name="IN"
-                stroke="#22c55e"
-                strokeWidth={2}
-                dot={{ r: 4, fill: "#22c55e", strokeWidth: 2 }}
-                activeDot={{ r: 6 }}
-              />
-              <Line
-                type="monotone"
-                dataKey="OUT"
-                name="OUT"
-                stroke="#f97316"
-                strokeWidth={2}
-                dot={{ r: 4, fill: "#f97316", strokeWidth: 2 }}
-                activeDot={{ r: 6 }}
-              />
-              <Line type="monotone" dataKey="standard" name="Standard" stroke="#ef4444" strokeWidth={2} dot={false} strokeDasharray="5 5" />
-            </LineChart>
-          </ResponsiveContainer>
-        </div>
-      </div>
-      </>
+          {/* ── Card 2: Pressure by Control Pressure ─────────── */}
+          <div className="rounded-lg border border-border bg-card p-6 shadow-sm mt-6">
+            <div className="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
+              <h2 className="text-lg font-semibold">Control Preassure</h2>
+              <div className="flex flex-wrap items-center gap-3">
+                {/* Station Filter */}
+                <div className="relative">
+                  <select
+                    className="appearance-none bg-background border border-border rounded-lg pl-3 pr-8 py-2 text-sm font-medium outline-none focus:ring-2 focus:ring-primary/20"
+                    value={station2}
+                    onChange={(e) => setStation2(e.target.value)}
+                  >
+                    {STATION_OPTIONS_2.map((opt) => (
+                      <option key={opt} value={opt}>
+                        {opt}
+                      </option>
+                    ))}
+                  </select>
+                  <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+                </div>
+              </div>
+            </div>
+
+            <div className="w-full">
+              <ResponsiveContainer width="100%" height={300}>
+                <LineChart data={dataControlPressure} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
+                  <XAxis
+                    dataKey="date"
+                    tick={{ fontSize: 12, fill: "var(--muted-foreground)" }}
+                    tickLine={false}
+                    axisLine={false}
+                    dy={10}
+                  />
+                  <YAxis
+                    domain={[0.01, 0.025]}
+                    ticks={yTicks}
+                    tickFormatter={(val) => val.toFixed(3)}
+                    tick={{ fontSize: 12, fill: "var(--muted-foreground)" }}
+                    tickLine={false}
+                    axisLine={false}
+                    dx={-10}
+                  />
+                  <Tooltip
+                    contentStyle={{
+                      background: "var(--card)",
+                      border: "1px solid var(--border)",
+                      borderRadius: 8,
+                      fontSize: 12,
+                    }}
+                  />
+                  <Legend wrapperStyle={{ fontSize: 12, paddingTop: 20 }} />
+                  <Line
+                    type="monotone"
+                    dataKey="IN"
+                    name="IN"
+                    stroke="#22c55e"
+                    strokeWidth={2}
+                    dot={{ r: 4, fill: "#22c55e", strokeWidth: 2 }}
+                    activeDot={{ r: 6 }}
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="OUT"
+                    name="OUT"
+                    stroke="#f97316"
+                    strokeWidth={2}
+                    dot={{ r: 4, fill: "#f97316", strokeWidth: 2 }}
+                    activeDot={{ r: 6 }}
+                  />
+                  <Line type="monotone" dataKey="standard" name="Standard" stroke="#ef4444" strokeWidth={2} dot={false} strokeDasharray="5 5" />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+        </>
       )}
 
       {activeTab === TABS[1] && (
@@ -1471,7 +1468,7 @@ function DashboardChecksheet() {
                         />
                         <Line type="monotone" dataKey="standardTAMin" name="Standard Min" stroke="#ef4444" strokeWidth={2} dot={false} strokeDasharray="5 5" opacity={0.7} />
                         <Line type="monotone" dataKey="standardTAMax" name="Standard Max" stroke="#ef4444" strokeWidth={2} dot={false} strokeDasharray="5 5" opacity={0.7} />
-                    </LineChart>
+                      </LineChart>
                     </ResponsiveContainer>
                   </div>
                 </div>
@@ -1534,7 +1531,7 @@ function DashboardChecksheet() {
                         />
                         <Line type="monotone" dataKey="standardFAMin" name="Standard Min" stroke="#ef4444" strokeWidth={2} dot={false} strokeDasharray="5 5" opacity={0.7} />
                         <Line type="monotone" dataKey="standardFAMax" name="Standard Max" stroke="#ef4444" strokeWidth={2} dot={false} strokeDasharray="5 5" opacity={0.7} />
-                    </LineChart>
+                      </LineChart>
                     </ResponsiveContainer>
                   </div>
                 </div>
@@ -1597,7 +1594,7 @@ function DashboardChecksheet() {
                         />
                         <Line type="monotone" dataKey="standardACMin" name="Standard Min" stroke="#ef4444" strokeWidth={2} dot={false} strokeDasharray="5 5" opacity={0.7} />
                         <Line type="monotone" dataKey="standardACMax" name="Standard Max" stroke="#ef4444" strokeWidth={2} dot={false} strokeDasharray="5 5" opacity={0.7} />
-                    </LineChart>
+                      </LineChart>
                     </ResponsiveContainer>
                   </div>
                 </div>
@@ -1659,7 +1656,7 @@ function DashboardChecksheet() {
                         />
                         <Line type="monotone" dataKey="standardTempMin" name="Standard Min" stroke="#ef4444" strokeWidth={2} dot={false} strokeDasharray="5 5" opacity={0.7} />
                         <Line type="monotone" dataKey="standardTempMax" name="Standard Max" stroke="#ef4444" strokeWidth={2} dot={false} strokeDasharray="5 5" opacity={0.7} />
-                    </LineChart>
+                      </LineChart>
                     </ResponsiveContainer>
                   </div>
                 </div>
@@ -1760,7 +1757,7 @@ function DashboardChecksheet() {
                           activeDot={{ r: 6 }}
                         />
                         <Line type="monotone" dataKey="standardWR2" name="Standard" stroke="#ef4444" strokeWidth={2} dot={false} strokeDasharray="5 5" />
-                    </LineChart>
+                      </LineChart>
                     </ResponsiveContainer>
                   </div>
                 </div>
@@ -1822,7 +1819,7 @@ function DashboardChecksheet() {
                           activeDot={{ r: 6 }}
                         />
                         <Line type="monotone" dataKey="standardWR4" name="Standard" stroke="#ef4444" strokeWidth={2} dot={false} strokeDasharray="5 5" />
-                    </LineChart>
+                      </LineChart>
                     </ResponsiveContainer>
                   </div>
                 </div>
@@ -1884,7 +1881,7 @@ function DashboardChecksheet() {
                           activeDot={{ r: 6 }}
                         />
                         <Line type="monotone" dataKey="standardWR5" name="Standard" stroke="#ef4444" strokeWidth={2} dot={false} strokeDasharray="5 5" />
-                    </LineChart>
+                      </LineChart>
                     </ResponsiveContainer>
                   </div>
                 </div>
@@ -1947,7 +1944,7 @@ function DashboardChecksheet() {
 
           {/* ── Bar Chart: Measurement Trends ───────────────────────────────── */}
           <div className="rounded-lg border border-border bg-card p-6 shadow-sm">
-            <h2 className="text-lg font-semibold mb-6">Measurement Trends</h2>
+            <h2 className="text-lg font-semibold mb-6">Judgement Trends</h2>
             <div className="w-full">
               <ResponsiveContainer width="100%" height={400}>
                 <ComposedChart
@@ -2054,10 +2051,10 @@ function DashboardChecksheet() {
                       if (showProblemModal === "PROBLEM") return row.problem !== "-";
                       return true;
                     }).length === 0 && (
-                      <div className="text-center py-8 text-muted-foreground">
-                        No data available for this filter.
-                      </div>
-                    )}
+                        <div className="text-center py-8 text-muted-foreground">
+                          No data available for this filter.
+                        </div>
+                      )}
                   </div>
                 </div>
               </div>
@@ -2119,7 +2116,7 @@ function DashboardChecksheet() {
 
           {/* ── Bar Chart: Measurement Trends ───────────────────────────────── */}
           <div className="rounded-lg border border-border bg-card p-6 shadow-sm">
-            <h2 className="text-lg font-semibold mb-6">Measurement Trends</h2>
+            <h2 className="text-lg font-semibold mb-6">Judgement Trends</h2>
             <div className="w-full">
               <ResponsiveContainer width="100%" height={400}>
                 <ComposedChart
@@ -2262,7 +2259,7 @@ function DashboardChecksheet() {
                     }}
                   />
                   <Legend wrapperStyle={{ fontSize: 12, paddingTop: 20 }} />
-                  
+
                   {edAmpereToggle === "RM & LM" && (
                     <Line
                       type="monotone"

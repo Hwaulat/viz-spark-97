@@ -4,6 +4,7 @@ import { ChevronLeft, Activity, Flame, Gauge, Power, BarChart3, Filter, Waves, Z
 import { Search } from "@/components/ui/search";
 import { SelectInput } from "@/components/ui/select-input";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import { BOILERS, BOILER_GAS, BOILER_USAGE_HISTORY, BOILER_LOG_HISTORY, ENERGY_PRICE_PER_KWH, GAS_PRICE_PER_MMBTU, LINE_TRACKING_STATIONS, LINE_TRACKING_ZONES, PROCESS_DETAIL_STATIONS, ovenElecDailyTrend, ovenElecMonthlyTrend, ovenElecYearlyTrend } from "@/lib/mock-data";
 import { Panel, StatusDot, ValueDisplay } from "@/components/panel";
 import { Tabs } from "@/components/tabs";
@@ -11,7 +12,7 @@ import { StatCardGrid } from "@/components/stat-card";
 import { Tabs as RawTabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Table, THead, TBody, Th, Tr, Td } from "@/components/ui/table";
 import { LineChart, Line, AreaChart, Area, BarChart, Bar, ReferenceLine, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
-import LineTrackingSvg from "@/assets/Line-Tracking.svg";
+import LineTrackingPng from "@/assets/Line Tracking.png";
 import StationPreDegreasingPng from "@/assets/Pre-degreasing.png";
 import StationFloodPng from "@/assets/Flood.png";
 import StationPhosphatePng from "@/assets/Phosphate-1.png";
@@ -21,6 +22,7 @@ import MapsPtedAreaPng from "@/assets/Maps-Pted-Area.png";
 import Boiler1Png from "@/assets/Boiler 1.png";
 import Boiler2Png from "@/assets/Boiler 2.png";
 import Boiler3Png from "@/assets/Boiler 3.png";
+import DenahFixPng from "@/assets/Denah Fix.png";
 export const Route = createFileRoute("/monitoring-area/$id")({
   head: ({ params }) => ({
     meta: [
@@ -322,7 +324,7 @@ function StationDetailContent({ tabKey }: { tabKey: string }) {
 
   const trendData = useMemo(() => {
     if (!data) return [];
-    
+
     let length = 24;
     let getLabel = (i: number) => {
       if (timeFilter === "daily") {
@@ -334,7 +336,7 @@ function StationDetailContent({ tabKey }: { tabKey: string }) {
         return months[i];
       }
     };
-    
+
     if (timeFilter === "daily") length = 24;
     else if (timeFilter === "monthly") length = 30;
     else length = 12;
@@ -350,7 +352,7 @@ function StationDetailContent({ tabKey }: { tabKey: string }) {
     if (!data) return [];
     return Array.from({ length: 10 }, (_, i) => {
       // 16 September 2026, 10:00 (decrementing hour for each row)
-      const date = new Date(2026, 8, 16, 10 - i, 0); 
+      const date = new Date(2026, 8, 16, 10 - i, 0);
       const day = date.getDate();
       const month = date.toLocaleString('default', { month: 'long' });
       const year = date.getFullYear();
@@ -398,10 +400,10 @@ function StationDetailContent({ tabKey }: { tabKey: string }) {
               <Activity className="h-4 w-4 text-muted-foreground" />
               <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Station Diagram — {data.name}</span>
             </div>
-            <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-orange-500/10 text-orange-600 border border-orange-500/20">READ-ONLY</span>
+            <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-orange-500/10 text-orange-600 border border-orange-500/20">VIEW-ONLY</span>
           </div>
 
-          <div 
+          <div
             className="relative w-full flex-1 flex items-center justify-center p-4 min-h-[250px] cursor-pointer hover:opacity-80 transition-opacity"
             onClick={() => setIsImageModalOpen(true)}
             title="Click to enlarge"
@@ -437,7 +439,7 @@ function StationDetailContent({ tabKey }: { tabKey: string }) {
                     : "text-muted-foreground hover:text-foreground hover:bg-secondary/80"
                     }`}
                 >
-                  {t === "daily" ? "Daily (24H)" : t === "monthly" ? "Monthly (30D)" : "Yearly (Jan-Dec)"}
+                  {t === "daily" ? "Daily" : t === "monthly" ? "Monthly" : "Yearly"}
                 </button>
               ))}
             </div>
@@ -529,11 +531,11 @@ function StationDetailContent({ tabKey }: { tabKey: string }) {
 
       {/* Image Modal Popup */}
       {isImageModalOpen && (
-        <div 
+        <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in duration-200"
           onClick={() => setIsImageModalOpen(false)}
         >
-          <div 
+          <div
             className="relative bg-background rounded-xl shadow-2xl border border-border/50 max-w-5xl w-full max-h-[90vh] flex flex-col overflow-hidden animate-in zoom-in-95 duration-200"
             onClick={(e) => e.stopPropagation()}
           >
@@ -542,7 +544,7 @@ function StationDetailContent({ tabKey }: { tabKey: string }) {
                 <Activity className="w-4 h-4 text-primary" />
                 Station Diagram — {data.name}
               </h3>
-              <button 
+              <button
                 onClick={() => setIsImageModalOpen(false)}
                 className="p-1 rounded-md hover:bg-muted text-muted-foreground transition-colors"
               >
@@ -713,10 +715,10 @@ function MonitoringAreaDetails() {
                         <div key={b.id} className="flex flex-col items-center">
                           {/* Tank illustration (Cylinder with rims) */}
                           <div className="relative w-full flex flex-col items-center">
-                            <img 
-                              src={b.name === "Boiler 1" ? Boiler1Png : b.name === "Boiler 2" ? Boiler2Png : Boiler3Png} 
-                              alt={b.name} 
-                              className="w-full max-w-[280px] object-contain" 
+                            <img
+                              src={b.name === "Boiler 1" ? Boiler1Png : b.name === "Boiler 2" ? Boiler2Png : Boiler3Png}
+                              alt={b.name}
+                              className="w-full max-w-[280px] object-contain"
                             />
                             <div className="mt-2 bg-background/90 px-3 py-1 rounded-full shadow-md backdrop-blur-sm border border-border/50 flex items-center gap-2">
                               <StatusDot state={b.running ? "on" : "off"} />
@@ -887,9 +889,40 @@ function MonitoringAreaDetails() {
                     </div>
 
                     <div className="rounded-xl border bg-card p-6 shadow-sm m-4">
-                      <div>
-                        <h2 className="text-xl font-bold tracking-tight text-foreground">Combine Usage Trend</h2>
-                        <p className="text-sm text-muted-foreground mt-1">Energy and Gas usage trend over the selected {timeFilter} timeframe.</p>
+                      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+                        <div>
+                          <h2 className="text-xl font-bold tracking-tight text-foreground">Combine Usage Trend</h2>
+                          <p className="text-sm text-muted-foreground mt-1">Energy and Gas usage trend over the selected {timeFilter} timeframe.</p>
+                        </div>
+                        <div className="flex flex-wrap items-center gap-4 mt-2 sm:mt-0">
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm font-medium text-muted-foreground whitespace-nowrap">Energy Price:</span>
+                          <Input
+                            type="number"
+                            prefix="Rp"
+                            containerClassName="w-fit min-w-0"
+                            fieldClassName="h-8 bg-background border border-border"
+                            className="px-2 min-w-0 border-0 shadow-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-0"
+                            style={{ width: `${Math.max(histEnergyPrice.toString().length + 3, 5)}ch` }}
+                            value={histEnergyPrice}
+                            onChange={e => setHistEnergyPrice(e.target.value)}
+                          />
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm font-medium text-muted-foreground whitespace-nowrap">Gas Price:</span>
+                          <Input
+                            type="number"
+                            prefix="Rp"
+                            containerClassName="w-fit min-w-0"
+                            fieldClassName="h-8 bg-background border border-border"
+                            className="px-2 min-w-0 border-0 shadow-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-0"
+                            style={{ width: `${Math.max(histGasPrice.toString().length + 3, 5)}ch` }}
+                            value={histGasPrice}
+                            onChange={e => setHistGasPrice(e.target.value)}
+                          />
+                        </div>
+                        <Button size="sm" className="h-8">Update</Button>
+                      </div>
                       </div>
                       <div className="h-[350px] mt-6 w-full">
                         <ResponsiveContainer width="100%" height="100%">
@@ -1006,34 +1039,6 @@ function MonitoringAreaDetails() {
                           <h2 className="text-xl font-bold tracking-tight text-foreground">Energy Consumption vs Gas Usage by Minute</h2>
                           <p className="text-sm text-muted-foreground mt-1">Comparison of energy and gas consumption trends.</p>
                         </div>
-                        <div className="flex items-center gap-4">
-                          <div className="flex items-center gap-2">
-                            <span className="text-sm font-medium text-muted-foreground whitespace-nowrap">Energy Price:</span>
-                            <Input
-                              type="number"
-                              prefix="Rp"
-                              containerClassName="w-fit min-w-0"
-                              fieldClassName="h-8 bg-background border border-border"
-                              className="px-2 min-w-0"
-                              style={{ width: `${Math.max(histEnergyPrice.toString().length + 3, 5)}ch` }}
-                              value={histEnergyPrice}
-                              onChange={e => setHistEnergyPrice(e.target.value)}
-                            />
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <span className="text-sm font-medium text-muted-foreground whitespace-nowrap">Gas Price:</span>
-                            <Input
-                              type="number"
-                              prefix="Rp"
-                              containerClassName="w-fit min-w-0"
-                              fieldClassName="h-8 bg-background border border-border"
-                              className="px-2 min-w-0"
-                              style={{ width: `${Math.max(histGasPrice.toString().length + 3, 5)}ch` }}
-                              value={histGasPrice}
-                              onChange={e => setHistGasPrice(e.target.value)}
-                            />
-                          </div>
-                        </div>
                       </div>
                       <div className="h-[350px] w-full mt-6">
                         <ResponsiveContainer width="100%" height="100%">
@@ -1115,14 +1120,13 @@ function MonitoringAreaDetails() {
                           <Waves className="h-4 w-4 text-primary" />
                           <span className="font-semibold text-sm uppercase tracking-wider text-muted-foreground">Skid Tracking Map (Green = Skid Present)</span>
                         </div>
-                        <span suppressHydrationWarning className="text-xs font-mono text-muted-foreground">{new Date().toLocaleString('en-GB')}</span>
                       </div>
                       <p className="text-foreground text-sm">Real-time position of skids along the CED line (U-loop layout)</p>
                     </div>
 
                     {/* L-Shape Map Content */}
-                    <div className="relative w-full min-h-[600px] overflow-auto flex items-center justify-center bg-background p-4 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCI+CiAgPHJlY3Qgd2lkdGg9IjIwIiBoZWlnaHQ9IjIwIiBmaWxsPSJub25lIiBzdHJva2U9IiNlNWU3ZWIiIHN0cm9rZS13aWR0aD0iMC41Ii8+Cjwvc3ZnPg==')] dark:bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCI+CiAgPHJlY3Qgd2lkdGg9IjIwIiBoZWlnaHQ9IjIwIiBmaWxsPSJub25lIiBzdHJva2U9IiMzMzQxNTUiIHN0cm9rZS13aWR0aD0iMC41Ii8+Cjwvc3ZnPg==')]">
-                      <img src={LineTrackingSvg} alt="Line Tracking Map" className="drop-shadow-sm dark:invert dark:opacity-80" style={{ filter: "drop-shadow(0px 0px 4px rgba(0,0,0,0.2))" }} />
+                    <div className="relative w-full min-h-[600px] overflow-hidden flex items-center justify-center bg-background bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCI+CiAgPHJlY3Qgd2lkdGg9IjIwIiBoZWlnaHQ9IjIwIiBmaWxsPSJub25lIiBzdHJva2U9IiNlNWU3ZWIiIHN0cm9rZS13aWR0aD0iMC41Ii8+Cjwvc3ZnPg==')] dark:bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCI+CiAgPHJlY3Qgd2lkdGg9IjIwIiBoZWlnaHQ9IjIwIiBmaWxsPSJub25lIiBzdHJva2U9IiMzMzQxNTUiIHN0cm9rZS13aWR0aD0iMC41Ii8+Cjwvc3ZnPg==')]">
+                      <img src={LineTrackingPng} alt="Line Tracking Map" className="w-full h-full object-cover drop-shadow-sm dark:invert dark:opacity-80 mix-blend-multiply dark:mix-blend-screen" />
                     </div>
 
                     {/* Map Legend Footer */}
@@ -1149,7 +1153,7 @@ function MonitoringAreaDetails() {
         <div className="mt-2">
           <StationDetailContent tabKey={
             id === "flood-station" ? "flood" :
-                id
+              id
           } />
         </div>
       ) : id === "pted-bag-filter" ? (
@@ -1177,6 +1181,24 @@ function MonitoringAreaDetails() {
         </div>
       ) : ["oven-sealing", "oven-topcoat", "oven-ced"].includes(id) ? (
         <OvenDetailContent id={id} />
+      ) : id === "bag-filter" ? (
+        <div className="space-y-6">
+          <div className="bg-card border border-border rounded-lg shadow-sm p-6">
+            <div className="animate-in fade-in duration-300">
+              <div className="border border-border/50 rounded-lg overflow-hidden bg-background">
+                <div className="flex justify-between items-center p-3 bg-secondary/30 border-b border-border/50">
+                  <div className="flex items-center gap-2">
+                    <Filter className="h-4 w-4 text-muted-foreground" />
+                    <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Bag Filter Layout Diagram</span>
+                  </div>
+                </div>
+                <div className="relative w-full overflow-hidden flex items-center justify-center">
+                  <img src={DenahFixPng} alt="Bag Filter Layout" className="w-full h-full object-cover drop-shadow-sm dark:invert" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       ) : (
         /* Placeholder Content */
         <div className="rounded-lg border border-dashed border-border p-12 text-center text-muted-foreground bg-secondary/20">
