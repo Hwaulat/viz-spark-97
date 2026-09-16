@@ -327,7 +327,7 @@ function AreaCard({ area }: { area: AreaDef }) {
             <span className="text-[10px] text-muted-foreground uppercase tracking-widest mb-1 flex items-center gap-1"><Gauge className="h-3 w-3" /> Pressure</span>
             <div className="flex items-baseline gap-1">
               <span className={`text-xl font-bold font-mono ${getLimitColor(area.oven.pressure, 2.0, 2.5, "text-emerald-500", "text-emerald-500")}`}>{area.oven.pressure}</span>
-              <span className="text-[10px] text-muted-foreground">bar</span>
+              <span className="text-[10px] text-muted-foreground">MPa</span>
             </div>
           </div>
         </div>
@@ -350,7 +350,7 @@ function AreaCard({ area }: { area: AreaDef }) {
             </div>
             <div className="flex items-baseline gap-1">
               <span className="text-2xl font-semibold tabular-nums">{area.pressure}</span>
-              <span className="text-xs text-muted-foreground">bar</span>
+              <span className="text-xs text-muted-foreground">MPa</span>
             </div>
           </div>
         </div>
@@ -388,14 +388,14 @@ function AreaCard({ area }: { area: AreaDef }) {
                 <span className="text-muted-foreground/80 text-[9px] uppercase">IN</span>
                 <div className="flex items-baseline gap-0.5">
                   <span className="text-xl font-semibold tabular-nums text-foreground">{area.pted.pressureIn}</span>
-                  <span className="text-[9px] text-muted-foreground">bar</span>
+                  <span className="text-[9px] text-muted-foreground">MPa</span>
                 </div>
               </div>
               <div className="flex flex-col items-end">
                 <span className="text-muted-foreground/80 text-[9px] uppercase">OUT</span>
                 <div className="flex items-baseline gap-0.5">
                   <span className="text-xl font-semibold tabular-nums text-blue-500">{area.pted.pressureOut}</span>
-                  <span className="text-[9px] text-muted-foreground">bar</span>
+                  <span className="text-[9px] text-muted-foreground">MPa</span>
                 </div>
               </div>
             </div>
@@ -508,7 +508,7 @@ function AreaCard({ area }: { area: AreaDef }) {
             </div>
 
             <div className="mt-auto">
-              <BagFilterItemDialog item={{ name: "HE Pressure", val: "4.5", val2: "3.2", id: "bag-filter-he-pressure", unit: "bar", valName: "IN (bar)", val2Name: "OUT (bar)", minStd: 4.0, maxStd: 5.0, minStd2: 2.0, maxStd2: 4.0 }}>
+              <BagFilterItemDialog item={{ name: "HE Pressure", val: "4.5", val2: "3.2", id: "bag-filter-he-pressure", unit: "MPa", valName: "IN (MPa)", val2Name: "OUT (MPa)", minStd: 4.0, maxStd: 5.0, minStd2: 2.0, maxStd2: 4.0 }}>
                 <button className="p-3 rounded-lg bg-secondary/30 border border-border/50 flex flex-col gap-2 hover:border-primary/50 hover:bg-secondary/80 transition-colors group text-left w-full h-full">
                   <span className="text-[10px] font-semibold text-muted-foreground uppercase flex items-center gap-1.5 border-b border-border/50 pb-2 group-hover:text-primary transition-colors"><Gauge className="h-3.5 w-3.5" /> HE Pressure</span>
                   <div className="flex justify-between mt-1 items-end h-full">
@@ -516,14 +516,14 @@ function AreaCard({ area }: { area: AreaDef }) {
                       <span className="text-[9px] text-muted-foreground mb-0.5">IN</span>
                       <div className="flex items-baseline gap-1 whitespace-nowrap">
                         <span className={`font-mono text-3xl font-bold ${getLimitColor("4.5", 4.0, 5.0, "text-emerald-500")}`}>4.5</span>
-                        <span className="text-xs font-normal text-muted-foreground">bar</span>
+                        <span className="text-xs font-normal text-muted-foreground">MPa</span>
                       </div>
                     </div>
                     <div className="flex flex-col items-end">
                       <span className="text-[9px] text-muted-foreground mb-0.5">OUT</span>
                       <div className="flex items-baseline gap-1 whitespace-nowrap">
                         <span className={`font-mono text-3xl font-bold ${getLimitColor("3.2", 2.0, 4.0, "text-emerald-500")}`}>3.2</span>
-                        <span className="text-xs font-normal text-muted-foreground/70">bar</span>
+                        <span className="text-xs font-normal text-muted-foreground/70">MPa</span>
                       </div>
                     </div>
                   </div>
