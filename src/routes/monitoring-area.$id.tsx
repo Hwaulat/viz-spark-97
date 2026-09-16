@@ -13,12 +13,11 @@ import { Tabs as RawTabs, TabsList, TabsTrigger, TabsContent } from "@/component
 import { Table, THead, TBody, Th, Tr, Td } from "@/components/ui/table";
 import { LineChart, Line, AreaChart, Area, BarChart, Bar, ReferenceLine, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import LineTrackingPng from "@/assets/Line Tracking.png";
-import StationPreDegreasingPng from "@/assets/Pre-degreasing.png";
+import StationPreDegreasingPng from "@/assets/Pre-Degreasing.png";
 import StationFloodPng from "@/assets/Flood.png";
-import StationPhosphatePng from "@/assets/Phosphate-1.png";
+import StationPhosphatePng from "@/assets/Phosphate.png";
 import StationDegreasingPng from "@/assets/Degreasing.png";
-import StationDegreasingNewPng from "@/assets/Degreasing-New.png";
-import MapsPtedAreaPng from "@/assets/Maps-Pted-Area.png";
+import StationDegreasingNewPng from "@/assets/Degreasing.png";
 import Boiler1Png from "@/assets/Boiler 1.png";
 import Boiler2Png from "@/assets/Boiler 2.png";
 import Boiler3Png from "@/assets/Boiler 3.png";
@@ -183,8 +182,8 @@ function OvenDetailContent({ id }: { id: string }) {
               key={t}
               onClick={() => setTimeFilter(t)}
               className={`px-4 py-1.5 text-xs font-medium rounded-md capitalize transition-colors ${timeFilter === t
-                  ? "bg-background text-foreground shadow-sm border border-border/50"
-                  : "text-muted-foreground hover:text-foreground"
+                ? "bg-background text-foreground shadow-sm border border-border/50"
+                : "text-muted-foreground hover:text-foreground"
                 }`}
             >
               {t}
@@ -197,9 +196,8 @@ function OvenDetailContent({ id }: { id: string }) {
       <div className="grid lg:grid-cols-2 gap-6">
         {/* Power Consumption (kW) */}
         <div className="rounded-xl border bg-card p-6 shadow-sm">
-          <div className="flex justify-between items-center">
+          <div>
             <h2 className="text-xl font-bold tracking-tight text-foreground">Power Consumption Trend</h2>
-            <span className="text-xs font-semibold uppercase tracking-widest text-muted-foreground bg-secondary/50 px-2 py-0.5 rounded border border-border/50">History</span>
           </div>
           <div className="h-[250px] mt-6 w-full">
             <ResponsiveContainer width="100%" height="100%">
@@ -226,9 +224,8 @@ function OvenDetailContent({ id }: { id: string }) {
 
         {/* Cumulative Energy */}
         <div className="rounded-xl border bg-card p-6 shadow-sm">
-          <div className="flex justify-between items-center">
+          <div>
             <h2 className="text-xl font-bold tracking-tight text-foreground">Cumulative Energy Usage</h2>
-            <span className="text-xs font-semibold uppercase tracking-widest text-muted-foreground bg-secondary/50 px-2 py-0.5 rounded border border-border/50">History</span>
           </div>
           <div className="h-[250px] mt-6 w-full">
             <ResponsiveContainer width="100%" height="100%">
@@ -250,9 +247,8 @@ function OvenDetailContent({ id }: { id: string }) {
 
         {/* Cumulative Gas */}
         <div className="rounded-xl border bg-card p-6 shadow-sm">
-          <div className="flex justify-between items-center">
+          <div>
             <h2 className="text-xl font-bold tracking-tight text-foreground">Cumulative Gas Usage</h2>
-            <span className="text-xs font-semibold uppercase tracking-widest text-muted-foreground bg-secondary/50 px-2 py-0.5 rounded border border-border/50">History</span>
           </div>
           <div className="h-[250px] mt-6 w-full">
             <ResponsiveContainer width="100%" height="100%">
@@ -274,9 +270,8 @@ function OvenDetailContent({ id }: { id: string }) {
 
         {/* Temperature Trend */}
         <div className="rounded-xl border bg-card p-6 shadow-sm">
-          <div className="flex justify-between items-center">
+          <div>
             <h2 className="text-xl font-bold tracking-tight text-foreground">Temperature Trend</h2>
-            <span className="text-xs font-semibold uppercase tracking-widest text-muted-foreground bg-secondary/50 px-2 py-0.5 rounded border border-border/50">History</span>
           </div>
           <div className="h-[250px] mt-6 w-full">
             <ResponsiveContainer width="100%" height="100%">
@@ -300,9 +295,8 @@ function OvenDetailContent({ id }: { id: string }) {
 
         {/* Pressure Trend */}
         <div className="rounded-xl border bg-card p-6 shadow-sm">
-          <div className="flex justify-between items-center">
+          <div>
             <h2 className="text-xl font-bold tracking-tight text-foreground">Pressure Trend</h2>
-            <span className="text-xs font-semibold uppercase tracking-widest text-muted-foreground bg-secondary/50 px-2 py-0.5 rounded border border-border/50">History</span>
           </div>
           <div className="h-[250px] mt-6 w-full">
             <ResponsiveContainer width="100%" height="100%">
@@ -668,7 +662,7 @@ function MonitoringAreaDetails() {
               items={[
                 {
                   title: "Gas Flow",
-                  value: `${BOILER_GAS.instantFlow} m³/m`,
+                  value: `${BOILER_GAS.instantFlow} MMBTU/m`,
                   variant: "stat",
                   icon: <Fuel />,
                   iconBg: "bg-amber-500/10 text-amber-500",
@@ -921,34 +915,34 @@ function MonitoringAreaDetails() {
                           <p className="text-sm text-muted-foreground mt-1">Energy and Gas usage trend over the selected {timeFilter} timeframe.</p>
                         </div>
                         <div className="flex flex-wrap items-center gap-4 mt-2 sm:mt-0">
-                        <div className="flex items-center gap-2">
-                          <span className="text-sm font-medium text-muted-foreground whitespace-nowrap">Energy Price:</span>
-                          <Input
-                            type="number"
-                            prefix="Rp"
-                            containerClassName="w-fit min-w-0"
-                            fieldClassName="h-8 bg-background border border-border"
-                            className="px-2 min-w-0 border-0 shadow-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-0"
-                            style={{ width: `${Math.max(histEnergyPrice.toString().length + 3, 5)}ch` }}
-                            value={histEnergyPrice}
-                            onChange={e => setHistEnergyPrice(e.target.value)}
-                          />
+                          <div className="flex items-center gap-2">
+                            <span className="text-sm font-medium text-muted-foreground whitespace-nowrap">Energy Price:</span>
+                            <Input
+                              type="number"
+                              prefix="Rp"
+                              containerClassName="w-fit min-w-0"
+                              fieldClassName="h-8 bg-background border border-border"
+                              className="px-2 min-w-0 border-0 shadow-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-0"
+                              style={{ width: `${Math.max(histEnergyPrice.toString().length + 3, 5)}ch` }}
+                              value={histEnergyPrice}
+                              onChange={e => setHistEnergyPrice(e.target.value)}
+                            />
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <span className="text-sm font-medium text-muted-foreground whitespace-nowrap">Gas Price:</span>
+                            <Input
+                              type="number"
+                              prefix="Rp"
+                              containerClassName="w-fit min-w-0"
+                              fieldClassName="h-8 bg-background border border-border"
+                              className="px-2 min-w-0 border-0 shadow-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-0"
+                              style={{ width: `${Math.max(histGasPrice.toString().length + 3, 5)}ch` }}
+                              value={histGasPrice}
+                              onChange={e => setHistGasPrice(e.target.value)}
+                            />
+                          </div>
+                          <Button size="sm" className="h-8">Update</Button>
                         </div>
-                        <div className="flex items-center gap-2">
-                          <span className="text-sm font-medium text-muted-foreground whitespace-nowrap">Gas Price:</span>
-                          <Input
-                            type="number"
-                            prefix="Rp"
-                            containerClassName="w-fit min-w-0"
-                            fieldClassName="h-8 bg-background border border-border"
-                            className="px-2 min-w-0 border-0 shadow-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-0"
-                            style={{ width: `${Math.max(histGasPrice.toString().length + 3, 5)}ch` }}
-                            value={histGasPrice}
-                            onChange={e => setHistGasPrice(e.target.value)}
-                          />
-                        </div>
-                        <Button size="sm" className="h-8">Update</Button>
-                      </div>
                       </div>
                       <div className="h-[350px] mt-6 w-full">
                         <ResponsiveContainer width="100%" height="100%">
@@ -1198,7 +1192,8 @@ function MonitoringAreaDetails() {
 
                 <div className="relative w-full overflow-hidden flex items-center justify-center p-4">
                   <div className="w-full -mt-[12%]">
-                    <img src={MapsPtedAreaPng} alt="PTED Bag Filter" className="w-full h-auto object-contain mix-blend-multiply dark:mix-blend-screen dark:invert" style={{ clipPath: 'inset(12% 0 0 0)' }} />
+                    {/* Maps-Pted-Area.png has been deleted, using a placeholder text for now */}
+                    <div className="h-48 flex items-center justify-center text-muted-foreground border border-dashed rounded-md">Map Image Missing</div>
                   </div>
                 </div>
               </div>
