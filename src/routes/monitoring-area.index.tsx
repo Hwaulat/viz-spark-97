@@ -447,15 +447,15 @@ function AreaCard({ area }: { area: AreaDef }) {
 
             <div className="grid grid-cols-3 gap-2 mb-4 flex-1">
               {[
-                { name: "Pre Degreasing", val: "45.5", id: "bag-filter-pre-deg", minStd: 20, maxStd: 35 },
-                { name: "Degreasing", val: "34.8", id: "bag-filter-deg", minStd: 20, maxStd: 35 },
-                { name: "DI 1", val: "25.0", id: "bag-filter-di1", minStd: 20, maxStd: 35 },
-                { name: "DI 2", val: "25.1", id: "bag-filter-di2", minStd: 20, maxStd: 35 },
-                { name: "WR 5", val: "24.9", id: "bag-filter-wr5", minStd: 20, maxStd: 35 },
-                { name: "CED 1", val: "28.5", id: "bag-filter-ced1", minStd: 20, maxStd: 35 },
-                { name: "CED 2", val: "28.3", id: "bag-filter-ced2", minStd: 20, maxStd: 35 },
-                { name: "UF 1", val: "26.2", id: "bag-filter-uf1", minStd: 20, maxStd: 35 },
-                { name: "UF 2", val: "26.0", id: "bag-filter-uf2", minStd: 20, maxStd: 35 }
+                { name: "Pre Degreasing", val: "45.5", id: "bag-filter-pre-deg", minStd: 20, maxStd: 35, unit: "MPa" },
+                { name: "Degreasing", val: "34.8", id: "bag-filter-deg", minStd: 20, maxStd: 35, unit: "MPa" },
+                { name: "DI 1", val: "25.0", id: "bag-filter-di1", minStd: 20, maxStd: 35, unit: "MPa" },
+                { name: "DI 2", val: "25.1", id: "bag-filter-di2", minStd: 20, maxStd: 35, unit: "MPa" },
+                { name: "WR 5", val: "24.9", id: "bag-filter-wr5", minStd: 20, maxStd: 35, unit: "MPa" },
+                { name: "CED 1", val: "28.5", id: "bag-filter-ced1", minStd: 20, maxStd: 35, unit: "MPa" },
+                { name: "CED 2", val: "28.3", id: "bag-filter-ced2", minStd: 20, maxStd: 35, unit: "MPa" },
+                { name: "UF 1", val: "26.2", id: "bag-filter-uf1", minStd: 20, maxStd: 35, unit: "MPa" },
+                { name: "UF 2", val: "26.0", id: "bag-filter-uf2", minStd: 20, maxStd: 35, unit: "MPa" }
 
               ].map(t => (
                 <BagFilterItemDialog key={t.name} item={t}>
@@ -463,7 +463,7 @@ function AreaCard({ area }: { area: AreaDef }) {
                     <span className="text-[10px] text-muted-foreground uppercase tracking-wider font-medium group-hover:text-primary transition-colors">{t.name}</span>
                     <div className="flex items-baseline gap-1">
                       <span className={`font-mono text-3xl font-bold ${getLimitColor(t.val, 20, 35, "text-emerald-500")}`}>{t.val}</span>
-                      <span className="text-sm text-muted-foreground">°C</span>
+                      <span className="text-sm text-muted-foreground">{t.unit || "°C"}</span>
                     </div>
                   </button>
                 </BagFilterItemDialog>
