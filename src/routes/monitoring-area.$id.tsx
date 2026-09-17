@@ -176,17 +176,17 @@ function OvenDetailContent({ id }: { id: string }) {
           <h2 className="text-xl font-bold tracking-tight text-foreground">Overview Trends</h2>
           <p className="text-sm text-muted-foreground mt-1">Energy, gas, and power trends for {name}.</p>
         </div>
-        <div className="flex bg-secondary/50 rounded-lg p-1 border border-border/50">
+        <div className="flex bg-gray-100 dark:bg-gray-700/60 rounded-xl p-1 h-auto shrink-0">
           {(["daily", "monthly", "yearly"] as const).map((t) => (
             <button
               key={t}
               onClick={() => setTimeFilter(t)}
-              className={`px-4 py-1.5 text-xs font-medium rounded-md capitalize transition-colors ${timeFilter === t
-                ? "bg-background text-foreground shadow-sm border border-border/50"
-                : "text-muted-foreground hover:text-foreground"
+              className={`text-gray-500 dark:text-gray-400 rounded-lg text-xs font-medium h-8 px-4 transition-colors ${timeFilter === t
+                ? "bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-sm"
+                : "hover:text-gray-700 dark:hover:text-gray-300"
                 }`}
             >
-              {t}
+              {t.charAt(0).toUpperCase() + t.slice(1)}
             </button>
           ))}
         </div>
@@ -420,7 +420,13 @@ function StationDetailContent({ tabKey }: { tabKey: string }) {
               <Activity className="h-4 w-4 text-muted-foreground" />
               <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Station Diagram — {data.name}</span>
             </div>
-            <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-orange-500/10 text-orange-600 border border-orange-500/20">VIEW-ONLY</span>
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-3 text-sm font-medium">
+                <span className="text-muted-foreground">PV: <span className="text-lg font-bold text-blue-500">{data.pv}</span> °C</span>
+                <span className="text-muted-foreground">SP: <span className="text-lg font-bold text-foreground">{data.sp}</span> °C</span>
+              </div>
+              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-orange-500/10 text-orange-600 border border-orange-500/20">VIEW-ONLY</span>
+            </div>
           </div>
 
           <div
@@ -449,14 +455,14 @@ function StationDetailContent({ tabKey }: { tabKey: string }) {
               <h2 className="text-xl font-bold tracking-tight text-foreground">Temperature Trends</h2>
               <p className="text-sm text-muted-foreground mt-1">Temperature PV and SP trend over the selected {timeFilter} timeframe.</p>
             </div>
-            <div className="flex bg-secondary/50 rounded-lg p-1 border border-border/50 shrink-0">
+            <div className="flex bg-gray-100 dark:bg-gray-700/60 rounded-xl p-1 h-auto shrink-0">
               {(["daily", "monthly", "yearly"] as const).map((t) => (
                 <button
                   key={t}
                   onClick={() => setTimeFilter(t)}
-                  className={`px-4 py-1.5 rounded-md text-xs font-medium transition-colors ${timeFilter === t
-                    ? "bg-background text-foreground shadow-sm border border-border/50"
-                    : "text-muted-foreground hover:text-foreground hover:bg-secondary/80"
+                  className={`text-gray-500 dark:text-gray-400 rounded-lg text-xs font-medium h-8 px-4 transition-colors ${timeFilter === t
+                    ? "bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-sm"
+                    : "hover:text-gray-700 dark:hover:text-gray-300"
                     }`}
                 >
                   {t === "daily" ? "Daily" : t === "monthly" ? "Monthly" : "Yearly"}
@@ -488,7 +494,16 @@ function StationDetailContent({ tabKey }: { tabKey: string }) {
         {/* Search and Filters */}
         <div className="flex flex-col lg:flex-row items-center gap-4 px-4 py-3 bg-secondary/10 border-b border-border/50 w-full">
           <Search placeholder="Search" containerClassName="flex-1 w-full" />
-          <div className="flex items-center gap-2 px-3 py-2 rounded-lg border border-border bg-background text-sm text-muted-foreground cursor-pointer hover:bg-secondary/20 transition-colors">
+          <SelectInput
+            datalist={[
+              { label: "All Status", value: "all" },
+              { label: "Normal", value: "normal" },
+              { label: "Warning", value: "warning" },
+            ]}
+            placeholder="Status"
+            containerClassName="w-full lg:w-40"
+          />
+          <div className="flex items-center gap-2 px-3 py-2 rounded-lg border border-border bg-background text-sm text-muted-foreground cursor-pointer hover:bg-secondary/20 transition-colors h-[40px]">
             <Calendar className="h-4 w-4" />
             <span>dd/mm/yyyy - dd/mm/yyyy</span>
           </div>
@@ -705,17 +720,17 @@ function MonitoringAreaDetails() {
             listClassName="m-4 ml-4 mt-4"
             rightElement={
               activeTab === "Cummulative Usage" ? (
-                <div className="flex gap-1 bg-background p-1 rounded-md border border-border mr-4">
-                  <div className="flex items-center gap-2 text-sm font-medium px-2 text-muted-foreground mr-1">
+                <div className="flex items-center bg-gray-100 dark:bg-gray-700/60 rounded-xl p-1 h-auto mr-4">
+                  <div className="flex items-center gap-2 text-xs font-medium px-2 text-muted-foreground mr-1">
                     <Filter className="h-3.5 w-3.5" /> Filter by:
                   </div>
                   {(["daily", "monthly", "yearly"] as const).map((t) => (
                     <button
                       key={t}
                       onClick={() => setTimeFilter(t)}
-                      className={`px-3 py-1 text-xs font-medium rounded transition ${timeFilter === t
-                        ? "bg-primary text-primary-foreground shadow-sm"
-                        : "text-muted-foreground hover:bg-secondary hover:text-foreground"
+                      className={`text-gray-500 dark:text-gray-400 rounded-lg text-xs font-medium h-8 px-4 transition-colors ${timeFilter === t
+                        ? "bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-sm"
+                        : "hover:text-gray-700 dark:hover:text-gray-300"
                         }`}
                     >
                       {t.charAt(0).toUpperCase() + t.slice(1)}
