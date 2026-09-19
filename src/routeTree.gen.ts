@@ -30,6 +30,7 @@ import { Route as MasterDataTypeRouteImport } from './routes/master-data.type'
 import { Route as MasterDataUomRouteImport } from './routes/master-data.uom'
 import { Route as MonitoringAreaIndexRouteImport } from './routes/monitoring-area.index'
 import { Route as MonitoringAreaIdRouteImport } from './routes/monitoring-area.$id'
+import { Route as MonitoringAreaPtedLogHistoryRouteImport } from './routes/monitoring-area.pted-log-history'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -136,6 +137,12 @@ const MonitoringAreaIdRoute = MonitoringAreaIdRouteImport.update({
   path: '/monitoring-area/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MonitoringAreaPtedLogHistoryRoute =
+  MonitoringAreaPtedLogHistoryRouteImport.update({
+    id: '/monitoring-area/pted-log-history',
+    path: '/monitoring-area/pted-log-history',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -157,6 +164,7 @@ export interface FileRoutesByFullPath {
   '/master-data/type': typeof MasterDataTypeRoute
   '/master-data/uom': typeof MasterDataUomRoute
   '/monitoring-area/$id': typeof MonitoringAreaIdRoute
+  '/monitoring-area/pted-log-history': typeof MonitoringAreaPtedLogHistoryRoute
   '/master-data/': typeof MasterDataIndexRoute
   '/monitoring-area/': typeof MonitoringAreaIndexRoute
 }
@@ -179,6 +187,7 @@ export interface FileRoutesByTo {
   '/master-data/type': typeof MasterDataTypeRoute
   '/master-data/uom': typeof MasterDataUomRoute
   '/monitoring-area/$id': typeof MonitoringAreaIdRoute
+  '/monitoring-area/pted-log-history': typeof MonitoringAreaPtedLogHistoryRoute
   '/master-data': typeof MasterDataIndexRoute
   '/monitoring-area': typeof MonitoringAreaIndexRoute
 }
@@ -203,6 +212,7 @@ export interface FileRoutesById {
   '/master-data/type': typeof MasterDataTypeRoute
   '/master-data/uom': typeof MasterDataUomRoute
   '/monitoring-area/$id': typeof MonitoringAreaIdRoute
+  '/monitoring-area/pted-log-history': typeof MonitoringAreaPtedLogHistoryRoute
   '/master-data/': typeof MasterDataIndexRoute
   '/monitoring-area/': typeof MonitoringAreaIndexRoute
 }
@@ -228,6 +238,7 @@ export interface FileRouteTypes {
     | '/master-data/type'
     | '/master-data/uom'
     | '/monitoring-area/$id'
+    | '/monitoring-area/pted-log-history'
     | '/master-data/'
     | '/monitoring-area/'
   fileRoutesByTo: FileRoutesByTo
@@ -250,6 +261,7 @@ export interface FileRouteTypes {
     | '/master-data/type'
     | '/master-data/uom'
     | '/monitoring-area/$id'
+    | '/monitoring-area/pted-log-history'
     | '/master-data'
     | '/monitoring-area'
   id:
@@ -273,6 +285,7 @@ export interface FileRouteTypes {
     | '/master-data/type'
     | '/master-data/uom'
     | '/monitoring-area/$id'
+    | '/monitoring-area/pted-log-history'
     | '/master-data/'
     | '/monitoring-area/'
   fileRoutesById: FileRoutesById
@@ -291,6 +304,7 @@ export interface RootRouteChildren {
   UserManagementRoute: typeof UserManagementRoute
   BoilerDetailsIdRoute: typeof BoilerDetailsIdRoute
   MonitoringAreaIdRoute: typeof MonitoringAreaIdRoute
+  MonitoringAreaPtedLogHistoryRoute: typeof MonitoringAreaPtedLogHistoryRoute
   MonitoringAreaIndexRoute: typeof MonitoringAreaIndexRoute
 }
 
@@ -443,6 +457,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MonitoringAreaIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/monitoring-area/pted-log-history': {
+      id: '/monitoring-area/pted-log-history'
+      path: '/monitoring-area/pted-log-history'
+      fullPath: '/monitoring-area/pted-log-history'
+      preLoaderRoute: typeof MonitoringAreaPtedLogHistoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -484,6 +505,7 @@ const rootRouteChildren: RootRouteChildren = {
   UserManagementRoute: UserManagementRoute,
   BoilerDetailsIdRoute: BoilerDetailsIdRoute,
   MonitoringAreaIdRoute: MonitoringAreaIdRoute,
+  MonitoringAreaPtedLogHistoryRoute: MonitoringAreaPtedLogHistoryRoute,
   MonitoringAreaIndexRoute: MonitoringAreaIndexRoute,
 }
 export const routeTree = rootRouteImport

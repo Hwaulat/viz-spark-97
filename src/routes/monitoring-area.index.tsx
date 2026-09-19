@@ -480,12 +480,14 @@ function AreaCard({ area }: { area: AreaDef }) {
                         <span className="text-[9px] text-muted-foreground mb-0.5">UF 1</span>
                         <div className="flex items-baseline gap-1 whitespace-nowrap">
                           <span className={`font-mono text-3xl font-bold ${getLimitColor("120.5", 100, 150, "text-emerald-500")}`}>120.5</span>
+                          <span className="text-xs font-normal text-muted-foreground">µS</span>
                         </div>
                       </div>
                       <div className="flex flex-col items-end">
                         <span className="text-[9px] text-muted-foreground mb-0.5">UF 2</span>
                         <div className="flex items-baseline gap-1 whitespace-nowrap">
                           <span className={`font-mono text-3xl font-bold ${getLimitColor("118.2", 100, 150, "text-emerald-500")}`}>118.2</span>
+                          <span className="text-xs font-normal text-muted-foreground/70">µS</span>
                         </div>
                       </div>
                     </div>
