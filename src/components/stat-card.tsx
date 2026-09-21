@@ -120,9 +120,9 @@ export function StatCard(item: StatCardItem) {
         )}
         <div>
           <p className="text-gray-400 dark:text-gray-500 text-xs">{item.title}</p>
-          <p className={`font-bold tabular-nums ${item.valueColor ?? 'text-gray-900 dark:text-white'}`}>
+          <div className={`font-bold tabular-nums ${item.valueColor ?? 'text-gray-900 dark:text-white'}`}>
             {typeof item.value === 'number' ? item.value.toLocaleString() : item.value}
-          </p>
+          </div>
         </div>
       </div>
     );
@@ -149,9 +149,9 @@ export function StatCard(item: StatCardItem) {
               </TooltipWrapper>
             )}
           </div>
-          <p className={`text-2xl font-bold tabular-nums ${item.valueColor ?? 'text-gray-900 dark:text-white'}`}>
+          <div className={`text-2xl font-bold tabular-nums ${item.valueColor ?? 'text-gray-900 dark:text-white'}`}>
             {typeof item.value === 'number' ? item.value.toLocaleString() : item.value}
-          </p>
+          </div>
           {item.subtitle && (
             <p className="text-gray-400 dark:text-gray-500 text-xs mt-0.5">{item.subtitle}</p>
           )}
@@ -177,9 +177,9 @@ export function StatCard(item: StatCardItem) {
         )}
       </div>
       <p className="text-gray-500 dark:text-gray-400 text-sm">{item.title}</p>
-      <p className={`text-2xl font-bold tabular-nums ${item.valueColor ?? 'text-gray-900 dark:text-white'}`}>
+      <div className={`text-2xl font-bold tabular-nums ${item.valueColor ?? 'text-gray-900 dark:text-white'}`}>
         {typeof item.value === 'number' ? item.value.toLocaleString() : item.value}
-      </p>
+      </div>
       {item.subtitle && (
         <p className={`text-xs mt-1 ${item.subtitleColor ?? 'text-gray-500'}`}>
           {item.subtitle}

@@ -21,6 +21,7 @@ import { Route as OvenRouteImport } from './routes/oven'
 import { Route as ReportRouteImport } from './routes/report'
 import { Route as UserManagementRouteImport } from './routes/user-management'
 import { Route as BoilerDetailsIdRouteImport } from './routes/boiler-details.$id'
+import { Route as ChecksheetProblemListRouteImport } from './routes/checksheet_.problem-list'
 import { Route as MasterDataIndexRouteImport } from './routes/master-data.index'
 import { Route as MasterDataColorsRouteImport } from './routes/master-data.colors'
 import { Route as MasterDataEquipmentRouteImport } from './routes/master-data.equipment'
@@ -92,6 +93,11 @@ const BoilerDetailsIdRoute = BoilerDetailsIdRouteImport.update({
   path: '/boiler-details/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ChecksheetProblemListRoute = ChecksheetProblemListRouteImport.update({
+  id: '/checksheet_/problem-list',
+  path: '/checksheet/problem-list',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const MasterDataIndexRoute = MasterDataIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -157,6 +163,7 @@ export interface FileRoutesByFullPath {
   '/report': typeof ReportRoute
   '/user-management': typeof UserManagementRoute
   '/boiler-details/$id': typeof BoilerDetailsIdRoute
+  '/checksheet/problem-list': typeof ChecksheetProblemListRoute
   '/master-data/colors': typeof MasterDataColorsRoute
   '/master-data/equipment': typeof MasterDataEquipmentRoute
   '/master-data/standard': typeof MasterDataStandardRoute
@@ -180,6 +187,7 @@ export interface FileRoutesByTo {
   '/report': typeof ReportRoute
   '/user-management': typeof UserManagementRoute
   '/boiler-details/$id': typeof BoilerDetailsIdRoute
+  '/checksheet/problem-list': typeof ChecksheetProblemListRoute
   '/master-data/colors': typeof MasterDataColorsRoute
   '/master-data/equipment': typeof MasterDataEquipmentRoute
   '/master-data/standard': typeof MasterDataStandardRoute
@@ -205,6 +213,7 @@ export interface FileRoutesById {
   '/report': typeof ReportRoute
   '/user-management': typeof UserManagementRoute
   '/boiler-details/$id': typeof BoilerDetailsIdRoute
+  '/checksheet_/problem-list': typeof ChecksheetProblemListRoute
   '/master-data/colors': typeof MasterDataColorsRoute
   '/master-data/equipment': typeof MasterDataEquipmentRoute
   '/master-data/standard': typeof MasterDataStandardRoute
@@ -231,6 +240,7 @@ export interface FileRouteTypes {
     | '/report'
     | '/user-management'
     | '/boiler-details/$id'
+    | '/checksheet/problem-list'
     | '/master-data/colors'
     | '/master-data/equipment'
     | '/master-data/standard'
@@ -254,6 +264,7 @@ export interface FileRouteTypes {
     | '/report'
     | '/user-management'
     | '/boiler-details/$id'
+    | '/checksheet/problem-list'
     | '/master-data/colors'
     | '/master-data/equipment'
     | '/master-data/standard'
@@ -278,6 +289,7 @@ export interface FileRouteTypes {
     | '/report'
     | '/user-management'
     | '/boiler-details/$id'
+    | '/checksheet_/problem-list'
     | '/master-data/colors'
     | '/master-data/equipment'
     | '/master-data/standard'
@@ -303,6 +315,7 @@ export interface RootRouteChildren {
   ReportRoute: typeof ReportRoute
   UserManagementRoute: typeof UserManagementRoute
   BoilerDetailsIdRoute: typeof BoilerDetailsIdRoute
+  ChecksheetProblemListRoute: typeof ChecksheetProblemListRoute
   MonitoringAreaIdRoute: typeof MonitoringAreaIdRoute
   MonitoringAreaPtedLogHistoryRoute: typeof MonitoringAreaPtedLogHistoryRoute
   MonitoringAreaIndexRoute: typeof MonitoringAreaIndexRoute
@@ -392,6 +405,13 @@ declare module '@tanstack/react-router' {
       path: '/boiler-details/$id'
       fullPath: '/boiler-details/$id'
       preLoaderRoute: typeof BoilerDetailsIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/checksheet_/problem-list': {
+      id: '/checksheet_/problem-list'
+      path: '/checksheet/problem-list'
+      fullPath: '/checksheet/problem-list'
+      preLoaderRoute: typeof ChecksheetProblemListRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/master-data/': {
@@ -504,6 +524,7 @@ const rootRouteChildren: RootRouteChildren = {
   ReportRoute: ReportRoute,
   UserManagementRoute: UserManagementRoute,
   BoilerDetailsIdRoute: BoilerDetailsIdRoute,
+  ChecksheetProblemListRoute: ChecksheetProblemListRoute,
   MonitoringAreaIdRoute: MonitoringAreaIdRoute,
   MonitoringAreaPtedLogHistoryRoute: MonitoringAreaPtedLogHistoryRoute,
   MonitoringAreaIndexRoute: MonitoringAreaIndexRoute,

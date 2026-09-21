@@ -392,6 +392,8 @@ function StationDetailContent({ tabKey }: { tabKey: string }) {
         time: `${day} ${month} ${year}, ${timeStr}`,
         pv: +(parseFloat(data.pv) + (Math.random() * 2 - 1)).toFixed(1),
         sp: parseFloat(data.sp),
+        pv_large: +(parseFloat(data.pv) + 5 + (Math.random() * 2 - 1)).toFixed(1),
+        sp_large: parseFloat(data.sp) + 5,
       };
     });
   }, [data]);
@@ -401,25 +403,61 @@ function StationDetailContent({ tabKey }: { tabKey: string }) {
     <div className="animate-in fade-in duration-300 bg-card border border-border rounded-lg shadow-sm p-4 m-4">
       {/* Summary Cards */}
       <div className="mb-6">
-        <StatCardGrid
-          columns={2}
-          items={[
-            {
-              title: "PV Temperature",
-              value: <div className="flex items-baseline gap-1"><span className={data.alarm ? "text-destructive" : "text-blue-500"}>{data.pv}</span><span className="text-sm text-muted-foreground font-normal">°C</span></div>,
-              variant: "stat",
-              icon: <Thermometer />,
-              iconBg: "bg-blue-500/10 text-blue-500",
-            },
-            {
-              title: "SP Temperature",
-              value: <div className="flex items-baseline gap-1"><span className="text-blue-500">{data.sp}</span><span className="text-sm text-muted-foreground font-normal">°C</span></div>,
-              variant: "stat",
-              icon: <Thermometer />,
-              iconBg: "bg-blue-500/10 text-blue-500",
-            }
-          ]}
-        />
+        {(tabKey === "pre-degreasing" || tabKey === "phosphate") ? (
+          <StatCardGrid
+            columns={4}
+            items={[
+              {
+                title: "SP Temp (Small Tank)",
+                value: <div className="flex items-baseline gap-1"><span className="text-blue-500">{data.sp}</span><span className="text-sm text-muted-foreground font-normal">°C</span></div>,
+                variant: "stat",
+                icon: <Thermometer />,
+                iconBg: "bg-blue-500/10 text-blue-500",
+              },
+              {
+                title: "PV Temp (Small Tank)",
+                value: <div className="flex items-baseline gap-1"><span className={data.alarm ? "text-destructive" : "text-blue-500"}>{data.pv}</span><span className="text-sm text-muted-foreground font-normal">°C</span></div>,
+                variant: "stat",
+                icon: <Thermometer />,
+                iconBg: "bg-blue-500/10 text-blue-500",
+              },
+              {
+                title: "SP Temp (Large Tank)",
+                value: <div className="flex items-baseline gap-1"><span className="text-blue-500">{(parseFloat(data.sp) + 5).toString()}</span><span className="text-sm text-muted-foreground font-normal">°C</span></div>,
+                variant: "stat",
+                icon: <Thermometer />,
+                iconBg: "bg-blue-500/10 text-blue-500",
+              },
+              {
+                title: "PV Temp (Large Tank)",
+                value: <div className="flex items-baseline gap-1"><span className={data.alarm ? "text-destructive" : "text-blue-500"}>{(parseFloat(data.pv) + 5).toFixed(1)}</span><span className="text-sm text-muted-foreground font-normal">°C</span></div>,
+                variant: "stat",
+                icon: <Thermometer />,
+                iconBg: "bg-blue-500/10 text-blue-500",
+              }
+            ]}
+          />
+        ) : (
+          <StatCardGrid
+            columns={2}
+            items={[
+              {
+                title: "SP Temperature",
+                value: <div className="flex items-baseline gap-1"><span className="text-blue-500">{data.sp}</span><span className="text-sm text-muted-foreground font-normal">°C</span></div>,
+                variant: "stat",
+                icon: <Thermometer />,
+                iconBg: "bg-blue-500/10 text-blue-500",
+              },
+              {
+                title: "PV Temperature",
+                value: <div className="flex items-baseline gap-1"><span className={data.alarm ? "text-destructive" : "text-blue-500"}>{data.pv}</span><span className="text-sm text-muted-foreground font-normal">°C</span></div>,
+                variant: "stat",
+                icon: <Thermometer />,
+                iconBg: "bg-blue-500/10 text-blue-500",
+              }
+            ]}
+          />
+        )}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-6">
@@ -508,7 +546,7 @@ function StationDetailContent({ tabKey }: { tabKey: string }) {
             datalist={[
               { label: "All Status", value: "all" },
               { label: "Normal", value: "normal" },
-              { label: "Warning", value: "warning" },
+              { label: "Critical", value: "critical" },
             ]}
             placeholder="Status"
             containerClassName="w-full lg:w-40"
@@ -523,23 +561,43 @@ function StationDetailContent({ tabKey }: { tabKey: string }) {
           <THead>
             <Tr noHover>
               <Th sortable column="time">TIME / PERIOD</Th>
-              <Th sortable column="pv" className="text-right">ACTUAL TEMP (PV)</Th>
-              <Th sortable column="sp" className="text-right">SET POINT (SP)</Th>
+              {!(tabKey === "flood" || tabKey === "degreasing") && (
+                <>
+                  <Th sortable column="sp" className="text-right">SET POINT (SP) SMALL TANK</Th>
+                  <Th sortable column="pv" className="text-right">ACTUAL TEMP. (PV) SMALL TANK</Th>
+                </>
+              )}
+              <Th sortable column="sp_large" className="text-right">SET POINT (SP) LARGE TANK</Th>
+              <Th sortable column="pv_large" className="text-right">ACTUAL TEMP. (PV) LARGE TANK</Th>
               <Th sortable column="status" className="text-center">STATUS</Th>
             </Tr>
           </THead>
           <TBody>
             {tableData.map((row, idx) => {
               const diff = Math.abs(row.pv - row.sp);
-              const isWarning = diff > 2; // Threshold for warning
+              const diffLarge = Math.abs(row.pv_large - row.sp_large);
+
+              let isCritical = false;
+              if (tabKey === "flood" || tabKey === "degreasing") {
+                isCritical = diffLarge > 2;
+              } else {
+                isCritical = diff > 2 || diffLarge > 2;
+              }
+
               return (
                 <Tr key={idx}>
                   <Td className="font-medium text-foreground">{row.time}</Td>
-                  <Td className="text-right font-mono font-medium text-blue-500">{row.pv.toFixed(1)} °C</Td>
-                  <Td className="text-right font-mono font-medium text-foreground">{row.sp.toFixed(1)} °C</Td>
+                  {!(tabKey === "flood" || tabKey === "degreasing") && (
+                    <>
+                      <Td className="text-right font-mono font-medium text-foreground">{row.sp.toFixed(1)} °C</Td>
+                      <Td className="text-right font-mono font-medium text-blue-500">{row.pv.toFixed(1)} °C</Td>
+                    </>
+                  )}
+                  <Td className="text-right font-mono font-medium text-foreground">{row.sp_large.toFixed(1)} °C</Td>
+                  <Td className="text-right font-mono font-medium text-blue-500">{row.pv_large.toFixed(1)} °C</Td>
                   <Td className="text-center">
-                    {isWarning ? (
-                      <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold bg-red-500/10 text-red-600 border border-red-500/20">WARNING</span>
+                    {isCritical ? (
+                      <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold bg-red-500/10 text-red-600 border border-red-500/20">CRITICAL</span>
                     ) : (
                       <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-500/10 text-emerald-600 border border-emerald-500/20">NORMAL</span>
                     )}
@@ -1240,37 +1298,6 @@ function MonitoringAreaDetails() {
                 </div>
                 <div className="relative w-full overflow-hidden flex items-center justify-center">
                   <img src={DenahFixPng} alt="Bag Filter Layout" className="w-full h-full object-cover drop-shadow-sm dark:invert" />
-                  
-                  {/* Interactive Hotspots */}
-                  {[
-                    { id: "di-bf1", label: "DI Bag Filter 1", top: "15%", left: "22%", pressure: "0.22" },
-                    { id: "di-bf2", label: "DI Bag Filter 2", top: "8%", left: "50%", pressure: "0.21" },
-                    { id: "di-bf3", label: "DI Bag Filter 3", top: "15%", left: "77%", pressure: "0.23" },
-                    { id: "uf2-bf", label: "UF 2 Bag Filter", top: "42%", left: "73%", pressure: "0.45" },
-                    { id: "uf1-module", label: "UF 1 Module", top: "67%", left: "82%", pressure: "0.38" },
-                    { id: "ced-bf1", label: "CED Bag Filter 1", top: "88%", left: "28%", pressure: "0.31" },
-                    { id: "ced-bf2", label: "CED Bag Filter 2", top: "88%", left: "52%", pressure: "0.32" },
-                  ].map((hotspot) => (
-                    <Popover key={hotspot.id}>
-                      <PopoverTrigger asChild>
-                        <button
-                          className="absolute w-6 h-6 rounded-full bg-blue-500/50 hover:bg-blue-500 border-2 border-white shadow-lg flex items-center justify-center animate-pulse transition-all cursor-pointer"
-                          style={{ top: hotspot.top, left: hotspot.left }}
-                          aria-label={`View ${hotspot.label} pressure`}
-                        />
-                      </PopoverTrigger>
-                      <PopoverContent className="w-48 p-3 bg-card border-border shadow-md">
-                        <div className="flex flex-col gap-1">
-                          <span className="text-xs font-semibold text-muted-foreground uppercase">{hotspot.label}</span>
-                          <span className="text-sm font-bold text-foreground">Pressure</span>
-                          <div className="flex items-baseline gap-1 mt-1">
-                            <span className="text-2xl font-mono text-blue-500 font-bold">{hotspot.pressure}</span>
-                            <span className="text-sm text-muted-foreground">MPa</span>
-                          </div>
-                        </div>
-                      </PopoverContent>
-                    </Popover>
-                  ))}
                 </div>
               </div>
             </div>
