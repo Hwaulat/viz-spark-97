@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, useMemo } from "react";
 import { ChevronDown, LayoutDashboard, Calendar, Droplet, Thermometer, Beaker, CheckCircle, AlertTriangle, Wrench, AlertOctagon, X } from "lucide-react";
 import {
@@ -1924,14 +1924,15 @@ function DashboardChecksheet() {
               {
                 title: "Total Problem",
                 value: (
-                  <div className="flex items-baseline gap-2">
+                  <div className="flex items-baseline gap-2 relative z-10">
                     <span>{eqTotalProblem}</span>
-                    <button
-                      className="text-xs text-primary hover:underline cursor-pointer font-medium relative -top-0.5"
-                      onClick={() => setShowProblemModal("PROBLEM")}
+                    <Link
+                      to="/checksheet/problem-list"
+                      className="text-xs text-primary hover:underline cursor-pointer font-medium"
+                      style={{ pointerEvents: 'auto' }}
                     >
                       details
-                    </button>
+                    </Link>
                   </div>
                 ),
                 variant: "stat",
@@ -2096,14 +2097,15 @@ function DashboardChecksheet() {
               {
                 title: "Total Problem",
                 value: (
-                  <div className="flex items-baseline gap-2">
+                  <div className="flex items-baseline gap-2 relative z-10">
                     <span>{cedTotalProblem}</span>
-                    <button
-                      className="text-xs text-primary hover:underline cursor-pointer font-medium relative -top-0.5"
-                      onClick={() => setShowCEDProblemModal("PROBLEM")}
+                    <Link
+                      to="/checksheet/problem-list"
+                      className="text-xs text-primary hover:underline cursor-pointer font-medium"
+                      style={{ pointerEvents: 'auto' }}
                     >
                       details
-                    </button>
+                    </Link>
                   </div>
                 ),
                 variant: "stat",
