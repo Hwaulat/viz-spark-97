@@ -76,15 +76,9 @@ function PTEDLogHistory() {
           Back
         </Link>
         <div>
-          <div className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">
-            Monitoring Area / PTED Area
-          </div>
           <h1 className="text-2xl font-semibold mt-1 flex items-center gap-2">
              <Activity className="h-5 w-5 text-primary" /> PTED Log History
           </h1>
-          <p className="text-sm text-muted-foreground mt-0.5">
-            Log history for PTED equipment fluid temperature.
-          </p>
         </div>
       </div>
 

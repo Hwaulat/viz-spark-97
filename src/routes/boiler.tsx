@@ -66,7 +66,7 @@ function BoilerArea() {
             {
               title: "Current Gas Consumption",
               value: `${BOILER_GAS.instantFlow} ${BOILER_GAS.unit}`,
-              variant: "stat",
+              variant: "stat-side",
               icon: <Fuel />,
               iconBg: "bg-amber-500/10 text-amber-500",
               valueColor: "text-amber-500",
@@ -74,7 +74,7 @@ function BoilerArea() {
             {
               title: "Total Consumption Today",
               value: `${BOILER_GAS.todayTotal.toLocaleString()} ${BOILER_GAS.todayUnit}`,
-              variant: "stat",
+              variant: "stat-side",
               icon: <Fuel />,
               iconBg: "bg-blue-500/10 text-blue-500",
             },
@@ -83,7 +83,7 @@ function BoilerArea() {
               value: "4.2 MPa",
               subtitle: "● Supply Line Normal",
               subtitleColor: "text-ok",
-              variant: "stat",
+              variant: "stat-side",
               icon: <Fuel />,
               iconBg: "bg-amber-500/10 text-amber-500",
             }

@@ -1900,7 +1900,7 @@ function DashboardChecksheet() {
               {
                 title: "Total OK",
                 value: eqTotalOK.toString(),
-                variant: "stat",
+                variant: "stat-side",
                 icon: <CheckCircle className="h-4.5 w-4.5" />,
                 iconBg: "bg-green-500/10 text-green-500",
                 valueColor: "text-green-600",
@@ -1908,7 +1908,7 @@ function DashboardChecksheet() {
               {
                 title: "Total NG",
                 value: eqTotalNG.toString(),
-                variant: "stat",
+                variant: "stat-side",
                 icon: <AlertTriangle className="h-4.5 w-4.5" />,
                 iconBg: "bg-red-500/10 text-red-500",
                 valueColor: "text-red-600",
@@ -1916,7 +1916,7 @@ function DashboardChecksheet() {
               {
                 title: "Total Repair",
                 value: eqTotalRepair.toString(),
-                variant: "stat",
+                variant: "stat-side",
                 icon: <Wrench className="h-4.5 w-4.5" />,
                 iconBg: "bg-orange-500/10 text-orange-500",
                 valueColor: "text-orange-600",
@@ -1935,7 +1935,7 @@ function DashboardChecksheet() {
                     </Link>
                   </div>
                 ),
-                variant: "stat",
+                variant: "stat-side",
                 icon: <AlertOctagon className="h-4.5 w-4.5" />,
                 iconBg: "bg-purple-500/10 text-purple-500",
                 valueColor: "text-purple-600",
@@ -2073,7 +2073,7 @@ function DashboardChecksheet() {
               {
                 title: "Total OK",
                 value: cedTotalOK.toString(),
-                variant: "stat",
+                variant: "stat-side",
                 icon: <CheckCircle className="h-4.5 w-4.5" />,
                 iconBg: "bg-green-500/10 text-green-500",
                 valueColor: "text-green-600",
@@ -2081,7 +2081,7 @@ function DashboardChecksheet() {
               {
                 title: "Total NG",
                 value: cedTotalNG.toString(),
-                variant: "stat",
+                variant: "stat-side",
                 icon: <AlertTriangle className="h-4.5 w-4.5" />,
                 iconBg: "bg-red-500/10 text-red-500",
                 valueColor: "text-red-600",
@@ -2089,7 +2089,7 @@ function DashboardChecksheet() {
               {
                 title: "Total Repair",
                 value: cedTotalRepair.toString(),
-                variant: "stat",
+                variant: "stat-side",
                 icon: <Wrench className="h-4.5 w-4.5" />,
                 iconBg: "bg-orange-500/10 text-orange-500",
                 valueColor: "text-orange-600",
@@ -2108,7 +2108,7 @@ function DashboardChecksheet() {
                     </Link>
                   </div>
                 ),
-                variant: "stat",
+                variant: "stat-side",
                 icon: <AlertOctagon className="h-4.5 w-4.5" />,
                 iconBg: "bg-purple-500/10 text-purple-500",
                 valueColor: "text-purple-600",
