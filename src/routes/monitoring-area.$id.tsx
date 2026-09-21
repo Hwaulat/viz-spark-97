@@ -129,7 +129,7 @@ function OvenDetailContent({ id }: { id: string }) {
                   </div>
                 </div>
               ),
-              variant: "stat",
+              variant: "stat-side",
               icon: <Thermometer />,
               iconBg: "bg-blue-500/10 text-blue-500",
             },
@@ -147,7 +147,7 @@ function OvenDetailContent({ id }: { id: string }) {
                   </div>
                 </div>
               ),
-              variant: "stat",
+              variant: "stat-side",
               icon: <Thermometer />,
               iconBg: "bg-blue-500/10 text-blue-500",
             },
@@ -165,7 +165,7 @@ function OvenDetailContent({ id }: { id: string }) {
                   </div>
                 </div>
               ),
-              variant: "stat",
+              variant: "stat-side",
               icon: <Gauge />,
               iconBg: "bg-amber-500/10 text-amber-500",
             }
@@ -410,28 +410,28 @@ function StationDetailContent({ tabKey }: { tabKey: string }) {
               {
                 title: "SP Temp (Small Tank)",
                 value: <div className="flex items-baseline gap-1"><span className="text-blue-500">{data.sp}</span><span className="text-sm text-muted-foreground font-normal">°C</span></div>,
-                variant: "stat",
+                variant: "stat-side",
                 icon: <Thermometer />,
                 iconBg: "bg-blue-500/10 text-blue-500",
               },
               {
                 title: "PV Temp (Small Tank)",
                 value: <div className="flex items-baseline gap-1"><span className={data.alarm ? "text-destructive" : "text-blue-500"}>{data.pv}</span><span className="text-sm text-muted-foreground font-normal">°C</span></div>,
-                variant: "stat",
+                variant: "stat-side",
                 icon: <Thermometer />,
                 iconBg: "bg-blue-500/10 text-blue-500",
               },
               {
                 title: "SP Temp (Large Tank)",
                 value: <div className="flex items-baseline gap-1"><span className="text-blue-500">{(parseFloat(data.sp) + 5).toString()}</span><span className="text-sm text-muted-foreground font-normal">°C</span></div>,
-                variant: "stat",
+                variant: "stat-side",
                 icon: <Thermometer />,
                 iconBg: "bg-blue-500/10 text-blue-500",
               },
               {
                 title: "PV Temp (Large Tank)",
                 value: <div className="flex items-baseline gap-1"><span className={data.alarm ? "text-destructive" : "text-blue-500"}>{(parseFloat(data.pv) + 5).toFixed(1)}</span><span className="text-sm text-muted-foreground font-normal">°C</span></div>,
-                variant: "stat",
+                variant: "stat-side",
                 icon: <Thermometer />,
                 iconBg: "bg-blue-500/10 text-blue-500",
               }
@@ -444,14 +444,14 @@ function StationDetailContent({ tabKey }: { tabKey: string }) {
               {
                 title: "SP Temperature",
                 value: <div className="flex items-baseline gap-1"><span className="text-blue-500">{data.sp}</span><span className="text-sm text-muted-foreground font-normal">°C</span></div>,
-                variant: "stat",
+                variant: "stat-side",
                 icon: <Thermometer />,
                 iconBg: "bg-blue-500/10 text-blue-500",
               },
               {
                 title: "PV Temperature",
                 value: <div className="flex items-baseline gap-1"><span className={data.alarm ? "text-destructive" : "text-blue-500"}>{data.pv}</span><span className="text-sm text-muted-foreground font-normal">°C</span></div>,
-                variant: "stat",
+                variant: "stat-side",
                 icon: <Thermometer />,
                 iconBg: "bg-blue-500/10 text-blue-500",
               }
@@ -469,10 +469,7 @@ function StationDetailContent({ tabKey }: { tabKey: string }) {
               <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Station Diagram — {data.name}</span>
             </div>
             <div className="flex items-center gap-4">
-              <div className="flex items-center gap-3 text-sm font-medium">
-                <span className="text-muted-foreground">PV: <span className="text-lg font-bold text-blue-500">{data.pv}</span> °C</span>
-                <span className="text-muted-foreground">SP: <span className="text-lg font-bold text-foreground">{data.sp}</span> °C</span>
-              </div>
+
               <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-orange-500/10 text-orange-600 border border-orange-500/20">VIEW-ONLY</span>
             </div>
           </div>
@@ -535,102 +532,104 @@ function StationDetailContent({ tabKey }: { tabKey: string }) {
       </div>
 
       {/* Table History */}
-      <div className="w-full rounded-lg border border-border bg-card shadow-sm overflow-hidden mt-6 mb-2">
-        <div className="flex items-center justify-between p-4 border-b border-border/50 bg-card">
-          <h3 className="text-lg font-semibold text-foreground">Temperature History</h3>
-        </div>
-        {/* Search and Filters */}
-        <div className="flex flex-col lg:flex-row items-center gap-4 px-4 py-3 bg-secondary/10 border-b border-border/50 w-full">
-          <Search placeholder="Search" containerClassName="flex-1 w-full" />
-          <SelectInput
-            datalist={[
-              { label: "All Status", value: "all" },
-              { label: "Normal", value: "normal" },
-              { label: "Critical", value: "critical" },
-            ]}
-            placeholder="Status"
-            containerClassName="w-full lg:w-40"
-          />
-          <div className="flex items-center gap-2 px-3 py-2 rounded-lg border border-border bg-background text-sm text-muted-foreground cursor-pointer hover:bg-secondary/20 transition-colors h-[40px]">
-            <Calendar className="h-4 w-4" />
-            <span>dd/mm/yyyy - dd/mm/yyyy</span>
-          </div>
-        </div>
-
-        <Table freezeHeader={false}>
-          <THead>
-            <Tr noHover>
-              <Th sortable column="time">TIME / PERIOD</Th>
-              {!(tabKey === "flood" || tabKey === "degreasing") && (
-                <>
-                  <Th sortable column="sp" className="text-right">SET POINT (SP) SMALL TANK</Th>
-                  <Th sortable column="pv" className="text-right">ACTUAL TEMP. (PV) SMALL TANK</Th>
-                </>
-              )}
-              <Th sortable column="sp_large" className="text-right">SET POINT (SP) LARGE TANK</Th>
-              <Th sortable column="pv_large" className="text-right">ACTUAL TEMP. (PV) LARGE TANK</Th>
-              <Th sortable column="status" className="text-center">STATUS</Th>
-            </Tr>
-          </THead>
-          <TBody>
-            {tableData.map((row, idx) => {
-              const diff = Math.abs(row.pv - row.sp);
-              const diffLarge = Math.abs(row.pv_large - row.sp_large);
-
-              let isCritical = false;
-              if (tabKey === "flood" || tabKey === "degreasing") {
-                isCritical = diffLarge > 2;
-              } else {
-                isCritical = diff > 2 || diffLarge > 2;
-              }
-
-              return (
-                <Tr key={idx}>
-                  <Td className="font-medium text-foreground">{row.time}</Td>
-                  {!(tabKey === "flood" || tabKey === "degreasing") && (
-                    <>
-                      <Td className="text-right font-mono font-medium text-foreground">{row.sp.toFixed(1)} °C</Td>
-                      <Td className="text-right font-mono font-medium text-blue-500">{row.pv.toFixed(1)} °C</Td>
-                    </>
-                  )}
-                  <Td className="text-right font-mono font-medium text-foreground">{row.sp_large.toFixed(1)} °C</Td>
-                  <Td className="text-right font-mono font-medium text-blue-500">{row.pv_large.toFixed(1)} °C</Td>
-                  <Td className="text-center">
-                    {isCritical ? (
-                      <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold bg-red-500/10 text-red-600 border border-red-500/20">CRITICAL</span>
-                    ) : (
-                      <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-500/10 text-emerald-600 border border-emerald-500/20">NORMAL</span>
-                    )}
-                  </Td>
-                </Tr>
-              );
-            })}
-          </TBody>
-        </Table>
-
-        {/* Pagination Footer */}
-        <div className="flex items-center justify-between px-4 py-4 border-t border-border/60">
-          <div className="flex items-center gap-4 text-sm text-muted-foreground font-medium">
-            <div className="flex items-center gap-2">
-              <span>Rows per page</span>
-              <div className="flex items-center justify-between w-[60px] px-2 py-1.5 border border-border rounded-md bg-background cursor-pointer hover:bg-secondary/40 transition-colors">
-                <span>10</span>
-                <ChevronDown className="h-3 w-3 opacity-50" />
+      {!["flood", "pre-degreasing", "degreasing", "phosphate"].includes(tabKey) && (
+        <>
+          <h3 className="text-lg font-semibold text-foreground mt-8 mb-4">Temperature History</h3>
+          <div className="w-full rounded-lg border border-border bg-card shadow-sm overflow-hidden mb-2">
+            {/* Search and Filters */}
+            <div className="flex flex-col lg:flex-row items-center gap-4 px-4 py-3 bg-secondary/10 border-b border-border/50 w-full">
+              <Search placeholder="Search" containerClassName="flex-1 w-full" />
+              <SelectInput
+                datalist={[
+                  { label: "All Status", value: "all" },
+                  { label: "Normal", value: "normal" },
+                  { label: "Critical", value: "critical" },
+                ]}
+                placeholder="Status"
+                containerClassName="w-full lg:w-40"
+              />
+              <div className="flex items-center gap-2 px-3 py-2 rounded-lg border border-border bg-background text-sm text-muted-foreground cursor-pointer hover:bg-secondary/20 transition-colors h-[40px]">
+                <Calendar className="h-4 w-4" />
+                <span>dd/mm/yyyy - dd/mm/yyyy</span>
               </div>
             </div>
-            <span>1–10 of {tableData.length}</span>
+
+            <Table freezeHeader={false}>
+              <THead>
+                <Tr noHover>
+                  <Th sortable column="time">TIME / PERIOD</Th>
+                  {!(tabKey === "flood" || tabKey === "degreasing") && (
+                    <>
+                      <Th sortable column="sp" className="text-right">SET POINT (SP) SMALL TANK</Th>
+                      <Th sortable column="pv" className="text-right">ACTUAL TEMP. (PV) SMALL TANK</Th>
+                    </>
+                  )}
+                  <Th sortable column="sp_large" className="text-right">SET POINT (SP) LARGE TANK</Th>
+                  <Th sortable column="pv_large" className="text-right">ACTUAL TEMP. (PV) LARGE TANK</Th>
+                  <Th sortable column="status" className="text-center">STATUS</Th>
+                </Tr>
+              </THead>
+              <TBody>
+                {tableData.map((row, idx) => {
+                  const diff = Math.abs(row.pv - row.sp);
+                  const diffLarge = Math.abs(row.pv_large - row.sp_large);
+
+                  let isCritical = false;
+                  if (tabKey === "flood" || tabKey === "degreasing") {
+                    isCritical = diffLarge > 2;
+                  } else {
+                    isCritical = diff > 2 || diffLarge > 2;
+                  }
+
+                  return (
+                    <Tr key={idx}>
+                      <Td className="font-medium text-foreground">{row.time}</Td>
+                      {!(tabKey === "flood" || tabKey === "degreasing") && (
+                        <>
+                          <Td className="text-right font-mono font-medium text-foreground">{row.sp.toFixed(1)} °C</Td>
+                          <Td className="text-right font-mono font-medium text-blue-500">{row.pv.toFixed(1)} °C</Td>
+                        </>
+                      )}
+                      <Td className="text-right font-mono font-medium text-foreground">{row.sp_large.toFixed(1)} °C</Td>
+                      <Td className="text-right font-mono font-medium text-blue-500">{row.pv_large.toFixed(1)} °C</Td>
+                      <Td className="text-center">
+                        {isCritical ? (
+                          <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold bg-red-500/10 text-red-600 border border-red-500/20">CRITICAL</span>
+                        ) : (
+                          <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-500/10 text-emerald-600 border border-emerald-500/20">NORMAL</span>
+                        )}
+                      </Td>
+                    </Tr>
+                  );
+                })}
+              </TBody>
+            </Table>
+
+            {/* Pagination Footer */}
+            <div className="flex items-center justify-between px-4 py-4 border-t border-border/60">
+              <div className="flex items-center gap-4 text-sm text-muted-foreground font-medium">
+                <div className="flex items-center gap-2">
+                  <span>Rows per page</span>
+                  <div className="flex items-center justify-between w-[60px] px-2 py-1.5 border border-border rounded-md bg-background cursor-pointer hover:bg-secondary/40 transition-colors">
+                    <span>10</span>
+                    <ChevronDown className="h-3 w-3 opacity-50" />
+                  </div>
+                </div>
+                <span>1–10 of {tableData.length}</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <button className="w-8 h-8 flex items-center justify-center rounded-md border border-border text-muted-foreground hover:bg-secondary/40 hover:text-foreground transition-colors text-sm font-medium">«</button>
+                <button className="w-8 h-8 flex items-center justify-center rounded-md border border-border text-muted-foreground hover:bg-secondary/40 hover:text-foreground transition-colors text-sm font-medium">‹</button>
+                <button className="w-8 h-8 flex items-center justify-center rounded-md bg-[#1F5AA6] text-white text-sm font-semibold border border-[#1F5AA6]">1</button>
+                <button className="w-8 h-8 flex items-center justify-center rounded-md border border-border text-muted-foreground hover:bg-secondary/40 hover:text-foreground transition-colors text-sm font-medium">2</button>
+                <button className="w-8 h-8 flex items-center justify-center rounded-md border border-border text-muted-foreground hover:bg-secondary/40 hover:text-foreground transition-colors text-sm font-medium">3</button>
+                <button className="w-8 h-8 flex items-center justify-center rounded-md border border-border text-muted-foreground hover:bg-secondary/40 hover:text-foreground transition-colors text-sm font-medium">›</button>
+                <button className="w-8 h-8 flex items-center justify-center rounded-md border border-border text-muted-foreground hover:bg-secondary/40 hover:text-foreground transition-colors text-sm font-medium">»</button>
+              </div>
+            </div>
           </div>
-          <div className="flex items-center gap-1">
-            <button className="w-8 h-8 flex items-center justify-center rounded-md border border-border text-muted-foreground hover:bg-secondary/40 hover:text-foreground transition-colors text-sm font-medium">«</button>
-            <button className="w-8 h-8 flex items-center justify-center rounded-md border border-border text-muted-foreground hover:bg-secondary/40 hover:text-foreground transition-colors text-sm font-medium">‹</button>
-            <button className="w-8 h-8 flex items-center justify-center rounded-md bg-[#1F5AA6] text-white text-sm font-semibold border border-[#1F5AA6]">1</button>
-            <button className="w-8 h-8 flex items-center justify-center rounded-md border border-border text-muted-foreground hover:bg-secondary/40 hover:text-foreground transition-colors text-sm font-medium">2</button>
-            <button className="w-8 h-8 flex items-center justify-center rounded-md border border-border text-muted-foreground hover:bg-secondary/40 hover:text-foreground transition-colors text-sm font-medium">3</button>
-            <button className="w-8 h-8 flex items-center justify-center rounded-md border border-border text-muted-foreground hover:bg-secondary/40 hover:text-foreground transition-colors text-sm font-medium">›</button>
-            <button className="w-8 h-8 flex items-center justify-center rounded-md border border-border text-muted-foreground hover:bg-secondary/40 hover:text-foreground transition-colors text-sm font-medium">»</button>
-          </div>
-        </div>
-      </div>
+        </>
+      )}
 
       {/* Image Modal Popup */}
       {isImageModalOpen && (
@@ -708,76 +707,102 @@ function MonitoringAreaDetails() {
   return (
     <div className="p-6 space-y-6">
       {/* Header */}
-      <div className="flex items-start gap-4">
-        <Link
-          to="/monitoring-area"
-          className="mt-1 flex items-center justify-center gap-1.5 rounded-lg border border-border bg-card px-3 py-1.5 shadow-sm hover:bg-secondary transition-colors text-sm font-medium text-foreground"
-        >
-          <ChevronLeft className="h-4 w-4" />
-          Back
-        </Link>
-        <div>
-          <div className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">
-            Monitoring Area
-          </div>
-          <h1 className="text-2xl font-semibold mt-1 inline-flex items-center gap-2">
+      <div className="flex items-center gap-4 flex-wrap">
+        <div className="flex items-center gap-4">
+          <Link
+            to="/monitoring-area"
+            className="flex items-center justify-center gap-1.5 rounded-lg border border-border bg-card px-3 py-1.5 shadow-sm hover:bg-secondary transition-colors text-sm font-medium text-foreground"
+          >
+            <ChevronLeft className="h-4 w-4" />
+            Back
+          </Link>
+          <h1 className="text-2xl font-semibold inline-flex items-center gap-2">
             <Activity className="h-5 w-5 text-primary" /> {name}
           </h1>
-          <p className="text-sm text-muted-foreground mt-0.5">
-            Detailed parameter monitoring for this section will be displayed here.
-          </p>
         </div>
+
+        {id === "line-tracking" && (
+          <div className="flex items-center gap-4">
+            <div className="flex bg-gray-100 dark:bg-gray-700/60 rounded-xl p-1 h-auto overflow-x-auto custom-scrollbar">
+              {["Line Tracking", "Process Detail"].map((t) => (
+                <button
+                  key={t}
+                  onClick={() => setLineTrackingTab(t)}
+                  className={`text-gray-500 dark:text-gray-400 rounded-lg text-xs font-medium h-8 px-4 whitespace-nowrap transition-colors ${lineTrackingTab === t
+                    ? "bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-sm"
+                    : "hover:text-gray-700 dark:hover:text-gray-300"
+                    }`}
+                >
+                  {t}
+                </button>
+              ))}
+            </div>
+
+            {lineTrackingTab === "Process Detail" && (
+              <div className="flex bg-gray-100 dark:bg-gray-700/60 rounded-xl p-1 h-auto overflow-x-auto custom-scrollbar">
+                {[
+                  { id: "pre-degreasing", label: "Pre Degreasing" },
+                  { id: "degreasing", label: "Degreasing" },
+                  { id: "phosphate", label: "Phosphate" },
+                  { id: "flood", label: "Flood" },
+                ].map((tab) => (
+                  <button
+                    key={tab.id}
+                    onClick={() => setProcessDetailTab(tab.id)}
+                    className={`text-gray-500 dark:text-gray-400 rounded-lg text-xs font-medium h-8 px-4 whitespace-nowrap transition-colors ${processDetailTab === tab.id
+                      ? "bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-sm"
+                      : "hover:text-gray-700 dark:hover:text-gray-300"
+                      }`}
+                  >
+                    {tab.label}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
       {id === "boiler-area" ? (
         <div className="space-y-6">
           {/* Summary Card */}
-          <Panel
-            title={
-              <span className="inline-flex items-center gap-2 font-semibold">
-                <Gauge className="h-4 w-4" /> Boiler Area Summary
-              </span>
-            }
-            subtitle="Total consumption and power"
-          >
-            <StatCardGrid
-              columns={4}
-              items={[
-                {
-                  title: "Gas Flow",
-                  value: `${BOILER_GAS.instantFlow} MMBTU/m`,
-                  variant: "stat",
-                  icon: <Fuel />,
-                  iconBg: "bg-amber-500/10 text-amber-500",
-                },
-                {
-                  title: "Gas Pressure",
-                  value: `${BOILER_GAS.gasPressure} MPa`,
-                  variant: "stat",
-                  icon: <Gauge />,
-                  iconBg: "bg-blue-500/10 text-blue-500",
-                },
-                {
-                  title: "Power Panel",
-                  value: `${BOILER_GAS.powerPanel} kw/h`,
-                  variant: "stat",
-                  icon: <Zap />,
-                  iconBg: "bg-emerald-500/10 text-emerald-500",
-                },
-                {
-                  title: "Panel Boiler Status",
-                  value: (
-                    <span className={`inline-block text-sm px-3 py-1 mt-1 rounded-md font-bold ${BOILER_GAS.panelBoilerStatus === "ON" ? 'bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400' : 'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400'}`}>
-                      {BOILER_GAS.panelBoilerStatus}
-                    </span>
-                  ),
-                  variant: "stat",
-                  icon: <Power />,
-                  iconBg: BOILER_GAS.panelBoilerStatus === "ON" ? "bg-emerald-500/10 text-emerald-500" : "bg-destructive/10 text-destructive",
-                }
-              ]}
-            />
-          </Panel>
+          <StatCardGrid
+            columns={4}
+            items={[
+              {
+                title: "Gas Flow",
+                value: `${BOILER_GAS.instantFlow} MMBTU/m`,
+                variant: "stat-side",
+                icon: <Fuel />,
+                iconBg: "bg-amber-500/10 text-amber-500",
+              },
+              {
+                title: "Gas Pressure",
+                value: `${BOILER_GAS.gasPressure} MPa`,
+                variant: "stat-side",
+                icon: <Gauge />,
+                iconBg: "bg-blue-500/10 text-blue-500",
+              },
+              {
+                title: "Power Panel",
+                value: `${BOILER_GAS.powerPanel} kw/h`,
+                variant: "stat-side",
+                icon: <Zap />,
+                iconBg: "bg-emerald-500/10 text-emerald-500",
+              },
+              {
+                title: "Panel Boiler Status",
+                value: (
+                  <span className={`inline-block text-sm px-3 py-1 mt-1 rounded-md font-bold ${BOILER_GAS.panelBoilerStatus === "ON" ? 'bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400' : 'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400'}`}>
+                    {BOILER_GAS.panelBoilerStatus}
+                  </span>
+                ),
+                variant: "stat-side",
+                icon: <Power />,
+                iconBg: BOILER_GAS.panelBoilerStatus === "ON" ? "bg-emerald-500/10 text-emerald-500" : "bg-destructive/10 text-destructive",
+              }
+            ]}
+          />
 
           {/* Tabbed Section inside a Card */}
           <Tabs
@@ -1181,76 +1206,24 @@ function MonitoringAreaDetails() {
         </div>
       ) : id === "line-tracking" ? (
         <div className="space-y-6">
-          <Tabs
-            variant="default"
-            value={lineTrackingTab}
-            onValueChange={setLineTrackingTab}
-            className="bg-card border border-border rounded-lg shadow-sm overflow-hidden flex flex-col w-full"
-            listClassName="m-4 w-fit"
-            rightElement={
-              lineTrackingTab === "Process Detail" ? (
-                <div className="flex bg-gray-100 dark:bg-gray-700/60 rounded-xl p-1 h-auto mr-4">
-                  {[
-                    { id: "pre-degreasing", label: "Pre Degreasing" },
-                    { id: "degreasing", label: "Degreasing" },
-                    { id: "phosphate", label: "Phosphate" },
-                    { id: "flood", label: "Flood" },
-                  ].map((tab) => (
-                    <button
-                      key={tab.id}
-                      onClick={() => setProcessDetailTab(tab.id)}
-                      className={`text-gray-500 dark:text-gray-400 rounded-lg text-xs font-medium h-8 px-4 transition-colors ${processDetailTab === tab.id
-                        ? "bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
-                        : "hover:text-gray-700 dark:hover:text-gray-300"
-                        }`}
-                    >
-                      {tab.label}
-                    </button>
-                  ))}
-                </div>
-              ) : null
-            }
-            items={[
-              {
-                value: "Line Tracking",
-                label: "Line Tracking",
-                content: (
-                  <div className="border border-border/50 rounded-lg overflow-hidden bg-background ml-4 mr-4 mb-4">
-                    {/* Map Header */}
-                    <div className="flex flex-col gap-2 p-4 border-b border-border/50 bg-secondary/20">
-                      <div className="flex justify-between items-start">
-                        <div className="flex items-center gap-2">
-                          <Waves className="h-4 w-4 text-primary" />
-                          <span className="font-semibold text-sm uppercase tracking-wider text-muted-foreground">Skid Tracking Map (Green = Skid Present)</span>
-                        </div>
-                      </div>
-                      <p className="text-foreground text-sm">Real-time position of skids along the CED line (U-loop layout)</p>
-                    </div>
+          {lineTrackingTab === "Line Tracking" ? (
+            <div className="border border-border/50 rounded-lg overflow-hidden bg-background mb-4">
+              {/* L-Shape Map Content */}
+              <div className="w-full overflow-hidden flex items-center justify-center bg-background bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCI+CiAgPHJlY3Qgd2lkdGg9IjIwIiBoZWlnaHQ9IjIwIiBmaWxsPSJub25lIiBzdHJva2U9IiNlNWU3ZWIiIHN0cm9rZS13aWR0aD0iMC41Ii8+Cjwvc3ZnPg==')] dark:bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCI+CiAgPHJlY3Qgd2lkdGg9IjIwIiBoZWlnaHQ9IjIwIiBmaWxsPSJub25lIiBzdHJva2U9IiMzMzQxNTUiIHN0cm9rZS13aWR0aD0iMC41Ii8+Cjwvc3ZnPg==')]">
+                <img src={LineTrackingPng} alt="Line Tracking Map" className="w-full h-auto object-cover drop-shadow-sm dark:invert dark:opacity-80 mix-blend-multiply dark:mix-blend-screen" />
+              </div>
 
-                    {/* L-Shape Map Content */}
-                    <div className="relative w-full min-h-[600px] overflow-hidden flex items-center justify-center bg-background bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCI+CiAgPHJlY3Qgd2lkdGg9IjIwIiBoZWlnaHQ9IjIwIiBmaWxsPSJub25lIiBzdHJva2U9IiNlNWU3ZWIiIHN0cm9rZS13aWR0aD0iMC41Ii8+Cjwvc3ZnPg==')] dark:bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCI+CiAgPHJlY3Qgd2lkdGg9IjIwIiBoZWlnaHQ9IjIwIiBmaWxsPSJub25lIiBzdHJva2U9IiMzMzQxNTUiIHN0cm9rZS13aWR0aD0iMC41Ii8+Cjwvc3ZnPg==')]">
-                      <img src={LineTrackingPng} alt="Line Tracking Map" className="w-full h-full object-cover drop-shadow-sm dark:invert dark:opacity-80 mix-blend-multiply dark:mix-blend-screen" />
-                    </div>
-
-                    {/* Map Legend Footer */}
-                    <div className="flex gap-4 p-3 bg-secondary/10 border-t border-border/50 text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">
-                      <div className="flex items-center gap-1.5"><div className="w-3 h-3 rounded-full bg-emerald-500"></div> GREEN = SKID PRESENT</div>
-                      <div className="flex items-center gap-1.5"><div className="w-3 h-3 rounded-full border-[1.5px] border-gray-400"></div> EMPTY STATION</div>
-                    </div>
-                  </div>
-                ),
-              },
-              {
-                value: "Process Detail",
-                label: "Process Detail",
-                content: (
-                  <div className="space-y-4 mb-4">
-                    <StationDetailContent tabKey={processDetailTab} />
-                  </div>
-                ),
-              },
-            ]}
-          />
+              {/* Map Legend Footer */}
+              <div className="flex gap-4 p-3 bg-secondary/10 border-t border-border/50 text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">
+                <div className="flex items-center gap-1.5"><div className="w-3 h-3 rounded-full bg-emerald-500"></div> GREEN = SKID PRESENT</div>
+                <div className="flex items-center gap-1.5"><div className="w-3 h-3 rounded-full border-[1.5px] border-gray-400"></div> EMPTY STATION</div>
+              </div>
+            </div>
+          ) : (
+            <div className="space-y-4 mb-4">
+              <StationDetailContent tabKey={processDetailTab} />
+            </div>
+          )}
         </div>
       ) : ["flood-station", "degreasing", "pre-degreasing", "phosphate"].includes(id) ? (
         <div className="mt-2">
@@ -1286,20 +1259,17 @@ function MonitoringAreaDetails() {
       ) : ["oven-sealing", "oven-topcoat", "oven-ced"].includes(id) ? (
         <OvenDetailContent id={id} />
       ) : id === "bag-filter" ? (
-        <div className="space-y-6">
-          <div className="bg-card border border-border rounded-lg shadow-sm p-6">
-            <div className="animate-in fade-in duration-300">
-              <div className="border border-border/50 rounded-lg overflow-hidden bg-background">
-                <div className="flex justify-between items-center p-3 bg-secondary/30 border-b border-border/50">
-                  <div className="flex items-center gap-2">
-                    <Filter className="h-4 w-4 text-muted-foreground" />
-                    <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Bag Filter Layout Diagram</span>
-                  </div>
-                </div>
-                <div className="relative w-full overflow-hidden flex items-center justify-center">
-                  <img src={DenahFixPng} alt="Bag Filter Layout" className="w-full h-full object-cover drop-shadow-sm dark:invert" />
-                </div>
+        <div className="animate-in fade-in duration-300">
+          <div className="border border-border/50 rounded-lg overflow-hidden bg-background shadow-sm">
+            <div className="flex justify-between items-center p-3 bg-white dark:bg-background border-b border-border/50">
+              <div className="flex items-center gap-2">
+                <Filter className="h-4 w-4 text-muted-foreground" />
+                <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Bag Filter Layout Diagram</span>
               </div>
+
+            </div>
+            <div className="w-full bg-white dark:bg-background flex items-center justify-center overflow-hidden">
+              <img src={DenahFixPng} alt="Bag Filter Layout" className="w-full h-auto object-cover drop-shadow-sm dark:invert" />
             </div>
           </div>
         </div>

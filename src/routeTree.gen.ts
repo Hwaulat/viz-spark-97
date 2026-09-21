@@ -31,6 +31,7 @@ import { Route as MasterDataTypeRouteImport } from './routes/master-data.type'
 import { Route as MasterDataUomRouteImport } from './routes/master-data.uom'
 import { Route as MonitoringAreaIndexRouteImport } from './routes/monitoring-area.index'
 import { Route as MonitoringAreaIdRouteImport } from './routes/monitoring-area.$id'
+import { Route as MonitoringAreaBagFilterHistoryRouteImport } from './routes/monitoring-area.bag-filter-history'
 import { Route as MonitoringAreaPtedLogHistoryRouteImport } from './routes/monitoring-area.pted-log-history'
 
 const IndexRoute = IndexRouteImport.update({
@@ -143,6 +144,12 @@ const MonitoringAreaIdRoute = MonitoringAreaIdRouteImport.update({
   path: '/monitoring-area/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MonitoringAreaBagFilterHistoryRoute =
+  MonitoringAreaBagFilterHistoryRouteImport.update({
+    id: '/monitoring-area/bag-filter-history',
+    path: '/monitoring-area/bag-filter-history',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const MonitoringAreaPtedLogHistoryRoute =
   MonitoringAreaPtedLogHistoryRouteImport.update({
     id: '/monitoring-area/pted-log-history',
@@ -171,6 +178,7 @@ export interface FileRoutesByFullPath {
   '/master-data/type': typeof MasterDataTypeRoute
   '/master-data/uom': typeof MasterDataUomRoute
   '/monitoring-area/$id': typeof MonitoringAreaIdRoute
+  '/monitoring-area/bag-filter-history': typeof MonitoringAreaBagFilterHistoryRoute
   '/monitoring-area/pted-log-history': typeof MonitoringAreaPtedLogHistoryRoute
   '/master-data/': typeof MasterDataIndexRoute
   '/monitoring-area/': typeof MonitoringAreaIndexRoute
@@ -195,6 +203,7 @@ export interface FileRoutesByTo {
   '/master-data/type': typeof MasterDataTypeRoute
   '/master-data/uom': typeof MasterDataUomRoute
   '/monitoring-area/$id': typeof MonitoringAreaIdRoute
+  '/monitoring-area/bag-filter-history': typeof MonitoringAreaBagFilterHistoryRoute
   '/monitoring-area/pted-log-history': typeof MonitoringAreaPtedLogHistoryRoute
   '/master-data': typeof MasterDataIndexRoute
   '/monitoring-area': typeof MonitoringAreaIndexRoute
@@ -221,6 +230,7 @@ export interface FileRoutesById {
   '/master-data/type': typeof MasterDataTypeRoute
   '/master-data/uom': typeof MasterDataUomRoute
   '/monitoring-area/$id': typeof MonitoringAreaIdRoute
+  '/monitoring-area/bag-filter-history': typeof MonitoringAreaBagFilterHistoryRoute
   '/monitoring-area/pted-log-history': typeof MonitoringAreaPtedLogHistoryRoute
   '/master-data/': typeof MasterDataIndexRoute
   '/monitoring-area/': typeof MonitoringAreaIndexRoute
@@ -248,6 +258,7 @@ export interface FileRouteTypes {
     | '/master-data/type'
     | '/master-data/uom'
     | '/monitoring-area/$id'
+    | '/monitoring-area/bag-filter-history'
     | '/monitoring-area/pted-log-history'
     | '/master-data/'
     | '/monitoring-area/'
@@ -272,6 +283,7 @@ export interface FileRouteTypes {
     | '/master-data/type'
     | '/master-data/uom'
     | '/monitoring-area/$id'
+    | '/monitoring-area/bag-filter-history'
     | '/monitoring-area/pted-log-history'
     | '/master-data'
     | '/monitoring-area'
@@ -297,6 +309,7 @@ export interface FileRouteTypes {
     | '/master-data/type'
     | '/master-data/uom'
     | '/monitoring-area/$id'
+    | '/monitoring-area/bag-filter-history'
     | '/monitoring-area/pted-log-history'
     | '/master-data/'
     | '/monitoring-area/'
@@ -317,6 +330,7 @@ export interface RootRouteChildren {
   BoilerDetailsIdRoute: typeof BoilerDetailsIdRoute
   ChecksheetProblemListRoute: typeof ChecksheetProblemListRoute
   MonitoringAreaIdRoute: typeof MonitoringAreaIdRoute
+  MonitoringAreaBagFilterHistoryRoute: typeof MonitoringAreaBagFilterHistoryRoute
   MonitoringAreaPtedLogHistoryRoute: typeof MonitoringAreaPtedLogHistoryRoute
   MonitoringAreaIndexRoute: typeof MonitoringAreaIndexRoute
 }
@@ -477,6 +491,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MonitoringAreaIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/monitoring-area/bag-filter-history': {
+      id: '/monitoring-area/bag-filter-history'
+      path: '/monitoring-area/bag-filter-history'
+      fullPath: '/monitoring-area/bag-filter-history'
+      preLoaderRoute: typeof MonitoringAreaBagFilterHistoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/monitoring-area/pted-log-history': {
       id: '/monitoring-area/pted-log-history'
       path: '/monitoring-area/pted-log-history'
@@ -526,6 +547,7 @@ const rootRouteChildren: RootRouteChildren = {
   BoilerDetailsIdRoute: BoilerDetailsIdRoute,
   ChecksheetProblemListRoute: ChecksheetProblemListRoute,
   MonitoringAreaIdRoute: MonitoringAreaIdRoute,
+  MonitoringAreaBagFilterHistoryRoute: MonitoringAreaBagFilterHistoryRoute,
   MonitoringAreaPtedLogHistoryRoute: MonitoringAreaPtedLogHistoryRoute,
   MonitoringAreaIndexRoute: MonitoringAreaIndexRoute,
 }

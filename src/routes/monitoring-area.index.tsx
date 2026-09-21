@@ -458,79 +458,71 @@ function AreaCard({ area }: { area: AreaDef }) {
                 { name: "UF 2", val: "26.0", id: "bag-filter-uf2", minStd: 20, maxStd: 35, unit: "MPa" }
 
               ].map(t => (
-                <BagFilterItemDialog key={t.name} item={t}>
-                  <button className="flex flex-col text-left p-3 rounded bg-secondary/30 border border-border/50 justify-center gap-1 hover:border-primary/50 hover:bg-secondary/80 transition-colors group w-full">
-                    <span className="text-[10px] text-muted-foreground uppercase tracking-wider font-medium group-hover:text-primary transition-colors">{t.name}</span>
-                    <div className="flex items-baseline gap-1">
-                      <span className={`font-mono text-3xl font-bold ${getLimitColor(t.val, 20, 35, "text-emerald-500")}`}>{t.val}</span>
-                      <span className="text-sm text-muted-foreground">{t.unit || "°C"}</span>
-                    </div>
-                  </button>
-                </BagFilterItemDialog>
+                <div key={t.name} className="flex flex-col text-left p-3 rounded bg-secondary/30 border border-border/50 justify-center gap-1 w-full">
+                  <span className="text-[10px] text-muted-foreground uppercase tracking-wider font-medium">{t.name}</span>
+                  <div className="flex items-baseline gap-1">
+                    <span className={`font-mono text-3xl font-bold ${getLimitColor(t.val, 20, 35, "text-emerald-500")}`}>{t.val}</span>
+                    <span className="text-sm text-muted-foreground">{t.unit || "°C"}</span>
+                  </div>
+                </div>
               ))}
             </div>
 
             <div className="grid grid-cols-3 gap-3 mb-3">
               <div className="col-span-2">
-                <BagFilterItemDialog item={{ name: "UF 1 & UF 2 Tank", val: "120.5", val2: "118.2", id: "bag-filter-uf-tank", unit: "µS/cm", valName: "UF 1 Cond", val2Name: "UF 2 Cond", minStd: 100, maxStd: 150, minStd2: 100, maxStd2: 150, minStdName: "Standard Conductivity 1 MIN", maxStdName: "Standard Conductivity 1 MAX", minStd2Name: "Standard Conductivity 2 MIN", maxStd2Name: "Standard Conductivity 2 MAX" }}>
-                  <button className="p-3 rounded-lg bg-secondary/30 border border-border/50 flex flex-col gap-2 hover:border-primary/50 hover:bg-secondary/80 transition-colors group text-left w-full h-full">
-                    <span className="text-[10px] font-semibold text-muted-foreground uppercase flex items-center gap-1.5 border-b border-border/50 pb-2 group-hover:text-primary transition-colors"><Waves className="h-3.5 w-3.5" /> UF 1 & 2 Tank</span>
-                    <div className="flex justify-between mt-1 items-end h-full">
-                      <div className="flex flex-col">
-                        <span className="text-[9px] text-muted-foreground mb-0.5">UF 1</span>
-                        <div className="flex items-baseline gap-1 whitespace-nowrap">
-                          <span className={`font-mono text-3xl font-bold ${getLimitColor("120.5", 100, 150, "text-emerald-500")}`}>120.5</span>
-                          <span className="text-xs font-normal text-muted-foreground">µS</span>
-                        </div>
-                      </div>
-                      <div className="flex flex-col items-end">
-                        <span className="text-[9px] text-muted-foreground mb-0.5">UF 2</span>
-                        <div className="flex items-baseline gap-1 whitespace-nowrap">
-                          <span className={`font-mono text-3xl font-bold ${getLimitColor("118.2", 100, 150, "text-emerald-500")}`}>118.2</span>
-                          <span className="text-xs font-normal text-muted-foreground/70">µS</span>
-                        </div>
-                      </div>
-                    </div>
-                  </button>
-                </BagFilterItemDialog>
-              </div>
-
-              <BagFilterItemDialog item={{ name: "UF Module", val: "15.0", id: "bag-filter-uf-module", unit: "L/Min", minStd: 10, maxStd: 20 }}>
-                <button className="p-3 rounded-lg bg-secondary/30 border border-border/50 flex flex-col gap-2 hover:border-primary/50 hover:bg-secondary/80 transition-colors group text-left w-full h-full">
-                  <span className="text-[10px] font-semibold text-muted-foreground uppercase flex items-center gap-1.5 border-b border-border/50 pb-2 group-hover:text-primary transition-colors"><Waves className="h-3.5 w-3.5" /> UF Module</span>
-                  <div className="flex flex-col mt-1">
-                    <span className="text-[9px] text-muted-foreground mb-0.5">Flowmeter</span>
-                    <div className="flex items-baseline gap-1 whitespace-nowrap">
-                      <span className={`font-mono text-3xl font-bold ${getLimitColor("15.0", 10.0, 20.0, "text-emerald-500")}`}>15.0</span>
-                      <span className="text-xs font-normal text-muted-foreground">L/Min</span>
-                    </div>
-                  </div>
-                </button>
-              </BagFilterItemDialog>
-            </div>
-
-            <div className="mt-auto">
-              <BagFilterItemDialog item={{ name: "HE Pressure", val: "4.5", val2: "3.2", id: "bag-filter-he-pressure", unit: "MPa", valName: "IN (MPa)", val2Name: "OUT (MPa)", minStd: 4.0, maxStd: 5.0, minStd2: 2.0, maxStd2: 4.0 }}>
-                <button className="p-3 rounded-lg bg-secondary/30 border border-border/50 flex flex-col gap-2 hover:border-primary/50 hover:bg-secondary/80 transition-colors group text-left w-full h-full">
-                  <span className="text-[10px] font-semibold text-muted-foreground uppercase flex items-center gap-1.5 border-b border-border/50 pb-2 group-hover:text-primary transition-colors"><Gauge className="h-3.5 w-3.5" /> HE Pressure</span>
+                <div className="p-3 rounded-lg bg-secondary/30 border border-border/50 flex flex-col gap-2 text-left w-full h-full">
+                  <span className="text-[10px] font-semibold text-muted-foreground uppercase flex items-center gap-1.5 border-b border-border/50 pb-2"><Waves className="h-3.5 w-3.5" /> UF 1 & 2 Tank</span>
                   <div className="flex justify-between mt-1 items-end h-full">
                     <div className="flex flex-col">
-                      <span className="text-[9px] text-muted-foreground mb-0.5">IN</span>
+                      <span className="text-[9px] text-muted-foreground mb-0.5">UF 1</span>
                       <div className="flex items-baseline gap-1 whitespace-nowrap">
-                        <span className={`font-mono text-3xl font-bold ${getLimitColor("4.5", 4.0, 5.0, "text-emerald-500")}`}>4.5</span>
-                        <span className="text-xs font-normal text-muted-foreground">MPa</span>
+                        <span className={`font-mono text-3xl font-bold ${getLimitColor("120.5", 100, 150, "text-emerald-500")}`}>120.5</span>
+                        <span className="text-xs font-normal text-muted-foreground">µS</span>
                       </div>
                     </div>
                     <div className="flex flex-col items-end">
-                      <span className="text-[9px] text-muted-foreground mb-0.5">OUT</span>
+                      <span className="text-[9px] text-muted-foreground mb-0.5">UF 2</span>
                       <div className="flex items-baseline gap-1 whitespace-nowrap">
-                        <span className={`font-mono text-3xl font-bold ${getLimitColor("3.2", 2.0, 4.0, "text-emerald-500")}`}>3.2</span>
-                        <span className="text-xs font-normal text-muted-foreground/70">MPa</span>
+                        <span className={`font-mono text-3xl font-bold ${getLimitColor("118.2", 100, 150, "text-emerald-500")}`}>118.2</span>
+                        <span className="text-xs font-normal text-muted-foreground/70">µS</span>
                       </div>
                     </div>
                   </div>
-                </button>
-              </BagFilterItemDialog>
+                </div>
+              </div>
+
+              <div className="p-3 rounded-lg bg-secondary/30 border border-border/50 flex flex-col gap-2 text-left w-full h-full">
+                <span className="text-[10px] font-semibold text-muted-foreground uppercase flex items-center gap-1.5 border-b border-border/50 pb-2"><Waves className="h-3.5 w-3.5" /> UF Module</span>
+                <div className="flex flex-col mt-1">
+                  <span className="text-[9px] text-muted-foreground mb-0.5">Flowmeter</span>
+                  <div className="flex items-baseline gap-1 whitespace-nowrap">
+                    <span className={`font-mono text-3xl font-bold ${getLimitColor("15.0", 10.0, 20.0, "text-emerald-500")}`}>15.0</span>
+                    <span className="text-xs font-normal text-muted-foreground">L/Min</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-auto">
+              <div className="p-3 rounded-lg bg-secondary/30 border border-border/50 flex flex-col gap-2 text-left w-full h-full">
+                <span className="text-[10px] font-semibold text-muted-foreground uppercase flex items-center gap-1.5 border-b border-border/50 pb-2"><Gauge className="h-3.5 w-3.5" /> HE Pressure</span>
+                <div className="flex justify-between mt-1 items-end h-full">
+                  <div className="flex flex-col">
+                    <span className="text-[9px] text-muted-foreground mb-0.5">IN</span>
+                    <div className="flex items-baseline gap-1 whitespace-nowrap">
+                      <span className={`font-mono text-3xl font-bold ${getLimitColor("4.5", 4.0, 5.0, "text-emerald-500")}`}>4.5</span>
+                      <span className="text-xs font-normal text-muted-foreground">MPa</span>
+                    </div>
+                  </div>
+                  <div className="flex flex-col items-end">
+                    <span className="text-[9px] text-muted-foreground mb-0.5">OUT</span>
+                    <div className="flex items-baseline gap-1 whitespace-nowrap">
+                      <span className={`font-mono text-3xl font-bold ${getLimitColor("3.2", 2.0, 4.0, "text-emerald-500")}`}>3.2</span>
+                      <span className="text-xs font-normal text-muted-foreground/70">MPa</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -560,15 +552,9 @@ function MonitoringArea() {
       {/* Header */}
       <div className="flex items-end justify-between flex-wrap gap-3">
         <div>
-          <div className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">
-            Monitoring System
-          </div>
           <h1 className="text-2xl font-semibold mt-1 flex items-center gap-2">
             <Activity className="h-6 w-6 text-primary" /> Monitoring Area
           </h1>
-          <p className="text-sm text-muted-foreground mt-1">
-            Real-time overview of temperature and pressure for all processing areas.
-          </p>
         </div>
       </div>
       {/* Layout Grid */}
