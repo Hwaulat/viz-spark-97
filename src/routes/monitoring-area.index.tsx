@@ -35,6 +35,7 @@ interface AreaDef {
     temp1: string;
     temp2: string;
     pressure: string;
+    running?: boolean;
   };
   pted?: {
     tempIn: string;
@@ -47,9 +48,9 @@ interface AreaDef {
 const AREAS: AreaDef[] = [
   { id: "boiler-area", name: "Boiler Area", type: "boiler" },
   { id: "pted-area", name: "PTED Area", type: "pted-wrapper" },
-  { id: "oven-sealing", name: "Oven Sealing", type: "oven", oven: { temp1: "186.5", temp2: "184.0", pressure: "2.1" } },
-  { id: "oven-topcoat", name: "Oven Topcoat", type: "oven", oven: { temp1: "191.0", temp2: "189.5", pressure: "2.4" } },
-  { id: "oven-ced", name: "Oven CED", type: "oven", oven: { temp1: "182.0", temp2: "179.0", pressure: "2.8" } },
+  { id: "oven-sealing", name: "Oven Sealing", type: "oven", oven: { temp1: "186.5", temp2: "184.0", pressure: "2.1", running: true } },
+  { id: "oven-topcoat", name: "Oven Topcoat", type: "oven", oven: { temp1: "191.0", temp2: "189.5", pressure: "2.4", running: true } },
+  { id: "oven-ced", name: "Oven CED", type: "oven", oven: { temp1: "182.0", temp2: "179.0", pressure: "2.8", running: false } },
 ];
 
 
@@ -139,6 +140,14 @@ function AreaCard({ area }: { area: AreaDef }) {
               <div className="flex items-center gap-2 hidden sm:flex">
                 <span className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">Panel Burner Status</span>
                 <span className="text-[11px] px-2.5 py-0.5 rounded font-bold bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400">ON</span>
+              </div>
+            )}
+            {area.type === "oven" && area.oven && (
+              <div className="flex items-center gap-2 hidden sm:flex">
+                <span className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">Status Oven</span>
+                <span className={`text-[11px] px-2.5 py-0.5 rounded font-bold ${area.oven.running ? 'bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400' : 'bg-rose-100 text-rose-600 dark:bg-rose-900/30 dark:text-rose-400'}`}>
+                  {area.oven.running ? 'ON' : 'OFF'}
+                </span>
               </div>
             )}
             <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
