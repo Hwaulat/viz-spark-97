@@ -32,6 +32,7 @@ import { Route as MasterDataUomRouteImport } from './routes/master-data.uom'
 import { Route as MonitoringAreaIndexRouteImport } from './routes/monitoring-area.index'
 import { Route as MonitoringAreaIdRouteImport } from './routes/monitoring-area.$id'
 import { Route as MonitoringAreaBagFilterHistoryRouteImport } from './routes/monitoring-area.bag-filter-history'
+import { Route as MonitoringAreaOvenLogHistoryRouteImport } from './routes/monitoring-area.oven-log-history'
 import { Route as MonitoringAreaPtedLogHistoryRouteImport } from './routes/monitoring-area.pted-log-history'
 
 const IndexRoute = IndexRouteImport.update({
@@ -150,6 +151,12 @@ const MonitoringAreaBagFilterHistoryRoute =
     path: '/monitoring-area/bag-filter-history',
     getParentRoute: () => rootRouteImport,
   } as any)
+const MonitoringAreaOvenLogHistoryRoute =
+  MonitoringAreaOvenLogHistoryRouteImport.update({
+    id: '/monitoring-area/oven-log-history',
+    path: '/monitoring-area/oven-log-history',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const MonitoringAreaPtedLogHistoryRoute =
   MonitoringAreaPtedLogHistoryRouteImport.update({
     id: '/monitoring-area/pted-log-history',
@@ -179,6 +186,7 @@ export interface FileRoutesByFullPath {
   '/master-data/uom': typeof MasterDataUomRoute
   '/monitoring-area/$id': typeof MonitoringAreaIdRoute
   '/monitoring-area/bag-filter-history': typeof MonitoringAreaBagFilterHistoryRoute
+  '/monitoring-area/oven-log-history': typeof MonitoringAreaOvenLogHistoryRoute
   '/monitoring-area/pted-log-history': typeof MonitoringAreaPtedLogHistoryRoute
   '/master-data/': typeof MasterDataIndexRoute
   '/monitoring-area/': typeof MonitoringAreaIndexRoute
@@ -204,6 +212,7 @@ export interface FileRoutesByTo {
   '/master-data/uom': typeof MasterDataUomRoute
   '/monitoring-area/$id': typeof MonitoringAreaIdRoute
   '/monitoring-area/bag-filter-history': typeof MonitoringAreaBagFilterHistoryRoute
+  '/monitoring-area/oven-log-history': typeof MonitoringAreaOvenLogHistoryRoute
   '/monitoring-area/pted-log-history': typeof MonitoringAreaPtedLogHistoryRoute
   '/master-data': typeof MasterDataIndexRoute
   '/monitoring-area': typeof MonitoringAreaIndexRoute
@@ -231,6 +240,7 @@ export interface FileRoutesById {
   '/master-data/uom': typeof MasterDataUomRoute
   '/monitoring-area/$id': typeof MonitoringAreaIdRoute
   '/monitoring-area/bag-filter-history': typeof MonitoringAreaBagFilterHistoryRoute
+  '/monitoring-area/oven-log-history': typeof MonitoringAreaOvenLogHistoryRoute
   '/monitoring-area/pted-log-history': typeof MonitoringAreaPtedLogHistoryRoute
   '/master-data/': typeof MasterDataIndexRoute
   '/monitoring-area/': typeof MonitoringAreaIndexRoute
@@ -259,6 +269,7 @@ export interface FileRouteTypes {
     | '/master-data/uom'
     | '/monitoring-area/$id'
     | '/monitoring-area/bag-filter-history'
+    | '/monitoring-area/oven-log-history'
     | '/monitoring-area/pted-log-history'
     | '/master-data/'
     | '/monitoring-area/'
@@ -284,6 +295,7 @@ export interface FileRouteTypes {
     | '/master-data/uom'
     | '/monitoring-area/$id'
     | '/monitoring-area/bag-filter-history'
+    | '/monitoring-area/oven-log-history'
     | '/monitoring-area/pted-log-history'
     | '/master-data'
     | '/monitoring-area'
@@ -310,6 +322,7 @@ export interface FileRouteTypes {
     | '/master-data/uom'
     | '/monitoring-area/$id'
     | '/monitoring-area/bag-filter-history'
+    | '/monitoring-area/oven-log-history'
     | '/monitoring-area/pted-log-history'
     | '/master-data/'
     | '/monitoring-area/'
@@ -331,6 +344,7 @@ export interface RootRouteChildren {
   ChecksheetProblemListRoute: typeof ChecksheetProblemListRoute
   MonitoringAreaIdRoute: typeof MonitoringAreaIdRoute
   MonitoringAreaBagFilterHistoryRoute: typeof MonitoringAreaBagFilterHistoryRoute
+  MonitoringAreaOvenLogHistoryRoute: typeof MonitoringAreaOvenLogHistoryRoute
   MonitoringAreaPtedLogHistoryRoute: typeof MonitoringAreaPtedLogHistoryRoute
   MonitoringAreaIndexRoute: typeof MonitoringAreaIndexRoute
 }
@@ -498,6 +512,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MonitoringAreaBagFilterHistoryRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/monitoring-area/oven-log-history': {
+      id: '/monitoring-area/oven-log-history'
+      path: '/monitoring-area/oven-log-history'
+      fullPath: '/monitoring-area/oven-log-history'
+      preLoaderRoute: typeof MonitoringAreaOvenLogHistoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/monitoring-area/pted-log-history': {
       id: '/monitoring-area/pted-log-history'
       path: '/monitoring-area/pted-log-history'
@@ -548,6 +569,7 @@ const rootRouteChildren: RootRouteChildren = {
   ChecksheetProblemListRoute: ChecksheetProblemListRoute,
   MonitoringAreaIdRoute: MonitoringAreaIdRoute,
   MonitoringAreaBagFilterHistoryRoute: MonitoringAreaBagFilterHistoryRoute,
+  MonitoringAreaOvenLogHistoryRoute: MonitoringAreaOvenLogHistoryRoute,
   MonitoringAreaPtedLogHistoryRoute: MonitoringAreaPtedLogHistoryRoute,
   MonitoringAreaIndexRoute: MonitoringAreaIndexRoute,
 }

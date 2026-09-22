@@ -308,18 +308,11 @@ function AreaCard({ area }: { area: AreaDef }) {
       )}
 
       {area.type === "oven" && area.oven && (
-        <div className="grid grid-cols-3 gap-2 mt-2">
+        <div className="grid grid-cols-2 gap-2 mt-2">
           <div className="rounded bg-secondary/50 p-2 border border-border/50 flex flex-col justify-center items-center text-center">
-            <span className="text-[10px] text-muted-foreground uppercase tracking-widest mb-1 flex items-center gap-1"><Thermometer className="h-3 w-3" /> Temp 1</span>
+            <span className="text-[10px] text-muted-foreground uppercase tracking-widest mb-1 flex items-center gap-1"><Thermometer className="h-3 w-3" /> Temp</span>
             <div className="flex items-baseline gap-1">
               <span className={`text-xl font-bold font-mono ${getLimitColor(area.oven.temp1, 180, 190, "text-emerald-500", "text-emerald-500")}`}>{area.oven.temp1}</span>
-              <span className="text-[10px] text-muted-foreground">°C</span>
-            </div>
-          </div>
-          <div className="rounded bg-secondary/50 p-2 border border-border/50 flex flex-col justify-center items-center text-center">
-            <span className="text-[10px] text-muted-foreground uppercase tracking-widest mb-1 flex items-center gap-1"><Thermometer className="h-3 w-3" /> Temp 2</span>
-            <div className="flex items-baseline gap-1">
-              <span className={`text-xl font-bold font-mono ${getLimitColor(area.oven.temp2, 180, 190, "text-emerald-500", "text-emerald-500")}`}>{area.oven.temp2}</span>
               <span className="text-[10px] text-muted-foreground">°C</span>
             </div>
           </div>

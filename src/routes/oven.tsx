@@ -49,7 +49,7 @@ function OvenArea() {
 
       {/* Per-Oven Cards */}
       <div className="grid gap-4 lg:grid-cols-3">
-        {OVENS.map((o) => {
+        {OVENS.slice(0, 1).map((o) => {
           const dev = o.temp - o.setpoint;
           const tone = o.alarm || Math.abs(dev) > 3 ? "warn" : "ok";
           return (
@@ -67,6 +67,7 @@ function OvenArea() {
               <div className="grid grid-cols-2 gap-3">
                 <ValueDisplay label="Temperature" value={o.temp.toFixed(1)} unit="°C" tone={o.temp > o.setpoint ? "danger" : "ok"} />
                 <ValueDisplay label="Setpoint" value={o.setpoint} unit="°C" />
+                <ValueDisplay label="Status" value={Math.abs(dev) > 3 ? "NG" : "OK"} tone={Math.abs(dev) > 3 ? "danger" : "ok"} />
                 <ValueDisplay label="Gas Flow" value={o.gasFlow} unit="m³/h" tone="warn" />
                 <ValueDisplay label="Gas Today" value={o.gasTotal.toLocaleString()} unit="m³" />
               </div>
@@ -117,10 +118,10 @@ function OvenArea() {
 
         <Panel
           title={<span className="inline-flex items-center gap-2"><Thermometer className="h-3.5 w-3.5" />Temperature Recorder</span>}
-          right={<span className="text-[10px] font-mono text-muted-foreground">6 ZONES · AUTO</span>}
+          right={<span className="text-[10px] font-mono text-muted-foreground">1 ZONE · AUTO</span>}
         >
           <div className="grid grid-cols-2 gap-3">
-            {OVEN_ZONES.map((z) => {
+            {OVEN_ZONES.slice(0, 1).map((z) => {
               const dev = z.pv - z.sp;
               const tone = Math.abs(dev) > 3 ? "warn" : "ok";
               return (

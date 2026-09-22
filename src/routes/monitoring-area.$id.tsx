@@ -110,40 +110,56 @@ function OvenDetailContent({ id }: { id: string }) {
 
   return (
     <div className="animate-in fade-in duration-300 bg-card border border-border rounded-lg shadow-sm p-4 m-4">
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-lg font-bold tracking-tight text-foreground">{name} Details</h2>
+      </div>
       {/* Summary Cards */}
       <div className="mb-6">
         <StatCardGrid
           columns={3}
           items={[
             {
-              title: "Temperature 1",
+              title: "",
+              value: (
+                <div className="flex flex-col gap-1.5 w-full">
+                  <div className="flex items-center gap-2">
+                    <span className="text-emerald-500 font-mono font-bold text-2xl">ON</span>
+                    <span className="text-[10px] px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-500 font-semibold tracking-wider uppercase">Running</span>
+                    <Link to="/monitoring-area/oven-log-history" className="text-xs text-blue-500 hover:text-blue-600 italic underline ml-auto transition-colors">
+                      Log history
+                    </Link>
+                  </div>
+                  <div className="grid grid-cols-3 gap-x-2 gap-y-1 text-xs font-mono mt-1">
+                    <div className="flex flex-col">
+                      <span className="text-muted-foreground/70 text-[9px] uppercase">Time ON</span>
+                      <span className="font-bold text-emerald-500 text-sm">06:00</span>
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="text-muted-foreground/70 text-[9px] uppercase">Time OFF</span>
+                      <span className="font-bold text-rose-500 text-sm">--:--</span>
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="text-muted-foreground/70 text-[9px] uppercase">Total Duration</span>
+                      <span className="font-bold text-foreground text-sm">8h 15m</span>
+                    </div>
+                  </div>
+                </div>
+              ),
+              variant: "stat-side",
+              icon: <Activity />,
+              iconBg: "bg-emerald-500/10 text-emerald-500",
+            },
+            {
+              title: "Temperature",
               value: (
                 <div className="flex flex-col gap-1">
                   <div className="flex items-baseline gap-1">
                     <span className={data[data.length - 1]?.temp1 > standard ? 'text-destructive font-mono font-bold text-3xl' : 'text-emerald-500 font-mono font-bold text-3xl'}>{data[data.length - 1]?.temp1?.toFixed(1) || "0.0"}</span>
                     <span className="text-sm text-muted-foreground font-normal">°C</span>
                   </div>
-                  <div className="flex gap-3 text-[10px] font-mono font-semibold">
+                  <div className="flex gap-3 text-[10px] font-mono font-semibold items-center">
                     <span className="text-emerald-500/90">MIN: {temp1Min.toFixed(1)}</span>
                     <span className="text-rose-500/90">MAX: {temp1Max.toFixed(1)}</span>
-                  </div>
-                </div>
-              ),
-              variant: "stat-side",
-              icon: <Thermometer />,
-              iconBg: "bg-blue-500/10 text-blue-500",
-            },
-            {
-              title: "Temperature 2",
-              value: (
-                <div className="flex flex-col gap-1">
-                  <div className="flex items-baseline gap-1">
-                    <span className={data[data.length - 1]?.temp2 > standard ? 'text-destructive font-mono font-bold text-3xl' : 'text-emerald-500 font-mono font-bold text-3xl'}>{data[data.length - 1]?.temp2?.toFixed(1) || "0.0"}</span>
-                    <span className="text-sm text-muted-foreground font-normal">°C</span>
-                  </div>
-                  <div className="flex gap-3 text-[10px] font-mono font-semibold">
-                    <span className="text-emerald-500/90">MIN: {temp2Min.toFixed(1)}</span>
-                    <span className="text-rose-500/90">MAX: {temp2Max.toFixed(1)}</span>
                   </div>
                 </div>
               ),
@@ -294,8 +310,7 @@ function OvenDetailContent({ id }: { id: string }) {
                   itemStyle={{ color: 'hsl(var(--foreground))' }}
                 />
                 <Legend iconType="circle" wrapperStyle={{ fontSize: '11px' }} />
-                <Line type="monotone" dataKey="temp1" name="Temp 1 (°C)" stroke="#ef4444" strokeWidth={2} dot={false} />
-                <Line type="monotone" dataKey="temp2" name="Temp 2 (°C)" stroke="#3b82f6" strokeWidth={2} dot={false} />
+                <Line type="monotone" dataKey="temp1" name="Temperature (°C)" stroke="#ef4444" strokeWidth={2} dot={false} />
                 <Line type="monotone" dataKey="tempMin" name="Min" stroke="#ef4444" strokeDasharray="3 3" strokeWidth={1.5} opacity={0.6} dot={false} />
                 <Line type="monotone" dataKey="tempMax" name="Max" stroke="#ef4444" strokeDasharray="3 3" strokeWidth={1.5} opacity={0.6} dot={false} />
               </LineChart>
@@ -759,6 +774,18 @@ function MonitoringAreaDetails() {
                 ))}
               </div>
             )}
+          </div>
+        )}
+        
+        {id === "bag-filter" && (
+          <div className="ml-auto">
+            <Link
+              to="/monitoring-area/bag-filter-history"
+              className="flex items-center justify-center gap-1.5 rounded-lg bg-[#1F5AA6] px-3 py-1.5 shadow-sm hover:bg-[#1F5AA6]/90 transition-colors text-sm font-medium text-white border border-[#1F5AA6]"
+            >
+              <BarChart3 className="h-4 w-4" />
+              Historical Charts
+            </Link>
           </div>
         )}
       </div>
