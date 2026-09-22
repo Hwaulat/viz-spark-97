@@ -475,18 +475,18 @@ function StationDetailContent({ tabKey }: { tabKey: string }) {
           </div>
 
           <div
-            className="relative w-full flex-1 flex items-center justify-center p-4 min-h-[250px] cursor-pointer hover:opacity-80 transition-opacity"
+            className="relative w-full flex-1 flex items-center justify-center min-h-[250px] cursor-pointer hover:opacity-80 transition-opacity overflow-hidden"
             onClick={() => setIsImageModalOpen(true)}
             title="Click to enlarge"
           >
             {tabKey === "pre-degreasing" ? (
-              <img src={StationPreDegreasingPng} alt={`Station ${data.name}`} className="absolute inset-4 w-[calc(100%-2rem)] h-[calc(100%-2rem)] object-contain mix-blend-multiply dark:mix-blend-screen dark:invert" />
+              <img src={StationPreDegreasingPng} alt={`Station ${data.name}`} className="absolute inset-0 w-full h-full object-fill mix-blend-multiply dark:mix-blend-screen dark:invert" />
             ) : tabKey === "degreasing" ? (
-              <img src={StationDegreasingNewPng} alt={`Station ${data.name}`} className="absolute inset-4 w-[calc(100%-2rem)] h-[calc(100%-2rem)] object-contain mix-blend-multiply dark:mix-blend-screen dark:invert" />
+              <img src={StationDegreasingNewPng} alt={`Station ${data.name}`} className="absolute inset-0 w-full h-full object-fill mix-blend-multiply dark:mix-blend-screen dark:invert" />
             ) : tabKey === "flood" ? (
-              <img src={StationFloodPng} alt={`Station ${data.name}`} className="absolute inset-4 w-[calc(100%-2rem)] h-[calc(100%-2rem)] object-contain mix-blend-multiply dark:mix-blend-screen dark:invert" />
+              <img src={StationFloodPng} alt={`Station ${data.name}`} className="absolute inset-0 w-full h-full object-fill mix-blend-multiply dark:mix-blend-screen dark:invert" />
             ) : tabKey === "phosphate" ? (
-              <img src={StationPhosphatePng} alt={`Station ${data.name}`} className="absolute inset-4 w-[calc(100%-2rem)] h-[calc(100%-2rem)] object-contain mix-blend-multiply dark:mix-blend-screen dark:invert" />
+              <img src={StationPhosphatePng} alt={`Station ${data.name}`} className="absolute inset-0 w-full h-full object-fill mix-blend-multiply dark:mix-blend-screen dark:invert" />
             ) : (
               <div className="w-full h-full flex items-center justify-center text-muted-foreground text-sm">Station diagram coming soon</div>
             )}
@@ -653,15 +653,15 @@ function StationDetailContent({ tabKey }: { tabKey: string }) {
                 <X className="w-5 h-5" />
               </button>
             </div>
-            <div className="p-6 overflow-auto flex-1 flex items-center justify-center min-h-[50vh]">
+            <div className="p-0 overflow-auto flex-1 flex items-center justify-center min-h-[50vh] w-full">
               {tabKey === "pre-degreasing" ? (
-                <img src={StationPreDegreasingPng} alt={`Station ${data.name}`} className="max-w-full max-h-[70vh] object-contain mix-blend-multiply dark:mix-blend-screen dark:invert" />
+                <img src={StationPreDegreasingPng} alt={`Station ${data.name}`} className="w-full h-full object-fill mix-blend-multiply dark:mix-blend-screen dark:invert" />
               ) : tabKey === "degreasing" ? (
-                <img src={StationDegreasingNewPng} alt={`Station ${data.name}`} className="max-w-full max-h-[70vh] object-contain mix-blend-multiply dark:mix-blend-screen dark:invert" />
+                <img src={StationDegreasingNewPng} alt={`Station ${data.name}`} className="w-full h-full object-fill mix-blend-multiply dark:mix-blend-screen dark:invert" />
               ) : tabKey === "flood" ? (
-                <img src={StationFloodPng} alt={`Station ${data.name}`} className="max-w-full max-h-[70vh] object-contain mix-blend-multiply dark:mix-blend-screen dark:invert" />
+                <img src={StationFloodPng} alt={`Station ${data.name}`} className="w-full h-full object-fill mix-blend-multiply dark:mix-blend-screen dark:invert" />
               ) : tabKey === "phosphate" ? (
-                <img src={StationPhosphatePng} alt={`Station ${data.name}`} className="max-w-full max-h-[70vh] object-contain mix-blend-multiply dark:mix-blend-screen dark:invert" />
+                <img src={StationPhosphatePng} alt={`Station ${data.name}`} className="w-full h-full object-fill mix-blend-multiply dark:mix-blend-screen dark:invert" />
               ) : (
                 <div className="text-muted-foreground">No diagram available</div>
               )}
