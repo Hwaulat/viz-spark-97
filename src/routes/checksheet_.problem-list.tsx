@@ -113,23 +113,17 @@ function ProblemList() {
           Back
         </Link>
         <div>
-          <div className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">
-            Checksheet / Dashboard
-          </div>
           <h1 className="text-2xl font-semibold mt-1 flex items-center gap-2">
-             <AlertOctagon className="h-5 w-5 text-primary" /> Problem List
+            <AlertOctagon className="h-5 w-5 text-primary" /> Problem List
           </h1>
-          <p className="text-sm text-muted-foreground mt-0.5">
-            List of recorded problems for equipment and facilities.
-          </p>
         </div>
       </div>
 
       <div className="w-full rounded-lg border border-border bg-card shadow-sm overflow-hidden mt-6 mb-2">
         {/* Search and Filters */}
         <div className="flex flex-col lg:flex-row items-center gap-4 px-4 py-3 bg-secondary/10 border-b border-border/50 w-full">
-          <Search 
-            placeholder="Search equipment or problem..." 
+          <Search
+            placeholder="Search equipment or problem..."
             containerClassName="flex-1 w-full"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -227,11 +221,10 @@ function ProblemList() {
               <button
                 key={i}
                 onClick={() => setCurrentPage(i + 1)}
-                className={`w-8 h-8 flex items-center justify-center rounded-md text-sm font-medium transition-colors ${
-                  currentPage === i + 1
+                className={`w-8 h-8 flex items-center justify-center rounded-md text-sm font-medium transition-colors ${currentPage === i + 1
                     ? "bg-[#1F5AA6] text-white font-semibold border border-[#1F5AA6]"
                     : "border border-border text-muted-foreground hover:bg-secondary/40 hover:text-foreground"
-                }`}
+                  }`}
               >
                 {i + 1}
               </button>

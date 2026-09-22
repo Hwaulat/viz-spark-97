@@ -445,20 +445,20 @@ function AreaCard({ area }: { area: AreaDef }) {
               </h3>
             </Link>
 
-            <div className="grid grid-cols-3 gap-2 mb-4 flex-1">
+            <div className="grid grid-cols-3 gap-1.5 mb-2 flex-1">
               {[
                 { name: "Pre Degreasing", val: "45.5", id: "bag-filter-pre-deg", minStd: 20, maxStd: 35, unit: "MPa" },
                 { name: "Degreasing", val: "34.8", id: "bag-filter-deg", minStd: 20, maxStd: 35, unit: "MPa" },
                 { name: "DI 1", val: "25.0", id: "bag-filter-di1", minStd: 20, maxStd: 35, unit: "MPa" },
                 { name: "DI 2", val: "25.1", id: "bag-filter-di2", minStd: 20, maxStd: 35, unit: "MPa" },
-                { name: "WR 5", val: "24.9", id: "bag-filter-wr5", minStd: 20, maxStd: 35, unit: "MPa" },
+                { name: "DI 3", val: "25.2", id: "bag-filter-di3", minStd: 20, maxStd: 35, unit: "MPa" },
                 { name: "CED 1", val: "28.5", id: "bag-filter-ced1", minStd: 20, maxStd: 35, unit: "MPa" },
                 { name: "CED 2", val: "28.3", id: "bag-filter-ced2", minStd: 20, maxStd: 35, unit: "MPa" },
                 { name: "UF 1", val: "26.2", id: "bag-filter-uf1", minStd: 20, maxStd: 35, unit: "MPa" },
                 { name: "UF 2", val: "26.0", id: "bag-filter-uf2", minStd: 20, maxStd: 35, unit: "MPa" }
 
               ].map(t => (
-                <div key={t.name} className="flex flex-col text-left p-3 rounded bg-secondary/30 border border-border/50 justify-center gap-1 w-full">
+                <div key={t.name} className="flex flex-col text-left p-2.5 rounded bg-secondary/30 border border-border/50 justify-center gap-0.5 w-full">
                   <span className="text-[10px] text-muted-foreground uppercase tracking-wider font-medium">{t.name}</span>
                   <div className="flex items-baseline gap-1">
                     <span className={`font-mono text-3xl font-bold ${getLimitColor(t.val, 20, 35, "text-emerald-500")}`}>{t.val}</span>
@@ -468,11 +468,11 @@ function AreaCard({ area }: { area: AreaDef }) {
               ))}
             </div>
 
-            <div className="grid grid-cols-3 gap-3 mb-3">
+            <div className="grid grid-cols-3 gap-1.5 mb-1.5">
               <div className="col-span-2">
-                <div className="p-3 rounded-lg bg-secondary/30 border border-border/50 flex flex-col gap-2 text-left w-full h-full">
-                  <span className="text-[10px] font-semibold text-muted-foreground uppercase flex items-center gap-1.5 border-b border-border/50 pb-2"><Waves className="h-3.5 w-3.5" /> UF 1 & 2 Tank</span>
-                  <div className="flex justify-between mt-1 items-end h-full">
+                <div className="p-2.5 rounded-lg bg-secondary/30 border border-border/50 flex flex-col justify-center gap-0.5 text-left w-full h-full">
+                  <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">UF 1 & 2 Tank</span>
+                  <div className="flex justify-between mt-1 w-full">
                     <div className="flex flex-col">
                       <span className="text-[9px] text-muted-foreground mb-0.5">UF 1</span>
                       <div className="flex items-baseline gap-1 whitespace-nowrap">
@@ -491,22 +491,19 @@ function AreaCard({ area }: { area: AreaDef }) {
                 </div>
               </div>
 
-              <div className="p-3 rounded-lg bg-secondary/30 border border-border/50 flex flex-col gap-2 text-left w-full h-full">
-                <span className="text-[10px] font-semibold text-muted-foreground uppercase flex items-center gap-1.5 border-b border-border/50 pb-2"><Waves className="h-3.5 w-3.5" /> UF Module</span>
-                <div className="flex flex-col mt-1">
-                  <span className="text-[9px] text-muted-foreground mb-0.5">Flowmeter</span>
-                  <div className="flex items-baseline gap-1 whitespace-nowrap">
-                    <span className={`font-mono text-3xl font-bold ${getLimitColor("15.0", 10.0, 20.0, "text-emerald-500")}`}>15.0</span>
-                    <span className="text-xs font-normal text-muted-foreground">L/Min</span>
-                  </div>
+              <div className="p-2.5 rounded-lg bg-secondary/30 border border-border/50 flex flex-col justify-center gap-0.5 w-full h-full text-left">
+                <span className="text-[10px] text-muted-foreground uppercase tracking-wider font-medium">WR 5</span>
+                <div className="flex items-baseline gap-1">
+                  <span className={`font-mono text-3xl font-bold ${getLimitColor("24.9", 20, 35, "text-emerald-500")}`}>24.9</span>
+                  <span className="text-sm text-muted-foreground">MPa</span>
                 </div>
               </div>
             </div>
 
-            <div className="mt-auto">
-              <div className="p-3 rounded-lg bg-secondary/30 border border-border/50 flex flex-col gap-2 text-left w-full h-full">
-                <span className="text-[10px] font-semibold text-muted-foreground uppercase flex items-center gap-1.5 border-b border-border/50 pb-2"><Gauge className="h-3.5 w-3.5" /> HE Pressure</span>
-                <div className="flex justify-between mt-1 items-end h-full">
+            <div className="grid grid-cols-3 gap-1.5 mt-auto">
+              <div className="col-span-2 p-2.5 rounded-lg bg-secondary/30 border border-border/50 flex flex-col justify-center gap-0.5 text-left w-full h-full">
+                <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">HE Pressure</span>
+                <div className="flex justify-between mt-1 w-full">
                   <div className="flex flex-col">
                     <span className="text-[9px] text-muted-foreground mb-0.5">IN</span>
                     <div className="flex items-baseline gap-1 whitespace-nowrap">
@@ -520,6 +517,17 @@ function AreaCard({ area }: { area: AreaDef }) {
                       <span className={`font-mono text-3xl font-bold ${getLimitColor("3.2", 2.0, 4.0, "text-emerald-500")}`}>3.2</span>
                       <span className="text-xs font-normal text-muted-foreground/70">MPa</span>
                     </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="p-2.5 rounded-lg bg-secondary/30 border border-border/50 flex flex-col justify-center gap-0.5 text-left w-full h-full">
+                <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">UF Module</span>
+                <div className="flex flex-col mt-1">
+                  <span className="text-[9px] text-muted-foreground mb-0.5">Flowmeter</span>
+                  <div className="flex items-baseline gap-1 whitespace-nowrap">
+                    <span className={`font-mono text-3xl font-bold ${getLimitColor("15.0", 10.0, 20.0, "text-emerald-500")}`}>15.0</span>
+                    <span className="text-xs font-normal text-muted-foreground">L/Min</span>
                   </div>
                 </div>
               </div>
