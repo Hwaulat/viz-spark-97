@@ -110,9 +110,6 @@ function OvenDetailContent({ id }: { id: string }) {
 
   return (
     <div className="animate-in fade-in duration-300 bg-card border border-border rounded-lg shadow-sm p-4 m-4">
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-lg font-bold tracking-tight text-foreground">{name} Details</h2>
-      </div>
       {/* Summary Cards */}
       <div className="mb-6">
         <StatCardGrid
