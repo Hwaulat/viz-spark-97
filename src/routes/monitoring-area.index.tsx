@@ -137,15 +137,16 @@ function AreaCard({ area }: { area: AreaDef }) {
         !isPtedWrapper && (
           <div className="flex items-center gap-3">
             {area.type === "boiler" && (
-              <div className="flex items-center gap-2 hidden sm:flex">
-                <span className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">Panel Burner Status</span>
-                <span className="text-[11px] px-2.5 py-0.5 rounded font-bold bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400">ON</span>
+              <div className="flex items-center gap-1 sm:gap-2">
+                <span className="text-[7px] md:text-[9px] xl:text-[11px] font-bold text-muted-foreground uppercase tracking-tighter sm:tracking-widest hidden sm:inline">Panel Burner Status</span>
+                <span className="text-[7px] md:text-[9px] xl:text-[11px] font-bold text-muted-foreground uppercase tracking-tighter sm:tracking-widest sm:hidden">Status</span>
+                <span className="text-[8px] sm:text-[10px] xl:text-[11px] px-1.5 sm:px-2.5 py-0.5 rounded font-bold bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400">ON</span>
               </div>
             )}
             {area.type === "oven" && area.oven && (
-              <div className="flex items-center gap-2 hidden sm:flex">
-                <span className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">Status Oven</span>
-                <span className={`text-[11px] px-2.5 py-0.5 rounded font-bold ${area.oven.running ? 'bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400' : 'bg-rose-100 text-rose-600 dark:bg-rose-900/30 dark:text-rose-400'}`}>
+              <div className="flex items-center gap-1 sm:gap-2">
+                <span className="text-[7px] md:text-[9px] xl:text-[11px] font-bold text-muted-foreground uppercase tracking-tighter sm:tracking-widest">Status <span className="hidden sm:inline">Oven</span></span>
+                <span className={`text-[8px] sm:text-[10px] xl:text-[11px] px-1.5 sm:px-2.5 py-0.5 rounded font-bold ${area.oven.running ? 'bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400' : 'bg-rose-100 text-rose-600 dark:bg-rose-900/30 dark:text-rose-400'}`}>
                   {area.oven.running ? 'ON' : 'OFF'}
                 </span>
               </div>
@@ -166,9 +167,9 @@ function AreaCard({ area }: { area: AreaDef }) {
                   {b.id === 2 && <span className="ml-2 text-[11px] px-2 py-0.5 rounded font-bold bg-orange-100 text-orange-600 dark:bg-orange-900/30 dark:text-orange-400">OK</span>}
                   {b.id === 3 && <span className="ml-2 text-[11px] px-2 py-0.5 rounded font-bold bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400">NG</span>}
                 </span>
-                <div className="flex gap-4 text-xs font-mono items-center">
-                  <span className="text-muted-foreground flex items-baseline gap-2">T1 <span className={`font-bold text-2xl ${getLimitColor(b.temp1, 175, 188, "text-foreground", "text-emerald-500")}`}>{b.temp1.toFixed(1)}°C</span></span>
-                  <span className="text-muted-foreground flex items-baseline gap-2">T2 <span className={`font-bold text-2xl ${getLimitColor(b.temp2, 175, 188, "text-foreground", "text-emerald-500")}`}>{b.temp2.toFixed(1)}°C</span></span>
+                <div className="flex gap-2 sm:gap-4 text-[10px] sm:text-xs font-mono items-center flex-wrap justify-end">
+                  <span className="text-muted-foreground flex items-baseline gap-1 sm:gap-2">T1 <span className={`font-bold text-base sm:text-lg xl:text-2xl ${getLimitColor(b.temp1, 175, 188, "text-foreground", "text-emerald-500")}`}>{b.temp1.toFixed(1)}°C</span></span>
+                  <span className="text-muted-foreground flex items-baseline gap-1 sm:gap-2">T2 <span className={`font-bold text-base sm:text-lg xl:text-2xl ${getLimitColor(b.temp2, 175, 188, "text-foreground", "text-emerald-500")}`}>{b.temp2.toFixed(1)}°C</span></span>
                 </div>
               </div>
 
@@ -427,11 +428,11 @@ function AreaCard({ area }: { area: AreaDef }) {
                   <div className="flex gap-5">
                     <div className="flex flex-col items-end">
                       <span className="text-[9px] text-muted-foreground uppercase flex items-center gap-1"><Thermometer className="h-3 w-3" /> Temp PV</span>
-                      <div className="flex items-baseline gap-1 mt-0.5"><span className={`font-mono font-bold text-3xl ${getLimitColor(eq.pv, parseFloat(eq.sp) - 2, parseFloat(eq.sp) + 2, "text-foreground", "text-emerald-500")}`}>{eq.pv}</span><span className="text-sm text-muted-foreground">°C</span></div>
+                      <div className="flex items-baseline gap-1 mt-0.5"><span className={`font-mono font-bold text-lg md:text-xl xl:text-3xl ${getLimitColor(eq.pv, parseFloat(eq.sp) - 2, parseFloat(eq.sp) + 2, "text-foreground", "text-emerald-500")}`}>{eq.pv}</span><span className="text-xs sm:text-sm text-muted-foreground">°C</span></div>
                     </div>
                     <div className="flex flex-col items-end">
                       <span className="text-[9px] text-muted-foreground uppercase flex items-center gap-1"><Thermometer className="h-3 w-3" /> Temp SP</span>
-                      <div className="flex items-baseline gap-1 mt-0.5"><span className="font-mono font-bold text-3xl text-foreground">{eq.sp}</span><span className="text-sm text-muted-foreground">°C</span></div>
+                      <div className="flex items-baseline gap-1 mt-0.5"><span className="font-mono font-bold text-lg md:text-xl xl:text-3xl text-foreground">{eq.sp}</span><span className="text-xs sm:text-sm text-muted-foreground">°C</span></div>
                     </div>
                   </div>
                 </Link>
