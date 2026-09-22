@@ -109,7 +109,7 @@ function OvenDetailContent({ id }: { id: string }) {
   }));
 
   return (
-    <div className="animate-in fade-in duration-300 bg-card border border-border rounded-lg shadow-sm p-4 m-4">
+    <div className="animate-in fade-in duration-300 p-4 xl:p-6 space-y-8">
       {/* Summary Cards */}
       <div className="mb-6">
         <StatCardGrid
