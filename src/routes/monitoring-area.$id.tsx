@@ -186,7 +186,8 @@ function OvenDetailContent({ id }: { id: string }) {
         />
       </div>
 
-      <div className="flex flex-wrap items-center justify-between gap-4 mt-8 mb-4">
+      <div className="bg-card border border-border rounded-lg shadow-sm p-4 xl:p-6 mt-8">
+        <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
         <div>
           <h2 className="text-xl font-bold tracking-tight text-foreground">Overview Trends</h2>
           <p className="text-sm text-muted-foreground mt-1">Energy, gas, and power trends for {name}.</p>
@@ -338,6 +339,7 @@ function OvenDetailContent({ id }: { id: string }) {
             </ResponsiveContainer>
           </div>
         </div>
+      </div>
       </div>
     </div>
   );
