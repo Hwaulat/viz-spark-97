@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { Panel } from "@/components/panel";
 import { Activity, Thermometer, Gauge, ArrowRight, Flame, Zap, Power, Filter, Waves } from "lucide-react";
 import { BOILERS } from "@/lib/mock-data";
@@ -119,6 +119,7 @@ function BagFilterItemDialog({ item, children }: { item: { name: string, val: st
 
 function AreaCard({ area }: { area: AreaDef }) {
   const isPtedWrapper = area.type === "pted-wrapper";
+  const [bagFilterTab, setBagFilterTab] = useState("pre-treatment");
 
   const getLimitColor = (val: string | number | undefined, min: number, max: number, defaultClass: string = "text-foreground", okClass?: string) => {
     if (val === undefined) return defaultClass;
@@ -167,23 +168,26 @@ function AreaCard({ area }: { area: AreaDef }) {
                   {b.id === 2 && <span className="ml-2 text-[11px] px-2 py-0.5 rounded font-bold bg-orange-100 text-orange-600 dark:bg-orange-900/30 dark:text-orange-400">OK</span>}
                   {b.id === 3 && <span className="ml-2 text-[11px] px-2 py-0.5 rounded font-bold bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400">NG</span>}
                 </span>
+
                 <div className="flex gap-2 sm:gap-4 text-[10px] sm:text-xs font-mono items-center flex-wrap justify-end">
                   <span className="text-muted-foreground flex items-baseline gap-1 sm:gap-2">T1 <span className={`font-bold text-base sm:text-lg xl:text-2xl ${getLimitColor(b.temp1, 175, 188, "text-foreground", "text-emerald-500")}`}>{b.temp1.toFixed(1)}°C</span></span>
                   <span className="text-muted-foreground flex items-baseline gap-1 sm:gap-2">T2 <span className={`font-bold text-base sm:text-lg xl:text-2xl ${getLimitColor(b.temp2, 175, 188, "text-foreground", "text-emerald-500")}`}>{b.temp2.toFixed(1)}°C</span></span>
                 </div>
               </div>
 
-              <div className="mt-4 pt-4 border-t border-border/40 w-full">
-                {/* Boiler Status */}
+              <div className="mt-4 w-full">
                 <div className="flex flex-col gap-2.5 w-full">
-                  <div className="flex justify-between items-center">
-                    <span className="text-xs font-semibold text-muted-foreground">Boiler Status</span>
-                    <span className={`text-[9px] px-2 py-0.5 rounded font-bold ${b.running ? 'bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400' : 'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400'}`}>
-                      {b.running ? "ON" : "OFF"}
-                    </span>
-                  </div>
-
                   <div className="bg-secondary/30 border border-border/50 rounded-lg flex">
+                    <div className="flex-1 p-2 flex flex-col gap-1 border-r border-border/50">
+                      <div className="flex items-center gap-1.5 text-[9px] text-muted-foreground font-medium uppercase tracking-wider">
+                        <Activity className="w-3 h-3 text-muted-foreground/70" /> Status
+                      </div>
+                      <div className="pl-4.5 mt-0.5">
+                        <span className={`text-[9px] sm:text-[10px] xl:text-[11px] px-1.5 sm:px-2 py-0.5 rounded font-bold ${b.running ? 'bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400' : 'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400'}`}>
+                          {b.running ? "ON" : "OFF"}
+                        </span>
+                      </div>
+                    </div>
                     <div className="flex-1 p-2 flex flex-col gap-1 border-r border-border/50">
                       <div className="flex items-center gap-1.5 text-[9px] text-muted-foreground font-medium uppercase tracking-wider">
                         <Power className={`w-3 h-3 ${b.running ? 'text-emerald-500' : 'text-muted-foreground/50'}`} /> ON
@@ -198,7 +202,6 @@ function AreaCard({ area }: { area: AreaDef }) {
                     </div>
                   </div>
                 </div>
-
               </div>
 
             </div>
@@ -318,14 +321,25 @@ function AreaCard({ area }: { area: AreaDef }) {
       )}
 
       {area.type === "oven" && area.oven && (
-        <div className="grid grid-cols-2 gap-2 mt-2">
+        <div className={`grid ${area.id === "oven-ced" ? "grid-cols-2" : "grid-cols-3"} gap-2 mt-2`}>
           <div className="rounded bg-secondary/50 p-2 border border-border/50 flex flex-col justify-center items-center text-center">
-            <span className="text-[10px] text-muted-foreground uppercase tracking-widest mb-1 flex items-center gap-1"><Thermometer className="h-3 w-3" /> Temp</span>
+            <span className="text-[10px] text-muted-foreground uppercase tracking-widest mb-1 flex items-center gap-1"><Zap className="h-3 w-3" /> Power Panel</span>
             <div className="flex items-baseline gap-1">
-              <span className={`text-xl font-bold font-mono ${getLimitColor(area.oven.temp1, 180, 190, "text-emerald-500", "text-emerald-500")}`}>{area.oven.temp1}</span>
-              <span className="text-[10px] text-muted-foreground">°C</span>
+              <span className={`text-xl font-bold font-mono ${area.oven.running ? "text-emerald-500" : "text-muted-foreground"}`}>
+                {area.id === "oven-ced" ? "98.2" : area.id === "oven-sealing" ? "124.5" : "145.0"}
+              </span>
+              <span className="text-[10px] text-muted-foreground">kWh</span>
             </div>
           </div>
+          {area.id !== "oven-ced" && (
+            <div className="rounded bg-secondary/50 p-2 border border-border/50 flex flex-col justify-center items-center text-center">
+              <span className="text-[10px] text-muted-foreground uppercase tracking-widest mb-1 flex items-center gap-1"><Thermometer className="h-3 w-3" /> Temp</span>
+              <div className="flex items-baseline gap-1">
+                <span className={`text-xl font-bold font-mono ${getLimitColor(area.oven.temp1, 180, 190, "text-emerald-500", "text-emerald-500")}`}>{area.oven.temp1}</span>
+                <span className="text-[10px] text-muted-foreground">°C</span>
+              </div>
+            </div>
+          )}
           <div className="rounded bg-secondary/50 p-2 border border-border/50 flex flex-col justify-center items-center text-center">
             <span className="text-[10px] text-muted-foreground uppercase tracking-widest mb-1 flex items-center gap-1"><Gauge className="h-3 w-3" /> Pressure</span>
             <div className="flex items-baseline gap-1">
@@ -418,21 +432,21 @@ function AreaCard({ area }: { area: AreaDef }) {
             </div>
             <div className="flex flex-col gap-3 flex-1">
               {[
-                { name: "Flood Station", id: "flood-station", pv: "30.1", sp: "30.0" },
-                { name: "Pre-Degreasing", id: "pre-degreasing", pv: "46.2", sp: "45.0" },
-                { name: "Degreasing", id: "degreasing", pv: "35.0", sp: "35.0" },
-                { name: "Phosphate", id: "phosphate", pv: "42.5", sp: "42.0" }
+                { name: "Flood Station", id: "flood-station", pv: "30.1", sp: "30.0", bgClass: "bg-blue-500/10 border-blue-500/30 text-blue-700 dark:text-blue-400 hover:bg-blue-500/20" },
+                { name: "Pre-Degreasing", id: "pre-degreasing", pv: "46.2", sp: "45.0", bgClass: "bg-purple-500/10 border-purple-500/30 text-purple-700 dark:text-purple-400 hover:bg-purple-500/20" },
+                { name: "Degreasing", id: "degreasing", pv: "35.0", sp: "35.0", bgClass: "bg-amber-500/10 border-amber-500/30 text-amber-700 dark:text-amber-400 hover:bg-amber-500/20" },
+                { name: "Phosphate", id: "phosphate", pv: "42.5", sp: "42.0", bgClass: "bg-emerald-500/10 border-emerald-500/30 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-500/20" }
               ].map(eq => (
-                <Link to="/monitoring-area/$id" params={{ id: eq.id }} key={eq.name} className="flex items-center justify-between p-3 rounded-lg bg-secondary/30 border border-border/50 flex-1 hover:bg-secondary/80 hover:border-primary/50 transition-all group">
-                  <span className="text-sm font-semibold group-hover:text-primary transition-colors flex items-center gap-2">{eq.name} <ArrowRight className="h-3 w-3 opacity-0 -ml-2 group-hover:opacity-100 group-hover:ml-0 transition-all" /></span>
+                <Link to="/monitoring-area/$id" params={{ id: eq.id }} key={eq.name} className={`flex-1 flex items-center justify-between p-3 rounded-lg border transition-all group ${eq.bgClass}`}>
+                  <span className="text-sm font-semibold flex items-center gap-2">{eq.name} <ArrowRight className="h-3 w-3 opacity-0 -ml-2 group-hover:opacity-100 group-hover:ml-0 transition-all" /></span>
                   <div className="flex gap-5">
                     <div className="flex flex-col items-end">
-                      <span className="text-[9px] text-muted-foreground uppercase flex items-center gap-1"><Thermometer className="h-3 w-3" /> Temp PV</span>
-                      <div className="flex items-baseline gap-1 mt-0.5"><span className={`font-mono font-bold text-lg md:text-xl xl:text-3xl ${getLimitColor(eq.pv, parseFloat(eq.sp) - 2, parseFloat(eq.sp) + 2, "text-foreground", "text-emerald-500")}`}>{eq.pv}</span><span className="text-xs sm:text-sm text-muted-foreground">°C</span></div>
+                      <span className="text-[9px] uppercase flex items-center gap-1 opacity-70"><Thermometer className="h-3 w-3" /> Temp PV</span>
+                      <div className="flex items-baseline gap-1 mt-0.5"><span className={`font-mono font-bold text-lg md:text-xl xl:text-3xl ${getLimitColor(eq.pv, parseFloat(eq.sp) - 2, parseFloat(eq.sp) + 2, "text-foreground", "text-emerald-500")}`}>{eq.pv}</span><span className="text-xs sm:text-sm opacity-70">°C</span></div>
                     </div>
                     <div className="flex flex-col items-end">
-                      <span className="text-[9px] text-muted-foreground uppercase flex items-center gap-1"><Thermometer className="h-3 w-3" /> Temp SP</span>
-                      <div className="flex items-baseline gap-1 mt-0.5"><span className="font-mono font-bold text-lg md:text-xl xl:text-3xl text-foreground">{eq.sp}</span><span className="text-xs sm:text-sm text-muted-foreground">°C</span></div>
+                      <span className="text-[9px] uppercase flex items-center gap-1 opacity-70"><Thermometer className="h-3 w-3" /> Temp SP</span>
+                      <div className="flex items-baseline gap-1 mt-0.5"><span className="font-mono font-bold text-lg md:text-xl xl:text-3xl text-foreground">{eq.sp}</span><span className="text-xs sm:text-sm opacity-70">°C</span></div>
                     </div>
                   </div>
                 </Link>
@@ -442,98 +456,65 @@ function AreaCard({ area }: { area: AreaDef }) {
 
           {/* Bag Filter Card */}
           <div className="border border-border/50 rounded-lg p-4 bg-background flex flex-col h-full">
-            <Link to="/monitoring-area/$id" params={{ id: "bag-filter" }} className="w-fit mb-3 group outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm">
-              <h3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground group-hover:text-primary transition-colors flex items-center gap-1.5">
-                <Filter className="h-4 w-4" /> Bag Filter <ArrowRight className="h-3 w-3 opacity-0 -ml-2 group-hover:opacity-100 group-hover:ml-0 transition-all" />
-              </h3>
-            </Link>
+            <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
+              <Link to="/monitoring-area/$id" params={{ id: "bag-filter" }} className="w-fit group outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm">
+                <h3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground group-hover:text-primary transition-colors flex items-center gap-1.5">
+                  <Filter className="h-4 w-4" /> Bag Filter <ArrowRight className="h-3 w-3 opacity-0 -ml-2 group-hover:opacity-100 group-hover:ml-0 transition-all" />
+                </h3>
+              </Link>
+              <div className="flex bg-secondary/50 p-0.5 rounded-md items-center shadow-sm border border-border/50">
+                <button onClick={(e) => { e.preventDefault(); setBagFilterTab("pre-treatment"); }} className={`text-[9px] sm:text-[10px] px-2 py-1 rounded-sm font-medium transition-colors ${bagFilterTab === 'pre-treatment' ? 'bg-background shadow-sm text-foreground' : 'text-muted-foreground hover:text-foreground'}`}>Pre-Treatment</button>
+                <button onClick={(e) => { e.preventDefault(); setBagFilterTab("ced"); }} className={`text-[9px] sm:text-[10px] px-2 py-1 rounded-sm font-medium transition-colors ${bagFilterTab === 'ced' ? 'bg-background shadow-sm text-foreground' : 'text-muted-foreground hover:text-foreground'}`}>CED Line</button>
+              </div>
+            </div>
 
-            <div className="grid grid-cols-3 gap-1.5 mb-2 flex-1">
+            <div className="grid grid-cols-2 gap-1.5 mb-2">
               {[
-                { name: "Pre Degreasing", val: "45.5", id: "bag-filter-pre-deg", minStd: 20, maxStd: 35, unit: "MPa" },
-                { name: "Degreasing", val: "34.8", id: "bag-filter-deg", minStd: 20, maxStd: 35, unit: "MPa" },
-                { name: "DI 1", val: "25.0", id: "bag-filter-di1", minStd: 20, maxStd: 35, unit: "MPa" },
-                { name: "DI 2", val: "25.1", id: "bag-filter-di2", minStd: 20, maxStd: 35, unit: "MPa" },
-                { name: "DI 3", val: "25.2", id: "bag-filter-di3", minStd: 20, maxStd: 35, unit: "MPa" },
-                { name: "CED 1", val: "28.5", id: "bag-filter-ced1", minStd: 20, maxStd: 35, unit: "MPa" },
-                { name: "CED 2", val: "28.3", id: "bag-filter-ced2", minStd: 20, maxStd: 35, unit: "MPa" },
-                { name: "UF 1", val: "26.2", id: "bag-filter-uf1", minStd: 20, maxStd: 35, unit: "MPa" },
-                { name: "UF 2", val: "26.0", id: "bag-filter-uf2", minStd: 20, maxStd: 35, unit: "MPa" }
+                { name: "WR 5", val: "45.5", id: "bag-filter-wr5", minStd: 20, maxStd: 35, unit: "MPa", line: "pre-treatment", bgClass: "bg-blue-300/10 border-blue-400/30 text-black-700 dark:text-blue-400" },
+                { name: "Pre Degreasing", val: "45.5", id: "bag-filter-pre-deg", minStd: 20, maxStd: 35, unit: "MPa", line: "pre-treatment", bgClass: "bg-purple-300/10 border-black-500/30 text-black-700 dark:text-purple-400" },
+                { name: "Degreasing", val: "34.8", id: "bag-filter-deg", minStd: 20, maxStd: 35, unit: "MPa", line: "pre-treatment", bgClass: "bg-amber-300/10 border-amber-500/30 text-black-700 dark:text-amber-400" },
+                { name: "Pressure IN", val: "34.8", id: "bag-filter-pressure-in", minStd: 20, maxStd: 35, unit: "MPa", line: "pre-treatment", bgClass: "bg-red-300/10 border-red-500/30 text-black-700 dark:text-red-400", groupTitle: "Phosphating" },
+                { name: "Pressure OUT", val: "34.8", id: "bag-filter-pressure-out", minStd: 20, maxStd: 35, unit: "MPa", line: "pre-treatment", bgClass: "bg-red-300/10 border-red-500/30 text-black-700 dark:text-red-400" },
+                { name: "DI 1", val: "25.0", id: "bag-filter-di1", minStd: 20, maxStd: 35, unit: "MPa", line: "ced", bgClass: "bg-cyan-300/10 border-cyan-500/30 text-black-700 dark:text-cyan-400" },
+                { name: "DI 2", val: "25.1", id: "bag-filter-di2", minStd: 20, maxStd: 35, unit: "MPa", line: "ced", bgClass: "bg-cyan-300/10 border-cyan-500/30 text-black-700 dark:text-cyan-400" },
+                { name: "Pressure UF 1", val: "25.1", id: "bag-filter-pressure-uf1", minStd: 20, maxStd: 35, unit: "MPa", line: "ced", bgClass: "bg-red-300/10 border-red-500/30 text-black-700 dark:text-red-400" },
+                { name: "Conductivity UF 1", val: "25.1", id: "bag-filter-conductivity-uf1", minStd: 20, maxStd: 35, unit: "µS", line: "ced", bgClass: "bg-red-300/10 border-red-500/30 text-black-700 dark:text-red-400" },
+                { name: "UF Module", val: "25.1", id: "bag-filter-ufmodule", minStd: 20, maxStd: 35, unit: "L/Min", line: "ced", bgClass: "bg-red-300/10 border-red-500/30 text-black-700 dark:text-red-400" },
 
-              ].map(t => (
-                <div key={t.name} className="flex flex-col text-left p-2.5 rounded bg-secondary/30 border border-border/50 justify-center gap-0.5 w-full">
-                  <span className="text-[10px] text-muted-foreground uppercase tracking-wider font-medium">{t.name}</span>
-                  <div className="flex items-baseline gap-1">
-                    <span className={`font-mono text-3xl font-bold ${getLimitColor(t.val, 20, 35, "text-emerald-500")}`}>{t.val}</span>
-                    <span className="text-sm text-muted-foreground">{t.unit || "°C"}</span>
+                { name: "Pressure UF 2", val: "25.1", id: "bag-filter-pressure-uf2", minStd: 20, maxStd: 35, unit: "MPa", line: "ced", bgClass: "bg-green-300/10 border-green-500/30 text-black-700 dark:text-green-400" },
+                { name: "Conductivity UF 2", val: "25.1", id: "bag-filter-conductivity-uf2", minStd: 20, maxStd: 35, unit: "µS", line: "ced", bgClass: "bg-green-300/10 border-green-500/30 text-black-700 dark:text-green-400" },
+                { name: "CED 1", val: "28.5", id: "bag-filter-ced1", minStd: 20, maxStd: 35, unit: "MPa", line: "ced", bgClass: "bg-indigo-300/10 border-indigo-500/30 text-black-700 dark:text-indigo-400" },
+                { name: "CED 2", val: "28.3", id: "bag-filter-ced2", minStd: 20, maxStd: 35, unit: "MPa", line: "ced", bgClass: "bg-violet-300/10 border-violet-500/30 text-black-700 dark:text-violet-400" },
+                { name: "Fluid Level", val: "28.5", id: "bag-filter-fluid-level", minStd: 20, maxStd: 35, unit: "mm", line: "ced", bgClass: "bg-indigo-300/10 border-indigo-500/30 text-black-700 dark:text-indigo-400" }
+              ].filter(t => t.line === bagFilterTab).map(t => [
+                t.groupTitle ? (
+                  <div key={`${t.name}-title`} className="col-span-2 mt-1.5 mb-0.5 px-0.5 flex items-center gap-2">
+                    <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">{t.groupTitle}</span>
+                    <div className="h-px bg-border flex-1"></div>
+                  </div>
+                ) : null,
+                <div key={t.name} className={`flex flex-col text-left p-2.5 rounded border justify-center gap-0.5 w-full ${t.bgClass} ${t.name === 'Degreasing' ? 'col-span-2' : ''}`}>
+                  <span className="text-[10px] uppercase tracking-wider font-medium opacity-80">{t.name}</span>
+                  <div className="flex items-end justify-between">
+                    <div className="flex items-baseline gap-1">
+                      <span className={`font-mono text-3xl font-bold ${getLimitColor(t.val, 20, 35, "text-emerald-500")}`}>{t.val}</span>
+                      <span className="text-sm opacity-70">{t.unit || "°C"}</span>
+                    </div>
+                    {t.val2 && (
+                      <div className="flex flex-col items-end">
+                        <span className="text-[8px] uppercase opacity-70 mb-0.5">{t.label2}</span>
+                        <div className="flex items-baseline gap-0.5">
+                          <span className={`font-mono text-2xl font-bold ${getLimitColor(t.val2, t.minStd2 || 0, t.maxStd2 || 100, "text-emerald-500")}`}>{t.val2}</span>
+                          <span className="text-[10px] opacity-70">{t.unit2}</span>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
-              ))}
+              ])}
             </div>
 
-            <div className="grid grid-cols-3 gap-1.5 mb-1.5">
-              <div className="col-span-2">
-                <div className="p-2.5 rounded-lg bg-secondary/30 border border-border/50 flex flex-col justify-center gap-0.5 text-left w-full h-full">
-                  <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">UF 1 & 2 Tank</span>
-                  <div className="flex justify-between mt-1 w-full">
-                    <div className="flex flex-col">
-                      <span className="text-[9px] text-muted-foreground mb-0.5">UF 1</span>
-                      <div className="flex items-baseline gap-1 whitespace-nowrap">
-                        <span className={`font-mono text-3xl font-bold ${getLimitColor("120.5", 100, 150, "text-emerald-500")}`}>120.5</span>
-                        <span className="text-xs font-normal text-muted-foreground">µS</span>
-                      </div>
-                    </div>
-                    <div className="flex flex-col items-end">
-                      <span className="text-[9px] text-muted-foreground mb-0.5">UF 2</span>
-                      <div className="flex items-baseline gap-1 whitespace-nowrap">
-                        <span className={`font-mono text-3xl font-bold ${getLimitColor("118.2", 100, 150, "text-emerald-500")}`}>118.2</span>
-                        <span className="text-xs font-normal text-muted-foreground/70">µS</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="p-2.5 rounded-lg bg-secondary/30 border border-border/50 flex flex-col justify-center gap-0.5 w-full h-full text-left">
-                <span className="text-[10px] text-muted-foreground uppercase tracking-wider font-medium">WR 5</span>
-                <div className="flex items-baseline gap-1">
-                  <span className={`font-mono text-3xl font-bold ${getLimitColor("24.9", 20, 35, "text-emerald-500")}`}>24.9</span>
-                  <span className="text-sm text-muted-foreground">MPa</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-3 gap-1.5 mt-auto">
-              <div className="col-span-2 p-2.5 rounded-lg bg-secondary/30 border border-border/50 flex flex-col justify-center gap-0.5 text-left w-full h-full">
-                <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">HE Pressure</span>
-                <div className="flex justify-between mt-1 w-full">
-                  <div className="flex flex-col">
-                    <span className="text-[9px] text-muted-foreground mb-0.5">IN</span>
-                    <div className="flex items-baseline gap-1 whitespace-nowrap">
-                      <span className={`font-mono text-3xl font-bold ${getLimitColor("4.5", 4.0, 5.0, "text-emerald-500")}`}>4.5</span>
-                      <span className="text-xs font-normal text-muted-foreground">MPa</span>
-                    </div>
-                  </div>
-                  <div className="flex flex-col items-end">
-                    <span className="text-[9px] text-muted-foreground mb-0.5">OUT</span>
-                    <div className="flex items-baseline gap-1 whitespace-nowrap">
-                      <span className={`font-mono text-3xl font-bold ${getLimitColor("3.2", 2.0, 4.0, "text-emerald-500")}`}>3.2</span>
-                      <span className="text-xs font-normal text-muted-foreground/70">MPa</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="p-2.5 rounded-lg bg-secondary/30 border border-border/50 flex flex-col justify-center gap-0.5 text-left w-full h-full">
-                <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">UF Module</span>
-                <div className="flex flex-col mt-1">
-                  <span className="text-[9px] text-muted-foreground mb-0.5">Flowmeter</span>
-                  <div className="flex items-baseline gap-1 whitespace-nowrap">
-                    <span className={`font-mono text-3xl font-bold ${getLimitColor("15.0", 10.0, 20.0, "text-emerald-500")}`}>15.0</span>
-                    <span className="text-xs font-normal text-muted-foreground">L/Min</span>
-                  </div>
-                </div>
-              </div>
+            <div className="grid grid-cols-3 gap-1.5">
             </div>
           </div>
         </div>
@@ -571,14 +552,14 @@ function MonitoringArea() {
       {/* Layout Grid */}
       <div className="flex flex-col gap-6">
         {/* Top Section */}
-        <div className="grid gap-4 lg:grid-cols-3">
+        <div className="grid gap-4 lg:grid-cols-5">
           {/* Column 1: Boiler Area */}
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-4 lg:col-span-2">
             {col1Areas.map(area => <AreaCard key={area.id} area={area} />)}
           </div>
 
-          {/* Column 2 & 3: PTED Area */}
-          <div className="flex flex-col gap-4 lg:col-span-2 h-full">
+          {/* Column 2: PTED Area */}
+          <div className="flex flex-col gap-4 lg:col-span-3 h-full">
             {ptedArea && <AreaCard area={ptedArea} />}
           </div>
         </div>
