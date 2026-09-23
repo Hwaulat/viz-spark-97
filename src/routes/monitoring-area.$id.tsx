@@ -113,7 +113,7 @@ function OvenDetailContent({ id }: { id: string }) {
       {/* Summary Cards */}
       <div className="mb-6">
         <StatCardGrid
-          columns={3}
+          columns={id === "oven-ced" ? 3 : 4}
           items={[
             {
               title: "",
@@ -147,6 +147,20 @@ function OvenDetailContent({ id }: { id: string }) {
               iconBg: "bg-emerald-500/10 text-emerald-500",
             },
             {
+              title: "Power Panel",
+              value: (
+                <div className="flex flex-col gap-1">
+                  <div className="flex items-baseline gap-1">
+                    <span className="text-foreground font-mono font-bold text-3xl">{elec?.kwh || "0"}</span>
+                    <span className="text-sm text-muted-foreground font-normal">kWh</span>
+                  </div>
+                </div>
+              ),
+              variant: "stat-side",
+              icon: <Zap />,
+              iconBg: "bg-amber-500/10 text-amber-500",
+            },
+            ...(id !== "oven-ced" ? [{
               title: "Temperature",
               value: (
                 <div className="flex flex-col gap-1">
@@ -160,10 +174,10 @@ function OvenDetailContent({ id }: { id: string }) {
                   </div>
                 </div>
               ),
-              variant: "stat-side",
+              variant: "stat-side" as const,
               icon: <Thermometer />,
               iconBg: "bg-blue-500/10 text-blue-500",
-            },
+            }] : []),
             {
               title: "Pressure",
               value: (
@@ -180,7 +194,7 @@ function OvenDetailContent({ id }: { id: string }) {
               ),
               variant: "stat-side",
               icon: <Gauge />,
-              iconBg: "bg-amber-500/10 text-amber-500",
+              iconBg: "bg-orange-500/10 text-orange-500",
             }
           ]}
         />
@@ -293,31 +307,33 @@ function OvenDetailContent({ id }: { id: string }) {
         </div>
 
         {/* Temperature Trend */}
-        <div className="rounded-xl border bg-card p-6 shadow-sm">
-          <div>
-            <h2 className="text-xl font-bold tracking-tight text-foreground">Temperature Trend</h2>
+        {id !== "oven-ced" && (
+          <div className="rounded-xl border bg-card p-6 shadow-sm">
+            <div>
+              <h2 className="text-xl font-bold tracking-tight text-foreground">Temperature Trend</h2>
+            </div>
+            <div className="h-[250px] mt-6 w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={chartData} margin={{ top: 10, right: 10, left: 10, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" vertical={false} />
+                  <XAxis dataKey="time" stroke="hsl(var(--muted-foreground))" fontSize={11} tickMargin={8} />
+                  <YAxis stroke="hsl(var(--muted-foreground))" fontSize={11} domain={['dataMin - 5', 'dataMax + 5']} tickFormatter={(val) => val.toFixed(0)} label={{ value: '°C', angle: -90, position: 'insideLeft', style: { textAnchor: 'middle', fill: '#ef4444', fontSize: 12, fontWeight: 600 } }} />
+                  <Tooltip
+                    contentStyle={{ backgroundColor: 'hsl(var(--card))', borderColor: 'hsl(var(--border))', borderRadius: '8px' }}
+                    itemStyle={{ color: 'hsl(var(--foreground))' }}
+                  />
+                  <Legend iconType="circle" wrapperStyle={{ fontSize: '11px' }} />
+                  <Line type="monotone" dataKey="temp1" name="Temperature (°C)" stroke="#ef4444" strokeWidth={2} dot={false} />
+                  <Line type="monotone" dataKey="tempMin" name="Min" stroke="#ef4444" strokeDasharray="3 3" strokeWidth={1.5} opacity={0.6} dot={false} />
+                  <Line type="monotone" dataKey="tempMax" name="Max" stroke="#ef4444" strokeDasharray="3 3" strokeWidth={1.5} opacity={0.6} dot={false} />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
           </div>
-          <div className="h-[250px] mt-6 w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={chartData} margin={{ top: 10, right: 10, left: 10, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" vertical={false} />
-                <XAxis dataKey="time" stroke="hsl(var(--muted-foreground))" fontSize={11} tickMargin={8} />
-                <YAxis stroke="hsl(var(--muted-foreground))" fontSize={11} domain={['dataMin - 5', 'dataMax + 5']} tickFormatter={(val) => val.toFixed(0)} label={{ value: '°C', angle: -90, position: 'insideLeft', style: { textAnchor: 'middle', fill: '#ef4444', fontSize: 12, fontWeight: 600 } }} />
-                <Tooltip
-                  contentStyle={{ backgroundColor: 'hsl(var(--card))', borderColor: 'hsl(var(--border))', borderRadius: '8px' }}
-                  itemStyle={{ color: 'hsl(var(--foreground))' }}
-                />
-                <Legend iconType="circle" wrapperStyle={{ fontSize: '11px' }} />
-                <Line type="monotone" dataKey="temp1" name="Temperature (°C)" stroke="#ef4444" strokeWidth={2} dot={false} />
-                <Line type="monotone" dataKey="tempMin" name="Min" stroke="#ef4444" strokeDasharray="3 3" strokeWidth={1.5} opacity={0.6} dot={false} />
-                <Line type="monotone" dataKey="tempMax" name="Max" stroke="#ef4444" strokeDasharray="3 3" strokeWidth={1.5} opacity={0.6} dot={false} />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
+        )}
 
         {/* Pressure Trend */}
-        <div className="rounded-xl border bg-card p-6 shadow-sm">
+        <div className={`rounded-xl border bg-card p-6 shadow-sm ${id === 'oven-ced' ? 'lg:col-span-2' : ''}`}>
           <div>
             <h2 className="text-xl font-bold tracking-tight text-foreground">Pressure Trend</h2>
           </div>
