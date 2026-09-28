@@ -22,7 +22,7 @@ import StationDegreasingNewPng from "@/assets/Degreasing.png";
 import Boiler1Png from "@/assets/Boiler 1.png";
 import Boiler2Png from "@/assets/Boiler 2.png";
 import Boiler3Png from "@/assets/Boiler 3.png";
-import DenahFixPng from "@/assets/Denah Fix.png";
+
 export const Route = createFileRoute("/monitoring-area/$id")({
   head: ({ params }) => ({
     meta: [
@@ -1314,8 +1314,8 @@ function MonitoringAreaDetails() {
               </div>
 
             </div>
-            <div className="w-full bg-white dark:bg-background flex items-center justify-center overflow-hidden">
-              <img src={DenahFixPng} alt="Bag Filter Layout" className="w-full h-auto object-cover drop-shadow-sm dark:invert" />
+            <div className="w-full bg-white dark:bg-background flex items-center justify-center overflow-hidden p-12">
+              <span className="text-muted-foreground text-sm font-medium">Bag Filter Layout Diagram (Image not available)</span>
             </div>
           </div>
         </div>
