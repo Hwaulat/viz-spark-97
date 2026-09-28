@@ -57,7 +57,7 @@ const NEW_LOG_HISTORY = [
 
 function OvenDetailContent({ id }: { id: string }) {
   const [timeFilter, setTimeFilter] = useState<"daily" | "monthly" | "yearly">("daily");
-  const [usageTab, setUsageTab] = useState<"Energy" | "Gas">("Energy");
+  const [tempTab, setTempTab] = useState<"temp1" | "temp2" | "temp3" | "temp4" | "temp5" | "temp6">("temp1");
 
   const ovenData = useMemo(() => {
     let baseKw = 50;
@@ -105,6 +105,10 @@ function OvenDetailContent({ id }: { id: string }) {
 
   const chartData = data.map((d: any) => ({
     ...d,
+    temp3: d.temp3 || +(d.temp1 + (Math.random() * 2 - 1)).toFixed(1),
+    temp4: d.temp4 || +(d.temp1 + (Math.random() * 2 - 1)).toFixed(1),
+    temp5: d.temp5 || +(d.temp1 + (Math.random() * 2 - 1)).toFixed(1),
+    temp6: d.temp6 || +(d.temp1 + (Math.random() * 2 - 1)).toFixed(1),
     temp1Min, temp1Max, temp2Min, temp2Max, pressureMin, pressureMax, tempMin, tempMax
   }));
 
@@ -200,79 +204,63 @@ function OvenDetailContent({ id }: { id: string }) {
         />
       </div>
 
+      {id === "oven-ced" && (
+        <div className="mb-6">
+          <StatCardGrid
+            columns={6}
+            items={[
+              { name: "TEMP. 1", val: "182.0", limit: [180, 190] },
+              { name: "TEMP. 2", val: "179.0", limit: [180, 190] },
+              { name: "TEMP. 3", val: "180.5", limit: [180, 190] },
+              { name: "TEMP. 4", val: "181.2", limit: [180, 190] },
+              { name: "TEMP. 5", val: "178.5", limit: [180, 190] },
+              { name: "TEMP. 6", val: "183.0", limit: [180, 190] },
+            ].map(t => ({
+              title: t.name,
+              value: (
+                <div className="flex flex-col gap-1">
+                  <div className="flex items-baseline gap-1">
+                    <span className={`font-mono font-bold text-3xl ${parseFloat(t.val) < t.limit[0] || parseFloat(t.val) > t.limit[1] ? 'text-destructive' : 'text-emerald-500'}`}>{t.val}</span>
+                    <span className="text-sm text-muted-foreground font-normal">°C</span>
+                  </div>
+                </div>
+              ),
+              variant: "stat-side",
+            }))}
+          />
+        </div>
+      )}
+
       <div className="bg-card border border-border rounded-lg shadow-sm p-4 xl:p-6 mt-8">
         <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
-        <div>
-          <h2 className="text-xl font-bold tracking-tight text-foreground">Overview Trends</h2>
-          <p className="text-sm text-muted-foreground mt-1">Energy, gas, and power trends for {name}.</p>
-        </div>
-        <div className="flex bg-gray-100 dark:bg-gray-700/60 rounded-xl p-1 h-auto shrink-0">
-          {(["daily", "monthly", "yearly"] as const).map((t) => (
-            <button
-              key={t}
-              onClick={() => setTimeFilter(t)}
-              className={`text-gray-500 dark:text-gray-400 rounded-lg text-xs font-medium h-8 px-4 transition-colors ${timeFilter === t
-                ? "bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-sm"
-                : "hover:text-gray-700 dark:hover:text-gray-300"
-                }`}
-            >
-              {t.charAt(0).toUpperCase() + t.slice(1)}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Charts Grid */}
-      <div className="grid lg:grid-cols-2 gap-6">
-        {/* Power Consumption (kW) */}
-        <div className="rounded-xl border bg-card p-6 shadow-sm">
           <div>
-            <h2 className="text-xl font-bold tracking-tight text-foreground">Power Consumption Trend</h2>
+            <h2 className="text-xl font-bold tracking-tight text-foreground">Overview Trends</h2>
+            <p className="text-sm text-muted-foreground mt-1">Energy, gas, and power trends for {name}.</p>
           </div>
-          <div className="h-[250px] mt-6 w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={data} margin={{ top: 10, right: 10, left: 10, bottom: 0 }}>
-                <defs>
-                  <linearGradient id="colorKw" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#f59e0b" stopOpacity={0.3} />
-                    <stop offset="95%" stopColor="#f59e0b" stopOpacity={0} />
-                  </linearGradient>
-                </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" vertical={false} />
-                <XAxis dataKey="time" stroke="hsl(var(--muted-foreground))" fontSize={11} tickMargin={8} />
-                <YAxis stroke="hsl(var(--muted-foreground))" fontSize={11} tickFormatter={(val) => val.toFixed(0)} label={{ value: 'kW', angle: -90, position: 'insideLeft', style: { textAnchor: 'middle', fill: '#f59e0b', fontSize: 12, fontWeight: 600 } }} />
-                <Tooltip
-                  contentStyle={{ backgroundColor: 'hsl(var(--card))', borderColor: 'hsl(var(--border))', borderRadius: '8px' }}
-                  itemStyle={{ color: 'hsl(var(--foreground))' }}
-                />
-                <Legend iconType="circle" wrapperStyle={{ fontSize: '11px' }} />
-                <Area type="monotone" dataKey="kw" name="Active Power (kW)" stroke="#f59e0b" fillOpacity={1} fill="url(#colorKw)" strokeWidth={2} />
-              </AreaChart>
-            </ResponsiveContainer>
+          <div className="flex bg-gray-100 dark:bg-gray-700/60 rounded-xl p-1 h-auto shrink-0">
+            {(["daily", "monthly", "yearly"] as const).map((t) => (
+              <button
+                key={t}
+                onClick={() => setTimeFilter(t)}
+                className={`text-gray-500 dark:text-gray-400 rounded-lg text-xs font-medium h-8 px-4 transition-colors ${timeFilter === t
+                  ? "bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-sm"
+                  : "hover:text-gray-700 dark:hover:text-gray-300"
+                  }`}
+              >
+                {t.charAt(0).toUpperCase() + t.slice(1)}
+              </button>
+            ))}
           </div>
         </div>
 
-        {/* Cumulative Usage */}
-        <div className="rounded-xl border bg-card p-6 shadow-sm flex flex-col">
-          <div className="flex justify-between items-start mb-6">
-            <h2 className="text-xl font-bold tracking-tight text-foreground">Cumulative {usageTab} Usage</h2>
-            <div className="flex bg-gray-100 dark:bg-gray-700/60 rounded-xl p-1 h-auto shrink-0">
-              {(["Energy", "Gas"] as const).map((t) => (
-                <button
-                  key={t}
-                  onClick={() => setUsageTab(t)}
-                  className={`text-gray-500 dark:text-gray-400 rounded-lg text-xs font-medium h-8 px-4 transition-colors ${usageTab === t
-                    ? "bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-sm"
-                    : "hover:text-gray-700 dark:hover:text-gray-300"
-                    }`}
-                >
-                  {t}
-                </button>
-              ))}
+        {/* Charts Grid */}
+        <div className="grid lg:grid-cols-2 gap-6">
+          {/* Cumulative Energy Usage */}
+          <div className="rounded-xl border bg-card p-6 shadow-sm flex flex-col">
+            <div className="flex justify-between items-start mb-6">
+              <h2 className="text-xl font-bold tracking-tight text-foreground">Cumulative Energy Usage</h2>
             </div>
-          </div>
-          <div className="flex-1 w-full min-h-[250px]">
-            {usageTab === "Energy" ? (
+            <div className="flex-1 w-full min-h-[250px]">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={data} margin={{ top: 10, right: 10, left: 10, bottom: 0 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" vertical={false} />
@@ -287,7 +275,15 @@ function OvenDetailContent({ id }: { id: string }) {
                   <Bar dataKey="kwh" name="Energy (kWh)" fill="#f59e0b" radius={[2, 2, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
-            ) : (
+            </div>
+          </div>
+
+          {/* Cumulative Gas Usage */}
+          <div className="rounded-xl border bg-card p-6 shadow-sm flex flex-col">
+            <div className="flex justify-between items-start mb-6">
+              <h2 className="text-xl font-bold tracking-tight text-foreground">Cumulative Gas Usage</h2>
+            </div>
+            <div className="flex-1 w-full min-h-[250px]">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={data} margin={{ top: 10, right: 10, left: 10, bottom: 0 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" vertical={false} />
@@ -302,17 +298,26 @@ function OvenDetailContent({ id }: { id: string }) {
                   <Bar dataKey="gas" name="Gas (MMBTU)" fill="#10b981" radius={[2, 2, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
-            )}
-          </div>
-        </div>
-
-        {/* Temperature Trend */}
-        {id !== "oven-ced" && (
-          <div className="rounded-xl border bg-card p-6 shadow-sm">
-            <div>
-              <h2 className="text-xl font-bold tracking-tight text-foreground">Temperature Trend</h2>
             </div>
-            <div className="h-[250px] mt-6 w-full">
+          </div>
+
+          {/* Temperature Trend */}
+          <div className="rounded-xl border bg-card p-6 shadow-sm flex flex-col">
+            <div className="flex justify-between items-start mb-6">
+              <h2 className="text-xl font-bold tracking-tight text-foreground">Temperature Trend</h2>
+              {id === "oven-ced" && (
+                <div className="shrink-0 w-32">
+                  <SelectInput
+                    datalist={[1, 2, 3, 4, 5, 6].map(num => ({ label: `Temp.${num}`, value: `temp${num}` }))}
+                    defValue={tempTab}
+                    onChange={(val) => val && setTempTab(val as any)}
+                    hideClear
+                    containerClassName="w-full"
+                  />
+                </div>
+              )}
+            </div>
+            <div className="flex-1 w-full min-h-[250px]">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={chartData} margin={{ top: 10, right: 10, left: 10, bottom: 0 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" vertical={false} />
@@ -323,39 +328,38 @@ function OvenDetailContent({ id }: { id: string }) {
                     itemStyle={{ color: 'hsl(var(--foreground))' }}
                   />
                   <Legend iconType="circle" wrapperStyle={{ fontSize: '11px' }} />
-                  <Line type="monotone" dataKey="temp1" name="Temperature (°C)" stroke="#ef4444" strokeWidth={2} dot={false} />
-                  <Line type="monotone" dataKey="tempMin" name="Min" stroke="#ef4444" strokeDasharray="3 3" strokeWidth={1.5} opacity={0.6} dot={false} />
-                  <Line type="monotone" dataKey="tempMax" name="Max" stroke="#ef4444" strokeDasharray="3 3" strokeWidth={1.5} opacity={0.6} dot={false} />
+                  <Line type="monotone" dataKey={id === "oven-ced" ? tempTab : "temp1"} name="Temperature (°C)" stroke="#ef4444" strokeWidth={2} dot={false} />
+                  {id !== "oven-ced" && <Line type="monotone" dataKey="tempMin" name="Min" stroke="#ef4444" strokeDasharray="3 3" strokeWidth={1.5} opacity={0.6} dot={false} />}
+                  {id !== "oven-ced" && <Line type="monotone" dataKey="tempMax" name="Max" stroke="#ef4444" strokeDasharray="3 3" strokeWidth={1.5} opacity={0.6} dot={false} />}
                 </LineChart>
               </ResponsiveContainer>
             </div>
           </div>
-        )}
 
-        {/* Pressure Trend */}
-        <div className={`rounded-xl border bg-card p-6 shadow-sm ${id === 'oven-ced' ? 'lg:col-span-2' : ''}`}>
-          <div>
-            <h2 className="text-xl font-bold tracking-tight text-foreground">Pressure Trend</h2>
-          </div>
-          <div className="h-[250px] mt-6 w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={chartData} margin={{ top: 10, right: 10, left: 10, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" vertical={false} />
-                <XAxis dataKey="time" stroke="hsl(var(--muted-foreground))" fontSize={11} tickMargin={8} />
-                <YAxis stroke="hsl(var(--muted-foreground))" fontSize={11} domain={['dataMin - 0.5', 'dataMax + 0.5']} tickFormatter={(val) => val.toFixed(2)} label={{ value: 'MPa', angle: -90, position: 'insideLeft', style: { textAnchor: 'middle', fill: '#8b5cf6', fontSize: 12, fontWeight: 600 } }} />
-                <Tooltip
-                  contentStyle={{ backgroundColor: 'hsl(var(--card))', borderColor: 'hsl(var(--border))', borderRadius: '8px' }}
-                  itemStyle={{ color: 'hsl(var(--foreground))' }}
-                />
-                <Legend iconType="circle" wrapperStyle={{ fontSize: '11px' }} />
-                <Line type="monotone" dataKey="pressure" name="Pressure (MPa)" stroke="#8b5cf6" strokeWidth={2} dot={false} />
-                <Line type="monotone" dataKey="pressureMin" name="Min" stroke="#8b5cf6" strokeDasharray="3 3" strokeWidth={1.5} opacity={0.6} dot={false} />
-                <Line type="monotone" dataKey="pressureMax" name="Max" stroke="#8b5cf6" strokeDasharray="3 3" strokeWidth={1.5} opacity={0.6} dot={false} />
-              </LineChart>
-            </ResponsiveContainer>
+          {/* Pressure Trend */}
+          <div className="rounded-xl border bg-card p-6 shadow-sm">
+            <div>
+              <h2 className="text-xl font-bold tracking-tight text-foreground">Pressure Trend</h2>
+            </div>
+            <div className="h-[250px] mt-6 w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={chartData} margin={{ top: 10, right: 10, left: 10, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" vertical={false} />
+                  <XAxis dataKey="time" stroke="hsl(var(--muted-foreground))" fontSize={11} tickMargin={8} />
+                  <YAxis stroke="hsl(var(--muted-foreground))" fontSize={11} domain={['dataMin - 0.5', 'dataMax + 0.5']} tickFormatter={(val) => val.toFixed(2)} label={{ value: 'MPa', angle: -90, position: 'insideLeft', style: { textAnchor: 'middle', fill: '#8b5cf6', fontSize: 12, fontWeight: 600 } }} />
+                  <Tooltip
+                    contentStyle={{ backgroundColor: 'hsl(var(--card))', borderColor: 'hsl(var(--border))', borderRadius: '8px' }}
+                    itemStyle={{ color: 'hsl(var(--foreground))' }}
+                  />
+                  <Legend iconType="circle" wrapperStyle={{ fontSize: '11px' }} />
+                  <Line type="monotone" dataKey="pressure" name="Pressure (MPa)" stroke="#8b5cf6" strokeWidth={2} dot={false} />
+                  <Line type="monotone" dataKey="pressureMin" name="Min" stroke="#8b5cf6" strokeDasharray="3 3" strokeWidth={1.5} opacity={0.6} dot={false} />
+                  <Line type="monotone" dataKey="pressureMax" name="Max" stroke="#8b5cf6" strokeDasharray="3 3" strokeWidth={1.5} opacity={0.6} dot={false} />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
           </div>
         </div>
-      </div>
       </div>
     </div>
   );
@@ -791,7 +795,7 @@ function MonitoringAreaDetails() {
             )}
           </div>
         )}
-        
+
         {id === "bag-filter" && (
           <div className="ml-auto">
             <Link
@@ -827,7 +831,7 @@ function MonitoringAreaDetails() {
               },
               {
                 title: "Power Panel",
-                value: `${BOILER_GAS.powerPanel} kw/h`,
+                value: `${BOILER_GAS.powerPanel} kWh`,
                 variant: "stat-side",
                 icon: <Zap />,
                 iconBg: "bg-emerald-500/10 text-emerald-500",
@@ -1099,15 +1103,15 @@ function MonitoringAreaDetails() {
                           <LineChart data={usageData} margin={{ top: 20, right: 50, left: 50, bottom: 5 }}>
                             <CartesianGrid strokeDasharray="3 3" vertical={false} opacity={0.3} />
                             <XAxis dataKey="label" tickLine={false} axisLine={false} tick={{ fontSize: 12 }} />
-                            <YAxis yAxisId="left" orientation="left" tickLine={false} axisLine={false} tick={{ fontSize: 12 }} tickFormatter={(val) => `${val / 1000}k`} label={{ value: 'Energy (kWh)', angle: -90, position: 'insideLeft', offset: -35, style: { fontSize: 12, fill: '#3b82f6', fontWeight: 600 } }} />
+                            <YAxis yAxisId="left" orientation="left" tickLine={false} axisLine={false} tick={{ fontSize: 12 }} tickFormatter={(val) => `${val / 1000}k`} label={{ value: 'Energy (kW)', angle: -90, position: 'insideLeft', offset: -35, style: { fontSize: 12, fill: '#3b82f6', fontWeight: 600 } }} />
                             <YAxis yAxisId="right" orientation="right" tickLine={false} axisLine={false} tick={{ fontSize: 12 }} tickFormatter={(val) => `${val / 1000}k`} label={{ value: 'Gas (MMBTU)', angle: 90, position: 'insideRight', offset: -35, style: { fontSize: 12, fill: '#10b981', fontWeight: 600 } }} />
                             <Tooltip
                               contentStyle={{ backgroundColor: "rgba(0, 0, 0, 0.8)", borderColor: "rgba(255, 255, 255, 0.1)", borderRadius: "8px" }}
                               itemStyle={{ color: "#fff" }}
                               formatter={(value: number, name: string) => {
-                                if (name === "Energy (kWh)") {
+                                if (name === "Energy (kW)") {
                                   const price = value * ENERGY_PRICE_PER_KWH;
-                                  return [`${value.toLocaleString()} kWh (Price: Rp ${price.toLocaleString()})`, name];
+                                  return [`${value.toLocaleString()} kW (Price: Rp ${price.toLocaleString()})`, name];
                                 }
                                 if (name === "Gas (MMBTU)") {
                                   const price = value * GAS_PRICE_PER_MMBTU;
@@ -1117,7 +1121,7 @@ function MonitoringAreaDetails() {
                               }}
                             />
                             <Legend iconType="circle" wrapperStyle={{ paddingTop: "20px" }} />
-                            <Line yAxisId="left" type="monotone" name="Energy (kWh)" dataKey="energy" stroke="#3b82f6" strokeWidth={2} dot={{ r: 4, strokeWidth: 2, fill: "hsl(var(--card))" }} activeDot={{ r: 6 }} />
+                            <Line yAxisId="left" type="monotone" name="Energy (kW)" dataKey="energy" stroke="#3b82f6" strokeWidth={2} dot={{ r: 4, strokeWidth: 2, fill: "hsl(var(--card))" }} activeDot={{ r: 6 }} />
                             <Line yAxisId="right" type="monotone" name="Gas (MMBTU)" dataKey="gas" stroke="#10b981" strokeWidth={2} dot={{ r: 4, strokeWidth: 2, fill: "hsl(var(--card))" }} activeDot={{ r: 6 }} />
                           </LineChart>
                         </ResponsiveContainer>
