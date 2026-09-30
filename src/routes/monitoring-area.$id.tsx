@@ -882,7 +882,7 @@ function MonitoringAreaDetails() {
         </div>
         {id === "oven-ced" && (
           <button className="ml-auto flex items-center gap-1.5 rounded-lg border border-blue-500 bg-blue-500 px-3 py-1.5 shadow-sm hover:bg-blue-600 transition-colors text-sm font-medium text-white">
-            <Eye className="h-4 w-4" /> Diagram Mapping
+            <Eye className="h-4 w-4" /> Layout Diagram
           </button>
         )}
 
