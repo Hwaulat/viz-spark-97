@@ -118,7 +118,7 @@ function OvenDetailContent({ id }: { id: string }) {
       {/* Summary Cards */}
       <div className="mb-6">
         <StatCardGrid
-          columns={id === "oven-ced" ? 3 : 4}
+          columns={(id === "oven-sealing" || id === "oven-topcoat") ? 5 : id === "oven-ced" ? 3 : 4}
           items={[
             {
               title: "",
@@ -165,7 +165,77 @@ function OvenDetailContent({ id }: { id: string }) {
               icon: <Zap />,
               iconBg: "bg-amber-500/10 text-amber-500",
             },
-            ...(id !== "oven-ced" ? [{
+            ...(id === "oven-sealing" ? [
+              {
+                title: "Sealing 1",
+                value: (
+                  <div className="flex flex-col gap-1">
+                    <div className="flex items-baseline gap-1">
+                      <span className={data[data.length - 1]?.temp1 > standard ? 'text-destructive font-mono font-bold text-3xl' : 'text-emerald-500 font-mono font-bold text-3xl'}>{data[data.length - 1]?.temp1?.toFixed(1) || "0.0"}</span>
+                      <span className="text-sm text-muted-foreground font-normal">°C</span>
+                    </div>
+                    <div className="flex gap-3 text-[10px] font-mono font-semibold items-center">
+                      <span className="text-blue-500/90">Standard: {standard}°C</span>
+                    </div>
+                  </div>
+                ),
+                variant: "stat-side" as const,
+                icon: <Thermometer />,
+                iconBg: "bg-blue-500/10 text-blue-500",
+              },
+              {
+                title: "Sealing 2",
+                value: (
+                  <div className="flex flex-col gap-1">
+                    <div className="flex items-baseline gap-1">
+                      <span className={data[data.length - 1]?.temp2 > standard ? 'text-destructive font-mono font-bold text-3xl' : 'text-emerald-500 font-mono font-bold text-3xl'}>{data[data.length - 1]?.temp2?.toFixed(1) || "0.0"}</span>
+                      <span className="text-sm text-muted-foreground font-normal">°C</span>
+                    </div>
+                    <div className="flex gap-3 text-[10px] font-mono font-semibold items-center">
+                      <span className="text-blue-500/90">Standard: {standard}°C</span>
+                    </div>
+                  </div>
+                ),
+                variant: "stat-side" as const,
+                icon: <Thermometer />,
+                iconBg: "bg-blue-500/10 text-blue-500",
+              },
+            ] : id === "oven-topcoat" ? [
+              {
+                title: "TC1",
+                value: (
+                  <div className="flex flex-col gap-1">
+                    <div className="flex items-baseline gap-1">
+                      <span className={data[data.length - 1]?.temp1 > standard ? 'text-destructive font-mono font-bold text-3xl' : 'text-emerald-500 font-mono font-bold text-3xl'}>{data[data.length - 1]?.temp1?.toFixed(1) || "0.0"}</span>
+                      <span className="text-sm text-muted-foreground font-normal">°C</span>
+                    </div>
+                    <div className="flex gap-3 text-[10px] font-mono font-semibold items-center">
+                      <span className="text-blue-500/90">Standard: {standard}°C</span>
+                    </div>
+                  </div>
+                ),
+                variant: "stat-side" as const,
+                icon: <Thermometer />,
+                iconBg: "bg-blue-500/10 text-blue-500",
+              },
+              {
+                title: "New Heater",
+                value: (
+                  <div className="flex flex-col gap-1">
+                    <div className="flex items-baseline gap-1">
+                      <span className={data[data.length - 1]?.temp2 > standard ? 'text-destructive font-mono font-bold text-3xl' : 'text-emerald-500 font-mono font-bold text-3xl'}>{data[data.length - 1]?.temp2?.toFixed(1) || "0.0"}</span>
+                      <span className="text-sm text-muted-foreground font-normal">°C</span>
+                    </div>
+                    <div className="flex gap-3 text-[10px] font-mono font-semibold items-center">
+                      <span className="text-blue-500/90">Standard: {standard}°C</span>
+                    </div>
+                  </div>
+                ),
+                variant: "stat-side" as const,
+                icon: <Thermometer />,
+                iconBg: "bg-blue-500/10 text-blue-500",
+              },
+            ] : id !== "oven-ced" ? [{
               title: "Temperature",
               value: (
                 <div className="flex flex-col gap-1">
@@ -210,12 +280,12 @@ function OvenDetailContent({ id }: { id: string }) {
           <StatCardGrid
             columns={6}
             items={[
-              { name: "TEMP. 1", val: "182.0", limit: [180, 190] },
-              { name: "TEMP. 2", val: "179.0", limit: [180, 190] },
-              { name: "TEMP. 3", val: "180.5", limit: [180, 190] },
-              { name: "TEMP. 4", val: "181.2", limit: [180, 190] },
-              { name: "TEMP. 5", val: "178.5", limit: [180, 190] },
-              { name: "TEMP. 6", val: "183.0", limit: [180, 190] },
+              { name: "SUPPLY 1", val: "182.0", limit: [180, 190], isSupply: true },
+              { name: "RETURN 1", val: "179.0", limit: [180, 190], isSupply: false },
+              { name: "SUPPLY 2", val: "180.5", limit: [180, 190], isSupply: true },
+              { name: "RETURN 2", val: "181.2", limit: [180, 190], isSupply: false },
+              { name: "SUPPLY 3", val: "178.5", limit: [180, 190], isSupply: true },
+              { name: "RETURN 3", val: "183.0", limit: [180, 190], isSupply: false },
             ].map(t => ({
               title: t.name,
               value: (
@@ -224,6 +294,11 @@ function OvenDetailContent({ id }: { id: string }) {
                     <span className={`font-mono font-bold text-3xl ${parseFloat(t.val) < t.limit[0] || parseFloat(t.val) > t.limit[1] ? 'text-destructive' : 'text-emerald-500'}`}>{t.val}</span>
                     <span className="text-sm text-muted-foreground font-normal">°C</span>
                   </div>
+                  {t.isSupply && (
+                    <div className="flex gap-3 text-[10px] font-mono font-semibold items-center">
+                      <span className="text-blue-500/90">Standard: {standard}°C</span>
+                    </div>
+                  )}
                 </div>
               ),
               variant: "stat-side",
@@ -307,14 +382,54 @@ function OvenDetailContent({ id }: { id: string }) {
             <div className="flex justify-between items-start mb-6">
               <h2 className="text-xl font-bold tracking-tight text-foreground">Temperature Trend</h2>
               {id === "oven-ced" && (
-                <div className="shrink-0 w-32">
-                  <SelectInput
-                    datalist={[1, 2, 3, 4, 5, 6].map(num => ({ label: `Temp.${num}`, value: `temp${num}` }))}
-                    defValue={tempTab}
-                    onChange={(val) => val && setTempTab(val as any)}
-                    hideClear
-                    containerClassName="w-full"
-                  />
+                <div className="flex bg-gray-100 dark:bg-gray-700/60 rounded-xl p-1 h-auto shrink-0">
+                  {([{ label: "Supply 1", value: "temp1" }, { label: "Supply 2", value: "temp3" }, { label: "Supply 3", value: "temp5" }] as const).map((t) => (
+                    <button
+                      key={t.value}
+                      onClick={() => setTempTab(t.value as any)}
+                      className={`text-gray-500 dark:text-gray-400 rounded-lg text-xs font-medium h-8 px-4 transition-colors ${
+                        tempTab === t.value
+                          ? "bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-sm"
+                          : "hover:text-gray-700 dark:hover:text-gray-300"
+                      }`}
+                    >
+                      {t.label}
+                    </button>
+                  ))}
+                </div>
+              )}
+              {id === "oven-sealing" && (
+                <div className="flex bg-gray-100 dark:bg-gray-700/60 rounded-xl p-1 h-auto shrink-0">
+                  {([{ label: "Sealing 1", value: "temp1" }, { label: "Sealing 2", value: "temp2" }] as const).map((t) => (
+                    <button
+                      key={t.value}
+                      onClick={() => setTempTab(t.value as any)}
+                      className={`text-gray-500 dark:text-gray-400 rounded-lg text-xs font-medium h-8 px-4 transition-colors ${
+                        tempTab === t.value
+                          ? "bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-sm"
+                          : "hover:text-gray-700 dark:hover:text-gray-300"
+                      }`}
+                    >
+                      {t.label}
+                    </button>
+                  ))}
+                </div>
+              )}
+              {id === "oven-topcoat" && (
+                <div className="flex bg-gray-100 dark:bg-gray-700/60 rounded-xl p-1 h-auto shrink-0">
+                  {([{ label: "TC1", value: "temp1" }, { label: "New Heater", value: "temp2" }] as const).map((t) => (
+                    <button
+                      key={t.value}
+                      onClick={() => setTempTab(t.value as any)}
+                      className={`text-gray-500 dark:text-gray-400 rounded-lg text-xs font-medium h-8 px-4 transition-colors ${
+                        tempTab === t.value
+                          ? "bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-sm"
+                          : "hover:text-gray-700 dark:hover:text-gray-300"
+                      }`}
+                    >
+                      {t.label}
+                    </button>
+                  ))}
                 </div>
               )}
             </div>
@@ -323,15 +438,25 @@ function OvenDetailContent({ id }: { id: string }) {
                 <LineChart data={chartData} margin={{ top: 10, right: 10, left: 10, bottom: 0 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" vertical={false} />
                   <XAxis dataKey="time" stroke="hsl(var(--muted-foreground))" fontSize={11} tickMargin={8} />
-                  <YAxis stroke="hsl(var(--muted-foreground))" fontSize={11} domain={['dataMin - 5', 'dataMax + 5']} tickFormatter={(val) => val.toFixed(0)} label={{ value: '°C', angle: -90, position: 'insideLeft', style: { textAnchor: 'middle', fill: '#ef4444', fontSize: 12, fontWeight: 600 } }} />
+                  {id === "oven-ced" && <YAxis yAxisId="left" stroke="hsl(var(--muted-foreground))" fontSize={11} domain={['dataMin - 5', 'dataMax + 5']} tickFormatter={(val) => val.toFixed(0)} label={{ value: 'Supply (°C)', angle: -90, position: 'insideLeft', style: { textAnchor: 'middle', fill: '#ef4444', fontSize: 12, fontWeight: 600 } }} />}
+                  {id === "oven-ced" && <YAxis yAxisId="right" orientation="right" stroke="hsl(var(--muted-foreground))" fontSize={11} domain={['dataMin - 5', 'dataMax + 5']} tickFormatter={(val) => val.toFixed(0)} label={{ value: 'Return (°C)', angle: 90, position: 'insideRight', style: { textAnchor: 'middle', fill: '#10b981', fontSize: 12, fontWeight: 600 } }} />}
+                  {id !== "oven-ced" && <YAxis stroke="hsl(var(--muted-foreground))" fontSize={11} domain={['dataMin - 5', 'dataMax + 5']} tickFormatter={(val) => val.toFixed(0)} label={{ value: '°C', angle: -90, position: 'insideLeft', style: { textAnchor: 'middle', fill: '#ef4444', fontSize: 12, fontWeight: 600 } }} />}
                   <Tooltip
                     contentStyle={{ backgroundColor: 'hsl(var(--card))', borderColor: 'hsl(var(--border))', borderRadius: '8px' }}
                     itemStyle={{ color: 'hsl(var(--foreground))' }}
                   />
                   <Legend iconType="circle" wrapperStyle={{ fontSize: '11px' }} />
-                  <Line type="monotone" dataKey={id === "oven-ced" ? tempTab : "temp1"} name="Temperature (°C)" stroke="#ef4444" strokeWidth={2} dot={false} />
-                  {id !== "oven-ced" && <Line type="monotone" dataKey="tempMin" name="Min" stroke="#ef4444" strokeDasharray="3 3" strokeWidth={1.5} opacity={0.6} dot={false} />}
-                  {id !== "oven-ced" && <Line type="monotone" dataKey="tempMax" name="Max" stroke="#ef4444" strokeDasharray="3 3" strokeWidth={1.5} opacity={0.6} dot={false} />}
+                  {id === "oven-ced" && tempTab === "temp1" && <Line yAxisId="left" type="monotone" dataKey="temp1" name="Supply 1 (°C)" stroke="#ef4444" strokeWidth={2} dot={false} />}
+                  {id === "oven-ced" && tempTab === "temp1" && <Line yAxisId="right" type="monotone" dataKey="temp2" name="Return 1 (°C)" stroke="#10b981" strokeWidth={2} dot={false} />}
+                  {id === "oven-ced" && tempTab === "temp3" && <Line yAxisId="left" type="monotone" dataKey="temp3" name="Supply 2 (°C)" stroke="#ef4444" strokeWidth={2} dot={false} />}
+                  {id === "oven-ced" && tempTab === "temp3" && <Line yAxisId="right" type="monotone" dataKey="temp4" name="Return 2 (°C)" stroke="#10b981" strokeWidth={2} dot={false} />}
+                  {id === "oven-ced" && tempTab === "temp5" && <Line yAxisId="left" type="monotone" dataKey="temp5" name="Supply 3 (°C)" stroke="#ef4444" strokeWidth={2} dot={false} />}
+                  {id === "oven-ced" && tempTab === "temp5" && <Line yAxisId="right" type="monotone" dataKey="temp6" name="Return 3 (°C)" stroke="#10b981" strokeWidth={2} dot={false} />}
+                  {id === "oven-ced" && <ReferenceLine yAxisId="left" y={standard} stroke="#3b82f6" strokeDasharray="5 5" strokeWidth={1.5} label={{ position: 'insideTopRight', value: `Standard (${standard}°C)`, fill: '#3b82f6', fontSize: 11, fontWeight: 600 }} />}
+                  {id !== "oven-ced" && <Line type="monotone" dataKey={(id === "oven-sealing" || id === "oven-topcoat") ? tempTab : "temp1"} name="Temperature (°C)" stroke="#ef4444" strokeWidth={2} dot={false} />}
+                  {(id === "oven-sealing" || id === "oven-topcoat") && <ReferenceLine y={standard} stroke="#3b82f6" strokeDasharray="5 5" strokeWidth={1.5} label={{ position: 'insideTopRight', value: `Standard (${standard}°C)`, fill: '#3b82f6', fontSize: 11, fontWeight: 600 }} />}
+                  {id !== "oven-ced" && id !== "oven-sealing" && id !== "oven-topcoat" && <Line type="monotone" dataKey="tempMin" name="Min" stroke="#ef4444" strokeDasharray="3 3" strokeWidth={1.5} opacity={0.6} dot={false} />}
+                  {id !== "oven-ced" && id !== "oven-sealing" && id !== "oven-topcoat" && <Line type="monotone" dataKey="tempMax" name="Max" stroke="#ef4444" strokeDasharray="3 3" strokeWidth={1.5} opacity={0.6} dot={false} />}
                 </LineChart>
               </ResponsiveContainer>
             </div>
@@ -755,6 +880,11 @@ function MonitoringAreaDetails() {
             <Activity className="h-5 w-5 text-primary" /> {name}
           </h1>
         </div>
+        {id === "oven-ced" && (
+          <button className="ml-auto flex items-center gap-1.5 rounded-lg border border-blue-500 bg-blue-500 px-3 py-1.5 shadow-sm hover:bg-blue-600 transition-colors text-sm font-medium text-white">
+            <Eye className="h-4 w-4" /> Diagram Mapping
+          </button>
+        )}
 
         {id === "line-tracking" && (
           <div className="flex items-center gap-4">

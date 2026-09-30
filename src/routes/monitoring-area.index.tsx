@@ -33,6 +33,7 @@ interface AreaDef {
   smallTank?: { pv: string; sp: string };
   oven?: {
     temp1: string;
+    temp1Label?: string;
     temp2: string;
     temp3?: string;
     temp4?: string;
@@ -40,6 +41,7 @@ interface AreaDef {
     temp6?: string;
     pressure: string;
     running?: boolean;
+    extraCard?: { label: string; value: string };
   };
   pted?: {
     tempIn: string;
@@ -52,9 +54,9 @@ interface AreaDef {
 const AREAS: AreaDef[] = [
   { id: "boiler-area", name: "Boiler Area", type: "boiler" },
   { id: "pted-area", name: "PTED Area", type: "pted-wrapper" },
-  { id: "oven-sealing", name: "Oven Sealing", type: "oven", oven: { temp1: "186.5", temp2: "184.0", pressure: "2.1", running: true } },
-  { id: "oven-topcoat", name: "Oven Topcoat", type: "oven", oven: { temp1: "191.0", temp2: "189.5", pressure: "2.4", running: true } },
-  { id: "oven-ced", name: "Oven CED", type: "oven", oven: { temp1: "182.0", temp2: "179.0", temp3: "180.5", temp4: "181.2", temp5: "178.5", temp6: "183.0", pressure: "2.8", running: false } },
+  { id: "oven-sealing", name: "Oven Sealing", type: "oven", oven: { temp1: "186.5", temp1Label: "Sealing 1", temp2: "184.0", pressure: "2.1", running: true, extraCard: { label: "Sealing 2", value: "183.2" } } },
+  { id: "oven-topcoat", name: "Oven Topcoat", type: "oven", oven: { temp1: "191.0", temp1Label: "TC1", temp2: "189.5", pressure: "2.4", running: true, extraCard: { label: "New Heater", value: "188.0" } } },
+  { id: "oven-ced", name: "Oven CED", type: "oven", oven: { temp1: "182.0", temp1Label: "Supply 1", temp2: "179.0", temp3: "180.5", temp4: "181.2", temp5: "178.5", temp6: "183.0", pressure: "2.8", running: false, extraCard: { label: "Return 1", value: "180.5" } } },
 ];
 
 
@@ -325,7 +327,7 @@ function AreaCard({ area }: { area: AreaDef }) {
       )}
 
       {area.type === "oven" && area.oven && (
-        <div className="grid grid-cols-3 gap-2 mt-2">
+        <div className={`grid gap-2 mt-2 ${area.oven.extraCard ? 'grid-cols-4' : 'grid-cols-3'}`}>
           <div className="rounded bg-secondary/50 p-2 border border-border/50 flex flex-col justify-center items-center text-center">
             <span className="text-[10px] text-muted-foreground uppercase tracking-widest mb-1 flex items-center gap-1"><Zap className="h-3 w-3" /> Power Panel</span>
             <div className="flex items-baseline gap-1">
@@ -336,12 +338,21 @@ function AreaCard({ area }: { area: AreaDef }) {
             </div>
           </div>
           <div className="rounded bg-secondary/50 p-2 border border-border/50 flex flex-col justify-center items-center text-center">
-            <span className="text-[10px] text-muted-foreground uppercase tracking-widest mb-1 flex items-center gap-1"><Thermometer className="h-3 w-3" /> Temp.1</span>
+            <span className="text-[10px] text-muted-foreground uppercase tracking-widest mb-1 flex items-center gap-1"><Thermometer className="h-3 w-3" /> {area.oven.temp1Label || "Temp.1"}</span>
             <div className="flex items-baseline gap-1">
               <span className={`text-xl font-bold font-mono ${getLimitColor(area.oven.temp1, 180, 190, "text-emerald-500", "text-emerald-500")}`}>{area.oven.temp1}</span>
               <span className="text-[10px] text-muted-foreground">°C</span>
             </div>
           </div>
+          {area.oven.extraCard && (
+            <div className="rounded bg-secondary/50 p-2 border border-border/50 flex flex-col justify-center items-center text-center">
+              <span className="text-[10px] text-muted-foreground uppercase tracking-widest mb-1 flex items-center gap-1"><Thermometer className="h-3 w-3" /> {area.oven.extraCard.label}</span>
+              <div className="flex items-baseline gap-1">
+                <span className={`text-xl font-bold font-mono ${getLimitColor(area.oven.extraCard.value, 180, 190, "text-emerald-500", "text-emerald-500")}`}>{area.oven.extraCard.value}</span>
+                <span className="text-[10px] text-muted-foreground">°C</span>
+              </div>
+            </div>
+          )}
           <div className="rounded bg-secondary/50 p-2 border border-border/50 flex flex-col justify-center items-center text-center">
             <span className="text-[10px] text-muted-foreground uppercase tracking-widest mb-1 flex items-center gap-1"><Gauge className="h-3 w-3" /> Pressure</span>
             <div className="flex items-baseline gap-1">
