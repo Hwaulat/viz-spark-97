@@ -5,6 +5,7 @@ import { Activity, Thermometer, Gauge, ArrowRight, Flame, Zap, Power, Filter, Wa
 import { BOILERS } from "@/lib/mock-data";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine, Legend, BarChart, Bar, Cell } from "recharts";
+import OvenCEDLayoutPng from "@/assets/Oven-CED-Layout.png";
 
 export const Route = createFileRoute("/monitoring-area/")({
   head: () => ({
@@ -126,6 +127,7 @@ function BagFilterItemDialog({ item, children }: { item: { name: string, val: st
 function AreaCard({ area }: { area: AreaDef }) {
   const isPtedWrapper = area.type === "pted-wrapper";
   const [bagFilterTab, setBagFilterTab] = useState("pre-treatment");
+  const [layoutDialogOpen, setLayoutDialogOpen] = useState(false);
 
   const getLimitColor = (val: string | number | undefined, min: number, max: number, defaultClass: string = "text-foreground", okClass?: string) => {
     if (val === undefined) return defaultClass;
@@ -368,9 +370,45 @@ function AreaCard({ area }: { area: AreaDef }) {
           </div>
 
           {area.id === "oven-ced" && (
-            <div className="rounded bg-blue-500 hover:bg-blue-600 transition-colors p-2 border border-blue-500/50 flex flex-col justify-center items-center text-center cursor-pointer shadow-sm text-white">
-              <span className="text-[10px] font-bold uppercase tracking-widest text-center mt-1">Layout<br/>Diagram</span>
-            </div>
+            <Dialog open={layoutDialogOpen} onOpenChange={setLayoutDialogOpen}>
+              <div 
+                onClick={(e) => { e.preventDefault(); e.stopPropagation(); setLayoutDialogOpen(true); }}
+                className="rounded bg-blue-500 hover:bg-blue-600 transition-colors p-2 border border-blue-500/50 flex flex-col justify-center items-center text-center cursor-pointer shadow-sm text-white"
+              >
+                <span className="text-[10px] font-bold uppercase tracking-widest text-center mt-1">Layout<br/>Diagram</span>
+              </div>
+              <DialogContent onClick={(e) => e.stopPropagation()} className="max-w-[90vw] lg:max-w-[1200px] w-full p-6 bg-background border-border">
+                <DialogHeader>
+                  <DialogTitle>Oven CED - Layout Diagram & Temperatures</DialogTitle>
+                </DialogHeader>
+                <div className="flex flex-col gap-4">
+                  <div className="flex flex-col gap-2">
+                    <h3 className="font-semibold text-xs text-muted-foreground uppercase tracking-widest">Temperature Summary</h3>
+                    <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
+                      {[
+                        { name: "Supply 1", val: area.oven.temp1 },
+                        { name: "Return 1", val: area.oven.temp2 },
+                        { name: "Supply 2", val: area.oven.temp3 },
+                        { name: "Return 2", val: area.oven.temp4 },
+                        { name: "Supply 3", val: area.oven.temp5 },
+                        { name: "Return 3", val: area.oven.temp6 },
+                      ].map(t => (
+                        <div key={t.name} className="rounded-lg bg-secondary/50 p-2 border border-border/50 flex flex-col items-center justify-center text-center">
+                          <span className="text-[9px] uppercase tracking-widest text-muted-foreground mb-0.5">{t.name}</span>
+                          <div className="flex items-baseline gap-0.5">
+                            <span className={`text-lg font-bold font-mono ${getLimitColor(t.val, 180, 190, "text-emerald-500", "text-emerald-500")}`}>{t.val}</span>
+                            <span className="text-[9px] text-muted-foreground">°C</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="bg-black/90 p-2 rounded-lg flex items-center justify-center border border-zinc-800">
+                    <img src={OvenCEDLayoutPng} alt="Oven CED Layout" className="w-full h-auto max-h-[60vh] object-contain rounded" />
+                  </div>
+                </div>
+              </DialogContent>
+            </Dialog>
           )}
         </div>
       )}

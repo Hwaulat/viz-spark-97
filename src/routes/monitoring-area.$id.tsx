@@ -11,6 +11,7 @@ import { Tabs } from "@/components/tabs";
 import { StatCardGrid } from "@/components/stat-card";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Tabs as RawTabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Dialog, DialogContent, DialogTrigger, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Table, THead, TBody, Th, Tr, Td } from "@/components/ui/table";
 import { LineChart, Line, AreaChart, Area, BarChart, Bar, ReferenceLine, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import LineTrackingPng from "@/assets/Line Tracking.png";
@@ -23,6 +24,7 @@ import Boiler1Png from "@/assets/Boiler 1.png";
 import Boiler2Png from "@/assets/Boiler 2.png";
 import Boiler3Png from "@/assets/Boiler 3.png";
 import DenahPng from "@/assets/Denah.png";
+import OvenCEDLayoutPng from "@/assets/Oven-CED-Layout.png";
 
 export const Route = createFileRoute("/monitoring-area/$id")({
   head: ({ params }) => ({
@@ -881,9 +883,44 @@ function MonitoringAreaDetails() {
           </h1>
         </div>
         {id === "oven-ced" && (
-          <button className="ml-auto flex items-center gap-1.5 rounded-lg border border-blue-500 bg-blue-500 px-3 py-1.5 shadow-sm hover:bg-blue-600 transition-colors text-sm font-medium text-white">
-            <Eye className="h-4 w-4" /> Layout Diagram
-          </button>
+          <Dialog>
+            <DialogTrigger asChild>
+              <button className="ml-auto flex items-center gap-1.5 rounded-lg border border-blue-500 bg-blue-500 px-3 py-1.5 shadow-sm hover:bg-blue-600 transition-colors text-sm font-medium text-white">
+                <Eye className="h-4 w-4" /> Layout Diagram
+              </button>
+            </DialogTrigger>
+            <DialogContent className="max-w-[90vw] lg:max-w-[1200px] w-full p-6 bg-background border-border">
+              <DialogHeader>
+                <DialogTitle>Oven CED - Layout Diagram & Temperatures</DialogTitle>
+              </DialogHeader>
+              <div className="flex flex-col gap-4">
+                <div className="flex flex-col gap-2">
+                  <h3 className="font-semibold text-xs text-muted-foreground uppercase tracking-widest">Temperature Summary</h3>
+                  <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
+                    {[
+                      { name: "Supply 1", val: 182.0 },
+                      { name: "Return 1", val: 179.0 },
+                      { name: "Supply 2", val: 180.5 },
+                      { name: "Return 2", val: 181.2 },
+                      { name: "Supply 3", val: 178.5 },
+                      { name: "Return 3", val: 183.0 },
+                    ].map(t => (
+                      <div key={t.name} className="rounded-lg bg-secondary/50 p-2 border border-border/50 flex flex-col items-center justify-center text-center">
+                        <span className="text-[9px] uppercase tracking-widest text-muted-foreground mb-0.5">{t.name}</span>
+                        <div className="flex items-baseline gap-0.5">
+                          <span className={`text-lg font-bold font-mono ${t.val >= 180 && t.val <= 190 ? "text-emerald-500" : "text-destructive"}`}>{t.val.toFixed(1)}</span>
+                          <span className="text-[9px] text-muted-foreground">°C</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div className="bg-black/90 p-2 rounded-lg flex items-center justify-center border border-zinc-800">
+                  <img src={OvenCEDLayoutPng} alt="Oven CED Layout Diagram" className="w-full h-auto max-h-[60vh] object-contain rounded" />
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
         )}
 
         {id === "line-tracking" && (
