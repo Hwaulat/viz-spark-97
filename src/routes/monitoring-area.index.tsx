@@ -262,7 +262,7 @@ function AreaCard({ area }: { area: AreaDef }) {
         <div className="grid grid-cols-2 gap-4 mt-2">
           <div className="rounded-lg bg-secondary/50 p-3 border border-border/50">
             <div className="flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-muted-foreground mb-1">
-              <Thermometer className="h-3.5 w-3.5" /> Temp PV
+              <Thermometer className="h-3.5 w-3.5" /> Actual
             </div>
             <div className="flex items-baseline gap-1">
               <span className="text-2xl font-semibold tabular-nums">{area.tempPV}</span>
@@ -271,7 +271,7 @@ function AreaCard({ area }: { area: AreaDef }) {
           </div>
           <div className="rounded-lg bg-secondary/50 p-3 border border-border/50">
             <div className="flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-muted-foreground mb-1">
-              <Thermometer className="h-3.5 w-3.5" /> Temp SP
+              <Thermometer className="h-3.5 w-3.5" /> Standard
             </div>
             <div className="flex items-baseline gap-1">
               <span className="text-2xl font-semibold tabular-nums">{area.tempSP}</span>
@@ -504,11 +504,11 @@ function AreaCard({ area }: { area: AreaDef }) {
                   <span className="text-sm font-semibold flex items-center gap-2">{eq.name} <ArrowRight className="h-3 w-3 opacity-0 -ml-2 group-hover:opacity-100 group-hover:ml-0 transition-all" /></span>
                   <div className="flex gap-5">
                     <div className="flex flex-col items-end">
-                      <span className="text-[9px] uppercase flex items-center gap-1 opacity-70"><Thermometer className="h-3 w-3" /> Temp PV</span>
+                      <span className="text-[9px] uppercase flex items-center gap-1 opacity-70"><Thermometer className="h-3 w-3" /> Actual</span>
                       <div className="flex items-baseline gap-1 mt-0.5"><span className={`font-mono font-bold text-lg md:text-xl xl:text-3xl ${getLimitColor(eq.pv, parseFloat(eq.sp) - 2, parseFloat(eq.sp) + 2, "text-foreground", "text-emerald-500")}`}>{eq.pv}</span><span className="text-xs sm:text-sm opacity-70">°C</span></div>
                     </div>
                     <div className="flex flex-col items-end">
-                      <span className="text-[9px] uppercase flex items-center gap-1 opacity-70"><Thermometer className="h-3 w-3" /> Temp SP</span>
+                      <span className="text-[9px] uppercase flex items-center gap-1 opacity-70"><Thermometer className="h-3 w-3" /> Standard</span>
                       <div className="flex items-baseline gap-1 mt-0.5"><span className="font-mono font-bold text-lg md:text-xl xl:text-3xl text-foreground">{eq.sp}</span><span className="text-xs sm:text-sm opacity-70">°C</span></div>
                     </div>
                   </div>

@@ -512,6 +512,7 @@ const MINUTE_DATA = Array.from({ length: 30 }, (_, i) => {
 function StationDetailContent({ tabKey }: { tabKey: string }) {
   const data = PROCESS_DETAIL_STATIONS[tabKey as keyof typeof PROCESS_DETAIL_STATIONS] as Record<string, any> | undefined;
   const [timeFilter, setTimeFilter] = useState<"daily" | "monthly" | "yearly">("daily");
+  const [tankFilter, setTankFilter] = useState<"small" | "large">("small");
   const [isImageModalOpen, setIsImageModalOpen] = useState(false);
 
   const trendData = useMemo(() => {
@@ -535,10 +536,10 @@ function StationDetailContent({ tabKey }: { tabKey: string }) {
 
     return Array.from({ length }, (_, i) => ({
       time: getLabel(i),
-      pv: +(parseFloat(data.pv) + (Math.random() * 2 - 1)).toFixed(1),
-      sp: parseFloat(data.sp),
+      pv: tankFilter === "small" ? +(parseFloat(data.pv) + (Math.random() * 2 - 1)).toFixed(1) : +(parseFloat(data.pv) + 5 + (Math.random() * 2 - 1)).toFixed(1),
+      sp: tankFilter === "small" ? parseFloat(data.sp) : parseFloat(data.sp) + 5,
     }));
-  }, [data, timeFilter]);
+  }, [data, timeFilter, tankFilter]);
 
   const tableData = useMemo(() => {
     if (!data) return [];
@@ -570,28 +571,28 @@ function StationDetailContent({ tabKey }: { tabKey: string }) {
             columns={4}
             items={[
               {
-                title: "SP Temp (Small Tank)",
+                title: "Standard Temp. (Small Tank)",
                 value: <div className="flex items-baseline gap-1"><span className="text-blue-500">{data.sp}</span><span className="text-sm text-muted-foreground font-normal">°C</span></div>,
                 variant: "stat-side",
                 icon: <Thermometer />,
                 iconBg: "bg-blue-500/10 text-blue-500",
               },
               {
-                title: "PV Temp (Small Tank)",
+                title: "Actual Temp. (Small Tank)",
                 value: <div className="flex items-baseline gap-1"><span className={data.alarm ? "text-destructive" : "text-blue-500"}>{data.pv}</span><span className="text-sm text-muted-foreground font-normal">°C</span></div>,
                 variant: "stat-side",
                 icon: <Thermometer />,
                 iconBg: "bg-blue-500/10 text-blue-500",
               },
               {
-                title: "SP Temp (Large Tank)",
+                title: "Standard Temp. (Large Tank)",
                 value: <div className="flex items-baseline gap-1"><span className="text-blue-500">{(parseFloat(data.sp) + 5).toString()}</span><span className="text-sm text-muted-foreground font-normal">°C</span></div>,
                 variant: "stat-side",
                 icon: <Thermometer />,
                 iconBg: "bg-blue-500/10 text-blue-500",
               },
               {
-                title: "PV Temp (Large Tank)",
+                title: "Actual Temp. (Large Tank)",
                 value: <div className="flex items-baseline gap-1"><span className={data.alarm ? "text-destructive" : "text-blue-500"}>{(parseFloat(data.pv) + 5).toFixed(1)}</span><span className="text-sm text-muted-foreground font-normal">°C</span></div>,
                 variant: "stat-side",
                 icon: <Thermometer />,
@@ -604,14 +605,14 @@ function StationDetailContent({ tabKey }: { tabKey: string }) {
             columns={2}
             items={[
               {
-                title: "SP Temperature",
+                title: "Standard Temperature",
                 value: <div className="flex items-baseline gap-1"><span className="text-blue-500">{data.sp}</span><span className="text-sm text-muted-foreground font-normal">°C</span></div>,
                 variant: "stat-side",
                 icon: <Thermometer />,
                 iconBg: "bg-blue-500/10 text-blue-500",
               },
               {
-                title: "PV Temperature",
+                title: "Actual Temperature",
                 value: <div className="flex items-baseline gap-1"><span className={data.alarm ? "text-destructive" : "text-blue-500"}>{data.pv}</span><span className="text-sm text-muted-foreground font-normal">°C</span></div>,
                 variant: "stat-side",
                 icon: <Thermometer />,
@@ -662,19 +663,37 @@ function StationDetailContent({ tabKey }: { tabKey: string }) {
               <h2 className="text-xl font-bold tracking-tight text-foreground">Temperature Trends</h2>
               <p className="text-sm text-muted-foreground mt-1">Temperature PV and SP trend over the selected {timeFilter} timeframe.</p>
             </div>
-            <div className="flex bg-gray-100 dark:bg-gray-700/60 rounded-xl p-1 h-auto shrink-0">
-              {(["daily", "monthly", "yearly"] as const).map((t) => (
-                <button
-                  key={t}
-                  onClick={() => setTimeFilter(t)}
-                  className={`text-gray-500 dark:text-gray-400 rounded-lg text-xs font-medium h-8 px-4 transition-colors ${timeFilter === t
-                    ? "bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-sm"
-                    : "hover:text-gray-700 dark:hover:text-gray-300"
-                    }`}
-                >
-                  {t === "daily" ? "Daily" : t === "monthly" ? "Monthly" : "Yearly"}
-                </button>
-              ))}
+            <div className="flex gap-2">
+              {(tabKey === "pre-degreasing" || tabKey === "phosphate") && (
+                <div className="flex bg-gray-100 dark:bg-gray-700/60 rounded-xl p-1 h-auto shrink-0">
+                  {(["small", "large"] as const).map((t) => (
+                    <button
+                      key={t}
+                      onClick={() => setTankFilter(t)}
+                      className={`text-gray-500 dark:text-gray-400 rounded-lg text-xs font-medium h-8 px-4 transition-colors ${tankFilter === t
+                        ? "bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-sm"
+                        : "hover:text-gray-700 dark:hover:text-gray-300"
+                        }`}
+                    >
+                      {t === "small" ? "Small" : "Large"}
+                    </button>
+                  ))}
+                </div>
+              )}
+              <div className="flex bg-gray-100 dark:bg-gray-700/60 rounded-xl p-1 h-auto shrink-0">
+                {(["daily", "monthly", "yearly"] as const).map((t) => (
+                  <button
+                    key={t}
+                    onClick={() => setTimeFilter(t)}
+                    className={`text-gray-500 dark:text-gray-400 rounded-lg text-xs font-medium h-8 px-4 transition-colors ${timeFilter === t
+                      ? "bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-sm"
+                      : "hover:text-gray-700 dark:hover:text-gray-300"
+                      }`}
+                  >
+                    {t === "daily" ? "Daily" : t === "monthly" ? "Monthly" : "Yearly"}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
           <div className="flex-1 w-full min-h-[300px]">
@@ -685,7 +704,7 @@ function StationDetailContent({ tabKey }: { tabKey: string }) {
                 <YAxis tick={{ fontSize: 12 }} domain={['dataMin - 2', 'dataMax + 2']} tickLine={false} axisLine={false} label={{ value: 'Temperature (°C)', angle: -90, position: 'insideLeft', offset: -5, style: { fontSize: 12, fill: '#3b82f6', fontWeight: 600 } }} />
                 <Tooltip contentStyle={{ backgroundColor: "rgba(0,0,0,0.8)", borderRadius: "8px", border: "1px solid rgba(255,255,255,0.1)" }} itemStyle={{ fontSize: 12 }} />
                 <Legend wrapperStyle={{ paddingTop: "20px" }} iconType="circle" />
-                <Line type="monotone" dataKey="sp" name="Set Point" stroke="#ef4444" strokeWidth={2} strokeDasharray="5 5" dot={false} activeDot={false} />
+                <Line type="monotone" dataKey="sp" name="Standard" stroke="#ef4444" strokeWidth={2} strokeDasharray="5 5" dot={false} activeDot={false} />
                 <Line type="monotone" dataKey="pv" name="Actual Temp" stroke="#3b82f6" strokeWidth={2} dot={{ r: 4, strokeWidth: 2, fill: "hsl(var(--card))" }} activeDot={{ r: 6 }} />
               </LineChart>
             </ResponsiveContainer>
